@@ -12,3 +12,6 @@ To know how to contribute follow [this link](https://github.com/SafeTel/Contribu
 
 
 To see the documentation about the server follow [this link](https://github.com/SafeTel/SafeTel-Doc-Backend).
+
+
+You can find all the relative POC by following [this link](https://github.com/SafeTel/SafeTel-POC-Backend).
