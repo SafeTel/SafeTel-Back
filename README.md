@@ -5,7 +5,7 @@
 </p>
 
 
-This repository holds SafeTel backend's code.
+This repository holds SafeTel backend's code, the server name is **Magi**.
 
 
 To know how to contribute follow [this link](https://github.com/SafeTel/Contribution).

@@ -1,0 +1,10 @@
+version: "3.3"
+
+services:
+    magi:
+        build:
+            ./
+        ports:
+            - 2407:2407
+        restart:
+            on-failure
