@@ -9,8 +9,19 @@
 
 package main
 
-import "fmt"
+import (
+	"net/http"
+
+	"github.com/labstack/echo/v4" // Echo framework
+)
 
 func main() {
-	fmt.Println("hello world")
+
+	echoServer := echo.New() // Create a new object Echo server
+
+	echoServer.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Welcome to Magi!") // Proof of working
+	})
+
+	echoServer.Logger.Fatal(echoServer.Start(":2407")) // Launch Echo Server
 }
