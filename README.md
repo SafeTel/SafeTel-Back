@@ -17,6 +17,7 @@ To see the documentation about the server follow [this link](https://github.com/
 
 The server is wrapped with Docker.
 
+
 Command:
 ```sh
 $ sudo docker-compose up
