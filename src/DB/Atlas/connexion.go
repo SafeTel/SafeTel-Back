@@ -1,3 +1,10 @@
+//
+// SAFETEL PROJECT, 2021
+// SafeTel-Backend
+// File description:
+// MongoDB-Atlas - connexion.go
+//
+
 package mongoDBAtlas
 
 import (
@@ -20,7 +27,9 @@ const (
 	URI = "mongodb+srv://admin:" + DBPassword + "@cluster0.7yreq.mongodb.net/" + DBName + "?retryWrites=true&w=majority" // Uri of the mongoAtlas data base
 )
 
-func generateAMongoClient() (*mongo.Client, error) {
+// --- Client Connection --- //
+
+func generateAMongoClient() (*mongo.Client, error) { // Generate a mongoDb atlas client
 	log.Println("Try to connect client to MongoDB Atlas!")         // Printing to ensure the program started
 	client, err := mongo.NewClient(options.Client().ApplyURI(URI)) // Generating a new client
 
@@ -30,7 +39,7 @@ func generateAMongoClient() (*mongo.Client, error) {
 	return client, nil
 }
 
-func checkIfClienIsConnected(client *mongo.Client, ctx context.Context) error {
+func checkIfClientIsConnected(client *mongo.Client, ctx context.Context) error { // Check if the client is connected to his mongo db
 	err := client.Ping(ctx, nil) // Check the connection
 
 	if err != nil { // Check Error
@@ -40,7 +49,7 @@ func checkIfClienIsConnected(client *mongo.Client, ctx context.Context) error {
 	return nil
 }
 
-func connectClientToMongoDb(client *mongo.Client, ctx context.Context) error {
+func connectClientToMongoDb(client *mongo.Client, ctx context.Context) error { // Connect a client to mongoDbAtlas
 	connectionCtx, cancel := context.WithTimeout(ctx, 10*time.Second) // generating a basic context (context.Background) + with timeout <=> return a WithDeadline(parent, time.Now().Add(timeOut)) ::  WithDeadline returns a copy of the parent context with the deadline adjusted to be no later than d. If the parent's deadline is already earlier than d, WithDeadline(parent, d) is semantically equivalent to parent. The returned context's Done channel is closed when the deadline expires, when the returned cancel function is called, or when the parent context's Done channel is closed, whichever happens first.
 
 	defer cancel()                       // Cancel mean cleaning datas in the context (free data)
@@ -52,7 +61,7 @@ func connectClientToMongoDb(client *mongo.Client, ctx context.Context) error {
 	return nil
 }
 
-func GetConnectedMongoAtlasClient(isExitingIfErrors bool) (*mongo.Client, error) {
+func GetConnectedMongoAtlasClient(isExitingIfErrors bool) (*mongo.Client, error) { // Create and return a client connected to the project mongoDB Atlas
 	client, err := generateAMongoClient() // Generate a mongo Client
 	ctx := context.Background()           // Generate a basic ctx
 
@@ -64,6 +73,15 @@ func GetConnectedMongoAtlasClient(isExitingIfErrors bool) (*mongo.Client, error)
 	}
 
 	err = connectClientToMongoDb(client, ctx) // Connect the mongo Client
+
+	if err != nil { // Check connection to mongo db
+		if isExitingIfErrors { // Exiting the program if their is an error
+			log.Fatal(err) // log and Exit(1)
+		}
+		return nil, errors.New("Error: Connection to Mongo Client: " + err.Error())
+	}
+
+	err = checkIfClientIsConnected(client, ctx) // Check client connexion
 
 	if err != nil { // Check connection to mongo db
 		if isExitingIfErrors { // Exiting the program if their is an error
