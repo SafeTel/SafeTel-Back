@@ -25,16 +25,16 @@ func TestMongoAtlasConnexionValidatedValues(tester *testing.T) {
 
 	// Act
 
-	for _, elem := range mongoDbConnectedClientTests {
-		_, err := GetConnectedMongoAtlasClient(elem.input)
-		testResults = append(testResults, err)
+	for _, elem := range mongoDbConnectedClientTests { // For each test, process
+		_, err := GetConnectedMongoAtlasClient(elem.input) // Get err from the method
+		testResults = append(testResults, err)             // Adding it to the testResults data structure
 	}
 
 	// Assert
 
-	for index, elem := range mongoDbConnectedClientTests {
-		if testResults[index] != elem.expected {
-			tester.Errorf("GetConnectedMongoAtlasClient: expected %s, got %s", elem.expected, testResults[index])
+	for index, elem := range mongoDbConnectedClientTests { // For each test, process
+		if testResults[index] != elem.expected { // Check if error between expected and result
+			tester.Errorf("GetConnectedMongoAtlasClient: expected %s, got %s", elem.expected, testResults[index]) // Raise an error
 		}
 	}
 
