@@ -12,16 +12,15 @@ import (
 	"log"
 	"time"
 
-	"go.mongodb.org/mongo-driver/mongo" // Mongo Driver
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo"         // Mongo Driver
+	"go.mongodb.org/mongo-driver/mongo/options" // Mongo Driver Options
 )
 
 const ( // Global vars
 	DBName     = "Melchior"                                                                                                                              // Data base name
 	DBPassword = "aSEFTHUKOM1!"                                                                                                                          // Data base user password
 	URI        = "mongodb+srv://SafeTelBackEndUser:" + DBPassword + "@safetel-back-cluster.klq5k.mongodb.net/" + DBName + "?retryWrites=true&w=majority" // Uri of the mongoAtlas data base
-	// TODO: explicit
-	// FIXME: comment
+	// Atlas Cluster URI to connect
 )
 
 func generateAMongoClient() *mongo.Client { // Generate a mongoDb atlas client
@@ -34,29 +33,23 @@ func generateAMongoClient() *mongo.Client { // Generate a mongoDb atlas client
 	return client
 }
 
-func checkIfClientIsConnected(client *mongo.Client, ctx context.Context) { // Check if the client is connected to his mongo db
-	// Check the connection
-	if err := client.Ping(ctx, nil); err != nil {
-		log.Fatal(err)
-	}
-	log.Println("Client Connected to MongoDB!")
-}
-
-func connectClientToMongoDb(client *mongo.Client, ctx context.Context) { // Connect a client to mongoDbAtlas
+func connectClientToAtlasMongoDb(client *mongo.Client, ctx context.Context) { // Connect a client to mongoDbAtlas
 	connectionCtx, cleanContextDatas := context.WithTimeout(ctx, 10*time.Second) // generating a basic context (context.Background) + with timeout
 
 	defer cleanContextDatas()            // Cancel mean cleaning datas in the context (free data)
 	err := client.Connect(connectionCtx) // Connecting the client to the database
-	if err != nil {                      // Check Error
+	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func GetConnectedMongoAtlasClient() *mongo.Client { // Create and return a client connected to the project mongoDB Atlas
+func CreateConnectionToAtlas() *mongo.Client { // Create and return a client connected to the project mongoDB Atlas
 	client := generateAMongoClient() // Generate a mongo Client
-	ctx := context.Background()      // Generate a basic ctx
+	ctx := context.Background()
 
-	connectClientToMongoDb(client, ctx)   // Connect the mongo Client
-	checkIfClientIsConnected(client, ctx) // Check client connexion
+	connectClientToAtlasMongoDb(client, ctx) // Connect the mongo Client
+	if err := client.Ping(ctx, nil); err != nil {
+		log.Fatal(err)
+	}
 	return client
 }
