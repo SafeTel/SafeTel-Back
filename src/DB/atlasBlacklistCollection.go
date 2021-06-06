@@ -2,7 +2,7 @@
 // SAFETEL PROJECT, 2021
 // SafeTel-Backend
 // File description:
-// Atlas-Collections - blackListDB.go
+// Atlas-Collections - atlasBlacklistCollection.go
 //
 
 package atlasCollections
@@ -15,16 +15,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"gopkg.in/mgo.v2/bson"
 )
-
-// ./src/DB/BlackListDB.go de:
-// - D'obtenir la liste des utilisateurs BlackListés à partir de l'id d'un utilisateur
-// GetBlackList(userId string)
-
-// - De WhiteLister un numéro  à partir d'un numéro à BlackList et de l'id de l'utilisateur
-// BlackListNumber(userId string, number string)
-
-// - D'enlever un numéro de la BlackList à partir d'un numéro à BlackList et de l'id de l'utilisateur
-// UNBlackListNumber(userId string, number string)
 
 type BlacklistHandler struct {
 	client     *mongo.Client

@@ -2,7 +2,7 @@
 // SAFETEL PROJECT, 2021
 // SafeTel-Backend
 // File description:
-// MongoDB-Atlas - connexion_test.go
+// MongoDB-Atlas - atlasClientConnection_test.go
 //
 
 package mongoDBAtlasClient_test
