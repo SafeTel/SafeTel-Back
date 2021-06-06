@@ -9,6 +9,10 @@ RUN go mod download
 
 COPY . .
 
+ARG DBName=Melchior
+ARG DBPassword=aSEFTHUKOM1!
+ARG MongoAtlasClusterURI= mongodb+srv://SafeTelBackEndUser:${DBPassword}@safetel-back-cluster.klq5k.mongodb.net/${DBName}?retryWrites=true&w=majority
+
 RUN go build -o Magi .
 
 EXPOSE 2407
