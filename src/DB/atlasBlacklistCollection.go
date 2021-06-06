@@ -29,9 +29,11 @@ func (h *BlacklistHandler) GetBlacklistForUserId(userId string) []dataModels.Pho
 	if err != nil {
 		log.Panic(err)
 	}
+
 	defer cursor.Close(context.Background())  // Defering the close of the cursor. Work like the closing of an IO
 	var phoneNumbers []dataModels.PhoneNumber // Creating the list var PhoneNumber that will be filled with collection elems
 
+	// TODO: serialize result of client into the object
 	for cursor.Next(context.Background()) { // Iterating on all elems of the cursor
 		var elem dataModels.PhoneNumber // Var that will be fill with the current value of the cursor
 		err := cursor.Decode(&elem)     // Decode the cursor value and fill the elem var
@@ -39,6 +41,7 @@ func (h *BlacklistHandler) GetBlacklistForUserId(userId string) []dataModels.Pho
 		if err != nil {
 			log.Panic(err)
 		}
+
 		phoneNumbers = append(phoneNumbers, elem) // append elem to phoneNumbers list
 	}
 	return phoneNumbers
@@ -52,6 +55,7 @@ func (h *BlacklistHandler) AddBlacklistPhoneNumberForUserId(userId string, phone
 	if err != nil {
 		log.Panic("Blacklist UpdateOne() ERROR:", err)
 	}
+
 	log.Println("Blacklist UpdateOne Result:", updateResult)
 }
 
@@ -65,6 +69,7 @@ func (h *BlacklistHandler) DeleteBlacklistPhoneNumberForUserId(userId string, ph
 	if err != nil {
 		log.Panic("DeleteOne() ERROR:", err)
 	}
+
 	log.Println("Blacklist DeleteOne Result:", deleteResult)
 }
 

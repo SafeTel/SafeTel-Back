@@ -29,6 +29,7 @@ func (h *HistoryHandler) GetHistoryForUserId(userId string) []dataModels.Call {
 	if err != nil {
 		log.Panic(err)
 	}
+
 	defer cursor.Close(context.Background()) // Defering the close of the cursor. Work like the closing of an IO
 	var historyCalls []dataModels.Call       // Creating the list var PhoneNumber that will be filled with collection elems
 
@@ -39,6 +40,7 @@ func (h *HistoryHandler) GetHistoryForUserId(userId string) []dataModels.Call {
 		if err != nil {
 			log.Panic(err)
 		}
+
 		historyCalls = append(historyCalls, elem) // append elem to phoneNumbers list
 	}
 	return historyCalls

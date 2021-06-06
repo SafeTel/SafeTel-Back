@@ -22,15 +22,17 @@ func generateAMongoClient() *mongo.Client { // Generate a mongoDb atlas client
 	mongoAtlasClusterURI := os.Getenv("MongoAtlasClusterURI")
 
 	if mongoAtlasClusterURI == "" {
+		// TODO:haveBeenSet -> exist
 		if _, haveBeenSet := os.LookupEnv("MongoAtlasClusterURI"); !haveBeenSet {
-			log.Panic("MongoAtlasClusterURI env var have not been set")
+			log.Fatal("MongoAtlasClusterURI env var have not been set")
 		}
-		log.Panic("mongoAtlasClusterURI env var empty")
+		log.Fatal("mongoAtlasClusterURI env var empty")
 	}
+
 	client, err := mongo.NewClient(options.Client().ApplyURI(mongoAtlasClusterURI)) // Generating a new client
 
 	if err != nil {
-		log.Panic(err)
+		log.Fatal(err)
 	}
 	return client
 }
@@ -41,17 +43,17 @@ func connectClientToAtlasMongoDb(client *mongo.Client, ctx context.Context) { //
 	defer cleanContextDatas()            // Cancel mean cleaning datas in the context (free data)
 	err := client.Connect(connectionCtx) // Connecting the client to the database
 	if err != nil {
-		log.Panic(err)
+		log.Fatal(err)
 	}
 }
 
 func CreateConnectionToAtlas() *mongo.Client { // Create and return a client connected to the project mongoDB Atlas
-	client := generateAMongoClient() // Generate a mongo Client
+	client := generateAMongoClient()
 	ctx := context.Background()
 
-	connectClientToAtlasMongoDb(client, ctx) // Connect the mongo Client
+	connectClientToAtlasMongoDb(client, ctx)
 	if err := client.Ping(ctx, nil); err != nil {
-		log.Panic(err)
+		log.Fatal(err)
 	}
 	return client
 }

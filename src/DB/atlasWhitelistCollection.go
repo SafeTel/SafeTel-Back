@@ -29,6 +29,7 @@ func (h *WhitelistHandler) GetWhiteListForUserId(userId string) []dataModels.Pho
 	if err != nil {
 		log.Panic(err)
 	}
+
 	defer cursor.Close(context.Background())  // Defering the close of the cursor. Work like the closing of an IO
 	var phoneNumbers []dataModels.PhoneNumber // Creating the list var PhoneNumber that will be filled with collection elems
 
@@ -52,6 +53,7 @@ func (h *WhitelistHandler) AddWhiteListPhoneNumberForUserId(userId string, phone
 	if err != nil {
 		log.Panic("Whilelist UpdateOne() ERROR:", err)
 	}
+
 	log.Println("Whilelist UpdateOne Result:", updateResult)
 }
 
@@ -65,6 +67,7 @@ func (h *WhitelistHandler) DeleteWhiteListPhoneNumberForUserId(userId string, ph
 	if err != nil {
 		log.Panic("DeleteOne() ERROR:", err)
 	}
+
 	log.Println("Whilelist DeleteOne Result:", deleteResult)
 }
 
