@@ -2,15 +2,15 @@
 // SAFETEL PROJECT, 2021
 // SafeTel-Backend
 // File description:
-// Call Data Model - call.go
+// Call Data Model - Call.go
 //
 
-package dataModels
+package models
 
 import "time"
 
 type Call struct {
-	PhoneNumber `json:"number"`
-	Origin      string    `json:"origin"`
-	Time        time.Time `json:"time"`
+	Number string    `json:"number"`
+	Origin string    `json:"origin"`
+	Time   time.Time `json:"time"`
 }

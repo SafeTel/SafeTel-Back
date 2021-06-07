@@ -2,11 +2,11 @@
 // SAFETEL PROJECT, 2021
 // SafeTel-Backend
 // File description:
-// PhoneNumber Data Model - phoneNumber.go
+// ControlList Data Model - ControlList.go
 //
 
-package dataModels
+package models
 
-type PhoneNumber struct {
-	Value string
+type ControlList struct {
+	Number []string
 }
