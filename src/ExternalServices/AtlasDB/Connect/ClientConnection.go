@@ -2,7 +2,7 @@
 // SAFETEL PROJECT, 2021
 // SafeTel-Backend
 // File description:
-// MongoDB-Atlas - connexion.go
+// MongoDB-Atlas - ClientConnection.go
 //
 
 package mongoDBAtlasClient
@@ -17,33 +17,34 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options" // Mongo Driver Options
 )
 
-func generateAMongoClient() *mongo.Client { // Generate a mongoDb atlas client
+var LogFatal = log.Fatal // Encapsulation of func that can be modify for test
+
+func generateAMongoClient() *mongo.Client {
 	log.Println("Try to connect client to MongoDB Atlas!")
 	mongoAtlasClusterURI := os.Getenv("MongoAtlasClusterURI")
 
 	if mongoAtlasClusterURI == "" {
-		// TODO:haveBeenSet -> exist
-		if _, haveBeenSet := os.LookupEnv("MongoAtlasClusterURI"); !haveBeenSet {
-			log.Fatal("MongoAtlasClusterURI env var have not been set")
+		if _, exist := os.LookupEnv("MongoAtlasClusterURI"); !exist {
+			LogFatal("MongoAtlasClusterURI env var have not been set")
 		}
-		log.Fatal("mongoAtlasClusterURI env var empty")
+		LogFatal("mongoAtlasClusterURI env var empty")
 	}
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(mongoAtlasClusterURI)) // Generating a new client
 
 	if err != nil {
-		log.Fatal(err)
+		LogFatal(err)
 	}
 	return client
 }
 
-func connectClientToAtlasMongoDb(client *mongo.Client, ctx context.Context) { // Connect a client to mongoDbAtlas
+func connectClientToAtlasMongoDb(client *mongo.Client, ctx context.Context) {
 	connectionCtx, cleanContextDatas := context.WithTimeout(ctx, 10*time.Second) // generating a basic context (context.Background) + with timeout
 
-	defer cleanContextDatas()            // Cancel mean cleaning datas in the context (free data)
-	err := client.Connect(connectionCtx) // Connecting the client to the database
+	defer cleanContextDatas() // Cancel mean cleaning datas in the context (free data)
+	err := client.Connect(connectionCtx)
 	if err != nil {
-		log.Fatal(err)
+		LogFatal(err)
 	}
 }
 
@@ -53,7 +54,7 @@ func CreateConnectionToAtlas() *mongo.Client { // Create and return a client con
 
 	connectClientToAtlasMongoDb(client, ctx)
 	if err := client.Ping(ctx, nil); err != nil {
-		log.Fatal(err)
+		LogFatal(err)
 	}
 	return client
 }
