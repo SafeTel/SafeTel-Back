@@ -10,18 +10,26 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/labstack/echo/v4" // Echo framework
+
+	getRequests "github.com/SafeTel/SafeTel-Back.git/src/Endpoints/UserLists/GETRequests"
 )
+
+func initUserLists(echoServer *echo.Echo) {
+
+	/* GET Requests */
+	echoServer.GET("/get/blacklist/:userId", getRequests.GetBlackList)
+	echoServer.GET("/get/whitelist/:userId", getRequests.GetWhiteList)
+	echoServer.GET("/get/history/:userId", getRequests.GetHistory)
+	echoServer.GET("/get/greylist/:userId", getRequests.GetGreyList)
+
+}
 
 func main() {
 
 	echoServer := echo.New() // Create a new object Echo server
 
-	echoServer.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Welcome to Magi!") // Proof of working
-	})
+	initUserLists(echoServer) // Init routes for UserLists
 
 	echoServer.Logger.Fatal(echoServer.Start(":2407")) // Launch Echo Server
 }
