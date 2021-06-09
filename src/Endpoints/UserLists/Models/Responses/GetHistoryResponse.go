@@ -5,7 +5,7 @@
 // GetHistoryResponse
 //
 
-package UserListsResponsesModels
+package responsesUserLists
 
 import "time"
 

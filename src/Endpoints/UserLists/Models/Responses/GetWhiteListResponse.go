@@ -5,7 +5,7 @@
 // GetWhiteListResponse
 //
 
-package UserListsResponsesModels
+package responsesUserLists
 
 type GetWhiteListResponse struct {
 	WhiteList []string `json:"WhiteList"`
