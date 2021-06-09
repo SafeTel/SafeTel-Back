@@ -25,7 +25,7 @@ import (
 func PostWhiteList(context echo.Context) error {
 
 	param := params.GenericControlList{}
-	response := responses.GetBlackListResponse{}
+	response := responses.GetWhiteListResponse{}
 
 	decoder := json.NewDecoder(context.Request().Body)
 	decoder.DisallowUnknownFields()
