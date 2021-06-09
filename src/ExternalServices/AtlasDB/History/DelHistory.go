@@ -14,6 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson" // Mongo Driver for bson data format
 )
 
+// FIXME: doesn't delete history element in mongodb
 func (h *HistoryHandler) DelHistoryCallForUserId(userId string, number string, unixTimeStamp int) {
 	filter := bson.D{{Key: "userId", Value: userId}}
 	update := bson.D{
