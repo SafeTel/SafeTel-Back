@@ -31,5 +31,5 @@ func (h *HistoryHandler) DelHistoryCallForUserId(userId string, number string, u
 	if err != nil { // Get One elem from collection matching the filter option
 		log.Panic(err)
 	}
-	log.Println("Blacklist DeleteOne Result: number of elem modified: ", deleteResult.ModifiedCount)
+	log.Println("History DeleteOne Result: number of elem modified: ", deleteResult.ModifiedCount)
 }
