@@ -13,10 +13,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	db "github.com/SafeTel/SafeTel-Back.git/src/ExternalServices/AtlasDB/Connect"
-	whitelist "github.com/SafeTel/SafeTel-Back.git/src/ExternalServices/AtlasDB/WhiteList"
+	db "github.com/SafeTel/SafeTel-Back.git/src/ExternalServices/AtlasDB/Connect"          // MongoDB Handler
+	whitelist "github.com/SafeTel/SafeTel-Back.git/src/ExternalServices/AtlasDB/WhiteList" // WhiteList Handler
 
-	responses "github.com/SafeTel/SafeTel-Back.git/src/Endpoints/UserLists/Models/Responses"
+	responses "github.com/SafeTel/SafeTel-Back.git/src/Endpoints/UserLists/Models/Responses" // Data Models for responses
 )
 
 func GetWhiteList(context echo.Context) error {

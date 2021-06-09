@@ -13,10 +13,10 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	db "github.com/SafeTel/SafeTel-Back.git/src/ExternalServices/AtlasDB/Connect"
-	history "github.com/SafeTel/SafeTel-Back.git/src/ExternalServices/AtlasDB/History"
+	db "github.com/SafeTel/SafeTel-Back.git/src/ExternalServices/AtlasDB/Connect"      // MongoDB Handler
+	history "github.com/SafeTel/SafeTel-Back.git/src/ExternalServices/AtlasDB/History" // History Handler
 
-	responses "github.com/SafeTel/SafeTel-Back.git/src/Endpoints/UserLists/Models/Responses"
+	responses "github.com/SafeTel/SafeTel-Back.git/src/Endpoints/UserLists/Models/Responses" // Data Models for responses
 )
 
 func GetHistory(context echo.Context) error {
