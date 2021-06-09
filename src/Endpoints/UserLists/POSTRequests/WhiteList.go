@@ -40,7 +40,7 @@ func PostWhiteList(context echo.Context) error {
 
 	whitelist.AddWhitelistPhoneNumberForUserId(param.UserId, param.Number)
 
-	response.BlackList = whitelist.GetWhiteListForUserId(param.UserId).Number
+	response.WhiteList = whitelist.GetWhiteListForUserId(param.UserId).Number
 
 	return context.JSON(http.StatusOK, response)
 }
