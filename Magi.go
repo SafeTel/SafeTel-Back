@@ -12,17 +12,21 @@ package main
 import (
 	"github.com/labstack/echo/v4" // Echo framework
 
-	getRequests "github.com/SafeTel/SafeTel-Back.git/src/Endpoints/UserLists/GETRequests"
+	getUserListsRequests "github.com/SafeTel/SafeTel-Back.git/src/Endpoints/UserLists/GETRequests"   // GET Requests for User Lists
+	postUserListsRequests "github.com/SafeTel/SafeTel-Back.git/src/Endpoints/UserLists/POSTRequests" // POST Requests for User Lists
 )
 
 func initUserLists(echoServer *echo.Echo) {
 
 	/* GET Requests */
-	echoServer.GET("/get/blacklist/:userId", getRequests.GetBlackList)
-	echoServer.GET("/get/whitelist/:userId", getRequests.GetWhiteList)
-	echoServer.GET("/get/history/:userId", getRequests.GetHistory)
-	echoServer.GET("/get/greylist/:userId", getRequests.GetGreyList)
+	echoServer.GET("/user/blacklist/:userId", getUserListsRequests.GetBlackList)
+	echoServer.GET("/user/whitelist/:userId", getUserListsRequests.GetWhiteList)
+	echoServer.GET("/user/history/:userId", getUserListsRequests.GetHistory)
+	echoServer.GET("/user/greylist/:userId", getUserListsRequests.GetGreyList)
 
+	/* POST Requests*/
+	echoServer.POST("/user/blacklist", postUserListsRequests.PostBlackList)
+	echoServer.POST("/user/whitelist", postUserListsRequests.PostWhiteList)
 }
 
 func main() {
