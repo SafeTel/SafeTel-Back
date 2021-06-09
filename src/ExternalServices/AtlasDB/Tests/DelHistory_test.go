@@ -28,7 +28,7 @@ func Test_DelHistoryForUserId_DeleteOneCall_FoundNotEmptyList(tester *testing.T)
 
 	client := dbCnct.CreateConnectionToAtlas()
 	history := history.NewHistory(client, os.Getenv("DBName"))
-	HistoryCallLen := len(history.GetHistoryForUserId("1"))
+	HistoryCallLen := len(history.GetHistoryForUserId("1").Values)
 	var getResultNumber int
 	var delHistoryForUserIdTest = struct { // Defining data var Delete method
 		input    CallTest
@@ -42,7 +42,7 @@ func Test_DelHistoryForUserId_DeleteOneCall_FoundNotEmptyList(tester *testing.T)
 		}
 	}()
 	history.DelHistoryCallForUserId(delHistoryForUserIdTest.input.UserId, delHistoryForUserIdTest.input.Number, delHistoryForUserIdTest.input.timeStamp)
-	getResultNumber = len(history.GetHistoryForUserId("1"))
+	getResultNumber = len(history.GetHistoryForUserId("1").Values)
 
 	// Assert
 	if getResultNumber != delHistoryForUserIdTest.expected {
