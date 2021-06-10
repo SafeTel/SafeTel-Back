@@ -10,18 +10,25 @@ package historyCollections
 import (
 	"context"
 	"log"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson" // Mongo Driver for bson data format
 )
 
-// FIXME: doesn't delete history element in mongodb
+func IntToTimeStampString(value int) string {
+	unixTimeUTC := time.Unix(int64(value), 0)             //gives unix time stamp in utc
+	unixTimeInRFC3339 := unixTimeUTC.Format(time.RFC3339) // converts utc time to RFC3339 format
+	return unixTimeInRFC3339
+}
+
 func (h *HistoryHandler) DelHistoryCallForUserId(userId string, number string, unixTimeStamp int) {
 	filter := bson.D{{Key: "userId", Value: userId}}
+	ustInStr := IntToTimeStampString(unixTimeStamp)
 	update := bson.D{
 		{Key: "$pull", Value: bson.D{ // $pull remove an elem that will match the Value:
 			{Key: "history", Value: bson.D{
 				{Key: "number", Value: number},
-				{Key: "time", Value: unixTimeStamp},
+				{Key: "time", Value: ustInStr},
 			},
 			},
 		},
