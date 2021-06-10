@@ -9,8 +9,8 @@ package responsesUserLists
 
 type GetHistoryResponse struct {
 	Values []struct {
-		Number string `json:"number"`
-		Origin string `json:"origin"`
-		Time   string `json:"time"`
-	} `json:"history"`
+		Number string `json:"number" bson:"number"`
+		Origin string `json:"origin" bson:"origin"`
+		Time   string `json:"time" bson:"time"`
+	} `json:"History" bson:"history"`
 }
