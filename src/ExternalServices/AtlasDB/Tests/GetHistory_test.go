@@ -23,7 +23,7 @@ func Test_GetHistoryForUserId_NoValues_FoundNotEmptyList(tester *testing.T) {
 
 	client := dbCnct.CreateConnectionToAtlas()
 	history := history.NewHistory(client, os.Getenv("DBName"))
-	var getResult []models.Call
+	var getResult models.History
 
 	// Act
 	defer func() { // Handling a Panic
@@ -34,7 +34,7 @@ func Test_GetHistoryForUserId_NoValues_FoundNotEmptyList(tester *testing.T) {
 	getResult = history.GetHistoryForUserId("1")
 
 	// Assert
-	if len(getResult) == 0 {
+	if len(getResult.Values) == 0 {
 		tester.Errorf("GetHistoryForUserId: empty result")
 	}
 }

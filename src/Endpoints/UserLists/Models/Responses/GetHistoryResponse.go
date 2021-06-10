@@ -1,17 +1,16 @@
 //
 // SAFETEL PROJECT, 2021
-// SafeTel-Backend
+// SafeTel-Back
 // File description:
-// History Data Model - History.go
+// GetHistoryResponse
 //
 
-package models
+package responsesUserLists
 
-type History struct {
-	UserId string `json:"userId"`
+type GetHistoryResponse struct {
 	Values []struct {
 		Number string `json:"number" bson:"number"`
 		Origin string `json:"origin" bson:"origin"`
 		Time   string `json:"time" bson:"time"`
-	} `json:"history" bson:"history"`
+	} `json:"History" bson:"history"`
 }
