@@ -7,13 +7,11 @@
 
 package models
 
-import "time"
-
 type History struct {
 	UserId string `json:"userId"`
 	Values []struct {
-		Number string    `json:"number" bson:"number"`
-		Origin string    `json:"origin" bson:"origin"`
-		Time   time.Time `json:"time" bson:"time"`
+		Number string `json:"number" bson:"number"`
+		Origin string `json:"origin" bson:"origin"`
+		Time   string `json:"time" bson:"time"`
 	} `json:"history" bson:"history"`
 }
