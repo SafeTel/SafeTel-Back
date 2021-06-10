@@ -7,12 +7,10 @@
 
 package responsesUserLists
 
-import "time"
-
 type GetHistoryResponse struct {
 	Values []struct {
-		Number string    `json:"number" bson:"number"`
-		Origin string    `json:"origin" bson:"origin"`
-		Time   time.Time `json:"time" bson:"time"`
+		Number string `json:"number" bson:"number"`
+		Origin string `json:"origin" bson:"origin"`
+		Time   string `json:"time" bson:"time"`
 	} `json:"history" bson:"History"`
 }
