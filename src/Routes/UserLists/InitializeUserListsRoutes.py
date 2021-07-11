@@ -25,9 +25,11 @@ def InitializeUserListsRoutes(api):
     api.add_resource(AddBlackList, "/user/blacklist")
     api.add_resource(DelBlackList, "/user/blacklist")
     api.add_resource(GetBlackList, "/user/blacklist")
+
     api.add_resource(GetHistory, "/user/history")
     api.add_resource(DelHistory, "/user/history")
     api.add_resource(AddWhiteList, "/user/whitelist")
+
     api.add_resource(DelWhiteList, "/user/whitelist")
     api.add_resource(GetWhiteList, "/user/whitelist")
     api.add_resource(GetGreyList, "/user/greylist")

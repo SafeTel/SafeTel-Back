@@ -19,10 +19,10 @@ api = Api(app)
 # Initialization of routes imports
 from src.Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
 
+InitializeUserListsRoutes(api)
+
 if __name__ == "__main__":
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
-
-    InitializeUserListsRoutes(api)
 
     app.run(debug=False, host='0.0.0.0', port='2407')
