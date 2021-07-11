@@ -1,24 +1,30 @@
 ##
-## EPITECH PROJECT, 2021
+## SAFETEL PROJECT, 2021
 ## SafeTel-Back
 ## File description:
 ## Melchior
 ##
 
+# Client mongo db import
 import pymongo
+
+# Import db settings connextion
 from config import client, password, dbname
 
-### 3.6 or later ###
+# URI to connect to our Atlas DB
 URI_MONGO_ATLAS = 'mongodb+srv://' + client + ':' + password + '@safetel-back-cluster.klq5k.mongodb.net/' + dbname + '?retryWrites=true&w=majority'
 
+# Not found definition
 NOT_FOUND = 404
 
+# Object to represent table User
 class UserDB():
     def __init__(self, db_name=dbname):
         self.client = pymongo.MongoClient(URI_MONGO_ATLAS)
         self.db = self.client[db_name]
         self.Users = self.db['User']
 
+# Object to represent table Blacklist
 class BlacklistDB():
     def __init__(self, db_name=dbname):
         self.client = pymongo.MongoClient(URI_MONGO_ATLAS)
@@ -58,6 +64,7 @@ class BlacklistDB():
         query_values = { "$set": { 'phoneNumbers': updated_values } }
         self.Blacklist.update_one(query, query_values)
 
+# Object to represent table Whitelist
 class WhitelistDB():
     def __init__(self, db_name=dbname):
         self.client = pymongo.MongoClient(URI_MONGO_ATLAS)
@@ -97,6 +104,7 @@ class WhitelistDB():
         query_values = { "$set": { 'phoneNumbers': updated_values } }
         self.Whitelist.update_one(query, query_values)
 
+# Object to represent table History
 class HistoryDB():
     def __init__(self, db_name=dbname):
         self.client = pymongo.MongoClient(URI_MONGO_ATLAS)
