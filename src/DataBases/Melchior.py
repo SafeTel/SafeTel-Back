@@ -34,6 +34,30 @@ class BlacklistDB():
             return NOT_FOUND
         return result
 
+    def addBlacklistNumberForUser(self, id, number):
+        query = {
+            'userId': str(id)
+        }
+        result = self.Blacklist.find_one(query)
+        if result is None:
+            return
+        updated_values = result["phoneNumbers"]
+        updated_values.append(number)
+        query_values = { "$set": { 'phoneNumbers': updated_values } }
+        self.Blacklist.update_one(query, query_values)
+
+    def delBlacklistNumberForUser(self, id, number):
+        query = {
+            'userId': str(id)
+        }
+        result = self.Blacklist.find_one(query)
+        if result is None:
+            return
+        updated_values = result["phoneNumbers"]
+        updated_values.remove(number)
+        query_values = { "$set": { 'phoneNumbers': updated_values } }
+        self.Blacklist.update_one(query, query_values)
+
 class WhitelistDB():
     def __init__(self, db_name=dbname):
         self.client = pymongo.MongoClient(URI_MONGO_ATLAS)
@@ -49,6 +73,30 @@ class WhitelistDB():
             return NOT_FOUND
         return result
 
+    def addWhitelistNumberForUser(self, id, number):
+        query = {
+            'userId': str(id)
+        }
+        result = self.Whitelist.find_one(query)
+        if result is None:
+            return
+        updated_values = result["phoneNumbers"]
+        updated_values.append(number)
+        query_values = { "$set": { 'phoneNumbers': updated_values } }
+        self.Whitelist.update_one(query, query_values)
+
+    def delWhitelistNumberForUser(self, id, number):
+        query = {
+            'userId': str(id)
+        }
+        result = self.Whitelist.find_one(query)
+        if result is None:
+            return
+        updated_values = result["phoneNumbers"]
+        updated_values.remove(number)
+        query_values = { "$set": { 'phoneNumbers': updated_values } }
+        self.Whitelist.update_one(query, query_values)
+
 class HistoryDB():
     def __init__(self, db_name=dbname):
         self.client = pymongo.MongoClient(URI_MONGO_ATLAS)
@@ -63,3 +111,19 @@ class HistoryDB():
         if result is None:
             return NOT_FOUND
         return result
+
+    def delHistoryCallForUser(self, id, number, timestamp):
+        query = {
+            'userId': str(id)
+        }
+        result = self.History.find_one(query)
+        if result is None:
+            return
+        updated_values = result["history"]
+        for i in range(len(updated_values)):
+            if updated_values[i]['number'] == number and updated_values[i]['time'] == str(timestamp):
+                del updated_values[i]
+                break
+        print(updated_values)
+        query_values = { "$set": { 'history': updated_values } }
+        self.History.update_one(query, query_values)

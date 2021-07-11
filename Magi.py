@@ -28,10 +28,14 @@ BlacklistDb = BlacklistDB()
 WhitelistDb = WhitelistDB()
 HistoryDb = HistoryDB()
 
-# Params for $thread_function & launch API (Flask App)
 if __name__ == "__main__":
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 
+    print(HistoryDb.getHistoryForUser(2))
 
-    app.run(debug=False, host='0.0.0.0')
+    HistoryDb.delHistoryCallForUser(2, "0191434133", 0)
+
+    print(HistoryDb.getHistoryForUser(2))
+
+    #app.run(debug=False, host='0.0.0.0')
