@@ -8,8 +8,3 @@ services:
             - 2407:2407
         restart:
             on-failure
-        environment:
-            - DBName=Melchior
-            - DBPassword=aSEFTHUKOM1!
-            - MongoAtlasClusterURI=mongodb+srv://SafeTelBackEndUser:aSEFTHUKOM1!@safetel-back-cluster.klq5k.mongodb.net/Melchior?retryWrites=true&w=majority
-
