@@ -19,5 +19,3 @@ def isValidNumber(data):
 # Validate a string as a valid email
 def isValidEmail(data):
     return re.match(emailRegex, data)
-
-
