@@ -13,11 +13,9 @@ import jwt, config
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
-from Routes.Utils.Types import isValidEmail, isValidNumber
 
 # Melchior DB imports
 from DataBases.Melchior import UserDB
-from DataBases.Utils.MelchiorUtils import createDocumentForNewUser
 
 UserDb = UserDB()
 
