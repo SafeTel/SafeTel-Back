@@ -17,8 +17,10 @@ app = Flask(__name__)
 api = Api(app)
 
 # Initialization of routes imports
+from Routes.UserManagement.InitializeUserManagementRoutes import InitializeUserManagementRoutes
 from Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
 
+InitializeUserManagementRoutes(api)
 InitializeUserListsRoutes(api)
 
 if __name__ == "__main__":

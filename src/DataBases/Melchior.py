@@ -24,6 +24,13 @@ class UserDB():
         self.db = self.client[db_name]
         self.Users = self.db['User']
 
+    def addUser(self, user):
+        self.Users.insert_one(user)
+
+    def exists(self, email):
+        result = self.Users.find_one({'email': email})
+        return True if result is not None else False
+
 # Object to represent table Blacklist
 class BlacklistDB():
     def __init__(self, db_name=dbname):
