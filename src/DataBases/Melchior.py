@@ -31,6 +31,10 @@ class UserDB():
         result = self.Users.find_one({'email': email})
         return True if result is not None else False
 
+    def getUser(self, email):
+        result = self.Users.find_one({'email': email})
+        return result
+
 # Object to represent table Blacklist
 class BlacklistDB():
     def __init__(self, db_name=dbname):
