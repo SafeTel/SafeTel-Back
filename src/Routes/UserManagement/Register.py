@@ -16,6 +16,7 @@ from Routes.Utils.Request import validateBody
 from Routes.Utils.Types import isValidEmail, isValidNumber
 
 from DataBases.Melchior import UserDB
+from DataBases.Utils.MelchiorUtils import createDocumentForNewUser
 
 UserDb = UserDB()
 
@@ -61,6 +62,7 @@ class Register(Resource):
         guid = body["guid"]
 
         UserDb.addUser(body)
+        createDocumentForNewUser(guid)
 
         token = jwt.encode(
             {

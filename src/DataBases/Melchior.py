@@ -38,6 +38,9 @@ class BlacklistDB():
         self.db = self.client[db_name]
         self.Blacklist = self.db['Blacklist']
 
+    def newBlacklist(self, guid):
+        self.Blacklist.insert_one({'guid': guid})
+
     def getBlacklistForUser(self, id):
         query = {
             'userId': str(id)
@@ -78,6 +81,9 @@ class WhitelistDB():
         self.db = self.client[db_name]
         self.Whitelist = self.db['Whitelist']
 
+    def newWhitelist(self, guid):
+        self.Whitelist.insert_one({'guid': guid})
+
     def getWhitelistForUser(self, id):
         query = {
             'userId': str(id)
@@ -117,6 +123,9 @@ class HistoryDB():
         self.client = pymongo.MongoClient(URI_MONGO_ATLAS)
         self.db = self.client[db_name]
         self.History = self.db['History']
+
+    def newHistory(self, guid):
+        self.History.insert_one({'guid': guid})
 
     def getHistoryForUser(self, id):
         query = {
