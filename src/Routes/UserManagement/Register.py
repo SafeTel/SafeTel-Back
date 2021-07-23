@@ -5,16 +5,18 @@
 ## Register
 ##
 
-import time
-
+# Network imports
 from flask import request as fquest
 from flask_restful import Resource
 from datetime import datetime, timedelta
 import jwt, config, uuid
+import time
 
+# Utils check imports
 from Routes.Utils.Request import validateBody
 from Routes.Utils.Types import isValidEmail, isValidNumber
 
+# Melchior DB imports
 from DataBases.Melchior import UserDB
 from DataBases.Utils.MelchiorUtils import createDocumentForNewUser
 
