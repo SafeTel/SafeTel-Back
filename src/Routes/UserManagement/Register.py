@@ -23,7 +23,7 @@ from DataBases.Utils.MelchiorUtils import createDocumentForNewUser
 UserDb = UserDB()
 
 # validate Body for Login route
-def UMLoginBodyValidation(data):
+def UMRegisterBodyValidation(data):
     if not validateBody(
         data,
         ["magicNumber", "email", "userName", "password", "customerInfos", "localization"]):
@@ -49,7 +49,7 @@ class Register(Resource):
     def post(self):
         body = fquest.get_json()
 
-        if not UMLoginBodyValidation(body):
+        if not UMRegisterBodyValidation(body):
             return {
                 'error': 'bad_request'
             }, 400
