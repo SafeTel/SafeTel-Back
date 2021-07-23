@@ -10,10 +10,10 @@ from flask import request as fquest
 from flask_restful import Resource
 
 # Utils import
-from src.Routes.Utils.Request import validateBody
+from Routes.Utils.Request import validateBody
 
 # DB import
-from src.DataBases.Melchior import WhitelistDB
+from DataBases.Melchior import WhitelistDB
 
 WhitelistDb = WhitelistDB()
 
