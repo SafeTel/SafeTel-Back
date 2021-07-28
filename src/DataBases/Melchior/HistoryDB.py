@@ -14,8 +14,9 @@ from config import dbname
 # Melchior uri import
 from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
 
-# Not found definition
-NOT_FOUND = 404
+# PyMongo Internal Utils
+from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
+from DataBases.InternalUtils.DataWorker import InsertDocument, DeleteDocument
 
 # Object to represent table History
 class HistoryDB():
@@ -29,29 +30,19 @@ class HistoryDB():
             "guid": guid,
             "History": []
         }
-        self.History.insert_one(data)
+        InsertDocument(self.History, data)
 
     def deleteHistory(self, guid):
-        self.History.delete_one({'guid': guid})
+        DeleteDocument(self.History, guid)
 
     def exists(self, guid):
-        result = self.History.find_one({'guid': guid})
-        return True if result is not None else False
+        return IsDocument(self.History, guid)
 
-    def getHistoryForUser(self, id):
-        query = {
-            'userId': str(id)
-        }
-        result = self.History.find_one(query)
-        if result is None:
-            return NOT_FOUND
-        return result
+    def getHistoryForUser(self, guid):
+        return GetDocument(self.History, "guid", guid)
 
-    def delHistoryCallForUser(self, id, number, timestamp):
-        query = {
-            'userId': str(id)
-        }
-        result = self.History.find_one(query)
+    def delHistoryCallForUser(self, guid, number, timestamp):
+        result = GetDocument(self.History, "guid", guid)
         if result is None:
             return
         updated_values = result["history"]
@@ -59,6 +50,5 @@ class HistoryDB():
             if updated_values[i]['number'] == number and updated_values[i]['time'] == str(timestamp):
                 del updated_values[i]
                 break
-        print(updated_values)
         query_values = { "$set": { 'history': updated_values } }
         self.History.update_one(query, query_values)

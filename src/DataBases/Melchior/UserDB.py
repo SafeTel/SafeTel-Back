@@ -14,6 +14,10 @@ from config import dbname
 # Melchior uri import
 from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
 
+# PyMongo Internal Utils
+from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
+from DataBases.InternalUtils.DataWorker import InsertDocument, DeleteDocument
+
 # Object to represent table User
 class UserDB():
     def __init__(self, db_name=dbname):
@@ -22,19 +26,16 @@ class UserDB():
         self.Users = self.db['User']
 
     def addUser(self, user_data):
-        self.Users.insert_one(user_data)
+        InsertDocument(self.Users, user_data)
 
     def deleteUser(self, guid):
-        self.Users.delete_one({'guid': guid})
+        DeleteDocument(self.Users, guid)
 
     def exists(self, email):
-        result = self.Users.find_one({'email': email})
-        return True if result is not None else False
+        return IsDocument(self.Users, 'email', email)
 
     def getUser(self, email):
-        result = self.Users.find_one({'email': email})
-        return result
+        return GetDocument(self.Users, 'email', email)
 
     def getUserByGUID(self, guid):
-        result = self.Users.find_one({'guid': guid})
-        return result
+        return GetDocument(self.Users, 'guid', guid)

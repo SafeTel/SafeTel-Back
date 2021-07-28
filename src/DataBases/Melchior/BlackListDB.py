@@ -14,8 +14,12 @@ from config import dbname
 # Melchior uri import
 from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
 
-# Not found definition
-NOT_FOUND = 404
+# PyMongo Internal Utils
+from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
+from DataBases.InternalUtils.DataWorker import InsertDocument, DeleteDocument
+
+# Melchior Internal Utils
+from DataBases.Melchior.InternalUtils.DataWorker import AddNumberToPhoneList, DeleteNumberFromPhoneList
 
 # Object to represent table Blacklist
 class BlacklistDB():
@@ -29,44 +33,19 @@ class BlacklistDB():
             "guid": guid,
             "PhoneNumbers": []
         }
-        self.Blacklist.insert_one(data)
+        InsertDocument(self.Blacklist, data)
 
     def deleteBlacklist(self, guid):
-        self.Blacklist.delete_one({'guid': guid})
+        DeleteDocument(self.Blacklist, guid)
 
     def exists(self, guid):
-        result = self.Blacklist.find_one({'guid': guid})
-        return True if result is not None else False
+        return IsDocument(self.Blacklist, "guid", guid)
 
-    def getBlacklistForUser(self, id):
-        query = {
-            'userId': str(id)
-        }
-        result = self.Blacklist.find_one(query)
-        if result is None:
-            return NOT_FOUND
-        return result
+    def getBlacklistForUser(self, guid):
+        return GetDocument(self.Blacklist, "guid", guid)
 
-    def addBlacklistNumberForUser(self, id, number):
-        query = {
-            'userId': str(id)
-        }
-        result = self.Blacklist.find_one(query)
-        if result is None:
-            return
-        updated_values = result["phoneNumbers"]
-        updated_values.append(number)
-        query_values = { "$set": { 'phoneNumbers': updated_values } }
-        self.Blacklist.update_one(query, query_values)
+    def addBlacklistNumberForUser(self, guid, number):
+        AddNumberToPhoneList(self.Blacklist, guid, number)
 
-    def delBlacklistNumberForUser(self, id, number):
-        query = {
-            'userId': str(id)
-        }
-        result = self.Blacklist.find_one(query)
-        if result is None:
-            return
-        updated_values = result["phoneNumbers"]
-        updated_values.remove(number)
-        query_values = { "$set": { 'phoneNumbers': updated_values } }
-        self.Blacklist.update_one(query, query_values)
+    def delBlacklistNumberForUser(self, guid, number):
+        DeleteNumberFromPhoneList(self.Blacklist, guid, number)

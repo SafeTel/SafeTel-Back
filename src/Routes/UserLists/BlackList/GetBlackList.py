@@ -19,5 +19,5 @@ class GetBlackList(Resource):
     def get(self):
         userId = request.args["userId"]
         return {
-            'BlackList': BlacklistDb.getBlacklistForUser(userId)["phoneNumbers"]
+            'BlackList': BlacklistDb.getBlacklistForUser(userId)["PhoneNumbers"]
         }, 200

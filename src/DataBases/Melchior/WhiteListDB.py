@@ -14,8 +14,12 @@ from config import dbname
 # Melchior uri import
 from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
 
-# Not found definition
-NOT_FOUND = 404
+# PyMongo Internal Utils
+from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
+from DataBases.InternalUtils.DataWorker import InsertDocument, DeleteDocument
+
+# Melchior Internal Utils
+from DataBases.Melchior.InternalUtils.DataWorker import AddNumberToPhoneList, DeleteNumberFromPhoneList
 
 # Object to represent table Whitelist
 class WhitelistDB():
@@ -29,44 +33,19 @@ class WhitelistDB():
             "guid": guid,
             "PhoneNumbers": []
         }
-        self.Whitelist.insert_one(data)
+        InsertDocument(self.Whitelist, data)
 
     def deleteWhitelist(self, guid):
-        self.Whitelist.delete_one({'guid': guid})
+        DeleteDocument(self.Whitelist, guid)
 
     def exists(self, guid):
-        result = self.Whitelist.find_one({'guid': guid})
-        return True if result is not None else False
+        return IsDocument(self.Whitelist, "guid", guid)
 
-    def getWhitelistForUser(self, id):
-        query = {
-            'userId': str(id)
-        }
-        result = self.Whitelist.find_one(query)
-        if result is None:
-            return NOT_FOUND
-        return result
+    def getWhitelistForUser(self, guid):
+        return GetDocument(self.Whitelist, "guid", guid)
 
-    def addWhitelistNumberForUser(self, id, number):
-        query = {
-            'userId': str(id)
-        }
-        result = self.Whitelist.find_one(query)
-        if result is None:
-            return
-        updated_values = result["phoneNumbers"]
-        updated_values.append(number)
-        query_values = { "$set": { 'phoneNumbers': updated_values } }
-        self.Whitelist.update_one(query, query_values)
+    def addWhitelistNumberForUser(self, guid, number):
+        AddNumberToPhoneList(self.Whitelist, guid, number)
 
-    def delWhitelistNumberForUser(self, id, number):
-        query = {
-            'userId': str(id)
-        }
-        result = self.Whitelist.find_one(query)
-        if result is None:
-            return
-        updated_values = result["phoneNumbers"]
-        updated_values.remove(number)
-        query_values = { "$set": { 'phoneNumbers': updated_values } }
-        self.Whitelist.update_one(query, query_values)
+    def delWhitelistNumberForUser(self, guid, number):
+        DeleteNumberFromPhoneList(self.Whitelist, guid, number)

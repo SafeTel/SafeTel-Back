@@ -28,5 +28,5 @@ class AddBlackList(Resource):
         number = body["number"]
         BlacklistDb.addBlacklistNumberForUser(userId, number)
         return {
-            'BlackList': BlacklistDb.getBlacklistForUser(userId)["phoneNumbers"]
+            'BlackList': BlacklistDb.getBlacklistForUser(userId)["PhoneNumbers"]
         }, 200
