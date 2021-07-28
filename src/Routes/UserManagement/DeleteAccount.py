@@ -20,6 +20,7 @@ from DataBases.Utils.MelchiorUtils import deleteDocumentForUser, isDeletedDocume
 
 UserDb = UserDB()
 
+# validate Body for DeleteAccount route
 def UMDeleteAccountBodyValidation(data):
     if not validateBody(
         data,
@@ -27,6 +28,7 @@ def UMDeleteAccountBodyValidation(data):
         return False
     return True
 
+# Route to delete an account from an auth user
 class DeleteAccount(Resource):
     def delete(self):
         body = fquest.get_json()
