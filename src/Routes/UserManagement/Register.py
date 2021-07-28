@@ -75,5 +75,6 @@ class Register(Resource):
         )
         return {
             'created': True,
+            'userName': body["userName"],
             'token': token,
         }, 200
