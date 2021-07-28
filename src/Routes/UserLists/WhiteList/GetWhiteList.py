@@ -11,7 +11,7 @@ from flask.globals import request
 from flask_restful import Resource
 
 # DB import
-from DataBases.Melchior import WhitelistDB
+from DataBases.Melchior.WhiteListDB import WhitelistDB
 
 WhitelistDb = WhitelistDB()
 

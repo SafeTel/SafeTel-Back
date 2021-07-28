@@ -13,7 +13,7 @@ from flask_restful import Resource
 from Routes.Utils.Request import validateBody
 
 # DB import
-from DataBases.Melchior import BlacklistDB
+from DataBases.Melchior.BlackListDB import BlacklistDB
 
 BlacklistDb = BlacklistDB()
 

@@ -6,7 +6,9 @@
 ##
 
 # Melchior DB imports
-from DataBases.Melchior import BlacklistDB, WhitelistDB, HistoryDB
+from DataBases.Melchior.BlackListDB import BlacklistDB
+from DataBases.Melchior.WhiteListDB import WhitelistDB
+from DataBases.Melchior.HistoryDB import HistoryDB
 
 BlacklistDb = BlacklistDB()
 WhitelistDb = WhitelistDB()

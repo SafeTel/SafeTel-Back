@@ -13,7 +13,7 @@ from flask_restful import Resource
 from Routes.Utils.Request import validateBody
 
 # DB import
-from DataBases.Melchior import HistoryDB
+from DataBases.Melchior.HistoryDB import HistoryDB
 
 HistoryDb = HistoryDB()
 
