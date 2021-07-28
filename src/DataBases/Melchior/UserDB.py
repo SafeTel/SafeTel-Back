@@ -29,7 +29,7 @@ class UserDB():
         InsertDocument(self.Users, user_data)
 
     def deleteUser(self, guid):
-        DeleteDocument(self.Users, guid)
+        DeleteDocument(self.Users, {'guid': guid})
 
     def exists(self, email):
         return IsDocument(self.Users, 'email', email)

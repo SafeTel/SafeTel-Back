@@ -11,5 +11,5 @@ import pymongo
 def InsertDocument(db, data):
     db.insert_one(data)
 
-def DeleteDocument(db, data):
-    db.delete_one(data)
+def DeleteDocument(db, guid):
+    db.delete_one(guid)

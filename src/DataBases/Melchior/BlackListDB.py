@@ -36,7 +36,7 @@ class BlacklistDB():
         InsertDocument(self.Blacklist, data)
 
     def deleteBlacklist(self, guid):
-        DeleteDocument(self.Blacklist, guid)
+        DeleteDocument(self.Blacklist, {'guid': guid})
 
     def exists(self, guid):
         return IsDocument(self.Blacklist, "guid", guid)

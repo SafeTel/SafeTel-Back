@@ -36,7 +36,7 @@ class WhitelistDB():
         InsertDocument(self.Whitelist, data)
 
     def deleteWhitelist(self, guid):
-        DeleteDocument(self.Whitelist, guid)
+        DeleteDocument(self.Whitelist, {'guid': guid})
 
     def exists(self, guid):
         return IsDocument(self.Whitelist, "guid", guid)

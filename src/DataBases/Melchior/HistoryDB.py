@@ -33,10 +33,10 @@ class HistoryDB():
         InsertDocument(self.History, data)
 
     def deleteHistory(self, guid):
-        DeleteDocument(self.History, guid)
+        DeleteDocument(self.History, {'guid': guid})
 
     def exists(self, guid):
-        return IsDocument(self.History, guid)
+        return IsDocument(self.History, "guid", guid)
 
     def getHistoryForUser(self, guid):
         return GetDocument(self.History, "guid", guid)
