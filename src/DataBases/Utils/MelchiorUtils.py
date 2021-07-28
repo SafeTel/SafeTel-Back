@@ -17,3 +17,15 @@ def createDocumentForNewUser(guid):
     BlacklistDb.newBlacklist(guid)
     WhitelistDb.newWhitelist(guid)
     HistoryDb.newHistory(guid)
+
+def deleteDocumentForUser(guid):
+    BlacklistDb.deleteBlacklist(guid)
+    WhitelistDb.deleteWhitelist(guid)
+    HistoryDb.deleteHistory(guid)
+
+def isDeletedDocumentForUser(guid):
+    if (not BlacklistDb.exists(guid)
+    and not WhitelistDb.exists(guid)
+    and not HistoryDb.exists(guid)):
+        return True
+    return False
