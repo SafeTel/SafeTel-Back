@@ -12,7 +12,7 @@ import pymongo
 from config import dbname
 
 # Melchior uri import
-from DataBases.MelchiorConfig import URI_MELCHIOR
+from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
 
 # Object to represent table User
 class UserDB():
