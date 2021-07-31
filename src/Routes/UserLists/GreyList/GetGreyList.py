@@ -24,6 +24,6 @@ class GetGreyList(Resource):
     def get(self):
         userId = request.args["userId"]
         return {
-            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["phoneNumbers"],
-            'BlackList': BlacklistDb.getBlacklistForUser(userId)["phoneNumbers"]
+            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["PhoneNumbers"],
+            'BlackList': BlacklistDb.getBlacklistForUser(userId)["PhoneNumbers"]
         }, 200

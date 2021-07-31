@@ -29,5 +29,5 @@ class DelHistory(Resource):
         time = body["time"]
         HistoryDb.delHistoryCallForUser(userId, number, time)
         return {
-            'History': HistoryDb.getHistoryForUser(userId)["history"]
+            'History': HistoryDb.getHistoryForUser(userId)["History"]
         }, 200

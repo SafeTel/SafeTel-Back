@@ -19,5 +19,5 @@ class GetHistory(Resource):
     def get(self):
         userId = request.args["userId"]
         return {
-            'History': HistoryDb.getHistoryForUser(userId)["history"]
+            'History': HistoryDb.getHistoryForUser(userId)["History"]
         }, 200

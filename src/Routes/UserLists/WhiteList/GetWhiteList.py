@@ -19,5 +19,5 @@ class GetWhiteList(Resource):
     def get(self):
         userId = request.args["userId"]
         return {
-            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["phoneNumbers"]
+            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["PhoneNumbers"]
         }, 200

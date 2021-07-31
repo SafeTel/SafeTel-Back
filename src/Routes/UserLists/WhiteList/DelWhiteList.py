@@ -28,6 +28,6 @@ class DelWhiteList(Resource):
         number = body["number"]
         WhitelistDb.delWhitelistNumberForUser(userId, number)
         return {
-            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["phoneNumbers"]
+            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["PhoneNumbers"]
         }, 200
 

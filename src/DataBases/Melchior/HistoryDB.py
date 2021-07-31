@@ -45,7 +45,7 @@ class HistoryDB():
         result = GetDocument(self.History, "guid", guid)
         if result is None:
             return
-        updated_values = result["history"]
+        updated_values = result["History"]
         for i in range(len(updated_values)):
             if updated_values[i]['number'] == number and updated_values[i]['time'] == str(timestamp):
                 del updated_values[i]
