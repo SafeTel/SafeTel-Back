@@ -24,12 +24,22 @@ class UserDB():
         self.db = self.client[db_name]
         self.Users = self.db['User']
 
+    def addUser(self, user):
+        self.Users.insert_one(user)
+
+    def exists(self, email):
+        result = self.Users.find_one({'email': email})
+        return True if result is not None else False
+
 # Object to represent table Blacklist
 class BlacklistDB():
     def __init__(self, db_name=dbname):
         self.client = pymongo.MongoClient(URI_MONGO_ATLAS)
         self.db = self.client[db_name]
         self.Blacklist = self.db['Blacklist']
+
+    def newBlacklist(self, guid):
+        self.Blacklist.insert_one({'guid': guid})
 
     def getBlacklistForUser(self, id):
         query = {
@@ -71,6 +81,9 @@ class WhitelistDB():
         self.db = self.client[db_name]
         self.Whitelist = self.db['Whitelist']
 
+    def newWhitelist(self, guid):
+        self.Whitelist.insert_one({'guid': guid})
+
     def getWhitelistForUser(self, id):
         query = {
             'userId': str(id)
@@ -110,6 +123,9 @@ class HistoryDB():
         self.client = pymongo.MongoClient(URI_MONGO_ATLAS)
         self.db = self.client[db_name]
         self.History = self.db['History']
+
+    def newHistory(self, guid):
+        self.History.insert_one({'guid': guid})
 
     def getHistoryForUser(self, id):
         query = {

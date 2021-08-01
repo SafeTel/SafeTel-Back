@@ -10,5 +10,7 @@ def validateBody(json, keys):
     for i in keys:
         if not i in json:
             return False
+        else:
+            if json[i] == "":
+                return False
     return True
-
