@@ -11,15 +11,15 @@ from flask import Flask
 from flask_restful import Api
 
 # Endpoints imports
-from src.Routes.UserLists.BlackList.AddBlackList import AddBlackList
-from src.Routes.UserLists.BlackList.DelBlackList import DelBlackList
-from src.Routes.UserLists.BlackList.GetBlackList import GetBlackList
-from src.Routes.UserLists.History.DelHistory import DelHistory
-from src.Routes.UserLists.History.GetHistory import GetHistory
-from src.Routes.UserLists.WhiteList.AddWhiteList import AddWhiteList
-from src.Routes.UserLists.WhiteList.DelWhiteList import DelWhiteList
-from src.Routes.UserLists.WhiteList.GetWhiteList import GetWhiteList
-from src.Routes.UserLists.GreyList.GetGreyList import GetGreyList
+from Routes.UserLists.BlackList.AddBlackList import AddBlackList
+from Routes.UserLists.BlackList.DelBlackList import DelBlackList
+from Routes.UserLists.BlackList.GetBlackList import GetBlackList
+from Routes.UserLists.History.DelHistory import DelHistory
+from Routes.UserLists.History.GetHistory import GetHistory
+from Routes.UserLists.WhiteList.AddWhiteList import AddWhiteList
+from Routes.UserLists.WhiteList.DelWhiteList import DelWhiteList
+from Routes.UserLists.WhiteList.GetWhiteList import GetWhiteList
+from Routes.UserLists.GreyList.GetGreyList import GetGreyList
 
 def InitializeUserListsRoutes(api):
     api.add_resource(AddBlackList, "/user/blacklist")

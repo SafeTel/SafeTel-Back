@@ -17,7 +17,7 @@ app = Flask(__name__)
 api = Api(app)
 
 # Initialization of routes imports
-from src.Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
+from Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
 
 InitializeUserListsRoutes(api)
 

@@ -11,10 +11,10 @@ from flask.globals import request
 from flask_restful import Resource
 
 # Utils import
-from src.Routes.Utils.Request import validateBody
+from Routes.Utils.Request import validateBody
 
 # DB import
-from src.DataBases.Melchior import BlacklistDB, WhitelistDB
+from DataBases.Melchior import BlacklistDB, WhitelistDB
 
 BlacklistDb = BlacklistDB()
 WhitelistDb = WhitelistDB()

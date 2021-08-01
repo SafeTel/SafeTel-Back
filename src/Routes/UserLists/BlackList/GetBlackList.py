@@ -11,7 +11,7 @@ from flask.globals import request
 from flask_restful import Resource
 
 # DB import
-from src.DataBases.Melchior import BlacklistDB
+from DataBases.Melchior import BlacklistDB
 
 BlacklistDb = BlacklistDB()
 

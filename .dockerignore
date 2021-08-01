@@ -1,11 +1,11 @@
 .editorconfig
 .git
-AUTHORS.md
-CONTRIBUTING.md
+*.md
 LICENSE
 Makefile
 NOTICE
-README.md
 arm/
 powerpc/
 mips/
+
+/images

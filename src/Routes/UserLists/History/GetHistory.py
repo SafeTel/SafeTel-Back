@@ -11,7 +11,7 @@ from flask.globals import request
 from flask_restful import Resource
 
 # DB import
-from src.DataBases.Melchior import HistoryDB
+from DataBases.Melchior import HistoryDB
 
 HistoryDb = HistoryDB()
 
