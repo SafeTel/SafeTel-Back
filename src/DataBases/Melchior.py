@@ -27,12 +27,19 @@ class UserDB():
     def addUser(self, user_data):
         self.Users.insert_one(user_data)
 
+    def deleteUser(self, guid):
+        self.Users.delete_one({'guid': guid})
+
     def exists(self, email):
         result = self.Users.find_one({'email': email})
         return True if result is not None else False
 
     def getUser(self, email):
         result = self.Users.find_one({'email': email})
+        return result
+
+    def getUserByGUID(self, guid):
+        result = self.Users.find_one({'guid': guid})
         return result
 
 # Object to represent table Blacklist
@@ -48,6 +55,13 @@ class BlacklistDB():
             "PhoneNumbers": []
         }
         self.Blacklist.insert_one(data)
+
+    def deleteBlacklist(self, guid):
+        self.Blacklist.delete_one({'guid': guid})
+
+    def exists(self, guid):
+        result = self.Blacklist.find_one({'guid': guid})
+        return True if result is not None else False
 
     def getBlacklistForUser(self, id):
         query = {
@@ -96,6 +110,13 @@ class WhitelistDB():
         }
         self.Whitelist.insert_one(data)
 
+    def deleteWhitelist(self, guid):
+        self.Whitelist.delete_one({'guid': guid})
+
+    def exists(self, guid):
+        result = self.Whitelist.find_one({'guid': guid})
+        return True if result is not None else False
+
     def getWhitelistForUser(self, id):
         query = {
             'userId': str(id)
@@ -142,6 +163,13 @@ class HistoryDB():
             "History": []
         }
         self.History.insert_one(data)
+
+    def deleteHistory(self, guid):
+        self.History.delete_one({'guid': guid})
+
+    def exists(self, guid):
+        result = self.History.find_one({'guid': guid})
+        return True if result is not None else False
 
     def getHistoryForUser(self, id):
         query = {
