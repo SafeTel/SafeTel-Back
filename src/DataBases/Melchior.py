@@ -24,12 +24,16 @@ class UserDB():
         self.db = self.client[db_name]
         self.Users = self.db['User']
 
-    def addUser(self, user):
-        self.Users.insert_one(user)
+    def addUser(self, user_data):
+        self.Users.insert_one(user_data)
 
     def exists(self, email):
         result = self.Users.find_one({'email': email})
         return True if result is not None else False
+
+    def getUser(self, email):
+        result = self.Users.find_one({'email': email})
+        return result
 
 # Object to represent table Blacklist
 class BlacklistDB():
@@ -39,7 +43,11 @@ class BlacklistDB():
         self.Blacklist = self.db['Blacklist']
 
     def newBlacklist(self, guid):
-        self.Blacklist.insert_one({'guid': guid})
+        data = {
+            "guid": guid,
+            "PhoneNumbers": []
+        }
+        self.Blacklist.insert_one(data)
 
     def getBlacklistForUser(self, id):
         query = {
@@ -82,7 +90,11 @@ class WhitelistDB():
         self.Whitelist = self.db['Whitelist']
 
     def newWhitelist(self, guid):
-        self.Whitelist.insert_one({'guid': guid})
+        data = {
+            "guid": guid,
+            "PhoneNumbers": []
+        }
+        self.Whitelist.insert_one(data)
 
     def getWhitelistForUser(self, id):
         query = {
@@ -125,7 +137,11 @@ class HistoryDB():
         self.History = self.db['History']
 
     def newHistory(self, guid):
-        self.History.insert_one({'guid': guid})
+        data = {
+            "guid": guid,
+            "History": []
+        }
+        self.History.insert_one(data)
 
     def getHistoryForUser(self, id):
         query = {
