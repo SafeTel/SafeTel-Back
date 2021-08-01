@@ -13,7 +13,7 @@ from flask_restful import Resource
 from Routes.Utils.Request import validateBody
 
 # DB import
-from DataBases.Melchior import BlacklistDB
+from DataBases.Melchior.BlackListDB import BlacklistDB
 
 BlacklistDb = BlacklistDB()
 
@@ -28,5 +28,5 @@ class AddBlackList(Resource):
         number = body["number"]
         BlacklistDb.addBlacklistNumberForUser(userId, number)
         return {
-            'BlackList': BlacklistDb.getBlacklistForUser(userId)["phoneNumbers"]
+            'BlackList': BlacklistDb.getBlacklistForUser(userId)["PhoneNumbers"]
         }, 200

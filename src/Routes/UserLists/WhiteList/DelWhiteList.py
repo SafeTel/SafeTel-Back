@@ -13,7 +13,7 @@ from flask_restful import Resource
 from Routes.Utils.Request import validateBody
 
 # DB import
-from DataBases.Melchior import WhitelistDB
+from DataBases.Melchior.WhiteListDB import WhitelistDB
 
 WhitelistDb = WhitelistDB()
 
@@ -28,6 +28,6 @@ class DelWhiteList(Resource):
         number = body["number"]
         WhitelistDb.delWhitelistNumberForUser(userId, number)
         return {
-            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["phoneNumbers"]
+            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["PhoneNumbers"]
         }, 200
 

@@ -15,7 +15,7 @@ import jwt, config
 from Routes.Utils.Request import validateBody
 
 # Melchior DB imports
-from DataBases.Melchior import UserDB
+from DataBases.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
 

@@ -11,7 +11,7 @@ from flask.globals import request
 from flask_restful import Resource
 
 # DB import
-from DataBases.Melchior import BlacklistDB
+from DataBases.Melchior.BlackListDB import BlacklistDB
 
 BlacklistDb = BlacklistDB()
 
@@ -19,5 +19,5 @@ class GetBlackList(Resource):
     def get(self):
         userId = request.args["userId"]
         return {
-            'BlackList': BlacklistDb.getBlacklistForUser(userId)["phoneNumbers"]
+            'BlackList': BlacklistDb.getBlacklistForUser(userId)["PhoneNumbers"]
         }, 200

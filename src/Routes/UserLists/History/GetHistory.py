@@ -11,7 +11,7 @@ from flask.globals import request
 from flask_restful import Resource
 
 # DB import
-from DataBases.Melchior import HistoryDB
+from DataBases.Melchior.HistoryDB import HistoryDB
 
 HistoryDb = HistoryDB()
 
@@ -19,5 +19,5 @@ class GetHistory(Resource):
     def get(self):
         userId = request.args["userId"]
         return {
-            'History': HistoryDb.getHistoryForUser(userId)["history"]
+            'History': HistoryDb.getHistoryForUser(userId)["History"]
         }, 200

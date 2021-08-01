@@ -13,7 +13,7 @@ from flask_restful import Resource
 from Routes.Utils.Request import validateBody
 
 # DB import
-from DataBases.Melchior import HistoryDB
+from DataBases.Melchior.HistoryDB import HistoryDB
 
 HistoryDb = HistoryDB()
 
@@ -29,5 +29,5 @@ class DelHistory(Resource):
         time = body["time"]
         HistoryDb.delHistoryCallForUser(userId, number, time)
         return {
-            'History': HistoryDb.getHistoryForUser(userId)["history"]
+            'History': HistoryDb.getHistoryForUser(userId)["History"]
         }, 200
