@@ -51,6 +51,6 @@ class UpdateEmail(Resource):
         UpdateAccountEmail(UserDb.Users, data['guid'], body['email'])
 
         return {
-            'deleted': not UserDb.exists(result['email'])
+            'updated': not UserDb.exists(result['email'])
         }, 200
 
