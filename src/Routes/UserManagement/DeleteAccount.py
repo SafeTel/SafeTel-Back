@@ -56,9 +56,6 @@ class DeleteAccount(Resource):
         if isDeletedDocumentForUser(data['guid']):
             UserDb.deleteUser(data['guid'])
 
-        # time.sleep(10)
-        # TODO: see why mongodb is so much to delete documents
-
         return {
             'deleted': UserDb.exists(result['email'])
         }, 200
