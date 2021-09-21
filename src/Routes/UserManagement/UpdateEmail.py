@@ -8,11 +8,11 @@
 # Network imports
 from flask import request as fquest
 from flask_restful import Resource
-import jwt, config
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
 from Routes.Utils.Types import isValidEmail
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
 
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
@@ -40,7 +40,11 @@ class UpdateEmail(Resource):
                 'error': 'bad_request'
             }, 400
 
-        data = jwt.decode(jwt=body['token'], key=config.SECRET_KEY, algorithms='HS256')
+        data = DeserializeJWT(body["token"])
+        if data is None:
+            return {
+                'error': 'bad_token'
+            }, 400
 
         result = UserDb.getUserByGUID(data['guid'])
         if result is None:

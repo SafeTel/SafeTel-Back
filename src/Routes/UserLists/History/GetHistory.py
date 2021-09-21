@@ -13,11 +13,20 @@ from flask_restful import Resource
 # DB import
 from DataBases.Melchior.HistoryDB import HistoryDB
 
+# Utils import
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+
 HistoryDb = HistoryDB()
 
 class GetHistory(Resource):
     def get(self):
-        userId = request.args["userId"]
+        data = DeserializeJWT(request.args["token"])
+        if data is None:
+            return {
+                'error': 'bad_token'
+            }, 400
+
+        guid = data['guid']
         return {
-            'History': HistoryDb.getHistoryForUser(userId)["History"]
+            'History': HistoryDb.getHistoryForUser(guid)["History"]
         }, 200

@@ -9,7 +9,10 @@
 from flask import request as fquest
 from flask_restful import Resource
 from datetime import datetime, timedelta
-import jwt, config
+
+# jwt provider import
+from Routes.Utils.JWTProvider.Roles import Roles
+from Routes.Utils.JWTProvider.Provider import SerializeJWT
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
@@ -46,14 +49,7 @@ class Login(Resource):
                 'error': 'this email is not linked to an account'
             }, 400
 
-        token = jwt.encode(
-            {
-                'guid': user["guid"],
-                'exp': datetime.utcnow() + timedelta(hours=24)
-            },
-            config.SECRET_KEY
-        )
         return {
             'userName': user["userName"],
-            'token': token,
+            'token': SerializeJWT(user["guid"], Roles.USER)
         }, 200

@@ -11,6 +11,7 @@ from flask_restful import Resource
 
 # Utils import
 from Routes.Utils.Request import validateBody
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
 
 # DB import
 from DataBases.Melchior.WhiteListDB import WhitelistDB
@@ -19,14 +20,21 @@ WhitelistDb = WhitelistDB()
 
 class AddWhiteList(Resource):
     def post(self):
-        if not validateBody(fquest.get_json(), ["userId", "number"]):
+        if not validateBody(fquest.get_json(), ["token", "number"]):
             return {
                 'error': 'bad_request'
             }, 400
         body = fquest.get_json()
-        userId = body["userId"]
+
+        data = DeserializeJWT(body["token"])
+        if data is None:
+            return {
+                'error': 'bad_token'
+            }, 400
+
+        guid = data['guid']
         number = body["number"]
-        WhitelistDb.addWhitelistNumberForUser(userId, number)
+        WhitelistDb.addWhitelistNumberForUser(guid, number)
         return {
-            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["PhoneNumbers"]
+            'WhiteList': WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"]
         }, 200

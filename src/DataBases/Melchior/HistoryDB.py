@@ -42,6 +42,9 @@ class HistoryDB():
         return GetDocument(self.History, "guid", guid)
 
     def delHistoryCallForUser(self, guid, number, timestamp):
+        query = {
+            'guid': str(guid)
+        }
         result = GetDocument(self.History, "guid", guid)
         if result is None:
             return

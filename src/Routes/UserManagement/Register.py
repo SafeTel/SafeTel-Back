@@ -9,12 +9,14 @@
 from flask import request as fquest
 from flask_restful import Resource
 from datetime import datetime, timedelta
-import jwt, config, uuid
+import uuid
 import time
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
 from Routes.Utils.Types import isValidEmail, isValidNumber
+from Routes.Utils.JWTProvider.Provider import SerializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
 
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
@@ -66,15 +68,8 @@ class Register(Resource):
         UserDb.addUser(body)
         createDocumentForNewUser(guid)
 
-        token = jwt.encode(
-            {
-                'guid': guid,
-                'exp': datetime.utcnow() + timedelta(hours=24)
-            },
-            config.SECRET_KEY
-        )
         return {
             'created': True,
             'userName': body["userName"],
-            'token': token,
+            'token': SerializeJWT(guid, Roles.USER)
         }, 200

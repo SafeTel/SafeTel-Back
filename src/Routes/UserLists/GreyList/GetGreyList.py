@@ -12,6 +12,7 @@ from flask_restful import Resource
 
 # Utils import
 from Routes.Utils.Request import validateBody
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
 
 # DB import
 from DataBases.Melchior.BlackListDB import BlacklistDB
@@ -22,8 +23,14 @@ WhitelistDb = WhitelistDB()
 
 class GetGreyList(Resource):
     def get(self):
-        userId = request.args["userId"]
+        data = DeserializeJWT(request.args["token"])
+        if data is None:
+            return {
+                'error': 'bad_token'
+            }, 400
+
+        guid = data['guid']
         return {
-            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["PhoneNumbers"],
-            'BlackList': BlacklistDb.getBlacklistForUser(userId)["PhoneNumbers"]
+            'WhiteList': WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"],
+            'BlackList': BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"]
         }, 200
