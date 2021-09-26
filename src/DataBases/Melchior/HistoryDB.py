@@ -50,8 +50,8 @@ class HistoryDB():
             return
         updated_values = result["History"]
         for i in range(len(updated_values)):
-            if updated_values[i]['number'] == number and updated_values[i]['time'] == str(timestamp):
+            if updated_values[i]['number'] == number and updated_values[i]['time'] == timestamp:
                 del updated_values[i]
                 break
-        query_values = { "$set": { 'history': updated_values } }
+        query_values = { "$set": { 'History': updated_values } }
         self.History.update_one(query, query_values)
