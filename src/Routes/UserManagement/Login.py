@@ -36,14 +36,12 @@ def UMLoginBodyValidation(data):
 class Login(Resource):
     def post(self):
         body = fquest.get_json()
-
         if not UMLoginBodyValidation(body):
             return {
                 'error': 'bad_request'
             }, 400
 
         user = UserDb.getUser(body["email"])
-
         if user == None:
             return {
                 'error': 'this email is not linked to an account'

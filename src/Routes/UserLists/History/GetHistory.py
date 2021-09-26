@@ -15,12 +15,14 @@ from DataBases.Melchior.HistoryDB import HistoryDB
 
 # Utils import
 from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
 
 HistoryDb = HistoryDB()
 
+# Route to get the whitelist of the user
 class GetHistory(Resource):
     def get(self):
-        data = DeserializeJWT(request.args["token"])
+        data = DeserializeJWT(request.args["token"], Roles.USER)
         if data is None:
             return {
                 'error': 'bad_token'

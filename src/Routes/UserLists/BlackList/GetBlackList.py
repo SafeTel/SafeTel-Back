@@ -12,15 +12,17 @@ from flask_restful import Resource
 
 # Utils import
 from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
 
 # DB import
 from DataBases.Melchior.BlackListDB import BlacklistDB
 
 BlacklistDb = BlacklistDB()
 
+# Route to get the blacklist of the user
 class GetBlackList(Resource):
     def get(self):
-        data = DeserializeJWT(request.args["token"])
+        data = DeserializeJWT(request.args["token"], Roles.USER)
         if data is None:
             return {
                 'error': 'bad_token'

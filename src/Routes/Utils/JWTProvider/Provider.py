@@ -31,7 +31,7 @@ def SerializeJWT(guid, role):
         config.SECRET_KEY
     )
 
-def DeserializeJWT(str):
+def DeserializeJWT(str, role):
     if (not VerifyJWT(str)):
         return None
 
@@ -39,9 +39,11 @@ def DeserializeJWT(str):
 
     if (not Roles.has_value(data['role']) or UserDb.existByGUID(data['guid']) is False):
         return None
+    if (not data['role'] == role):
+        return None
     return data
 
 def VerifyJWT(str):
-    if (len(str) < 10):
+    if (str == None or len(str) < 10):
         return False
     return True

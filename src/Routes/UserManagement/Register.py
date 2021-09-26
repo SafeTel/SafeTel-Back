@@ -50,7 +50,6 @@ def UMRegisterBodyValidation(data):
 class Register(Resource):
     def post(self):
         body = fquest.get_json()
-
         if not UMRegisterBodyValidation(body):
             return {
                 'error': 'bad_request'

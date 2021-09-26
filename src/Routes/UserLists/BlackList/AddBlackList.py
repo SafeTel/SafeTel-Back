@@ -12,22 +12,31 @@ from flask_restful import Resource
 # Utils import
 from Routes.Utils.Request import validateBody
 from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
 
 # DB import
 from DataBases.Melchior.BlackListDB import BlacklistDB
 
 BlacklistDb = BlacklistDB()
 
+# Validate Body for AddBlackList route
+def ULAddBlackListValidation(data):
+    if not validateBody(
+        data,
+        ["token", "number"]):
+        return False
+    return True
+
+# Route to add a number to the blacklist of the user
 class AddBlackList(Resource):
     def post(self):
-        if not validateBody(fquest.get_json(), ["token", "number"]):
+        body = fquest.get_json()
+        if not ULAddBlackListValidation(body):
             return {
                 'error': 'bad_request'
             }, 400
 
-        body = fquest.get_json()
-
-        data = DeserializeJWT(body["token"])
+        data = DeserializeJWT(body["token"], Roles.USER)
         if data is None:
             return {
                 'error': 'bad_token'

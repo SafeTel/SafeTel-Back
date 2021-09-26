@@ -8,12 +8,11 @@
 # Network imports
 from flask import request as fquest
 from flask_restful import Resource
-from datetime import datetime, timedelta
-import jwt, config, time
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
 from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
 
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
@@ -21,7 +20,7 @@ from DataBases.Utils.MelchiorUtils import deleteDocumentForUser, isDeletedDocume
 
 UserDb = UserDB()
 
-# validate Body for DeleteAccount route
+# Validate Body for DeleteAccount route
 def UMDeleteAccountBodyValidation(data):
     if not validateBody(
         data,
@@ -33,13 +32,12 @@ def UMDeleteAccountBodyValidation(data):
 class DeleteAccount(Resource):
     def delete(self):
         body = fquest.get_json()
-
         if not UMDeleteAccountBodyValidation(body):
             return {
                 'error': 'bad_request'
             }, 400
 
-        data = DeserializeJWT(body["token"])
+        data = DeserializeJWT(body["token"], Roles.USER)
         if data is None:
             return {
                 'error': 'bad_token'
