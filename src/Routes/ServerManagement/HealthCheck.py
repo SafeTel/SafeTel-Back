@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2021
 ## SafeTel-Back
 ## File description:
-## DeleteAccount
+## HealthCheck
 ##
 
 # Client mongo db import
