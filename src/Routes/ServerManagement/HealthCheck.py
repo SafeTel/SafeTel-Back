@@ -35,7 +35,7 @@ def getSoftwareData():
         "github_repo": "https://github.com/SafeTel/SafeTel-Back"}
 
 
-# Route to delete an account from an auth user
+# Route to health check
 class HealthCheck(Resource):
     def checkMongoDBAvailability(self):
         client = pymongo.MongoClient(URI_MELCHIOR)
