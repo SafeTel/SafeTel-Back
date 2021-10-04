@@ -9,7 +9,7 @@ from enum import IntEnum
 
 class Roles(IntEnum):
     ADMIN = 1
-    DEVLOPPER = 2
+    DEVELOPER = 2
     USER = 3
 
     @classmethod
