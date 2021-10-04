@@ -21,7 +21,7 @@ from Routes.Utils.Request import validateBody
 # Melchior uri import
 from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
 
-def HealthCheckBodyValidation(data):
+def SMHealthCheckBodyValidation(data):
     if not validateBody(
         data,
         ["magicNumber"]):
@@ -30,54 +30,12 @@ def HealthCheckBodyValidation(data):
         return False
     return True
 
-def getSoftwareData():
-    return {"maintainer": "Safetel",
-        "github_repo": "https://github.com/SafeTel/SafeTel-Back"}
-
-
 # Route to health check
 class HealthCheck(Resource):
-    def checkMongoDBAvailability(self):
-        client = pymongo.MongoClient(URI_MELCHIOR)
-        
-        # Check if we can access safetel database
-        self.safetelDatabase = client.Melchior
-
-        return True, "Safetel mongoDB available"
-
-
-    # Check if we can access the collections
-    def checkMongoDBCollectionAvailability_User(self):
-        _ = self.safetelDatabase.User
-        return True, 'User collection available'
-
-    def checkMongoDBCollectionAvailability_Blacklist(self):
-        _ = self.safetelDatabase.Blacklist
-        return True, 'Blacklist collection available'
-
-    def checkMongoDBCollectionAvailability_Whitelist(self):
-        _ = self.safetelDatabase.Whitelist
-        return True, 'Whitelist collection available'
-
-    def checkMongoDBCollectionAvailability_History(self):
-        _ = self.safetelDatabase.History
-        return True, 'History collection available'
-
-    def serverCheck(self):
-        self.health = HealthCheckFromPackage()
-        self.envdump = EnvironmentDump()
-
-        self.health.add_check(self.checkMongoDBAvailability)
-        self.health.add_check(self.checkMongoDBCollectionAvailability_User)
-        self.health.add_check(self.checkMongoDBCollectionAvailability_Blacklist)
-        self.health.add_check(self.checkMongoDBCollectionAvailability_Whitelist)
-        self.health.add_check(self.checkMongoDBCollectionAvailability_History)
-        self.envdump.add_section("application", getSoftwareData)
-
     def get(self):
         body = fquest.get_json()
 
-        if not HealthCheckBodyValidation(body):
+        if not SMHealthCheckBodyValidation(body):
             return {
                 'error': 'bad_request'
             }, 400
@@ -104,3 +62,41 @@ class HealthCheck(Resource):
                 "environment": envCheck
             }
         }
+
+    def serverCheck(self):
+        self.health = HealthCheckFromPackage()
+        self.envdump = EnvironmentDump()
+
+        self.health.add_check(self.checkMongoDBAvailability)
+        self.health.add_check(self.checkMongoDBCollectionAvailability_User)
+        self.health.add_check(self.checkMongoDBCollectionAvailability_Blacklist)
+        self.health.add_check(self.checkMongoDBCollectionAvailability_Whitelist)
+        self.health.add_check(self.checkMongoDBCollectionAvailability_History)
+        self.envdump.add_section("application", self.getSoftwareData)
+
+    def checkMongoDBAvailability(self):
+        client = pymongo.MongoClient(URI_MELCHIOR)
+        # Check if we can access safetel database
+        self.safetelDatabase = client.Melchior
+        return True, "Safetel mongoDB available"
+
+    # Check if we can access the collections
+    def checkMongoDBCollectionAvailability_User(self):
+        _ = self.safetelDatabase.User
+        return True, 'User collection available'
+
+    def checkMongoDBCollectionAvailability_Blacklist(self):
+        _ = self.safetelDatabase.Blacklist
+        return True, 'Blacklist collection available'
+
+    def checkMongoDBCollectionAvailability_Whitelist(self):
+        _ = self.safetelDatabase.Whitelist
+        return True, 'Whitelist collection available'
+
+    def checkMongoDBCollectionAvailability_History(self):
+        _ = self.safetelDatabase.History
+        return True, 'History collection available'
+
+    def getSoftwareData(self):
+        return {"maintainer": "Safetel",
+            "github_repo": "SafeTel-Back"}
