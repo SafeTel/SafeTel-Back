@@ -37,5 +37,8 @@ class UserDB():
     def getUser(self, email):
         return GetDocument(self.Users, 'email', email)
 
+    def existByGUID(self, guid):
+        return IsDocument(self.Users, 'guid', guid)
+
     def getUserByGUID(self, guid):
         return GetDocument(self.Users, 'guid', guid)

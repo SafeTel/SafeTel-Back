@@ -10,14 +10,25 @@ from flask import request as fquest
 from flask.globals import request
 from flask_restful import Resource
 
+# Utils import
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
+
 # DB import
 from DataBases.Melchior.BlackListDB import BlacklistDB
 
 BlacklistDb = BlacklistDB()
 
+# Route to get the blacklist of the user
 class GetBlackList(Resource):
     def get(self):
-        userId = request.args["userId"]
+        data = DeserializeJWT(request.args["token"], Roles.USER)
+        if data is None:
+            return {
+                'error': 'bad_token'
+            }, 400
+
+        guid = data['guid']
         return {
-            'BlackList': BlacklistDb.getBlacklistForUser(userId)["PhoneNumbers"]
+            'BlackList': BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"]
         }, 200

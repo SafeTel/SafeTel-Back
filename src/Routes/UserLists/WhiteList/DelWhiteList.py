@@ -11,23 +11,41 @@ from flask_restful import Resource
 
 # Utils import
 from Routes.Utils.Request import validateBody
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
 
 # DB import
 from DataBases.Melchior.WhiteListDB import WhitelistDB
 
 WhitelistDb = WhitelistDB()
 
+# Validate Body for AddBlackList route
+def ULDelWhiteListListValidation(data):
+    if not validateBody(
+        data,
+        ["token", "number"]):
+        return False
+    return True
+
+# Route to del a number to the whitelist of the user
 class DelWhiteList(Resource):
     def delete(self):
-        if not validateBody(fquest.get_json(), ["userId", "number"]):
+        body = fquest.get_json()
+        if not ULDelWhiteListListValidation(body):
             return {
                 'error': 'bad_request'
             }, 400
-        body = fquest.get_json()
-        userId = body["userId"]
+
+        data = DeserializeJWT(body["token"], Roles.USER)
+        if data is None:
+            return {
+                'error': 'bad_token'
+            }, 400
+
+        guid = data['guid']
         number = body["number"]
-        WhitelistDb.delWhitelistNumberForUser(userId, number)
+        WhitelistDb.delWhitelistNumberForUser(guid, number)
         return {
-            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["PhoneNumbers"]
+            'WhiteList': WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"]
         }, 200
 

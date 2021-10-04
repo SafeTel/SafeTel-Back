@@ -8,11 +8,12 @@
 # Network imports
 from flask import request as fquest
 from flask_restful import Resource
-import jwt, config
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
 from Routes.Utils.Types import isValidEmail
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
 
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
@@ -34,13 +35,16 @@ def UMUpdateEmailBodyValidation(data):
 class UpdateEmail(Resource):
     def post(self):
         body = fquest.get_json()
-
         if not UMUpdateEmailBodyValidation(body):
             return {
                 'error': 'bad_request'
             }, 400
 
-        data = jwt.decode(jwt=body['token'], key=config.SECRET_KEY, algorithms='HS256')
+        data = DeserializeJWT(body["token"], Roles.USER)
+        if data is None:
+            return {
+                'error': 'bad_token'
+            }, 400
 
         result = UserDb.getUserByGUID(data['guid'])
         if result is None:
