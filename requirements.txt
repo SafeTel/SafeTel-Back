@@ -5,3 +5,4 @@ pymongo
 dnspython
 pyjwt
 uuid
+py-healthcheck
