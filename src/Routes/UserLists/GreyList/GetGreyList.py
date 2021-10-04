@@ -11,18 +11,28 @@ from flask.globals import request
 from flask_restful import Resource
 
 # Utils import
-from src.Routes.Utils.Request import validateBody
+from Routes.Utils.Request import validateBody
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
 
 # DB import
-from src.DataBases.Melchior import BlacklistDB, WhitelistDB
+from DataBases.Melchior.BlackListDB import BlacklistDB
+from DataBases.Melchior.WhiteListDB import WhitelistDB
 
 BlacklistDb = BlacklistDB()
 WhitelistDb = WhitelistDB()
 
+# Route to get the white & black list of the user
 class GetGreyList(Resource):
     def get(self):
-        userId = request.args["userId"]
+        data = DeserializeJWT(request.args["token"], Roles.USER)
+        if data is None:
+            return {
+                'error': 'bad_token'
+            }, 400
+
+        guid = data['guid']
         return {
-            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["phoneNumbers"],
-            'BlackList': BlacklistDb.getBlacklistForUser(userId)["phoneNumbers"]
+            'WhiteList': WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"],
+            'BlackList': BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"]
         }, 200

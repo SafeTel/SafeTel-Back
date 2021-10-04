@@ -10,23 +10,40 @@ from flask import request as fquest
 from flask_restful import Resource
 
 # Utils import
-from src.Routes.Utils.Request import validateBody
+from Routes.Utils.Request import validateBody
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
 
 # DB import
-from src.DataBases.Melchior import BlacklistDB
+from DataBases.Melchior.BlackListDB import BlacklistDB
 
 BlacklistDb = BlacklistDB()
 
+# Validate Body for AddBlackList route
+def ULAddBlackListValidation(data):
+    if not validateBody(
+        data,
+        ["token", "number"]):
+        return False
+    return True
+
+# Route to add a number to the blacklist of the user
 class AddBlackList(Resource):
     def post(self):
-        if not validateBody(fquest.get_json(), ["userId", "number"]):
+        body = fquest.get_json()
+        if not ULAddBlackListValidation(body):
             return {
                 'error': 'bad_request'
             }, 400
-        body = fquest.get_json()
-        userId = body["userId"]
-        number = body["number"]
-        BlacklistDb.addBlacklistNumberForUser(userId, number)
+
+        data = DeserializeJWT(body["token"], Roles.USER)
+        if data is None:
+            return {
+                'error': 'bad_token'
+            }, 400
+
+        guid = data['guid']
+        BlacklistDb.addBlacklistNumberForUser(guid, body["number"])
         return {
-            'BlackList': BlacklistDb.getBlacklistForUser(userId)["phoneNumbers"]
+            'BlackList': BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"]
         }, 200

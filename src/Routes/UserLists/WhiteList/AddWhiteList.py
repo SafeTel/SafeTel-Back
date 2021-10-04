@@ -10,23 +10,41 @@ from flask import request as fquest
 from flask_restful import Resource
 
 # Utils import
-from src.Routes.Utils.Request import validateBody
+from Routes.Utils.Request import validateBody
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Provider import Roles
 
 # DB import
-from src.DataBases.Melchior import WhitelistDB
+from DataBases.Melchior.WhiteListDB import WhitelistDB
 
 WhitelistDb = WhitelistDB()
 
+# Validate Body for AddWhiteList route
+def ULAddWhiteListValidation(data):
+    if not validateBody(
+        data,
+        ["token", "number"]):
+        return False
+    return True
+
+# Route to add a number to the whitelist of the user
 class AddWhiteList(Resource):
     def post(self):
-        if not validateBody(fquest.get_json(), ["userId", "number"]):
+        body = fquest.get_json()
+        if not ULAddWhiteListValidation(body):
             return {
                 'error': 'bad_request'
             }, 400
-        body = fquest.get_json()
-        userId = body["userId"]
+
+        data = DeserializeJWT(body["token"], Roles.USER)
+        if data is None:
+            return {
+                'error': 'bad_token'
+            }, 400
+
+        guid = data['guid']
         number = body["number"]
-        WhitelistDb.addWhitelistNumberForUser(userId, number)
+        WhitelistDb.addWhitelistNumberForUser(guid, number)
         return {
-            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["phoneNumbers"]
+            'WhiteList': WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"]
         }, 200

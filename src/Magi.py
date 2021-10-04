@@ -11,15 +11,20 @@ import logging
 # Network Imports
 import requests
 from flask import Flask
+from Routes.Utils.JWTProvider.Roles import Roles
 from flask_restful import Api
 
 app = Flask(__name__)
 api = Api(app)
 
 # Initialization of routes imports
-from src.Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
+from Routes.UserManagement.InitializeUserManagementRoutes import InitializeUserManagementRoutes
+from Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
+from Routes.ServerManagement.InitializeServerManagementRoutes import InitializeServerManagementRoutes
 
+InitializeUserManagementRoutes(api)
 InitializeUserListsRoutes(api)
+InitializeServerManagementRoutes(api)
 
 if __name__ == "__main__":
     format = "%(asctime)s: %(message)s"
