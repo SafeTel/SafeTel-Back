@@ -21,7 +21,8 @@ def EAvaibleUpdate(data):
     if data["magicNumber"] != 42:
         return False
     return True
-#
+
+# Route to know if an update is required for the embeded software
 class AvaiableUpdate(Resource):
     def post(self):
         body = fquest.get_json()
