@@ -39,7 +39,7 @@ class HealthCheck(Resource):
             return {
                 'error': 'bad_request'
             }, 400
-        
+
         self.serverCheck()
 
         serverDatas = self.health.run()
