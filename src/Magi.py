@@ -17,14 +17,24 @@ from flask_restful import Api
 app = Flask(__name__)
 api = Api(app)
 
-# Initialization of routes imports
+## Initialization of routes imports
+
+# Initialize User Routes
 from Routes.UserManagement.InitializeUserManagementRoutes import InitializeUserManagementRoutes
 from Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
-from Routes.ServerManagement.InitializeServerManagementRoutes import InitializeServerManagementRoutes
 
 InitializeUserManagementRoutes(api)
 InitializeUserListsRoutes(api)
+
+# Initialize dev ressources routes
+from Routes.ServerManagement.InitializeServerManagementRoutes import InitializeServerManagementRoutes
+
 InitializeServerManagementRoutes(api)
+
+# Initialize embeded ressources routes
+from Routes.EmbededRessources.InitializeEmbededRessourcesRoutes import InitializeEmbededRessourceRoutes
+InitializeEmbededRessourceRoutes(api)
+
 
 if __name__ == "__main__":
     format = "%(asctime)s: %(message)s"
