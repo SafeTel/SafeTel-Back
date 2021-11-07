@@ -37,13 +37,15 @@ class DeleteAccount(Resource):
                 'error': 'bad_request'
             }, 400
 
-        data = DeserializeJWT(body["token"], Roles.USER)
-        if data is None:
+        jwtDeserialized = DeserializeJWT(body["token"], Roles.USER)
+        if jwtDeserialized is None:
             return {
                 'error': 'bad_token'
             }, 400
 
-        result = UserDb.getUserByGUID(data['guid'])
+        guidUsr = jwtDeserialized['guid']
+
+        result = UserDb.getUserByGUID(guidUsr)
         if result is None:
             return {
                 'error': 'bad_token'
@@ -54,10 +56,10 @@ class DeleteAccount(Resource):
                 'error': 'manual security check failed'
             }, 400
 
-        deleteDocumentForUser(data['guid'])
+        deleteDocumentForUser(guidUsr)
 
-        if isDeletedDocumentForUser(data['guid']):
-            UserDb.deleteUser(data['guid'])
+        if isDeletedDocumentForUser(guidUsr):
+            UserDb.deleteUser(guidUsr)
 
         return {
             'deleted': UserDb.exists(result['email'])

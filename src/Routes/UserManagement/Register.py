@@ -64,7 +64,7 @@ class Register(Resource):
         body["guid"] = str(uuid.uuid4())
         guid = body["guid"]
 
-        UserDb.addUser(body)
+        UserDb.addUser(body, Roles.USER)
         createDocumentForNewUser(guid)
 
         return {
