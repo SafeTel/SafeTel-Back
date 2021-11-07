@@ -28,6 +28,7 @@ sentry_sdk.init(
 )
 
 app = Flask(__name__)
+app.debug = True
 api = Api(app)
 
 ## Initialization of routes imports
