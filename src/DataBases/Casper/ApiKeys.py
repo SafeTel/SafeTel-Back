@@ -42,3 +42,6 @@ class ApiKeyLogDB():
         or IsDocument(self.ApiKeyLog, "ip", ip)):
             return True
         return False
+
+    def isValidApiKey(self, apiKey):
+        return IsDocument(self.ApiKeyLog, "apiKey", apiKey)
