@@ -6,6 +6,7 @@
 ##
 
 # Client mongo db import
+from flask.globals import request
 import pymongo
 
 # Network imports
@@ -21,21 +22,10 @@ from Routes.Utils.Request import validateBody
 # Melchior uri import
 from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
 
-def SMHealthCheckBodyValidation(data):
-    if not validateBody(
-        data,
-        ["magicNumber"]):
-        return False
-    if data["magicNumber"] != 42:
-        return False
-    return True
-
 # Route to health check
 class HealthCheck(Resource):
     def get(self):
-        body = fquest.get_json()
-
-        if not SMHealthCheckBodyValidation(body):
+        if request.args["magicNumber"] != "42":
             return {
                 'error': 'bad_request'
             }, 400
