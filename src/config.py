@@ -8,4 +8,5 @@
 client = 'SafeTelBackEndUser'
 password = 'aSEFTHUKOM1!'
 dbname = 'Melchior'
+dbnameCasper = 'Casper'
 SECRET_KEY = 'MankindsGreatestFearIsMankindItself'

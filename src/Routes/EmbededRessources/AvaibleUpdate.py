@@ -8,12 +8,11 @@
 # Network imports
 from flask import request as fquest
 from flask_restful import Resource
-import random
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
 
-def EAvaibleUpdate(data):
+def EAvaibleUpdateValidation(data):
     if not validateBody(
         data,
         ["magicNumber", "version"]):
@@ -27,7 +26,7 @@ class AvaiableUpdate(Resource):
     def post(self):
         body = fquest.get_json()
 
-        if not EAvaibleUpdate(body):
+        if not EAvaibleUpdateValidation(body):
             return {
                 'error': 'bad_request'
             }, 400
