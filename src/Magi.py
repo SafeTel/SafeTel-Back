@@ -14,6 +14,19 @@ from flask import Flask
 from Routes.Utils.JWTProvider.Roles import Roles
 from flask_restful import Api
 
+# import Sentry
+import sentry_sdk
+
+# Sentry integration
+sentry_sdk.init(
+    "https://840739ef53034860b515d400dc4b6219@o1036766.ingest.sentry.io/6004367",
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0
+)
+
 app = Flask(__name__)
 api = Api(app)
 
