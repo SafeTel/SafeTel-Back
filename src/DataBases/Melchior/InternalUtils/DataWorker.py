@@ -42,3 +42,9 @@ def UpdateAccountEmail(db, guid, email):
         return
     query_values = { "$set": { 'email': email } }
     db.update_one(query, query_values)
+
+def GetAccountsByRole(db, roleTarget):
+    query = {
+        'role': roleTarget
+    }
+    return db.find(query)
