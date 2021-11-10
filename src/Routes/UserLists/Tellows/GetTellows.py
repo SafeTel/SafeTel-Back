@@ -15,49 +15,50 @@ import requests, config
 # Utils import
 from Routes.Utils.Request import validateBody
 
-# validate Body for Login route
-def GetTellowsBodyValidation(data):
-    if not validateBody(
-        data,
-        ["magicNumber", "number"]):
-        return False
-    if data["magicNumber"] != 42:
-        return False
-    return True
-
 
 class GetTellows(Resource):
-    def generateValidTellowsJsonRequestForFrance(self, number):
+    def generateValidTellowsJsonRequestForFrance(self):
         return {
-            'apikeyMd5': '',
-            'country': 'fr',
-            'country': 'fr',
-            'json': 1, # output format json encoded instead of CSV
-            'numberformatinternational': 1, # output all numbers with international codes (e.g. +49342156567)
-            'lang': 'fr',
-            'mosttagged': 1, # get mosttagged caller for phone number
-            'minscore': 1, # only show phone numbers with a tellows score equal or higher than minscore
-            'mincomments': 3, # only show phone numbers with count comments equal or higher than mincomments
-            'showdeeplink': 1 # NOT PERTINENT - Don't know the effect - # show deeplink to tellows phone number
-            # 'showcallertypeid': 1, 
-            # 'showcallername': 1
-            # 'showprefixname': 1
+            'apikeyMd5': config.TELLOWS_API_KEY_MD5,
+            'json': 1, # response as JSON
         }
 
     def get(self):
-        body = fquest.get_json()
+        requestUrlQueryParams = self.generateValidTellowsJsonRequestForFrance()
 
-        if not GetTellowsBodyValidation(body):
+        phoneNumber = request.args.get('phonenumber')
+
+        if phoneNumber == None:
             return {
-                'error': 'bad_request'
+                'error': 'bad_request - missing phonenumber'
             }, 400
 
-        body = self.generateValidTellowsJsonRequestForFrance(body['number'])
+        response = requests.get(config.TELLOWS_URL+ phoneNumber, requestUrlQueryParams)
 
-        response = requests.get(config.TELLOWS_URL, body)
+        if response.status_code != 200:
+            return {
+                'isValid': False
+            }, 200
+
+        data = response.json()
+
+        if not 'tellows' in data:
+            return {
+                'isValid': False
+            }, 200
+
+        if not 'score' in data['tellows']:
+            return {
+                'isValid': False
+            }, 200
+
+        score = int(data['tellows']['score'])
+
+        if 0 <= score < config.MINIMAL_TELLOW_NOTATION_SCORE:
+            return {
+                'isValid': False
+            }, 200
 
         return {
-            "response": response
+            'isValid': True
         }, 200
-
-# https://www.tellows.fr/stats/partnerscoredata?apikeyMd5=399a147c51f6942600fa41412f2678d1&country=fr&json=1&numberformatinternational=1&lang=fr&mosttagged=1&minscore=1&mincomments=3&showdeeplink=1&showcallertypeid=1&showcallername=1&showprefixname=1
