@@ -37,28 +37,28 @@ class GetTellows(Resource):
 
         if response.status_code != 200:
             return {
-                'isValid': False
-            }, 200
+                'error': 'Internal Server error'
+            }, 400
 
         data = response.json()
 
         if not 'tellows' in data:
             return {
-                'isValid': False
-            }, 200
+                'error': 'Internal Server error'
+            }, 400
 
         if not 'score' in data['tellows']:
             return {
-                'isValid': False
-            }, 200
+                'error': 'Internal Server error'            
+            }, 400
 
         score = int(data['tellows']['score'])
 
-        if 0 <= score < config.MINIMAL_TELLOW_NOTATION_SCORE:
+        if score >= config.MINIMAL_TELLOW_NOTATION_SCORE:
             return {
-                'isValid': False
+                'isValid': True
             }, 200
 
         return {
-            'isValid': True
+            'isValid': False
         }, 200
