@@ -1,21 +1,10 @@
 version: "3.3"
 
 services:
-    magi_dev:
-        image:
-            safetel/safetel-back:dev
-        ports:
-            - 4270:4270
-        restart:
-            on-failure
-        environment:
-            - SERVER_PORT=4270
-    magi_prod:
-        image:
-            safetel/safetel-back:dev
+    magi:
+        build:
+            ./
         ports:
             - 2407:2407
         restart:
             on-failure
-        environment:
-            - SERVER_PORT=2407
