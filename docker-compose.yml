@@ -12,7 +12,7 @@ services:
             - SERVER_PORT=4270
     magi_prod:
         image:
-            safetel/safetel-back:dev
+            safetel/safetel-back:prod
         ports:
             - 2407:2407
         restart:
