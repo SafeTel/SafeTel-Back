@@ -18,6 +18,9 @@ from Routes.Utils.Types import isValidEmail, isValidNumber
 from Routes.Utils.JWTProvider.Provider import SerializeJWT
 from Routes.Utils.JWTProvider.Roles import Roles
 
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError
+
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
 from DataBases.Utils.MelchiorUtils import createDocumentForNewUser
@@ -51,14 +54,10 @@ class Register(Resource):
     def post(self):
         body = fquest.get_json()
         if not UMRegisterBodyValidation(body):
-            return {
-                'error': 'bad_request'
-            }, 400
+            return BadRequestError("bad request"), 400
 
         if UserDb.exists(body["email"]):
-            return {
-                'error': 'this email is already linked to an account'
-            }, 400
+            return BadRequestError("this email is already linked to an account"), 400
 
         body["time"] = time.time()
         body["guid"] = str(uuid.uuid4())

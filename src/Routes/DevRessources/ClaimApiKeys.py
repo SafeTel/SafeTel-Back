@@ -13,6 +13,9 @@ from flask_restful import Resource
 # Utils check imports
 from Routes.Utils.Request import validateBody
 
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError
+
 # DB imports
 from DataBases.Casper.Contributors import ContributorsDB
 from DataBases.Casper.ApiKeys import ApiKeyLogDB
@@ -38,21 +41,15 @@ class ClaimApiKeys(Resource):
         body = fquest.get_json()
 
         if not DRClaimApiKeysValidation(body):
-            return {
-                'error': 'bad_request'
-            }, 400
+            return BadRequestError("bad request"), 400
 
         claimer = body["name"]
 
         if (not ContributorsDb.IsContributor(claimer)):
-            return {
-                'error': 'you are not a contributor'
-            }, 400
+            return BadRequestError("you are not a contributor"), 400
 
         if (ApiKeyLogDb.isApiKeyForContributor(claimer, request.remote_addr)):
-            return {
-                'error': 'you already own an apiKey'
-            }
+            return BadRequestError("you already own an apiKey")
 
         apiKey = secrets.token_urlsafe(32)
         ApiKeyLogDb.logClaimeApiKey(apiKey, claimer, request.remote_addr)
