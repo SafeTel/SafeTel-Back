@@ -5,9 +5,6 @@
 ## DataWorker
 ##
 
-# Client mongo db import
-import pymongo
-
 def AddNumberToPhoneList(db, guid, number):
     query = {
         'guid': str(guid)
