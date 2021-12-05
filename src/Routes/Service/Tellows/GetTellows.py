@@ -17,10 +17,6 @@ import requests
 import re
 
 def validatePhoneNumber(phoneNumber):
-    if any((char in 'azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN') 
-            for char in phoneNumber):
-        return False
-
     phoneNumberWithoutSpaces = phoneNumber.replace(' ', '')
     regexResult = re.search('^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$', phoneNumberWithoutSpaces) ## Regext that match phone numbers: https://regex101.com/r/DsaRfI/1
     if regexResult == None:
