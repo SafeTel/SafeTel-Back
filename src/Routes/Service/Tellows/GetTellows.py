@@ -17,8 +17,8 @@ import requests
 import re
 
 def validatePhoneNumber(phoneNumber):
-    chars = set('azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN')
-    if any((char in chars) for char in phoneNumber):
+    if any((char in 'azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN') 
+            for char in phoneNumber):
         return False
 
     phoneNumberWithoutSpaces = phoneNumber.replace(' ', '')
