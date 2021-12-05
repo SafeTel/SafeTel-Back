@@ -8,3 +8,5 @@ services:
             - 2407:2407
         restart:
             on-failure
+        environment:
+            - SERVER_PORT=2407
