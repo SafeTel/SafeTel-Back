@@ -42,13 +42,16 @@ class HistoryDB():
         return GetDocument(self.History, "guid", guid)
 
     def delHistoryCallForUser(self, guid, number, timestamp):
+        query = {
+            'guid': str(guid)
+        }
         result = GetDocument(self.History, "guid", guid)
         if result is None:
             return
         updated_values = result["History"]
         for i in range(len(updated_values)):
-            if updated_values[i]['number'] == number and updated_values[i]['time'] == str(timestamp):
+            if updated_values[i]['number'] == number and updated_values[i]['time'] == timestamp:
                 del updated_values[i]
                 break
-        query_values = { "$set": { 'history': updated_values } }
+        query_values = { "$set": { 'History': updated_values } }
         self.History.update_one(query, query_values)

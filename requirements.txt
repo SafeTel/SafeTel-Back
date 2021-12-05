@@ -5,3 +5,5 @@ pymongo
 dnspython
 pyjwt
 uuid
+py-healthcheck
+sentry-sdk

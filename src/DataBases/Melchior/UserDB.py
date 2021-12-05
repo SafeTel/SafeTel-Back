@@ -17,6 +17,10 @@ from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
 # PyMongo Internal Utils
 from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
 from DataBases.InternalUtils.DataWorker import InsertDocument, DeleteDocument
+from DataBases.Melchior.InternalUtils.DataWorker import GetAccountsByRole
+
+# Magi Roles import
+from Routes.Utils.JWTProvider.Roles import Roles
 
 # Object to represent table User
 class UserDB():
@@ -25,8 +29,24 @@ class UserDB():
         self.db = self.client[db_name]
         self.Users = self.db['User']
 
-    def addUser(self, user_data):
+    def addUser(self, user_data, role):
+        if (role == Roles.USER):
+            user_data['role'] = 'user'
+        elif (role == Roles.DEVELOPER):
+            user_data['role'] = 'developer'
+        elif (role == Roles.ADMIN):
+            user_data['role'] = 'admin'
         InsertDocument(self.Users, user_data)
+
+    def getUsersByRole(self, role):
+        target = ""
+        if (role == Roles.USER):
+            target = "user"
+        elif(role == Roles.DEVELOPER):
+            target = "developer"
+        elif(role == Roles.ADMIN):
+            target = "admin"
+        return GetAccountsByRole(self.Users, target)
 
     def deleteUser(self, guid):
         DeleteDocument(self.Users, {'guid': guid})
@@ -37,5 +57,11 @@ class UserDB():
     def getUser(self, email):
         return GetDocument(self.Users, 'email', email)
 
+    def existByGUID(self, guid):
+        return IsDocument(self.Users, 'guid', guid)
+
     def getUserByGUID(self, guid):
         return GetDocument(self.Users, 'guid', guid)
+
+    def getUserRoleByGUID(self, guid):
+        return GetDocument(self.Users, 'guid', guid)['role']

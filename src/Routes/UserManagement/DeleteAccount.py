@@ -8,11 +8,11 @@
 # Network imports
 from flask import request as fquest
 from flask_restful import Resource
-from datetime import datetime, timedelta
-import jwt, config, time
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
 
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
@@ -20,7 +20,7 @@ from DataBases.Utils.MelchiorUtils import deleteDocumentForUser, isDeletedDocume
 
 UserDb = UserDB()
 
-# validate Body for DeleteAccount route
+# Validate Body for DeleteAccount route
 def UMDeleteAccountBodyValidation(data):
     if not validateBody(
         data,
@@ -32,15 +32,20 @@ def UMDeleteAccountBodyValidation(data):
 class DeleteAccount(Resource):
     def delete(self):
         body = fquest.get_json()
-
         if not UMDeleteAccountBodyValidation(body):
             return {
                 'error': 'bad_request'
             }, 400
 
-        data = jwt.decode(jwt=body['token'], key=config.SECRET_KEY, algorithms='HS256')
+        jwtDeserialized = DeserializeJWT(body["token"], Roles.USER)
+        if jwtDeserialized is None:
+            return {
+                'error': 'bad_token'
+            }, 400
 
-        result = UserDb.getUserByGUID(data['guid'])
+        guidUsr = jwtDeserialized['guid']
+
+        result = UserDb.getUserByGUID(guidUsr)
         if result is None:
             return {
                 'error': 'bad_token'
@@ -51,10 +56,10 @@ class DeleteAccount(Resource):
                 'error': 'manual security check failed'
             }, 400
 
-        deleteDocumentForUser(data['guid'])
+        deleteDocumentForUser(guidUsr)
 
-        if isDeletedDocumentForUser(data['guid']):
-            UserDb.deleteUser(data['guid'])
+        if isDeletedDocumentForUser(guidUsr):
+            UserDb.deleteUser(guidUsr)
 
         return {
             'deleted': UserDb.exists(result['email'])
