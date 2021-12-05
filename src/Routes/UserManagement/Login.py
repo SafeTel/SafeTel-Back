@@ -17,6 +17,9 @@ from Routes.Utils.JWTProvider.Provider import SerializeJWT
 # Utils check imports
 from Routes.Utils.Request import validateBody
 
+# Password encription import
+from Routes.Utils.PWDSerialiazer.Serializer import CheckPWD
+
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
 
@@ -45,6 +48,11 @@ class Login(Resource):
         if user == None:
             return {
                 'error': 'this email is not linked to an account'
+            }, 400
+
+        if not CheckPWD(body["password"], user["password"]):
+            return {
+                'error': 'you can not connect with this combination of email and password'
             }, 400
 
         return {
