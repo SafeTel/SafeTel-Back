@@ -19,9 +19,11 @@ api = Api(app)
 # Initialization of routes imports
 from Routes.UserManagement.InitializeUserManagementRoutes import InitializeUserManagementRoutes
 from Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
+from Routes.Service.InitializeServiceRoutes import InitializeServiceRoutes
 
 InitializeUserManagementRoutes(api)
 InitializeUserListsRoutes(api)
+InitializeServiceRoutes(api)
 
 if __name__ == "__main__":
     format = "%(asctime)s: %(message)s"
