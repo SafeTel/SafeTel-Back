@@ -8,6 +8,12 @@
 # Thread Imports
 import logging
 
+format = "%(asctime)s: %(message)s"
+logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
+
+logging.info("Launching Magi...")
+logging.info("You can find documentation on this repo: https://github.com/SafeTel/SafeTel-Doc-Backend")
+
 # Network Imports
 import requests
 import os
@@ -29,6 +35,8 @@ sentry_sdk.init(
     traces_sample_rate=1.0
 )
 
+logging.info("Connected to sentry")
+
 # ---
 # Flask initialitation
 app = Flask(__name__)
@@ -45,26 +53,41 @@ from Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
 InitializeUserManagementRoutes(api)
 InitializeUserListsRoutes(api)
 
+logging.info("Routes initialized - User Lists")
+
 # Initialize Service Routes
 from Routes.Service.InitializeServiceRoutes import InitializeServiceRoutes
 InitializeServiceRoutes(api)
+
+logging.info("Routes initialized - Service")
 
 # Initialize server ressources routes
 from Routes.ServerManagement.InitializeServerManagementRoutes import InitializeServerManagementRoutes
 InitializeServerManagementRoutes(api)
 
+logging.info("Routes initialized - Server Management")
+
 # Initialize embeded ressources routes
 from Routes.EmbededRessources.InitializeEmbededRessourcesRoutes import InitializeEmbededRessourceRoutes
 InitializeEmbededRessourceRoutes(api)
+
+logging.info("Routes initialized - Embeded Ressources")
 
 # Initialize dev ressources routes
 from Routes.DevRessources.InitializeDevRessources import InitializeDevRessourcesRoutes
 InitializeDevRessourcesRoutes(api)
 
+logging.info("Routes initialized - Dev Ressources")
+
+# ---
+# Logs imports
+import socket
+
 if __name__ == "__main__":
-    format = "%(asctime)s: %(message)s"
-    logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
+    logging.warning("You are starting the server connected with Mongo DB, this is a shared DB")
+    logging.warning("Be aware of the current git branch DEV or PROD")
 
     env_port = os.getenv('SERVER_PORT', '2407')
 
+    logging.info("Launching API on : 0.0.0.0:2407")
     app.run(debug=True, host='0.0.0.0', port=env_port)

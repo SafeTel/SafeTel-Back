@@ -18,13 +18,16 @@ from Routes.Utils.Types import isValidEmail, isValidNumber
 from Routes.Utils.JWTProvider.Provider import SerializeJWT
 from Routes.Utils.JWTProvider.Roles import Roles
 
+# Password encription import
+from Routes.Utils.PWDSerialiazer.Serializer import SerializePWD
+
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
 from DataBases.Utils.MelchiorUtils import createDocumentForNewUser
 
 UserDb = UserDB()
 
-# validate Body for Login route
+# validate Body for Register route
 def UMRegisterBodyValidation(data):
     if not validateBody(
         data,
@@ -46,7 +49,7 @@ def UMRegisterBodyValidation(data):
         return False
     return True
 
-# Route to log in a user
+# Route to Register a user
 class Register(Resource):
     def post(self):
         body = fquest.get_json()
@@ -63,6 +66,7 @@ class Register(Resource):
         body["time"] = time.time()
         body["guid"] = str(uuid.uuid4())
         guid = body["guid"]
+        body["password"] = SerializePWD(body["password"])
 
         UserDb.addUser(body, Roles.USER)
         createDocumentForNewUser(guid)
