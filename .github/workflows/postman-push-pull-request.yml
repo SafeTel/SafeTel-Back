@@ -34,7 +34,7 @@ jobs:
 
       - name: Run POSTMAN collection # running POSTMAN tests with local-env
         run: |
-          newman run ./tests/Backend.postman_collection.json -e ./tests/Local-Environment.postman_environment.json -r htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme  > testResults/runReportSafetel-Back.html
+          newman run ./tests/Backend.postman_collection.json -e ./tests/Local-Environment.postman_environment.json
 
     # Upload the contents of Test Results directory to workspace
       - name: Output the run Details
