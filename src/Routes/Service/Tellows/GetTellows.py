@@ -34,6 +34,10 @@ class GetTellows(Resource):
         requestUrlQueryParams = self.generateValidTellowsJsonRequestForFrance()
         phoneNumber = request.args.get('phonenumber')
 
+        if request.args["magicNumber"] != "42":
+            return {
+                'error': 'bad_request'
+            }, 400
         if phoneNumber == None:
             return {
                 'error': 'bad_request - missing phonenumber'
