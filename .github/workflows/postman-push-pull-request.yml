@@ -29,16 +29,16 @@ jobs:
       - name: Build the docker-compose of the project # running docker
         run: docker-compose up -d
 
-      - name: Make Directory for results # prepare a repo to store test results
-        run: mkdir -p testResults
+      # - name: Make Directory for results # prepare a repo to store test results
+      #   run: mkdir -p testResults
 
       - name: Run POSTMAN collection # running POSTMAN tests with local-env
         run: |
           newman run ./tests/Backend.postman_collection.json -e ./tests/Local-Environment.postman_environment.json
 
-    # Upload the contents of Test Results directory to workspace
-      - name: Output the run Details
-        uses: actions/upload-artifact@v2
-        with: 
-          name: RunReports
-          path: testResults
+    # # Upload the contents of Test Results directory to workspace
+    #   - name: Output the run Details
+    #     uses: actions/upload-artifact@v2
+    #     with: 
+    #       name: RunReports
+    #       path: testResults
