@@ -1,0 +1,44 @@
+name: postman-push-pull-request
+on: [push, pull_request]  # // this action runs on each new push 
+                          # // and pull_request
+
+jobs:
+  postman-build-and-test: # job_id
+    name: running postman tests # job name
+
+    runs-on: ubuntu-latest # hosted OS
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v2 # workspace for github action
+
+      - name:  Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install newman # installing newman, CLI to run postman tests
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
+
+      - name: Build the docker-compose of the project # running docker
+        run: docker-compose up -d
+
+      - name: Make Directory for results # prepare a repo to store test results
+        run: mkdir -p testResults
+
+      - name: Run POSTMAN collection # running POSTMAN tests with local-env
+        run: |
+          newman run ./tests/Backend.postman_collection.json -e ./tests/Local-Environment.postman_environment.json -r htmlextra --reporter-htmlextra-export testResults/htmlreport.html --reporter-htmlextra-darkTheme  > testResults/runReportSafetel-Back.html
+
+    # Upload the contents of Test Results directory to workspace
+      - name: Output the run Details
+        uses: actions/upload-artifact@v2
+        with: 
+          name: RunReports
+          path: testResults
