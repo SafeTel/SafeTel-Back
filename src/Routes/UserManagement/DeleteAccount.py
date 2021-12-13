@@ -14,6 +14,9 @@ from Routes.Utils.Request import validateBody
 from Routes.Utils.JWTProvider.Provider import DeserializeJWT
 from Routes.Utils.JWTProvider.Roles import Roles
 
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError
+
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
 from DataBases.Utils.MelchiorUtils import deleteDocumentForUser, isDeletedDocumentForUser
@@ -33,9 +36,7 @@ class DeleteAccount(Resource):
     def delete(self):
         body = fquest.get_json()
         if not UMDeleteAccountBodyValidation(body):
-            return {
-                'error': 'bad_request'
-            }, 400
+            return BadRequestError("bad request")
 
         jwtDeserialized = DeserializeJWT(body["token"], Roles.USER)
         if jwtDeserialized is None:
@@ -47,14 +48,10 @@ class DeleteAccount(Resource):
 
         result = UserDb.getUserByGUID(guidUsr)
         if result is None:
-            return {
-                'error': 'bad_token'
-            }, 400
+            return BadRequestError("bad token")
 
         if result["userName"] != body["userName"]:
-            return {
-                'error': 'manual security check failed'
-            }, 400
+            return BadRequestError("manual security check failed")
 
         deleteDocumentForUser(guidUsr)
 

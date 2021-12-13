@@ -17,6 +17,9 @@ from Routes.Utils.JWTProvider.Provider import SerializeJWT
 # Utils check imports
 from Routes.Utils.Request import validateBody
 
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError
+
 # Password encription import
 from Routes.Utils.PWDSerialiazer.Serializer import CheckPWD
 
@@ -40,15 +43,11 @@ class Login(Resource):
     def post(self):
         body = fquest.get_json()
         if not UMLoginBodyValidation(body):
-            return {
-                'error': 'bad_request'
-            }, 400
+            return BadRequestError("bad request")
 
         user = UserDb.getUser(body["email"])
         if user == None:
-            return {
-                'error': 'this email is not linked to an account'
-            }, 400
+            return BadRequestError("this email is not linked to an account")
 
         if not CheckPWD(body["password"], user["password"]):
             return {

@@ -19,6 +19,9 @@ from Routes.Utils.JWTProvider.Provider import SerializeJWT
 from Routes.Utils.Request import validateBody
 from Routes.Utils.JWTProvider.Roles import Roles
 
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
 from DataBases.Utils.MelchiorUtils import createDocumentForNewUser
@@ -48,21 +51,15 @@ class RegisterAdminDev(Resource):
         body = fquest.get_json()
 
         if not DRRegisterAdminDevValidation(body):
-            return {
-                'error': 'bad_request'
-            }, 400
+            return BadRequestError("bad request"), 400
 
         if (not ApiKeyLogDb.isValidApiKey(body['apiKey'])):
-            return {
-                'error': 'apiKey is not valid'
-            }
+            return BadRequestError("apiKey is not valid"), 400
 
         registration = body['registration']
 
         if UserDb.exists(registration["email"]):
-            return {
-                'error': 'this email is already linked to an account'
-            }, 400
+            return BadRequestError("this email is already linked to an account"), 400
 
         create_ts = time.time()
         guid = str(uuid.uuid4())
@@ -77,9 +74,7 @@ class RegisterAdminDev(Resource):
         elif (body['role'] == 'dev'):
             role = Roles.DEVELOPER
         else:
-            return {
-                'error': 'not a valid role'
-            }, 400
+            InternalLogicError("not a valid role"), 400
 
         UserDb.addUser(registration, role)
         createDocumentForNewUser(guid)

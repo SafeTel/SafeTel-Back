@@ -14,6 +14,9 @@ from flask_restful import Resource
 from Routes.Utils.JWTProvider.Provider import DeserializeJWT
 from Routes.Utils.JWTProvider.Roles import Roles
 
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError
+
 # DB import
 from DataBases.Melchior.BlackListDB import BlacklistDB
 
@@ -24,9 +27,7 @@ class GetBlackList(Resource):
     def get(self):
         data = DeserializeJWT(request.args["token"], Roles.USER)
         if data is None:
-            return {
-                'error': 'bad_token'
-            }, 400
+            return BadRequestError("bad token"), 400
 
         guid = data['guid']
         return {
