@@ -20,6 +20,9 @@ from Routes.Utils.Request import validateBody
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
 
+# Password encription import
+from Routes.Utils.PWDSerialiazer.Serializer import CheckPWD
+
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
 
@@ -45,6 +48,11 @@ class Login(Resource):
         user = UserDb.getUser(body["email"])
         if user == None:
             return BadRequestError("this email is not linked to an account")
+
+        if not CheckPWD(body["password"], user["password"]):
+            return {
+                'error': 'you can not connect with this combination of email and password'
+            }, 400
 
         return {
             'userName': user["userName"],
