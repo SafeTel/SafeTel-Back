@@ -5,50 +5,74 @@
 ## HealthCheck
 ##
 
+# Network imports
+from flask import request as fquest
+from flask_restful import Resource
+
 # Client mongo db import
 from flask.globals import request
 import pymongo
 
-# Network imports
-from flask import request as fquest
-from flask_restful import Resource
+# Health Check imports
 from healthcheck import HealthCheck as HealthCheckFromPackage
 from healthcheck import EnvironmentDump
-import json
-
-# Utils check imports
-from Routes.Utils.Request import validateBody
 
 # Melchior uri import
 from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
 
+# Utils imports
+import json
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
+
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError
+
 # Route to health check
 class HealthCheck(Resource):
     def get(self):
-        if request.args["magicNumber"] != "42":
-            return {
-                'error': 'bad_request'
-            }, 400
+        token = request.args["token"]
+        if request.args.get("something") == None:
+            return BadRequestError("bad token"), 400
 
         self.serverCheck()
-
         serverDatas = self.health.run()
         serverEnvDatas = self.envdump.run()
 
-        healthCheck = {}
+        serverCheck = {}
         envCheck = {}
 
         for x in serverDatas:
             if type(x) == type(''):
-                healthCheck = json.loads(x)
-
+                serverCheck = json.loads(x)
         for x in serverEnvDatas:
             if type(x) == type(''):
                 envCheck = json.loads(x)
 
+        devRequest = DeserializeJWT(token, Roles.DEVELOPER)
+        adminRequest = DeserializeJWT(token, Roles.ADMIN)
+
+        if (devRequest == None and adminRequest == None):
+            return BadRequestError("bad token"), 400
+        elif (devRequest != None):
+            return self.DevDTO(serverCheck, envCheck)
+
         return {
             "healthCheck": {
-                "server": healthCheck,
+                "server": serverCheck,
+                "environment": envCheck
+            }
+        }
+
+    def DevDTO(self, serverCheck, envCheck):
+        del serverCheck['results']
+
+        del envCheck['process']['environ']
+        del envCheck['process']['pid']
+
+        return {
+            "healthCheck": {
+                "server": serverCheck,
                 "environment": envCheck
             }
         }
