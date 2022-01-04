@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 # jwt provider import
 from Routes.Utils.JWTProvider.Roles import Roles
-from Routes.Utils.JWTProvider.Provider import SerializeJWT
+from Routes.Utils.JWTProvider.Provider import SerializeJWT, StrToRole
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
@@ -54,7 +54,9 @@ class Login(Resource):
                 'error': 'you can not connect with this combination of email and password'
             }, 400
 
+        role = StrToRole(user["role"])
+
         return {
             'userName': user["userName"],
-            'token': SerializeJWT(user["guid"], Roles.USER)
+            'token': SerializeJWT(user["guid"], role)
         }, 200

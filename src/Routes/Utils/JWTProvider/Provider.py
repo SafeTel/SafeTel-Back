@@ -47,3 +47,12 @@ def VerifyJWT(str):
     if (str == None or len(str) < 10):
         return False
     return True
+
+def StrToRole(str):
+    if (str == "admin"):
+        return Roles.ADMIN
+    if (str == "developer"):
+        return Roles.DEVELOPER
+    if (str == "user"):
+        return Roles.USER
+    return None
