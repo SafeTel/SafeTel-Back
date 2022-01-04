@@ -55,3 +55,25 @@ class HistoryDB():
                 break
         query_values = { "$set": { 'History': updated_values } }
         self.History.update_one(query, query_values)
+
+    def addHistoryCallForUser(self, guid, number, origin, time):
+        query = {
+            'guid': str(guid)
+        }
+        result = GetDocument(self.History, "guid", guid)
+        if result is None:
+            return
+
+        import sys
+
+        updated_values = result["History"]
+        print(updated_values, file=sys.stderr)
+        updated_values.append({
+                "number": number,
+                "origin": origin,
+                "time": time
+            }
+        )
+        print(updated_values, file=sys.stderr)
+        query_values = { "$set": { 'History': updated_values } }
+        self.History.update_one(query, query_values)
