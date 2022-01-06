@@ -10,7 +10,7 @@
 from os import strerror
 from flask.globals import request
 from flask_restful import Resource
-from Routes.Service.Tellows.tellowsConfig import TELLOWS_API_KEY_MD5, TELLOWS_URL, MINIMAL_TELLOW_NOTATION_SCORE
+from Routes.Services.Tellows.tellowsConfig import TELLOWS_API_KEY_MD5, TELLOWS_URL, MINIMAL_TELLOW_NOTATION_SCORE
 import requests
 
 # Utils import
