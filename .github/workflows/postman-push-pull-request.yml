@@ -29,9 +29,6 @@ jobs:
       - name: Build the docker-compose of the project # running docker
         run: docker-compose up -d
 
-      # - name: Make Directory for results # prepare a repo to store test results
-      #   run: mkdir -p testResults
-
       - name: Run POSTMAN collection with DEV env # running POSTMAN tests with local-env
         run: |
           newman run https://api.getpostman.com/collections/13182887-52e71d5f-5098-4970-8b4a-b756f14bc1b5?apikey=PMAK-61d6d54bc2694e20f2a96297-23580a5c8a31016b8c3a1ba307d106c800 --environment https://api.getpostman.com/environments/13182887-27b5e4d9-672d-46e3-a376-46091c3e8bc5?apikey=PMAK-61d6d54bc2694e20f2a96297-23580a5c8a31016b8c3a1ba307d106c800
@@ -39,10 +36,3 @@ jobs:
       - name: Run POSTMAN collection with PROD env
         run: |
           newman run https://api.getpostman.com/collections/13182887-52e71d5f-5098-4970-8b4a-b756f14bc1b5?apikey=PMAK-61d6d54bc2694e20f2a96297-23580a5c8a31016b8c3a1ba307d106c800 --environment https://api.getpostman.com/environments/13182887-202afc19-c14a-4da2-8ca8-e3cdb3b64f41?apikey=PMAK-61d6d54bc2694e20f2a96297-23580a5c8a31016b8c3a1ba307d106c800
-
-    # # Upload the contents of Test Results directory to workspace
-    #   - name: Output the run Details
-    #     uses: actions/upload-artifact@v2
-    #     with: 
-    #       name: RunReports
-    #       path: testResults
