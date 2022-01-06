@@ -1,8 +1,8 @@
 ##
-## SAFETEL PROJECT, 2021
+## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## DelWhiteList
+## AddHistory
 ##
 
 # Network imports
@@ -18,23 +18,23 @@ from Routes.Utils.JWTProvider.Roles import Roles
 from Routes.Utils.RouteErrors.Errors import BadRequestError
 
 # DB import
-from DataBases.Melchior.WhiteListDB import WhitelistDB
+from DataBases.Melchior.HistoryDB import HistoryDB
 
-WhitelistDb = WhitelistDB()
+HistoryDb = HistoryDB()
 
-# Validate Body for AddBlackList route
-def ULDelWhiteListListValidation(data):
+# Validate Body for DelHistory route
+def ULAddHistoryValidation(data):
     if not validateBody(
         data,
-        ["token", "number"]):
+        ["token", "number", "origin", "time"]):
         return False
     return True
 
-# Route to del a number to the whitelist of the user
-class DelWhiteList(Resource):
-    def delete(self):
+# Route to del a call from the history
+class AddHistory(Resource):
+    def post(self):
         body = fquest.get_json()
-        if not ULDelWhiteListListValidation(body):
+        if not ULAddHistoryValidation(body):
             return BadRequestError("bad request"), 400
 
         data = DeserializeJWT(body["token"], Roles.USER)
@@ -43,8 +43,9 @@ class DelWhiteList(Resource):
 
         guid = data['guid']
         number = body["number"]
-        WhitelistDb.delWhitelistNumberForUser(guid, number)
+        origin = body["origin"]
+        time = body["time"]
+        HistoryDb.addHistoryCallForUser(guid, number, origin, int(time))
         return {
-            'WhiteList': WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"]
+            'History': HistoryDb.getHistoryForUser(guid)["History"]
         }, 200
-

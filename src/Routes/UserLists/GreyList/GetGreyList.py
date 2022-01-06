@@ -15,6 +15,9 @@ from Routes.Utils.Request import validateBody
 from Routes.Utils.JWTProvider.Provider import DeserializeJWT
 from Routes.Utils.JWTProvider.Roles import Roles
 
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError
+
 # DB import
 from DataBases.Melchior.BlackListDB import BlacklistDB
 from DataBases.Melchior.WhiteListDB import WhitelistDB
@@ -27,9 +30,7 @@ class GetGreyList(Resource):
     def get(self):
         data = DeserializeJWT(request.args["token"], Roles.USER)
         if data is None:
-            return {
-                'error': 'bad_token'
-            }, 400
+            return BadRequestError("bad token"), 400
 
         guid = data['guid']
         return {

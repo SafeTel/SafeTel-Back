@@ -15,6 +15,9 @@ from Routes.Utils.Types import isValidEmail
 from Routes.Utils.JWTProvider.Provider import DeserializeJWT
 from Routes.Utils.JWTProvider.Roles import Roles
 
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError
+
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
 from DataBases.Melchior.InternalUtils.DataWorker import UpdateAccountEmail
@@ -36,21 +39,15 @@ class UpdateEmail(Resource):
     def post(self):
         body = fquest.get_json()
         if not UMUpdateEmailBodyValidation(body):
-            return {
-                'error': 'bad_request'
-            }, 400
+            return BadRequestError('bad request'), 400
 
         data = DeserializeJWT(body["token"], Roles.USER)
         if data is None:
-            return {
-                'error': 'bad_token'
-            }, 400
+            return BadRequestError("bad token"), 400
 
         result = UserDb.getUserByGUID(data['guid'])
         if result is None:
-            return {
-                'error': 'bad_token'
-            }, 400
+            return BadRequestError("bad token"), 400
 
         UpdateAccountEmail(UserDb.Users, data['guid'], body['email'])
 
