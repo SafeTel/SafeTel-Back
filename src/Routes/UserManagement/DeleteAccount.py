@@ -40,9 +40,7 @@ class DeleteAccount(Resource):
 
         jwtDeserialized = DeserializeJWT(body["token"], Roles.USER)
         if jwtDeserialized is None:
-            return {
-                'error': 'bad_token'
-            }, 400
+            return BadRequestError('bad token')
 
         guidUsr = jwtDeserialized['guid']
 
