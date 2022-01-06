@@ -55,11 +55,11 @@ InitializeUserListsRoutes(api)
 
 logging.info("Routes initialized - User Lists")
 
-# Initialize Service Routes
-from Routes.Service.InitializeServiceRoutes import InitializeServiceRoutes
-InitializeServiceRoutes(api)
+# Initialize s Routes
+from Routes.Services.InitializeServicesRoutes import InitializeServicesRoutes
+InitializeServicesRoutes(api)
 
-logging.info("Routes initialized - Service")
+logging.info("Routes initialized - Services")
 
 # Initialize server ressources routes
 from Routes.ServerManagement.InitializeServerManagementRoutes import InitializeServerManagementRoutes
