@@ -39,6 +39,16 @@ def UpdateAccountEmail(db, guid, email):
     query_values = { "$set": { 'email': email } }
     db.update_one(query, query_values)
 
+def UpdatePersonalInfos(db, guid, customerInfos, localization):
+    query = {'guid': str(guid)}
+    result = db.find_one(query)
+    if result is None:
+        return
+    query_values = { "$set": { 'customerInfos': customerInfos } }
+    db.update_one(query, query_values)
+    query_values = { "$set": { 'localization': localization } }
+    db.update_one(query, query_values)
+
 def GetAccountsByRole(db, roleTarget):
     query = {
         'role': roleTarget

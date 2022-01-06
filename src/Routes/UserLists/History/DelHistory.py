@@ -14,6 +14,9 @@ from Routes.Utils.Request import validateBody
 from Routes.Utils.JWTProvider.Provider import DeserializeJWT
 from Routes.Utils.JWTProvider.Roles import Roles
 
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError
+
 # DB import
 from DataBases.Melchior.HistoryDB import HistoryDB
 
@@ -32,15 +35,11 @@ class DelHistory(Resource):
     def delete(self):
         body = fquest.get_json()
         if not ULDelHistoryValidation(body):
-            return {
-                'error': 'bad_request'
-            }, 400
+            return BadRequestError("bad request"), 400
 
         data = DeserializeJWT(body["token"], Roles.USER)
         if data is None:
-            return {
-                'error': 'bad_token'
-            }, 400
+            return BadRequestError("bad token"), 400
 
         guid = data['guid']
         number = body["number"]
