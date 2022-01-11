@@ -5,8 +5,10 @@
 ## config
 ##
 
-client = 'SafeTelBackEndUser'
-password = 'aSEFTHUKOM1!'
-dbname = 'Melchior'
-dbnameCasper = 'Casper'
+import os
+
+client = os.getenv('DB_CLIENT', 'SafeTelBackEndUser')
+password = os.getenv('DB_PASSWORD', 'aSEFTHUKOM1!')
+dbname = os.getenv('DB_USERS_NAME', 'Melchior')
+dbnameCasper = os.getenv('DB_DEVELOPERS_NAME', 'Casper')
 SECRET_KEY = 'MankindsGreatestFearIsMankindItself'
