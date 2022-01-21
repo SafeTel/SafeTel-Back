@@ -15,4 +15,4 @@ def BadRequestError(details):
     return {
         'error': True,
         'details':details
-    }
+    }, 400

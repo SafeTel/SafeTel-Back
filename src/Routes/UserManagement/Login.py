@@ -50,9 +50,7 @@ class Login(Resource):
             return BadRequestError("this email is not linked to an account")
 
         if not CheckPWD(body["password"], user["password"]):
-            return {
-                'error': 'you can not connect with this combination of email and password'
-            }, 400
+            return BadRequestError('you can not connect with this combination of email and password')
 
         role = StrToRole(user["role"])
 
