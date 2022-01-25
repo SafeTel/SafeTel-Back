@@ -6,13 +6,13 @@ services:
         image: 
             drone/drone:latest
         ports:
-            - 8080:80
+            - 80:80
             - 443:443
         environment:
             - DRONE_GITHUB_CLIENT_ID=4d2a8308db5b980cd4ee
             - DRONE_GITHUB_CLIENT_SECRET=899c6ccd61d18cef732e6d2cd189aea11614bc3e
             - DRONE_RPC_SECRET=5db786fafec54ea081651b3ed7a68692
-            - DRONE_SERVER_HOST=safetel.francecentral.cloudapp.azure.com:8080
+            - DRONE_SERVER_HOST=safetel.francecentral.cloudapp.azure.com
             - DRONE_SERVER_PROTO=https
             - DRONE_TLS_AUTOCERT=true
 
@@ -31,7 +31,7 @@ services:
             - 3000:3000
         environment:
             - DRONE_RPC_PROTO=https
-            - DRONE_RPC_HOST=safetel.francecentral.cloudapp.azure.com:8080
+            - DRONE_RPC_HOST=safetel.francecentral.cloudapp.azure.com
             - DRONE_RPC_SECRET=5db786fafec54ea081651b3ed7a68692 
             - DRONE_RUNNER_CAPACITY=2
             - DRONE_RUNNER_NAME=safetel-drone-runner
