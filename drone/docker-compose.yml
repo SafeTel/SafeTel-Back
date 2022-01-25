@@ -14,9 +14,12 @@ services:
             - DRONE_RPC_SECRET=5db786fafec54ea081651b3ed7a68692
             - DRONE_SERVER_HOST=safetel.francecentral.cloudapp.azure.com:8080
             - DRONE_SERVER_PROTO=https
+            - DRONE_TLS_AUTOCERT=true
+
         volumes:
             - /var/lib/drone:/data
         restart: always
+
 
     drone_runner:
     # container_name: drone_runner
