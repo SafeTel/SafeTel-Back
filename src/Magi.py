@@ -49,10 +49,17 @@ api = Api(app)
 # Initialize User Routes
 from Routes.UserManagement.InitializeUserManagementRoutes import InitializeUserManagementRoutes
 from Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
+
 InitializeUserManagementRoutes(api)
 InitializeUserListsRoutes(api)
 
 logging.info("Routes initialized - User Lists")
+
+# Initialize s Routes
+from Routes.Services.InitializeServicesRoutes import InitializeServicesRoutes
+InitializeServicesRoutes(api)
+
+logging.info("Routes initialized - Services")
 
 # Initialize server ressources routes
 from Routes.ServerManagement.InitializeServerManagementRoutes import InitializeServerManagementRoutes
