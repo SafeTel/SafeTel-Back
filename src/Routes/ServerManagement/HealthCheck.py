@@ -32,7 +32,7 @@ from Routes.Utils.RouteErrors.Errors import BadRequestError
 class HealthCheck(Resource):
     def get(self):
         token = request.args["token"]
-        if request.args.get("something") == None:
+        if request.args.get("token") == None:
             return BadRequestError("bad token"), 400
 
         self.serverCheck()
