@@ -2,8 +2,10 @@ FROM python:latest
 
 COPY . /
 
-EXPOSE 2407
+ARG SERVER_PORT
+
+EXPOSE ${SERVER_PORT}
 
 RUN ["python3", "-m", "pip", "install", "-r", "requirements.txt"]
 
-CMD ["python3", "Magi.py"]
+CMD ["python3", "./src/Magi.py"]

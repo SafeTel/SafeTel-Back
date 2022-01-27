@@ -10,14 +10,26 @@ from flask import request as fquest
 from flask.globals import request
 from flask_restful import Resource
 
+# Utils import
+from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Routes.Utils.JWTProvider.Roles import Roles
+
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError
+
 # DB import
-from src.DataBases.Melchior import WhitelistDB
+from DataBases.Melchior.WhiteListDB import WhitelistDB
 
 WhitelistDb = WhitelistDB()
 
+# Route go get the whitelist of the user
 class GetWhiteList(Resource):
     def get(self):
-        userId = request.args["userId"]
+        data = DeserializeJWT(request.args["token"], Roles.USER)
+        if data is None:
+            return BadRequestError("bad request"), 400
+
+        guid = data['guid']
         return {
-            'WhiteList': WhitelistDb.getWhitelistForUser(userId)["phoneNumbers"]
+            'WhiteList': WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"]
         }, 200

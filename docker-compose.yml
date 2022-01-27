@@ -1,10 +1,36 @@
 version: "3.3"
 
 services:
-    magi:
+    magi-postman:
+        build:
+            ./
+        ports:
+            - 4207:4207
+        restart:
+            on-failure
+        env_file:
+            - ./docker/postman-config.env
+        environment:
+            SERVER_PORT: 4207
+    magi-dev:
+        build:
+            ./
+        ports:
+            - 4270:4270
+        restart:
+            on-failure
+        env_file:
+            - ./docker/dev-config.env
+        environment:
+            SERVER_PORT: 4270
+    magi-prod:
         build:
             ./
         ports:
             - 2407:2407
         restart:
             on-failure
+        env_file:
+            - ./docker/prod-config.env
+        environment:
+            SERVER_PORT: 2407

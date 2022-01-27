@@ -43,3 +43,5 @@ Command:
 ```sh
 $ sudo docker system prune -a
 ```
+
+Drone should be on Misa Amane Birthday, bad drone

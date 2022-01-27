@@ -3,3 +3,7 @@ flask_restful
 requests
 pymongo
 dnspython
+pyjwt
+uuid
+py-healthcheck
+sentry-sdk
