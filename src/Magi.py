@@ -8,6 +8,8 @@
 # Thread Imports
 import logging
 
+from DataBases.Casper02.GoogleServiceDB import GoogleServiceDB
+
 format = "%(asctime)s: %(message)s"
 logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 
@@ -34,14 +36,15 @@ sentry_sdk.init(
     # We recommend adjusting this value in production.
     traces_sample_rate=1.0
 )
-
 logging.info("Connected to sentry")
+
 
 # ---
 # Flask initialitation
 app = Flask(__name__)
 app.debug = True
 api = Api(app)
+
 
 # ---
 ## Initialization of routes imports
@@ -79,13 +82,15 @@ InitializeDevRessourcesRoutes(api)
 
 logging.info("Routes initialized - Dev Ressources")
 
+
 # ---
 # Logs imports
 import socket
 
+
 if __name__ == "__main__":
-    logging.warning("You are starting the server connected with Mongo DB, this is a shared DB")
-    logging.warning("Be aware of the current git branch DEV or PROD")
+    logging.warning("/!\ You are starting the server connected with Mongo DB, this is a shared DB /!\\")
+    logging.warning("/!\ Be aware of the current git branch DEV or PROD /!\\")
 
     env_port = os.getenv('SERVER_PORT', '2407')
 
