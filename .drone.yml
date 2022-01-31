@@ -4,7 +4,7 @@ name: deployement
 
 steps:
   - name: dev deployement
-    image: alpine
+    image: docker-compose
     commands:
     - cd devOps/deployement
     - docker-compose pull magi_dev
