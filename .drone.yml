@@ -3,20 +3,20 @@ type: docker
 name: deployment
 
 steps:
-- name: dev deployment
-  image: alpine
-  commands:
-  - cd devOps/deployment
-  - docker-compose up -d --force-recreate --no-deps --build magi_dev
-  when:
-    branch:
-    - DEV
+  - name: dev deployment
+    image: alpine
+    commands:
+    - cd devOps/deployment
+    - docker-compose up -d --force-recreate --no-deps --build magi_dev
+    when:
+      branch:
+      - DEV
 
-- name: prod deployment
-  image: alpine
-  commands:
-  - cd devOps/deployment
-  - docker-compose up -d --force-recreate --no-deps --build magi_prod
-  when:
-    branch:
-    - master
+  - name: prod deployment
+    image: alpine
+    commands:
+    - cd devOps/deployment
+    - docker-compose up -d --force-recreate --no-deps --build magi_prod
+    when:
+      branch:
+      - master
