@@ -1,22 +1,22 @@
 kind: pipeline
 type: docker
-name: deployment
+name: deployement
 
 steps:
-  - name: dev deployment
+  - name: dev deployement
     image: alpine
     commands:
-    - cd devOps/deployment
+    - cd devOps/deployement
     - docker-compose pull magi_dev
     - docker-compose up -d --force-recreate --no-deps --build magi_dev
     when:
       branch:
       - DEV
 
-  - name: prod deployment
+  - name: prod deployement
     image: alpine
     commands:
-    - cd devOps/deployment
+    - cd devOps/deployement
     - docker-compose pull magi_prod
     - docker-compose up -d --force-recreate --no-deps --build magi_prod
     when:
