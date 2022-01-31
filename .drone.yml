@@ -20,13 +20,3 @@ steps:
   when:
     branch:
     - master
-
-- name: postman deployment
-  image: alpine
-  commands:
-  - cd deployment
-  - docker-compose up -d --force-recreate --no-deps --build magi_postman
-  when:
-    branch:
-    - DEV
-    - master
