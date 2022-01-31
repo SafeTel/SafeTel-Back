@@ -4,29 +4,32 @@ name: deployement
 
 steps:
 
-  - name: deploy-preprod
-    image: appleboy/drone-ssh
-    settings:
-      host: safetel.francecentral.cloudapp.azure.com
-      username: backadmin
-      key:
-        from_secret: private_ssh_key
-      port: 60999
-      script:
-        - cd dockers/core
-        - docker-compose pull
-        - docker-compose down
-        - docker-compose up -d
-
   # - name: dev deployement
-  #   image: docker/compose
-  #   commands:
-  #   - cd devOps/deployement
-  #   - docker-compose pull magi_dev
-  #   - docker-compose up -d --force-recreate --no-deps --build magi_dev
+  #   image: appleboy/drone-ssh
+  #   settings:
+  #     host: safetel.francecentral.cloudapp.azure.com
+  #     username: backadmin
+  #     key:
+  #       from_secret: private_ssh_key
+  #     port: 60999
+  #     script:
+  #       - cd Safetel-Back/devOps/deployement
+  #       - docker-compose pull magi_dev
+  #       - docker-compose up -d --force-recreate --no-deps --build magi_dev
   #   when:
   #     branch:
   #     - DEV
+
+  - name: dev deployement
+    image: docker/compose
+    settings:
+      script:
+        - cd devOps/deployement
+        - docker-compose pull magi_dev
+        - docker-compose up -d --force-recreate --no-deps --build magi_dev
+    when:
+      branch:
+      - DEV
 
   # - name: prod deployement
   #   image: alpine
