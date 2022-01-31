@@ -8,11 +8,8 @@
 # Client mongo db import
 import pymongo
 
-# Import db name
-from config import dbnameCasper02
-
-# Melchior uri import!
-from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
+# Import db name and db URI
+from config import dbnameCasper02, URI_MELCHIOR
 
 # PyMongo Internal Utils
 from DataBases.InternalUtils.DataWatcher import GetDocument
@@ -28,4 +25,4 @@ class GoogleServiceDB():
         result = GetDocument(self.GoogleServices, "service", "GMail")
         if (result is None):
             return None
-        return (result["credentials"]["email"], result["credentials"]["email"])
+        return (result["credentials"]["email"], result["credentials"]["password"])

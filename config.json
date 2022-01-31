@@ -1,0 +1,4 @@
+{
+    "deployement_mode": "DEV",
+    "env_config_file": "./devOps/deployement/dev-config.env"
+}

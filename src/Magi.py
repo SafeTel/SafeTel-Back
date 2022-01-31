@@ -8,8 +8,6 @@
 # Thread Imports
 import logging
 
-from DataBases.Casper02.GoogleServiceDB import GoogleServiceDB
-
 format = "%(asctime)s: %(message)s"
 logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 
@@ -19,6 +17,7 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 # Network Imports
 import requests
 import os
+import config
 from flask import Flask
 from Routes.Utils.JWTProvider.Roles import Roles
 from flask_restful import Api
@@ -81,6 +80,10 @@ from Routes.DevRessources.InitializeDevRessources import InitializeDevRessources
 InitializeDevRessourcesRoutes(api)
 
 logging.info("Routes initialized - Dev Ressources")
+
+
+from Routes.Services.Google.GMailService import GMailService
+GMailService()
 
 
 # ---

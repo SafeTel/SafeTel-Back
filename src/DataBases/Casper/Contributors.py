@@ -8,11 +8,8 @@
 # Client mongo db import
 import pymongo
 
-# Import db name
-from config import dbnameCasper
-
-# Melchior uri import
-from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
+# Import db name and db URI
+from config import dbnameCasper, URI_MELCHIOR
 
 # PyMongo Internal Utils
 from DataBases.InternalUtils.DataWatcher import IsDocument
