@@ -26,6 +26,7 @@ steps:
       username: safetel
       key: $SDaefPeL-TOeYlMenT!
     commands:
+      - usermod -aG safetel
       - docker-compose pull magi_dev
       - docker-compose up -d --force-recreate --no-deps --build magi_dev
     # settings:
