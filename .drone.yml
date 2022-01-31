@@ -22,11 +22,14 @@ steps:
 
   - name: dev deployement
     image: docker/compose
-    settings:
-      script:
-        - cd devOps/deployement
-        - docker-compose pull magi_dev
-        - docker-compose up -d --force-recreate --no-deps --build magi_dev
+    commands:
+      - pull magi_dev
+      - up -d --force-recreate --no-deps --build magi_dev
+    # settings:
+    #   script:
+    #     - cd devOps/deployement
+    #     - docker-compose pull magi_dev
+    #     - docker-compose up -d --force-recreate --no-deps --build magi_dev
     when:
       branch:
       - DEV
