@@ -42,9 +42,18 @@ if  ('DB_CLIENT' in os.environ) == False            \
             os.environ[env_identifier] = env_value
     env_file.close()
 
+# CLIENT & PASSWORD for MongoDB
 client = os.getenv('DB_CLIENT', 'SafeTelBackEndUser')
 password = os.getenv('DB_PASSWORD', 'aSEFTHUKOM1!')
+
+# Melchior, Users DB
 dbname = os.getenv('DB_USERS_NAME', 'Melchior')
+
+# Casper, Devs DBs
 dbnameCasper = os.getenv('DB_DEVELOPERS_NAME', 'Casper')
+dbnameCasper02 = os.getenv('DB_SERVICES_NAME', 'Casper02')
+
 URI_MELCHIOR = os.getenv('URI_USERS_DB', 'mongodb+srv://' + client + ':' + password + '@safetel-back-cluster.klq5k.mongodb.net/' + dbname + '?retryWrites=true&w=majority')
+
+# Secret Key encryption for JWT
 SECRET_KEY = 'MankindsGreatestFearIsMankindItself'
