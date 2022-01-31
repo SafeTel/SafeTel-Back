@@ -2,7 +2,6 @@ version: "3.3"
 
 services:
     magi_dev:
-        user: "safetel:$SDaefPeL-TOeYlMenT!"
         image:
             safetel/safetel-back:dev
         ports:
