@@ -10,9 +10,6 @@ import os
 import re
 import json
 
-# Thread Imports
-import logging
-
 if  ('DB_CLIENT' in os.environ) == False            \
     or ('DB_PASSWORD'in os.environ) == False        \
     or ('DB_USERS_NAME'in os.environ) == False      \
@@ -39,7 +36,8 @@ if  ('DB_CLIENT' in os.environ) == False            \
         for match in matches:
             env_identifier = match.group(1)
             env_value = match.group(2)
-            os.environ[env_identifier] = env_value
+            if env_identifier != None and env_value != None:
+                os.environ[env_identifier] = env_value
     env_file.close()
 
 # CLIENT & PASSWORD for MongoDB
