@@ -20,7 +20,6 @@ services:
             - /var/lib/drone:/data
         restart: always
 
-
     drone_runner:
     # container_name: drone_runner
         depends_on:
