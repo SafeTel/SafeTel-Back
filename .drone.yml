@@ -6,19 +6,28 @@ steps:
 
   - name: dev automatic deployement
     image: appleboy/drone-ssh
+    volumes:
+    - name: ssh_key
+      path: /root/drone
     settings:
       host: safetel.francecentral.cloudapp.azure.com
       ssh_username: backadmin@safeback
-      ssh_key: "-----BEGIN OPENSSH PRIVATE KEY-----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-----END OPENSSH PRIVATE KEY-----"
-        # from_secret: private_ssh_key
+      key_path: /root/ssh/drone
+      # ssh_key:
+      #   from_secret: private_ssh_key
       port: 60999
       script:
         - cd Safetel-Back/devOps/deployement
         - docker-compose pull magi_dev
         - docker-compose up -d --force-recreate --no-deps --build magi_dev
-    when:
-      branch:
-      - DEV
+      when:
+        branch:
+        - DEV
+
+volumes:
+- name: ssh_key
+  host:
+    path: /home/.ssh/drone
 
   # - name: dev deployement
   #   image: docker/compose
