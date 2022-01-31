@@ -16,8 +16,8 @@ services:
             - DRONE_SERVER_PROTO=https
             - DRONE_TLS_AUTOCERT=true
             - DRONE_USER_CREATE=username:safetel,admin:true
+            - DRONE_GIT_ALWAYS_AUTH=true
 
-            # - DRONE_GIT_ALWAYS_AUTH=true
             # - DRONE_GIT_USERNAME=
             # - DRONE_GIT_PASSWORD=
 
