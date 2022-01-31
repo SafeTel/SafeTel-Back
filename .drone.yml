@@ -28,7 +28,7 @@ steps:
 volumes:
 - name: ssh_key
   host:
-    path: /home/backadmin/.ssh/drone-ssh/safetel-back-drone
+    path: /home/backadmin/.ssh/drone-ssh/
 
   # - name: dev deployement
   #   image: docker/compose
