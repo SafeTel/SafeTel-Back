@@ -13,8 +13,6 @@ steps:
         from_secret: private_ssh_key
       port: 60999
       script:
-        - ls
-        - pwd
         - cd Safetel-Back/devOps/deployement
         - ls
         - pwd
