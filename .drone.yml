@@ -8,7 +8,7 @@ steps:
     image: appleboy/drone-ssh
     settings:
       host: safetel.francecentral.cloudapp.azure.com
-      username: backadmin
+      username: backadmin@safetel
       key:
         from_secret: private_ssh_key
       port: 60999
@@ -20,11 +20,9 @@ steps:
       branch:
       - DEV
 
+
   # - name: dev deployement
   #   image: docker/compose
-  #   settings:
-  #     username: safetel
-  #     key: $SDaefPeL-TOeYlMenT!
   #   commands:
   #     - docker-compose pull magi_dev
   #     - docker-compose up -d --force-recreate --no-deps --build magi_dev
