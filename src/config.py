@@ -33,14 +33,14 @@ if  ('DB_CLIENT' in os.environ) == False            \
     env_file = open(env_config_file, 'r')
     file_content_lines = env_file.readlines()
 
+    regex_for_env = re.compile(r'([A-Z_]+)=([a-zA-Z0-9!\/+:@\-\.?=&]+)')
     for line in file_content_lines:
-        regex_for_env = re.compile(r'([A-Z_]+)=([a-zA-Z0-9!\/+:@\-\.?=&]+)')
-        matches = regex_for_env.finditer(line)
+        matches = regex_for_env.finditer(line) # find matches from line using regex_for_env
         for match in matches:
             env_identifier = match.group(1)
             env_value = match.group(2)
             os.environ[env_identifier] = env_value
-
+    env_file.close()
 
 client = os.getenv('DB_CLIENT', 'SafeTelBackEndUser')
 password = os.getenv('DB_PASSWORD', 'aSEFTHUKOM1!')
