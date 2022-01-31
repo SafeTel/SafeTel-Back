@@ -6,18 +6,50 @@ steps:
 
   - name: dev automatic deployement
     image: appleboy/drone-ssh
+    volumes:
+    - name: ssh_key
+      path: /root/ssh/drone
     settings:
       host: safetel.francecentral.cloudapp.azure.com
-      ssh_username: backadmin
-      ssh_key:
-        from_secret: private_ssh_key
+      ssh_username: backadmin@safeback
+      key_path: /root/ssh/drone
+      # ssh_key:
+      #   from_secret: private_ssh_key
       port: 60999
       script:
         - cd Safetel-Back/devOps/deployement
         - ls
-        - pwd
         - docker-compose pull magi_dev
         - docker-compose up -d --force-recreate --no-deps --build magi_dev
       when:
         branch:
         - DEV
+
+volumes:
+- name: ssh_key
+  host:
+    path: /home/backadmin/.ssh/drone-ssh/drone
+
+  # - name: dev deployement
+  #   image: docker/compose
+  #   commands:
+  #     - docker-compose pull magi_dev
+  #     - docker-compose up -d --force-recreate --no-deps --build magi_dev
+    # settings:
+    #   script:
+    #     - cd devOps/deployement
+    #     - docker-compose pull magi_dev
+    #     - docker-compose up -d --force-recreate --no-deps --build magi_dev
+    # when:
+    #   branch:
+    #   - DEV
+  # - name: prod deployement
+  #   image: alpine
+  #   commands:
+  #   - echo "Building magi_prod....."
+  #   - cd devOps/deployement
+  #   - docker-compose pull magi_prod
+  #   - docker-compose up -d --force-recreate --no-deps --build magi_prod
+  #   when:
+  #     branch:
+  #     - master
