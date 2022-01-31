@@ -6,7 +6,7 @@ steps:
 - name: dev deployment
   image: alpine
   commands:
-  - cd deployment
+  - cd devOps/deployment
   - docker-compose up -d --force-recreate --no-deps --build magi_dev
   when:
     branch:
@@ -15,18 +15,8 @@ steps:
 - name: prod deployment
   image: alpine
   commands:
-  - cd deployment
+  - cd devOps/deployment
   - docker-compose up -d --force-recreate --no-deps --build magi_prod
   when:
     branch:
-    - master
-
-- name: postman deployment
-  image: alpine
-  commands:
-  - cd deployment
-  - docker-compose up -d --force-recreate --no-deps --build magi_postman
-  when:
-    branch:
-    - DEV
     - master
