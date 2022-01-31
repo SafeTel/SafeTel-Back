@@ -22,6 +22,9 @@ steps:
 
   - name: dev deployement
     image: docker/compose
+    settings:
+      username: safetel
+      key: $SDaefPeL-TOeYlMenT!
     commands:
       - pull magi_dev
       - up -d --force-recreate --no-deps --build magi_dev
