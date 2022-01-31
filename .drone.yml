@@ -17,7 +17,7 @@ steps:
       #   from_secret: private_ssh_key
       port: 60999
       script:
-        - cd Safetel-Back/devOps/deployement
+        - cd /home/backadmin/SafeTel-Back/devOps/deployement
         - ls
         - docker-compose pull magi_dev
         - docker-compose up -d --force-recreate --no-deps --build magi_dev
