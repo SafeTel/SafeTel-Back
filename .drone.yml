@@ -8,11 +8,11 @@ steps:
     image: appleboy/drone-ssh
     volumes:
     - name: ssh_key
-      path: /root/ssh/
+      path: /root/ssh/safeteldronessh
     settings:
       host: safetel.francecentral.cloudapp.azure.com
       ssh_username: backadmin
-      key_path: /root/ssh/safetel-back-drone
+      key_path: /root/ssh/safeteldronessh
       # ssh_key:
       #   from_secret: private_ssh_key
       port: 60999
@@ -28,7 +28,7 @@ steps:
 volumes:
 - name: ssh_key
   host:
-    path: /home/backadmin/.ssh/drone-ssh
+    path: /home/backadmin/.ssh/drone-ssh/safeteldronessh
 
   # - name: dev deployement
   #   image: docker/compose
@@ -54,3 +54,4 @@ volumes:
   #     branch:
   #     - master
 
+-----BEGIN OPENSSH PRIVATE KEY-----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-----END OPENSSH PRIVATE KEY-----
