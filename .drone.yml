@@ -27,7 +27,7 @@ steps:
 volumes:
 - name: ssh_key
   host:
-    path: ~/.ssh/drone-ssh
+    path: /home/backadmin/.ssh/drone-ssh
 
   # - name: dev deployement
   #   image: docker/compose
