@@ -17,6 +17,7 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 # Network Imports
 import requests
 import os
+import config
 from flask import Flask
 from Routes.Utils.JWTProvider.Roles import Roles
 from flask_restful import Api
