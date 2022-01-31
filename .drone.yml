@@ -7,6 +7,8 @@ steps:
     image: alpine
     commands:
     - cd devOps/deployment
+    - docker-compose pull
+    - docker-compose down
     - docker-compose up -d --force-recreate --no-deps --build magi_dev
     when:
       branch:
@@ -16,6 +18,8 @@ steps:
     image: alpine
     commands:
     - cd devOps/deployment
+    - docker-compose pull
+    - docker-compose down
     - docker-compose up -d --force-recreate --no-deps --build magi_prod
     when:
       branch:
