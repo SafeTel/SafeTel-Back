@@ -8,7 +8,7 @@ steps:
     image: appleboy/drone-ssh
     volumes:
     - name: ssh_key
-      path: /root/ssh/safetel-back-drone
+      path: /root/ssh/
     settings:
       host: safetel.francecentral.cloudapp.azure.com
       ssh_username: backadmin
@@ -28,7 +28,7 @@ steps:
 volumes:
 - name: ssh_key
   host:
-    path: /home/backadmin/.ssh/drone-ssh/
+    path: /home/backadmin/.ssh/drone-ssh
 
   # - name: dev deployement
   #   image: docker/compose
