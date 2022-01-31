@@ -4,16 +4,23 @@ name: deployement
 
 steps:
   - name: dev deployement
-    image: docker/compose:1.25.0-rc2-alpine
+    image: alpine
     commands:
-    - echo "Building magi_dev....."
     - cd devOps/deployement
-    - echo $(ls)
     - docker-compose pull magi_dev
     - docker-compose up -d --force-recreate --no-deps --build magi_dev
     when:
       branch:
       - DEV
+  # - name: dev deployement
+  #   image: docker/compose:1.25.0-rc2-alpine
+  #   commands:
+  #   - cd devOps/deployement
+  #   - docker-compose pull magi_dev
+  #   - docker-compose up -d --force-recreate --no-deps --build magi_dev
+  #   when:
+  #     branch:
+  #     - DEV
 
   - name: prod deployement
     image: alpine
