@@ -3,17 +3,23 @@ type: docker
 name: deployement
 
 steps:
-  - name: dev deployement
-    image: docker/compose
-    commands:
-    - cd devOps/deployement
-    - docker-compose pull magi_dev
-    - docker-compose up -d --force-recreate --no-deps --build magi_dev
-    when:
-      branch:
-      - DEV
+
+  - name: deploy-preprod
+    image: appleboy/drone-ssh
+    settings:
+      host: safetel.francecentral.cloudapp.azure.com
+      username: backadmin
+      key:
+        from_secret: private_ssh_key
+      port: 60999
+      script:
+        - cd dockers/core
+        - docker-compose pull
+        - docker-compose down
+        - docker-compose up -d
+
   # - name: dev deployement
-  #   image: docker/compose:1.25.0-rc2-alpine
+  #   image: docker/compose
   #   commands:
   #   - cd devOps/deployement
   #   - docker-compose pull magi_dev
@@ -22,13 +28,13 @@ steps:
   #     branch:
   #     - DEV
 
-  - name: prod deployement
-    image: alpine
-    commands:
-    - echo "Building magi_prod....."
-    - cd devOps/deployement
-    - docker-compose pull magi_prod
-    - docker-compose up -d --force-recreate --no-deps --build magi_prod
-    when:
-      branch:
-      - master
+  # - name: prod deployement
+  #   image: alpine
+  #   commands:
+  #   - echo "Building magi_prod....."
+  #   - cd devOps/deployement
+  #   - docker-compose pull magi_prod
+  #   - docker-compose up -d --force-recreate --no-deps --build magi_prod
+  #   when:
+  #     branch:
+  #     - master
