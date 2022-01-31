@@ -18,9 +18,6 @@ services:
             - DRONE_USER_CREATE=username:ArthurBoulliardT,admin:true
             - DRONE_GIT_ALWAYS_AUTH=true
 
-            # - DRONE_GIT_USERNAME=
-            # - DRONE_GIT_PASSWORD=
-
         volumes:
             - /var/lib/drone:/data
         restart: always
