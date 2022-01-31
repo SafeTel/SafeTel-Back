@@ -6,7 +6,9 @@ steps:
   - name: dev deployement
     image: alpine
     commands:
+    - echo "Building magi_dev....."
     - cd devOps/deployement
+    - echo $(ls)
     - docker-compose pull magi_dev
     - docker-compose up -d --force-recreate --no-deps --build magi_dev
     when:
@@ -16,6 +18,7 @@ steps:
   - name: prod deployement
     image: alpine
     commands:
+    - echo "Building magi_prod....."
     - cd devOps/deployement
     - docker-compose pull magi_prod
     - docker-compose up -d --force-recreate --no-deps --build magi_prod
