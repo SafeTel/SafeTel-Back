@@ -4,7 +4,7 @@ name: deployement
 
 steps:
 
-  - name: dev deployement
+  - name: dev automatic deployement
     image: appleboy/drone-ssh
     settings:
       host: safetel.francecentral.cloudapp.azure.com
