@@ -23,27 +23,3 @@ steps:
       when:
         branch:
         - DEV
-
-  # - name: dev deployement
-  #   image: docker/compose
-  #   commands:
-  #     - docker-compose pull magi_dev
-  #     - docker-compose up -d --force-recreate --no-deps --build magi_dev
-    # settings:
-    #   script:
-    #     - cd devOps/deployement
-    #     - docker-compose pull magi_dev
-    #     - docker-compose up -d --force-recreate --no-deps --build magi_dev
-    # when:
-    #   branch:
-    #   - DEV
-  # - name: prod deployement
-  #   image: alpine
-  #   commands:
-  #   - echo "Building magi_prod....."
-  #   - cd devOps/deployement
-  #   - docker-compose pull magi_prod
-  #   - docker-compose up -d --force-recreate --no-deps --build magi_prod
-  #   when:
-  #     branch:
-  #     - master
