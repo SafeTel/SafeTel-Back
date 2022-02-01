@@ -13,8 +13,6 @@ steps:
       host: safetel.francecentral.cloudapp.azure.com
       ssh_username: backadmin
       key_path: /root/ssh/drone
-      # ssh_key:
-      #   from_secret: private_ssh_key
       port: 60999
       script:
         - cd devOps/deployement
