@@ -17,6 +17,7 @@ from Routes.UserManagement.DeleteAccount import DeleteAccount
 from Routes.UserManagement.UpdateEmail import UpdateEmail
 from Routes.UserManagement.ChangePersonalInfos import ChangesPersonalInfos
 from Routes.UserManagement.CheckToken import CheckToken
+from Routes.UserManagement.ResetToken import ResetToken
 
 def InitializeUserManagementRoutes(api):
     api.add_resource(Register, "/user/register")
@@ -25,3 +26,4 @@ def InitializeUserManagementRoutes(api):
     api.add_resource(UpdateEmail, "/user/updateEmail")
     api.add_resource(ChangesPersonalInfos, "/user/changePersonalInfos")
     api.add_resource(CheckToken, "/user/checkToken")
+    api.add_resource(ResetToken, "/user/resetToken")
