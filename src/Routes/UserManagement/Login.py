@@ -43,7 +43,7 @@ class Login(Resource):
     def post(self):
         body = fquest.get_json()
         if not UMLoginBodyValidation(body):
-            return BadRequestError("bad request")
+            return BadRequestError("bad request"), 400
 
         user = UserDb.getUser(body["email"])
         if user == None:

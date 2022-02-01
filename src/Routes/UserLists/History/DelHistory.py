@@ -35,7 +35,7 @@ class DelHistory(Resource):
     def delete(self):
         body = fquest.get_json()
         if not ULDelHistoryValidation(body):
-            return BadRequestError("bad request"), 400
+            return BadRequestError("bad request"), 400, 400
 
         data = DeserializeJWT(body["token"], Roles.USER)
         if data is None:

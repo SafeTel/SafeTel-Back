@@ -51,7 +51,7 @@ class RegisterAdminDev(Resource):
         body = fquest.get_json()
 
         if not DRRegisterAdminDevValidation(body):
-            return BadRequestError("bad request"), 400
+            return BadRequestError("bad request"), 400, 400
 
         if (not ApiKeyLogDb.isValidApiKey(body['apiKey'])):
             return BadRequestError("apiKey is not valid"), 400

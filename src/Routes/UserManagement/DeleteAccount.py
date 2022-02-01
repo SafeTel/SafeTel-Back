@@ -36,7 +36,7 @@ class DeleteAccount(Resource):
     def delete(self):
         body = fquest.get_json()
         if not UMDeleteAccountBodyValidation(body):
-            return BadRequestError("bad request")
+            return BadRequestError("bad request"), 400
 
         jwtDeserialized = DeserializeJWT(body["token"], Roles.USER)
         if jwtDeserialized is None:

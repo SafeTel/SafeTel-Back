@@ -41,7 +41,7 @@ class ClaimApiKeys(Resource):
         body = fquest.get_json()
 
         if not DRClaimApiKeysValidation(body):
-            return BadRequestError("bad request"), 400
+            return BadRequestError("bad request"), 400, 400
 
         claimer = body["name"]
 

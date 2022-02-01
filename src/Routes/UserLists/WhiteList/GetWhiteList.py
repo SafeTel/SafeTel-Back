@@ -27,7 +27,7 @@ class GetWhiteList(Resource):
     def get(self):
         data = DeserializeJWT(request.args["token"], Roles.USER)
         if data is None:
-            return BadRequestError("bad request"), 400
+            return BadRequestError("bad request"), 400, 400
 
         guid = data['guid']
         return {
