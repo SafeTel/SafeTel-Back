@@ -1,9 +1,6 @@
 name: ci
 
 on:
-  pull_request:
-    branches:
-      - 'DEV'
   push:
     branches:
       - 'DEV'
@@ -34,8 +31,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/safetel-back:dev
-
-      - name: executing remote ssh commands using password
+      - 
+        name: executing remote ssh commands for deployment using ssh_key
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
