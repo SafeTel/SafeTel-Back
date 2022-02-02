@@ -27,6 +27,7 @@ class UserDB():
         self.Users = self.db['User']
 
     def addUser(self, user_data, role):
+        del user_data["magicNumber"]
         if (role == Roles.USER):
             user_data['role'] = 'user'
         elif (role == Roles.DEVELOPER):
