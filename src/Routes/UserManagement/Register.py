@@ -57,7 +57,7 @@ class Register(Resource):
     def post(self):
         body = fquest.get_json()
         if not UMRegisterBodyValidation(body):
-            return BadRequestError("bad request"), 400, 400
+            return BadRequestError("bad request"), 400
 
         if UserDb.exists(body["email"]):
             return BadRequestError("this email is already linked to an account"), 400
