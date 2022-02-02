@@ -44,5 +44,5 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             ls
-            cd SafeTel/devOps/deployement
+            cd /home/backadmin/SafeTel-Back/devOps/deployement/
             ls
