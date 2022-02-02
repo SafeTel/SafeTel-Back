@@ -3,7 +3,7 @@ version: "3.3"
 services:
     drone_server:
         # container_name: drone_server
-        image: 
+        image:
             drone/drone:latest
         ports:
             - 80:80

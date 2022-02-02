@@ -10,7 +10,7 @@ on:
 
 jobs:
   build: # job_id
-    name: pushing new dev docker image on docker hub # job name
+    name: pushing new dev docker image on docker hub and deploy # job name
     runs-on: ubuntu-latest # hosted OS
 
     steps:
@@ -34,3 +34,15 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/safetel-back:dev
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            ls
+            cd SafeTel/devOps/deployement
+            ls
