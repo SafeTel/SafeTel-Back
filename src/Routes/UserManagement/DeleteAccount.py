@@ -40,16 +40,16 @@ class DeleteAccount(Resource):
 
         jwtDeserialized = DeserializeJWT(body["token"], Roles.USER)
         if jwtDeserialized is None:
-            return BadRequestError('bad token')
+            return BadRequestError('bad token'), 400
 
         guidUsr = jwtDeserialized['guid']
 
         result = UserDb.getUserByGUID(guidUsr)
         if result is None:
-            return BadRequestError("bad token")
+            return BadRequestError("bad token"), 400
 
         if result["userName"] != body["userName"]:
-            return BadRequestError("manual security check failed")
+            return BadRequestError("manual security check failed"), 400
 
         deleteDocumentForUser(guidUsr)
 
