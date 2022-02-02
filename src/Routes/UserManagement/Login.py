@@ -8,10 +8,8 @@
 # Network imports
 from flask import request as fquest
 from flask_restful import Resource
-from datetime import datetime, timedelta
 
 # jwt provider import
-from Routes.Utils.JWTProvider.Roles import Roles
 from Routes.Utils.JWTProvider.Provider import SerializeJWT, StrToRole
 
 # Utils check imports
