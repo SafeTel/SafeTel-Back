@@ -65,7 +65,7 @@ class GetTellows(Resource):
             }, 404
         if not 'score' in jsonTellowsReviewResponse['tellows']:
             return {
-                'error': 'unknown phone number'            
+                'error': 'unknown phone number'
             }, 404
         score = int(jsonTellowsReviewResponse['tellows']['score'])
 

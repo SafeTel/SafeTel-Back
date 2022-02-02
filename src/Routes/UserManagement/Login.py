@@ -43,14 +43,14 @@ class Login(Resource):
     def post(self):
         body = fquest.get_json()
         if not UMLoginBodyValidation(body):
-            return BadRequestError("bad request")
+            return BadRequestError("bad request"), 400
 
         user = UserDb.getUser(body["email"])
         if user == None:
-            return BadRequestError("this email is not linked to an account")
+            return BadRequestError("this email is not linked to an account"), 400
 
         if not CheckPWD(body["password"], user["password"]):
-            return BadRequestError('you can not connect with this combination of email and password')
+            return BadRequestError('you can not connect with this combination of email and password'), 400
 
         role = StrToRole(user["role"])
 

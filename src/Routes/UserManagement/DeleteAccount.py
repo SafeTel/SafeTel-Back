@@ -36,20 +36,20 @@ class DeleteAccount(Resource):
     def delete(self):
         body = fquest.get_json()
         if not UMDeleteAccountBodyValidation(body):
-            return BadRequestError("bad request")
+            return BadRequestError("bad request"), 400
 
         jwtDeserialized = DeserializeJWT(body["token"], Roles.USER)
         if jwtDeserialized is None:
-            return BadRequestError('bad token')
+            return BadRequestError('bad token'), 400
 
         guidUsr = jwtDeserialized['guid']
 
         result = UserDb.getUserByGUID(guidUsr)
         if result is None:
-            return BadRequestError("bad token")
+            return BadRequestError("bad token"), 400
 
         if result["userName"] != body["userName"]:
-            return BadRequestError("manual security check failed")
+            return BadRequestError("manual security check failed"), 400
 
         deleteDocumentForUser(guidUsr)
 
