@@ -82,10 +82,6 @@ InitializeDevRessourcesRoutes(api)
 logging.info("Routes initialized - Dev Ressources")
 
 
-from Routes.Services.Google.GMailService import GMailService
-GMailService()
-
-
 # ---
 # Logs imports
 import socket
