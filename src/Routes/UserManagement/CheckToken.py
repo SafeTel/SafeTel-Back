@@ -7,6 +7,7 @@
 
 # Network imports
 from flask import request as fquest
+from flask.globals import request
 from flask_restful import Resource
 
 # jwt provider import
@@ -18,22 +19,14 @@ from Routes.Utils.Request import validateBody
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
 
-# Validate Body for CheckToken route
-def UMCheckTokenBodyValidation(data):
-    if not validateBody(
-        data,
-        ["token"]):
-        return False
-    return True
-
 # Route to check a JWT
 class CheckToken(Resource):
-    def post(self):
-        body = fquest.get_json()
-        if not UMCheckTokenBodyValidation(body):
+    def get(self):
+        jwt = request.args["token"]
+        if jwt is None:
             return BadRequestError("bad request"), 400
 
-        validity = IsValidJWT(body["token"])
+        validity = IsValidJWT(jwt)
         if (validity == None):
             return BadRequestError("the token is not a JWT"), 400
 

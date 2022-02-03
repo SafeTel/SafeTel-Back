@@ -7,6 +7,7 @@
 
 # Network imports
 from flask import request as fquest
+from flask.globals import request
 from flask_restful import Resource
 
 # jwt provider import
@@ -24,22 +25,14 @@ from DataBases.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
 
-# validate Body for GetInfos route
-def UMGetInfosBodyValidation(data):
-    if not validateBody(
-        data,
-        ["token"]):
-        return False
-    return True
-
 # Route to get the information from a user
 class GetInfos(Resource):
-    def post(self):
-        body = fquest.get_json()
-        if not UMGetInfosBodyValidation(body):
+    def get(self):
+        jwt = request.args["token"]
+        if jwt is None:
             return BadRequestError("bad request"), 400
 
-        data = DeserializeJWT(body["token"], Roles.USER)
+        data = DeserializeJWT(jwt, Roles.USER)
         guid = data["guid"]
 
         if (data == None):

@@ -7,6 +7,7 @@
 
 # Network imports
 from flask import request as fquest
+from flask.globals import request
 from flask_restful import Resource
 
 # jwt provider import
@@ -23,26 +24,18 @@ from DataBases.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
 
-# Validate Body for ResetToken route
-def UMResetTokenBodyValidation(data):
-    if not validateBody(
-        data,
-        ["token"]):
-        return False
-    return True
-
 # Route to reset a JWT
 class ResetToken(Resource):
-    def post(self):
-        body = fquest.get_json()
-        if not UMResetTokenBodyValidation(body):
+    def get(self):
+        jwt = request.args["token"]
+        if jwt is None:
             return BadRequestError("bad request"), 400
 
-        validity = IsValidJWT(body["token"])
+        validity = IsValidJWT(jwt)
         if (validity == None or validity == False):
             return BadRequestError("not a valid JWT"), 400
 
-        jwtDeserialized = DeserializeBlindJWT(body["token"])
+        jwtDeserialized = DeserializeBlindJWT(jwt)
         guid = jwtDeserialized["guid"]
         role = jwtDeserialized["role"]
 
