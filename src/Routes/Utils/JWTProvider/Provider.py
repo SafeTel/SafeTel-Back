@@ -15,6 +15,9 @@ import jwt, config
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
 
+# Timestamp import
+import time
+
 UserDb = UserDB()
 
 def SerializeJWT(guid, role):
@@ -42,6 +45,26 @@ def DeserializeJWT(str, role):
     if (not data['role'] == role):
         return None
     return data
+
+def DeserializeBlindJWT(str):
+    if (not VerifyJWT(str)):
+        return None
+
+    data = jwt.decode(jwt=str, key=config.SECRET_KEY, algorithms='HS256')
+
+    if (not Roles.has_value(data['role']) or UserDb.existByGUID(data['guid']) is False):
+        return None
+    return data
+
+def IsValidJWT(jwt):
+    if (VerifyJWT(jwt) == False):
+        return None
+    data = DeserializeJWT(jwt, Roles.USER)
+    exp = data['exp']
+    curr_ts = time.time()
+    if (curr_ts < exp):
+        return True
+    return False
 
 def VerifyJWT(str):
     if (str == None or len(str) < 10):
