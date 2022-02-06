@@ -8,6 +8,8 @@ services:
             - 4270:4270
         restart:
             on-failure
+        env_file:
+            - dev-config.env
         environment:
             - SERVER_PORT=4270
     magi_prod:
@@ -17,5 +19,7 @@ services:
             - 2407:2407
         restart:
             on-failure
+        env_file:
+            - prod-config.env
         environment:
             - SERVER_PORT=2407
