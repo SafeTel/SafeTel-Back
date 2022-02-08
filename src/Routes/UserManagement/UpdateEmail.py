@@ -30,9 +30,9 @@ def UMUpdateEmailBodyValidation(data):
         data,
         ["token", "email"]):
         return False
-    if not isValidEmail(data["email"]):
-        return False
     return True
+"""     if not isValidEmail(data["email"]):
+        return False """
 
 # Route to update the email of an account from an auth user
 class UpdateEmail(Resource):
