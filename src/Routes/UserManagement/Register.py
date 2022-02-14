@@ -5,25 +5,23 @@
 ## Register
 ##
 
-# Network imports
-from flask import request as fquest
-from flask_restful import Resource
-from datetime import datetime, timedelta
-import uuid
-import time
-
+### LOGIC
 # Utils check imports
 from Routes.Utils.Request import validateBody
 from Routes.Utils.Types import isValidEmail, isValidNumber
 from Logic.Models.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
-
 # Password encription import
-from Routes.Utils.PWDSerialiazer.Serializer import SerializePWD
+from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 
+### INFRA
+# Network imports
+from flask import request as fquest
+from flask_restful import Resource
+import uuid
+import time
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
 from DataBases.Utils.MelchiorUtils import createDocumentForNewUser
@@ -62,10 +60,12 @@ class Register(Resource):
         if UserDb.exists(body["email"]):
             return BadRequestError("this email is already linked to an account"), 400
 
+        pwdConv = PWDConvert()
+
         body["time"] = time.time()
         body["guid"] = str(uuid.uuid4())
         guid = body["guid"]
-        body["password"] = SerializePWD(body["password"])
+        body["password"] = pwdConv.Serialize(body["password"])
 
         UserDb.addUser(body, Roles.USER)
         createDocumentForNewUser(guid)

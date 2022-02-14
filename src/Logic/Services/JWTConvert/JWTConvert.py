@@ -5,18 +5,20 @@
 ## Provider
 ##
 
+### MODELS
 # Role import
 from Logic.Models.Roles import Roles
 
+### LOGIC
 # jwt config imports
 from datetime import datetime, timedelta
 import jwt, config
-
-# Melchior DB imports
-from DataBases.Melchior.UserDB import UserDB
-
 # Timestamp import
 import time
+
+### INFRA
+# Melchior DB imports
+from DataBases.Melchior.UserDB import UserDB
 
 class JWTConvert():
     def __init__(self):

@@ -5,23 +5,20 @@
 ## Login
 ##
 
+### LOGIC
+# Utils check imports
+from Routes.Utils.Request import validateBody
+# Request Error
+from Routes.Utils.RouteErrors.Errors import BadRequestError
+# JWT import
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+# Password encription import
+from Logic.Services.PWDConvert.PWDConvert import PWDConvert
+
+### INFRA
 # Network imports
 from flask import request as fquest
 from flask_restful import Resource
-
-# JWT import
-from Logic.Models.Roles import Roles
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-
-# Utils check imports
-from Routes.Utils.Request import validateBody
-
-# Request Error
-from Routes.Utils.RouteErrors.Errors import BadRequestError
-
-# Password encription import
-from Routes.Utils.PWDSerialiazer.Serializer import CheckPWD
-
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
 
@@ -48,7 +45,8 @@ class Login(Resource):
         if user == None:
             return BadRequestError("this email is not linked to an account"), 400
 
-        if not CheckPWD(body["password"], user["password"]):
+        pwdConv = PWDConvert()
+        if not pwdConv.Compare(body["password"], user["password"]):
             return BadRequestError('you can not connect with this combination of email and password'), 400
 
         jwtConv = JWTConvert()
