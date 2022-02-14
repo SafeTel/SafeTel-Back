@@ -5,7 +5,10 @@
 ## Magi
 ##
 
-# Thread Imports
+
+#############################
+### LOGING SETTINGS BEGIN ###
+# Logs Imports
 import logging
 
 format = "%(asctime)s: %(message)s"
@@ -13,16 +16,13 @@ logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 
 logging.info("Launching Magi...")
 logging.info("You can find documentation on this repo: https://github.com/SafeTel/SafeTel-Doc-Backend")
-
-# Network Imports
-import requests
-import os
-import config
-from flask import Flask
-from flask_restful import Api
+###  LOGING SETTINGS END  ###
+#############################
 
 
-# ---
+###############################
+### EXTERNAL SERVICES BEGIN ###
+
 # import Sentry
 import sentry_sdk
 # Sentry integration
@@ -36,58 +36,37 @@ sentry_sdk.init(
 )
 logging.info("Connected to sentry")
 
+###  EXTERNAL SERVICES END  ###
+###############################
 
-# ---
+
+###################
+### INFRA BEGIN ###
+
+# Network Imports
+import os
+from flask import Flask
+from flask_restful import Api
+
 # Flask initialitation
 app = Flask(__name__)
 app.debug = True
 api = Api(app)
 
-
-# ---
-## Initialization of routes imports
-
-# Initialize User Routes
-from Routes.UserManagement.InitializeUserManagementRoutes import InitializeUserManagementRoutes
-from Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
-
-InitializeUserManagementRoutes(api)
-InitializeUserListsRoutes(api)
-
-logging.info("Routes initialized - User Lists")
-
-# Initialize s Routes
-from Routes.Services.InitializeServicesRoutes import InitializeServicesRoutes
-InitializeServicesRoutes(api)
-
-logging.info("Routes initialized - Services")
-
-# Initialize server ressources routes
-from Routes.ServerManagement.InitializeServerManagementRoutes import InitializeServerManagementRoutes
-InitializeServerManagementRoutes(api)
-
-logging.info("Routes initialized - Server Management")
-
-# Initialize embeded ressources routes
-from Routes.EmbededRessources.InitializeEmbededRessourcesRoutes import InitializeEmbededRessourceRoutes
-InitializeEmbededRessourceRoutes(api)
-
-logging.info("Routes initialized - Embeded Ressources")
-
-# Initialize dev ressources routes
-from Routes.DevRessources.InitializeDevRessources import InitializeDevRessourcesRoutes
-InitializeDevRessourcesRoutes(api)
-
-logging.info("Routes initialized - Dev Ressources")
-
-
-# ---
-# Logs imports
-import socket
-
-
+# CORS initialisation
 from flask_cors import CORS
 CORS(app)
+
+# Routes Initialization
+from InitRoutes import InitRoutes
+InitRoutes(api)
+
+###  INFRA END  ###
+###################
+
+##########################
+#### LAUNCHING SERVER ####
+##########################
 
 if __name__ == "__main__":
     logging.warning("/!\ You are starting the server connected with Mongo DB, this is a shared DB /!\\")
