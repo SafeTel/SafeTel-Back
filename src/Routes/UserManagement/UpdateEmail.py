@@ -12,8 +12,8 @@ from flask_restful import Resource
 # Utils check imports
 from Routes.Utils.Request import validateBody
 from Routes.Utils.Types import isValidEmail
-from Routes.Utils.JWTProvider.Provider import DeserializeJWT
-from Routes.Utils.JWTProvider.Roles import Roles
+from Logic.Models.Roles import Roles
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
@@ -41,15 +41,17 @@ class UpdateEmail(Resource):
         if not UMUpdateEmailBodyValidation(body):
             return BadRequestError('bad request'), 400
 
-        data = DeserializeJWT(body["token"], Roles.USER)
-        if data is None:
+        jwtConv = JWTConvert()
+
+        deserializedJWT = jwtConv.Deserialize(body["token"])
+        if deserializedJWT is None:
             return BadRequestError("bad token"), 400
 
-        result = UserDb.getUserByGUID(data['guid'])
+        result = UserDb.getUserByGUID(deserializedJWT['guid'])
         if result is None:
             return BadRequestError("bad token"), 400
 
-        UpdateAccountEmail(UserDb.Users, data['guid'], body['email'])
+        UpdateAccountEmail(UserDb.Users, deserializedJWT['guid'], body['email'])
 
         return {
             'updated': not UserDb.exists(result['email'])

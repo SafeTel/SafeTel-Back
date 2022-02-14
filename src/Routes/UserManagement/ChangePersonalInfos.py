@@ -15,8 +15,8 @@ import time
 # Utils check imports
 from Routes.Utils.Request import validateBody
 from Routes.Utils.Types import isValidNumber
-from Routes.Utils.JWTProvider.Roles import Roles
-from Routes.Utils.JWTProvider.Provider import DeserializeJWT
+from Logic.Models.Roles import Roles
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
@@ -52,18 +52,20 @@ class ChangesPersonalInfos(Resource):
         if not UMChangesPersonalInfosValidation(body):
             return BadRequestError("bad request"), 400
 
-        data = DeserializeJWT(body["token"], Roles.USER)
-        if data is None:
+        jwtConv = JWTConvert()
+
+        deserializedJWT = jwtConv.Deserialize(body["token"])
+        if deserializedJWT is None:
             return BadRequestError("bad token"), 400
 
-        result = UserDb.getUserByGUID(data['guid'])
+        result = UserDb.getUserByGUID(deserializedJWT['guid'])
         if result is None:
             return BadRequestError("bad token"), 400
 
         customerInfos = body["customerInfos"]
         localization = body["localization"]
 
-        UpdatePersonalInfos(UserDb.Users, data['guid'], customerInfos, localization)
+        UpdatePersonalInfos(UserDb.Users, deserializedJWT['guid'], customerInfos, localization)
 
         return {
             'changed': True

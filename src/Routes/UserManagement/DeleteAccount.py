@@ -11,8 +11,8 @@ from flask_restful import Resource
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
-from Routes.Utils.JWTProvider.Provider import DeserializeJWT
-from Routes.Utils.JWTProvider.Roles import Roles
+from Logic.Models.Roles import Roles
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
@@ -38,11 +38,13 @@ class DeleteAccount(Resource):
         if not UMDeleteAccountBodyValidation(body):
             return BadRequestError("bad request"), 400
 
-        jwtDeserialized = DeserializeJWT(body["token"], Roles.USER)
-        if jwtDeserialized is None:
-            return BadRequestError('bad token'), 400
+        jwtConv = JWTConvert()
 
-        guidUsr = jwtDeserialized['guid']
+        deserializedJWT = jwtConv.Deserialize(body["token"])
+        if deserializedJWT is None:
+            return BadRequestError("bad token"), 400
+
+        guidUsr = deserializedJWT['guid']
 
         result = UserDb.getUserByGUID(guidUsr)
         if result is None:

@@ -10,9 +10,8 @@ from flask import request as fquest
 from flask.globals import request
 from flask_restful import Resource
 
-# Utils import
-from Routes.Utils.JWTProvider.Provider import DeserializeJWT
-from Routes.Utils.JWTProvider.Roles import Roles
+# JWTConvert import
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
@@ -25,11 +24,17 @@ BlacklistDb = BlacklistDB()
 # Route to get the blacklist of the user
 class GetBlackList(Resource):
     def get(self):
-        data = DeserializeJWT(request.args["token"], Roles.USER)
-        if data is None:
+        token = request.args["token"]
+        if token is None:
             return BadRequestError("bad token"), 400
 
-        guid = data['guid']
+        jwtConv = JWTConvert()
+
+        deserializedJWT = jwtConv.Deserialize(body["token"])
+        if deserializedJWT is None:
+            return BadRequestError("bad token"), 400
+
+        guid = deserializedJWT['guid']
         return {
             'BlackList': BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"]
         }, 200

@@ -6,6 +6,7 @@
 ##
 
 # Network imports
+import imp
 from flask import request as fquest
 from flask_restful import Resource
 
@@ -22,8 +23,10 @@ from healthcheck import EnvironmentDump
 
 # Utils imports
 import json
-from Routes.Utils.JWTProvider.Provider import DeserializeJWT
-from Routes.Utils.JWTProvider.Roles import Roles
+
+# JWT imports
+from Logic.Models.Roles import Roles
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
@@ -31,7 +34,10 @@ from Routes.Utils.RouteErrors.Errors import BadRequestError
 # Route to health check
 class HealthCheck(Resource):
     def get(self):
+        jwtConv = JWTConvert()
+
         token = request.args["token"]
+
         if request.args.get("token") == None:
             return BadRequestError("bad token"), 400
 
@@ -49,12 +55,11 @@ class HealthCheck(Resource):
             if type(x) == type(''):
                 envCheck = json.loads(x)
 
-        devRequest = DeserializeJWT(token, Roles.DEVELOPER)
-        adminRequest = DeserializeJWT(token, Roles.ADMIN)
+        deserializedJWT = jwtConv.Deserialize(token)
 
-        if (devRequest == None and adminRequest == None):
+        if (deserializedJWT == None):
             return BadRequestError("bad token"), 400
-        elif (devRequest != None):
+        elif (deserializedJWT["role"] == Roles.ADMIN or deserializedJWT["role"] == Roles.DEVELOPER):
             return self.DevDTO(serverCheck, envCheck)
 
         return {

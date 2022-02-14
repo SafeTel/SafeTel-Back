@@ -11,8 +11,8 @@ from flask.globals import request
 from flask_restful import Resource
 
 # jwt provider import
-from Routes.Utils.JWTProvider.Provider import DeserializeJWT
-from Routes.Utils.JWTProvider.Roles import Roles
+from Logic.Models.Roles import Roles
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
@@ -28,14 +28,19 @@ UserDb = UserDB()
 # Route to get the information from a user
 class GetInfos(Resource):
     def get(self):
-        jwt = request.args["token"]
-        if jwt is None:
+        token = request.args["token"]
+        if token is None:
             return BadRequestError("bad request"), 400
 
-        data = DeserializeJWT(jwt, Roles.USER)
-        guid = data["guid"]
+        jwtConv = JWTConvert()
 
-        if (data == None):
+        deserializedJWT = jwtConv.Deserialize(token)
+        if deserializedJWT is None:
+            return BadRequestError("bad token"), 400
+
+        guid = deserializedJWT["guid"]
+
+        if (deserializedJWT["role"] != Roles.USER):
             return BadRequestError("this account is not a user account"), 400
 
         user = UserDb.getUserByGUID(guid)

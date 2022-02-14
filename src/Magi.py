@@ -19,7 +19,6 @@ import requests
 import os
 import config
 from flask import Flask
-from Routes.Utils.JWTProvider.Roles import Roles
 from flask_restful import Api
 
 

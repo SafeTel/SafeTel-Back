@@ -10,11 +10,9 @@ from flask import request as fquest
 from flask.globals import request
 from flask_restful import Resource
 
-# jwt provider import
-from Routes.Utils.JWTProvider.Provider import IsValidJWT
-
-# Utils check imports
-from Routes.Utils.Request import validateBody
+# JWT import
+from Logic.Models.Roles import Roles
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
@@ -22,14 +20,16 @@ from Routes.Utils.RouteErrors.Errors import BadRequestError
 # Route to check a JWT
 class CheckToken(Resource):
     def get(self):
-        jwt = request.args["token"]
-        if jwt is None:
+        token = request.args["token"]
+        if token is None:
             return BadRequestError("bad request"), 400
 
-        validity = IsValidJWT(jwt)
-        if (validity == None):
-            return BadRequestError("the token is not a JWT"), 400
+        jwtConv = JWTConvert()
+
+        validity = jwtConv.IsValid(token)
+        if validity is None:
+            return BadRequestError("bad token"), 400
 
         return {
-            'validity': validity,
+            'validity': validity
         }, 200

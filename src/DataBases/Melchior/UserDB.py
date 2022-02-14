@@ -16,8 +16,8 @@ from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
 from DataBases.InternalUtils.DataWorker import InsertDocument, DeleteDocument
 from DataBases.Melchior.InternalUtils.DataWorker import GetAccountsByRole
 
-# Magi Roles import
-from Routes.Utils.JWTProvider.Roles import Roles
+# Roles import
+from Logic.Models.Roles import Roles
 
 # Object to represent table User
 class UserDB():

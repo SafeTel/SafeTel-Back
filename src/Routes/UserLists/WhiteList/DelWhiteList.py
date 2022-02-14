@@ -11,8 +11,8 @@ from flask_restful import Resource
 
 # Utils import
 from Routes.Utils.Request import validateBody
-from Routes.Utils.JWTProvider.Provider import DeserializeJWT
-from Routes.Utils.JWTProvider.Roles import Roles
+from Logic.Models.Roles import Roles
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
@@ -37,14 +37,15 @@ class DelWhiteList(Resource):
         if not ULDelWhiteListListValidation(body):
             return BadRequestError("bad request"), 400
 
-        data = DeserializeJWT(body["token"], Roles.USER)
-        if data is None:
+        jwtConv = JWTConvert()
+
+        deserializedJWT = jwtConv.Deserialize(body["token"])
+        if deserializedJWT is None:
             return BadRequestError("bad token"), 400
 
-        guid = data['guid']
+        guid = deserializedJWT['guid']
         number = body["number"]
         WhitelistDb.delWhitelistNumberForUser(guid, number)
         return {
             'WhiteList': WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"]
         }, 200
-

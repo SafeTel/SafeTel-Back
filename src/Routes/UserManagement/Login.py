@@ -9,8 +9,9 @@
 from flask import request as fquest
 from flask_restful import Resource
 
-# jwt provider import
-from Routes.Utils.JWTProvider.Provider import SerializeJWT, StrToRole
+# JWT import
+from Logic.Models.Roles import Roles
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Utils check imports
 from Routes.Utils.Request import validateBody
@@ -50,9 +51,11 @@ class Login(Resource):
         if not CheckPWD(body["password"], user["password"]):
             return BadRequestError('you can not connect with this combination of email and password'), 400
 
-        role = StrToRole(user["role"])
+        jwtConv = JWTConvert()
+        role = jwtConv.SToRoles(user["role"])
+        guid = user["guid"]
 
         return {
             'userName': user["userName"],
-            'token': SerializeJWT(user["guid"], role)
+            'token': jwtConv.Serialize(guid, role)
         }, 200

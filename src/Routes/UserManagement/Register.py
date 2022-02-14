@@ -15,8 +15,8 @@ import time
 # Utils check imports
 from Routes.Utils.Request import validateBody
 from Routes.Utils.Types import isValidEmail, isValidNumber
-from Routes.Utils.JWTProvider.Provider import SerializeJWT
-from Routes.Utils.JWTProvider.Roles import Roles
+from Logic.Models.Roles import Roles
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
@@ -70,8 +70,10 @@ class Register(Resource):
         UserDb.addUser(body, Roles.USER)
         createDocumentForNewUser(guid)
 
+        jwtConv = JWTConvert()
+
         return {
             'created': True,
             'userName': body["userName"],
-            'token': SerializeJWT(guid, Roles.USER)
+            'token': jwtConv.Serialize(guid, Roles.USER)
         }, 200

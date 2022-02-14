@@ -15,12 +15,12 @@ import uuid
 import time
 
 # Utils check imports
-from Routes.Utils.JWTProvider.Provider import SerializeJWT
+from Logic.Models.Roles import Roles
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 from Routes.Utils.Request import validateBody
-from Routes.Utils.JWTProvider.Roles import Roles
 
 # Request Error
-from Routes.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+from Routes.Utils.RouteErrors.Errors import BadRequestError
 
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
@@ -67,6 +67,8 @@ class RegisterAdminDev(Resource):
         registration['guid'] = guid
         registration['ts'] = create_ts
 
+        if (not Roles.has_value(body['role'])):
+            return BadRequestError("bad request"), 400
         role = Roles.USER
 
         if (body['role'] == 'admin'):
@@ -74,13 +76,15 @@ class RegisterAdminDev(Resource):
         elif (body['role'] == 'dev'):
             role = Roles.DEVELOPER
         else:
-            InternalLogicError("not a valid role"), 400
+            return BadRequestError("bad request"), 400
 
         UserDb.addUser(registration, role)
         createDocumentForNewUser(guid)
 
+        jwtConv = JWTConvert()
+
         return {
             'created': True,
             'userName': registration['userName'],
-            'token': SerializeJWT(guid, role)
+            'token': jwtConv.Serialize(guid, role)
         }

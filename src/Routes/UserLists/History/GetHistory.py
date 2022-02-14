@@ -17,19 +17,24 @@ from DataBases.Melchior.HistoryDB import HistoryDB
 from Routes.Utils.RouteErrors.Errors import BadRequestError
 
 # Utils import
-from Routes.Utils.JWTProvider.Provider import DeserializeJWT
-from Routes.Utils.JWTProvider.Roles import Roles
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 HistoryDb = HistoryDB()
 
 # Route to get the whitelist of the user
 class GetHistory(Resource):
     def get(self):
-        data = DeserializeJWT(request.args["token"], Roles.USER)
-        if data is None:
+        token = request.args["token"]
+        if token is None:
             return BadRequestError("bad token"), 400
 
-        guid = data['guid']
+        jwtConv = JWTConvert()
+
+        deserializedJWT = jwtConv.Deserialize(token)
+        if deserializedJWT is None:
+            return BadRequestError("bad token"), 400
+
+        guid = deserializedJWT['guid']
         return {
             'History': HistoryDb.getHistoryForUser(guid)["History"]
         }, 200
