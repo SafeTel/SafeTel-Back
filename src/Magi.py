@@ -86,6 +86,9 @@ logging.info("Routes initialized - Dev Ressources")
 import socket
 
 
+from flask_cors import CORS
+CORS(app)
+
 if __name__ == "__main__":
     logging.warning("/!\ You are starting the server connected with Mongo DB, this is a shared DB /!\\")
     logging.warning("/!\ Be aware of the current git branch DEV or PROD /!\\")

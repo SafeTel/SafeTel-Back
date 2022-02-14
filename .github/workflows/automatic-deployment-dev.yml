@@ -1,16 +1,13 @@
 name: ci
 
 on:
-  pull_request:
-    branches:
-      - 'DEV'
   push:
     branches:
       - 'DEV'
 
 jobs:
   build: # job_id
-    name: pushing new dev docker image on docker hub # job name
+    name: pushing new dev docker image on docker hub and deploy # job name
     runs-on: ubuntu-latest # hosted OS
 
     steps:
@@ -34,3 +31,15 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/safetel-back:dev
+      - 
+        name: executing remote ssh commands for deployment using ssh_key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /home/backadmin/SafeTel-Back/devOps/deployement/
+            docker-compose pull magi_dev
+            docker-compose up -d --force-recreate --no-deps --build magi_dev
