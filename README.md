@@ -20,7 +20,7 @@ The server is wrapped with Docker.
 
 Command:
 ```sh
-$ sudo docker-compose up
+$ sudo docker-compose build && sudo docker-compose up
 ```
 
 
@@ -40,5 +40,3 @@ Command:
 ```sh
 $ sudo docker system prune -a
 ```
-
-Drone should be on Misa Amane Birthday, bad drone
