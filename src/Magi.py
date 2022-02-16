@@ -5,9 +5,13 @@
 ## Magi
 ##
 
-
+####################################
+### Initiate Server Config BEGIN ###
 from InitiateServerConfig import InitiateServerConfig
 InitiateServerConfig()
+###  Initiate Server Config END  ###
+####################################
+
 
 #############################
 ### LOGING SETTINGS BEGIN ###
