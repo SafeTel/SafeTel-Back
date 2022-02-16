@@ -5,13 +5,6 @@
 ## Magi
 ##
 
-####################################
-### Initiate Server Config BEGIN ###
-from InitiateServerConfig import InitiateServerConfig
-InitiateServerConfig()
-###  Initiate Server Config END  ###
-####################################
-
 
 #############################
 ### LOGING SETTINGS BEGIN ###
@@ -27,9 +20,18 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 #############################
 
 
+####################################
+### Initiate Server Config BEGIN ###
+logging.warning("--- /!\ Validating Environement /!\\ ----")
+from InitiateServerConfig import InitiateServerConfig
+InitiateServerConfig()
+logging.warning("--- Environement Validated ----")
+###  Initiate Server Config END  ###
+####################################
+
+
 ###############################
 ### EXTERNAL SERVICES BEGIN ###
-
 # import Sentry
 import sentry_sdk
 # Sentry integration
@@ -42,14 +44,12 @@ sentry_sdk.init(
     traces_sample_rate=1.0
 )
 logging.info("Connected to sentry")
-
 ###  EXTERNAL SERVICES END  ###
 ###############################
 
 
 ###################
 ### INFRA BEGIN ###
-
 # Network Imports
 import os
 from flask import Flask
@@ -67,9 +67,9 @@ CORS(app)
 # Routes Initialization
 from InitRoutes import InitRoutes
 InitRoutes(api)
-
 ###  INFRA END  ###
 ###################
+
 
 ##########################
 #### LAUNCHING SERVER ####

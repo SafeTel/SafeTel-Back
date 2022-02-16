@@ -5,9 +5,11 @@
 ## config
 ##
 
-###
+### LOGIX
 import os
 import json
+
+### INFRA
 from Infrastructure.Utils.HttpClient.HtttpClient import HttpClient
 
 class InitiateServerConfig():
