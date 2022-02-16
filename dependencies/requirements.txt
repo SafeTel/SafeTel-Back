@@ -8,3 +8,4 @@ pyjwt
 uuid
 py-healthcheck
 sentry-sdk
+ping3

@@ -2,10 +2,9 @@ version: "3.3"
 
 services:
     magi:
+        env_file: ./devOps/dev-config.env
         build:
             context: ./
-            args:
-                SECRET_KEY: ${SECRET_KEY}
         ports:
             - 2407:2407
         restart:
