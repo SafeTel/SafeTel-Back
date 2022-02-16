@@ -30,7 +30,7 @@ class HttpClient():
         return response.json()
 
     def Delete(self, uri, body):
-        response = requests.post(uri, body)
+        response = requests.delete(uri, body)
         if (response.status_code != self.validationCode):
             return None
         if (response.headers != self.header):

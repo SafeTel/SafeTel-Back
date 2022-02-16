@@ -6,16 +6,46 @@
 ##
 
 from ast import pattern
+import imp
 import os
 import re
 import json
 
-if  ("DB_CLIENT" in os.environ) == False            \
-    or ("DB_PASSWORD" in os.environ) == False        \
-    or ("DB_USERS_NAME" in os.environ) == False      \
-    or ("DB_DEVELOPERS_NAME" in os.environ) == False \
-    or ("URI_USERS_DB" in os.environ) == False       \
-    or ("URI_DEVELOPERS_DB" in os.environ) == False:
+
+class InitiateServerLaunch():
+    def __init__(self):
+        self.__CheckEnvVars()
+        self.__Ping()
+
+
+    def __CheckEnvVars(self):
+        with open("config.json", 'r') as jsonFile:
+            config = json.load(jsonFile)
+            for mandatoryEnvVar in config["MandatoryEnvVars"]:
+                if (mandatoryEnvVar in os.environ) == False:
+                    raise ValueError("Not a valid environement, missing mandatory env variable: " + mandatoryEnvVar)
+                else:
+                    import sys
+                    print('AAA '  +  os.getenv(mandatoryEnvVar), file=sys.stderr)
+
+
+    def __Ping(self):
+        addr = "google.com"
+        response = os.system("ping -c 1 " + addr)
+        if response != 0:
+            raise ValueError("Cannot ping " + addr + ", fatal error.")
+
+
+
+# ---------------------
+
+
+''' if  (("DB_CLIENT" in os.environ) == False
+    or ("DB_PASSWORD" in os.environ) == False
+    or ("DB_USERS_NAME" in os.environ) == False
+    or ("DB_DEVELOPERS_NAME" in os.environ) == False
+    or ("URI_USERS_DB" in os.environ) == False
+    or ("URI_DEVELOPERS_DB" in os.environ) == False):
 
     # Reading the config.json file to load the right env file
     json_file = open("config.json", 'r')
@@ -59,4 +89,4 @@ SECRET_KEY = "MankindsGreatestFearIsMankindItself"
 ### TELLOWS
 TELLOWS_BASE_URI = "https://www.tellows.fr"
 TELLOWS_URI_NUMBER = "/basic/num/"
-TELLOWS_API_KEY_MD5 = "31e664793ebfc5bc0b063db059de3e3a"
+TELLOWS_API_KEY_MD5 = "31e664793ebfc5bc0b063db059de3e3a" '''

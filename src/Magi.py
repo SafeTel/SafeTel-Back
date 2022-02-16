@@ -6,9 +6,13 @@
 ##
 
 
+from config import InitiateServerLaunch
+InitiateServerLaunch()
+
 #############################
 ### LOGING SETTINGS BEGIN ###
 # Logs Imports
+import imp
 import logging
 
 format = "%(asctime)s: %(message)s"

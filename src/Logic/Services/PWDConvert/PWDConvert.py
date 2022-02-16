@@ -17,12 +17,12 @@ class PWDConvert():
            import sha3
 
 
-    def Serialize(pwd):
+    def Serialize(slef, pwd):
         hash_sha3_512 = hashlib.new("sha3_512", pwd.encode())
         return hash_sha3_512.hexdigest()
 
 
-    def Compare(plain_pwd, hashed_pwd):
+    def Compare(self, plain_pwd, hashed_pwd):
         hash_sha3_512 = hashlib.new("sha3_512", plain_pwd.encode())
         plain_hashed_pwd = hash_sha3_512.hexdigest()
 
