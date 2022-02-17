@@ -11,7 +11,8 @@ import pymongo
 # PyMongo Internal Utils
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
-from DataBases.Melchior.InternalUtils.DataWorker import GetAccountsByRole
+from Infrastructure.Services.MongoDB.Melchior.UserDBWatcher import UserDBWatcher
+from Infrastructure.Services.MongoDB.Melchior.UserDBWorker import UserDBWorker
 
 # Roles import
 from Logic.Models.Roles import Roles
@@ -26,6 +27,8 @@ class UserDB():
         self.Users = self.db['User']
         self.DBWatcher = MongoDBWatcher(self.Users)
         self.DBWorker = MongoDBWorker(self.Users)
+        self.DBUserWatcher = UserDBWatcher(self.Users)
+        self.DBUserWorker = UserDBWorker(self.Users)
 
     def addUser(self, user_data, role):
         del user_data["magicNumber"]
@@ -45,7 +48,7 @@ class UserDB():
             target = "developer"
         elif(role == Roles.ADMIN):
             target = "admin"
-        return GetAccountsByRole(self.Users, target)
+        return self.DBUserWatcher.GetAccountsByRole(target)
 
     def deleteUser(self, guid):
         self.DBWorker.DeleteDocument({'guid': guid})
@@ -64,3 +67,9 @@ class UserDB():
 
     def getUserRoleByGUID(self, guid):
         return self.DBWatcher.GetDocument('guid', guid)['role']
+
+    def UpdateAccountEmail(self, guid, email):
+        self.DBUserWorker.UpdateAccountEmail(guid, email)
+
+    def UpdateAccountEmail(self, guid, customerInfos, localization):
+        self.DBUserWorker.UpdatePersonalInfos(guid, customerInfos, localization)

@@ -19,7 +19,7 @@ from Routes.Utils.RouteErrors.Errors import BadRequestError
 
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
-from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsWorker import UserListsWorker
+from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsUtils import UserListsUtils
 
 UserDb = UserDB()
 
@@ -53,8 +53,8 @@ class DeleteAccount(Resource):
         if result["userName"] != body["userName"]:
             return BadRequestError("manual security check failed"), 400
 
-        ULWorker = UserListsWorker()
-        ULWorker.DeleteUserLists(guidUsr)
+        ULUtils = UserListsUtils()
+        ULUtils.DeleteUserLists(guidUsr)
 
         if ULWorker.IsDeletedUserLists(guidUsr):
             UserDb.deleteUser(guidUsr)

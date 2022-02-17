@@ -24,7 +24,7 @@ import uuid
 import time
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
-from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsWorker import UserListsWorker
+from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsUtils import UserListsUtils
 
 
 UserDb = UserDB()
@@ -70,8 +70,8 @@ class Register(Resource):
 
         UserDb.addUser(body, Roles.USER)
 
-        ULWorker = UserListsWorker()
-        ULWorker.CreateUserLists(guid)
+        ULUtils = UserListsUtils()
+        ULUtils.CreateUserLists(guid)
 
         jwtConv = JWTConvert()
         return {

@@ -13,7 +13,7 @@ from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDB
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
 
 # Melchior Internal Utils
-from DataBases.Melchior.InternalUtils.DataWorker import AddNumberToPhoneList, DeleteNumberFromPhoneList
+from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsWorker import UserListsWorker
 
 import os
 
@@ -25,6 +25,7 @@ class BlacklistDB():
         self.Blacklist = self.db['Blacklist']
         self.DBWatcher = MongoDBWatcher(self.Blacklist)
         self.DBWorker = MongoDBWorker(self.Blacklist)
+        self.ULWorker = UserListsWorker(self.Blacklist)
 
     def newBlacklist(self, guid):
         data = {
@@ -43,7 +44,7 @@ class BlacklistDB():
         return self.DBWatcher.GetDocument("guid", guid)
 
     def addBlacklistNumberForUser(self, guid, number):
-        AddNumberToPhoneList(self.Blacklist, guid, number)
+        self.ULWorker.AddNumberFromList(guid, number)
 
     def delBlacklistNumberForUser(self, guid, number):
-        DeleteNumberFromPhoneList(self.Blacklist, guid, number)
+        self.ULWorker.DeleteNumberFromList(guid, number)

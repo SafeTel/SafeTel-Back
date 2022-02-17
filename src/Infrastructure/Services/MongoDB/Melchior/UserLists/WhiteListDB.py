@@ -13,8 +13,7 @@ from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDB
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
 
 # Melchior Internal Utils
-from DataBases.Melchior.InternalUtils.DataWorker import AddNumberToPhoneList, DeleteNumberFromPhoneList
-
+from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsWorker import UserListsWorker
 import os
 
 # Object to represent table Whitelist
@@ -25,6 +24,7 @@ class WhitelistDB():
         self.Whitelist = self.db['Whitelist']
         self.DBWatcher = MongoDBWatcher(self.Whitelist)
         self.DBWorker = MongoDBWorker(self.Whitelist)
+        self.ULWorker = UserListsWorker(self.Whitelist)
 
     def newWhitelist(self, guid):
         data = {
@@ -43,7 +43,7 @@ class WhitelistDB():
         return self.DBWatcher.GetDocument("guid", guid)
 
     def addWhitelistNumberForUser(self, guid, number):
-        AddNumberToPhoneList(self.Whitelist, guid, number)
+        self.ULWorker.AddNumberFromList(guid, number)
 
     def delWhitelistNumberForUser(self, guid, number):
-        DeleteNumberFromPhoneList(self.Whitelist, guid, number)
+        self.ULWorker.DeleteNumberFromList(guid, number)
