@@ -71,5 +71,5 @@ class UserDB():
     def UpdateAccountEmail(self, guid, email):
         self.DBUserWorker.UpdateAccountEmail(guid, email)
 
-    def UpdateAccountEmail(self, guid, customerInfos, localization):
+    def UpdatePersonalInfos(self, guid, customerInfos, localization):
         self.DBUserWorker.UpdatePersonalInfos(guid, customerInfos, localization)

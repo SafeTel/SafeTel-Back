@@ -19,8 +19,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 from Routes.Utils.RouteErrors.Errors import BadRequestError
 
 # Melchior DB imports
-from DataBases.Melchior.UserDB import UserDB
-from DataBases.Melchior.InternalUtils.DataWorker import UpdateAccountEmail
+from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
 
@@ -51,7 +50,7 @@ class UpdateEmail(Resource):
         if result is None:
             return BadRequestError("bad token"), 400
 
-        UpdateAccountEmail(UserDb.Users, deserializedJWT['guid'], body['email'])
+        UserDb.UpdateAccountEmail(deserializedJWT['guid'], body['email'])
 
         return {
             'updated': not UserDb.exists(result['email'])

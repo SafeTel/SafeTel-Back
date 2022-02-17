@@ -20,7 +20,7 @@ from Routes.Utils.RouteErrors.Errors import BadRequestError
 
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
-from DataBases.Melchior.InternalUtils.DataWorker import UpdatePersonalInfos
+from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
 
@@ -62,7 +62,7 @@ class ChangesPersonalInfos(Resource):
         customerInfos = body["customerInfos"]
         localization = body["localization"]
 
-        UpdatePersonalInfos(UserDb.Users, deserializedJWT['guid'], customerInfos, localization)
+        UserDb.UpdatePersonalInfos(deserializedJWT['guid'], customerInfos, localization)
 
         return {
             'changed': True
