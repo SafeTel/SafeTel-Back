@@ -10,7 +10,9 @@ from Logic.Models.Roles import Roles
 
 # JWTConvert import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-import jwt, config
+import jwt
+
+import os
 
 def JWTConvert_ClassicUsage_Nominal():
     # Assign
@@ -21,7 +23,7 @@ def JWTConvert_ClassicUsage_Nominal():
 
     # Act
     serializedJwt = jwtConv.Serialize(expectedGuid, expectedRole)
-    deserializedJwt = jwt.decode(jwt=serializedJwt, key=config.SECRET_KEY, algorithms='HS256')
+    deserializedJwt = jwt.decode(jwt=serializedJwt, key="secret", algorithms='HS256')
 
     resultGuid = deserializedJwt["guid"]
     resultRole = deserializedJwt["role"]
