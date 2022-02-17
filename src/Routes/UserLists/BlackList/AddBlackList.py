@@ -17,7 +17,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 from Routes.Utils.RouteErrors.Errors import BadRequestError
 
 # DB import
-from DataBases.Melchior.BlackListDB import BlacklistDB
+from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB
 
 BlacklistDb = BlacklistDB()
 

@@ -22,7 +22,7 @@ class HistoryDB():
         self.db = self.client[db_name]
         self.History = self.db['History']
         self.DBWatcher = MongoDBWatcher(self.History)
-        self.DBWorker = MongoDBWorker(self.ApiKeyLog)
+        self.DBWorker = MongoDBWorker(self.History)
 
     def newHistory(self, guid):
         data = {

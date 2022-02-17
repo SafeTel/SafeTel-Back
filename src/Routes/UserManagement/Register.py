@@ -23,7 +23,7 @@ from flask_restful import Resource
 import uuid
 import time
 # Melchior DB imports
-from DataBases.Melchior.UserDB import UserDB
+from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsUtils import UserListsUtils
 
 

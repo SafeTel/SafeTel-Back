@@ -9,7 +9,7 @@
 # mail connexion Import
 import smtplib
 # Service DB import
-from DataBases.Casper02.GoogleServiceDB import GoogleServiceDB
+from Infrastructure.Services.MongoDB.Casper02.GoogleServiceDB import GoogleServiceDB
 
 # Service class to send emails
 class GMail:

@@ -17,8 +17,8 @@ from Routes.Utils.Request import validateBody
 from Routes.Utils.RouteErrors.Errors import BadRequestError
 
 # DB imports
-from DataBases.Casper.Contributors import ContributorsDB
-from DataBases.Casper.ApiKeys import ApiKeyLogDB
+from Infrastructure.Services.MongoDB.Casper.Contributors import ContributorsDB
+from Infrastructure.Services.MongoDB.Casper.ApiKeys import ApiKeyLogDB
 
 # secret import
 import secrets

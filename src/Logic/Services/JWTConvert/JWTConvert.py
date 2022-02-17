@@ -20,7 +20,7 @@ import os
 
 ### INFRA
 # Melchior DB imports
-from DataBases.Melchior.UserDB import UserDB
+from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 class JWTConvert():
     def __init__(self):

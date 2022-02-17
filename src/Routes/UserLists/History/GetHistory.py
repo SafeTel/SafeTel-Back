@@ -11,7 +11,7 @@ from flask.globals import request
 from flask_restful import Resource
 
 # DB import
-from DataBases.Melchior.HistoryDB import HistoryDB
+from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
 
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError

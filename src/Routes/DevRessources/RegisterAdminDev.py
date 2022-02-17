@@ -22,12 +22,12 @@ from Routes.Utils.Request import validateBody
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
 
+### INFRA
 # Melchior DB imports
-from DataBases.Melchior.UserDB import UserDB
+from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsUtils import UserListsUtils
-
 # DB imports
-from DataBases.Casper.ApiKeys import ApiKeyLogDB
+from Infrastructure.Services.MongoDB.Casper.ApiKeys import ApiKeyLogDB
 
 UserDb = UserDB()
 

@@ -20,7 +20,7 @@ from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 from flask import request as fquest
 from flask_restful import Resource
 # Melchior DB imports
-from DataBases.Melchior.UserDB import UserDB
+from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
 

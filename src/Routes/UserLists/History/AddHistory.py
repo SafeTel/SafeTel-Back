@@ -18,7 +18,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 from Routes.Utils.RouteErrors.Errors import BadRequestError
 
 # DB import
-from DataBases.Melchior.HistoryDB import HistoryDB
+from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
 
 HistoryDb = HistoryDB()
 

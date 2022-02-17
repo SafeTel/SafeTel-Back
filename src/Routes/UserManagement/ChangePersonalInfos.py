@@ -18,8 +18,9 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
 
+### INFRA
 # Melchior DB imports
-from DataBases.Melchior.UserDB import UserDB
+from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
