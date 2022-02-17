@@ -25,7 +25,7 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 logging.warning("--- /!\ Validating Environement /!\\ ----")
 from InitiateServerConfig import InitiateServerConfig
 InitiateServerConfig()
-logging.warning("--- Environement Validated ----")
+logging.warning("---     Environement Validated      ----")
 ###  Initiate Server Config END  ###
 ####################################
 
@@ -79,7 +79,7 @@ if __name__ == "__main__":
     logging.warning("/!\ You are starting the server connected with Mongo DB, this is a shared DB /!\\")
     logging.warning("/!\ Be aware of the current git branch DEV or PROD /!\\")
 
-    env_port = os.getenv('SERVER_PORT', '2407')
+    serverPort = os.getenv("SERVER_PORT")
 
-    logging.info("Launching API on : 0.0.0.0:2407")
-    app.run(debug=True, host='0.0.0.0', port=env_port)
+    logging.info("Launching Magi.")
+    app.run(debug=True, host="0.0.0.0", port=serverPort)
