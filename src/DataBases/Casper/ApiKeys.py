@@ -8,9 +8,6 @@
 # Client mongo db import
 import pymongo
 
-# Import db name and db URI
-from config import dbnameCasper, URI_MELCHIOR
-
 # PyMongo Internal Utils
 from DataBases.InternalUtils.DataWatcher import IsDocument
 from DataBases.InternalUtils.DataWorker import InsertDocument
@@ -18,10 +15,12 @@ from DataBases.InternalUtils.DataWorker import InsertDocument
 # time import
 import time
 
+import os
+
 # Object to represent table Contributors
 class ApiKeyLogDB():
-    def __init__(self, db_name=dbnameCasper):
-        self.client = pymongo.MongoClient(URI_MELCHIOR)
+    def __init__(self, db_name=os.getenv("DB_CASPER")):
+        self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
         self.ApiKeyLog = self.db['ApiKeyLog']
 

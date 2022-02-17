@@ -10,11 +10,13 @@
 from Logic.Models.Roles import Roles
 
 ### LOGIC
-# jwt config imports
+# jwt imports
 from datetime import datetime, timedelta
-import jwt, config
+import jwt
 # Timestamp import
 import time
+# OS env import
+import os
 
 ### INFRA
 # Melchior DB imports
@@ -33,18 +35,18 @@ class JWTConvert():
         if (not Roles.has_value(role)):
             raise ValueError("It should be an existing one.")
 
-        return jwt.encode({
+        return jwt.encode( {
                 'guid': guid,
                 'role': role,
                 'exp': datetime.utcnow() + timedelta(hours=24)
             },
-            config.SECRET_KEY
+            os.getenv("SECRET_KEY")
         )
 
 
     def Deserialize(self, token):
         try:
-            jwtInfos = jwt.decode(jwt=token, key=config.SECRET_KEY, algorithms='HS256')
+            jwtInfos = jwt.decode(jwt=token, key=os.getenv("SECRET_KEY"), algorithms='HS256')
         except Exception as e:
             return None
 
@@ -61,7 +63,7 @@ class JWTConvert():
 
     def IsValid(self, token):
         try:
-            data = jwt.decode(jwt=token, key=config.SECRET_KEY, algorithms='HS256')
+            data = jwt.decode(jwt=token, key=os.getenv("SECRET_KEY"), algorithms='HS256')
         except Exception as e:
             return None
 

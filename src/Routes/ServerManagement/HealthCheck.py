@@ -14,9 +14,6 @@ from flask_restful import Resource
 from flask.globals import request
 import pymongo
 
-# Import db name and db URI
-from config import dbname, URI_MELCHIOR
-
 # Health Check imports
 from healthcheck import HealthCheck as HealthCheckFromPackage
 from healthcheck import EnvironmentDump
@@ -30,6 +27,8 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
+
+import os
 
 # Route to health check
 class HealthCheck(Resource):
@@ -94,7 +93,7 @@ class HealthCheck(Resource):
         self.envdump.add_section("application", self.getSoftwareData)
 
     def checkMongoDBAvailability(self):
-        client = pymongo.MongoClient(URI_MELCHIOR)
+        client = pymongo.MongoClient(os.getenv("DB_URI"))
         # Check if we can access safetel database
         self.safetelDatabase = client.Melchior
         return True, "Safetel mongoDB available"

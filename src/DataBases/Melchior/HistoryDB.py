@@ -8,17 +8,16 @@
 # Client mongo db import
 import pymongo
 
-# Import db name and db URI
-from config import dbname, URI_MELCHIOR
-
 # PyMongo Internal Utils
 from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
 from DataBases.InternalUtils.DataWorker import InsertDocument, DeleteDocument
 
+import os
+
 # Object to represent table History
 class HistoryDB():
-    def __init__(self, db_name=dbname):
-        self.client = pymongo.MongoClient(URI_MELCHIOR)
+    def __init__(self, db_name=os.getenv("DB_MELCHIOR")):
+        self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
         self.History = self.db['History']
 

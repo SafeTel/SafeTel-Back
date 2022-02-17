@@ -5,10 +5,6 @@
 ## Tellows
 ##
 
-### CONFIG
-# creds import
-from config import TELLOWS_API_KEY_MD5, TELLOWS_BASE_URI, TELLOWS_URI_NUMBER
-
 ### LOGIC
 # regex imports
 import re
@@ -17,12 +13,13 @@ import re
 # HttpClient import
 from Infrastructure.Utils.HttpClient.HtttpClient import HttpClient
 
+import os
+
 class Tellows():
     def __init__(self):
-        self.apiKey = TELLOWS_API_KEY_MD5
-        self.uri = TELLOWS_BASE_URI + TELLOWS_URI_NUMBER
+        self.uri = os.getenv("TELLOWS_BASE_URI") + os.getenv("TELLOWS_URI_NUMBER")
         self.queries = {
-            'apikeyMd5': TELLOWS_API_KEY_MD5,
+            'apikeyMd5': os.getenv("TELLOWS_API_KEY_MD5"),
             'json': 1
         }
         self.httpClient = HttpClient()
