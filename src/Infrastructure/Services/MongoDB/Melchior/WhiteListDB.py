@@ -8,9 +8,9 @@
 # Client mongo db import
 import pymongo
 
-# PyMongo Internal Utils
-from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
-from DataBases.InternalUtils.DataWorker import InsertDocument, DeleteDocument
+# MongoDBMongo Internal Utils
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
 
 # Melchior Internal Utils
 from DataBases.Melchior.InternalUtils.DataWorker import AddNumberToPhoneList, DeleteNumberFromPhoneList
@@ -23,22 +23,24 @@ class WhitelistDB():
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
         self.Whitelist = self.db['Whitelist']
+        self.DBWatcher = MongoDBWatcher(self.Whitelist)
+        self.DBWorker = MongoDBWorker(self.Whitelist)
 
     def newWhitelist(self, guid):
         data = {
             "guid": guid,
             "PhoneNumbers": []
         }
-        InsertDocument(self.Whitelist, data)
+        self.DBWorker.InsertDocument(data)
 
     def deleteWhitelist(self, guid):
-        DeleteDocument(self.Whitelist, {'guid': guid})
+        self.DBWorker.DeleteDocument({'guid': guid})
 
     def exists(self, guid):
-        return IsDocument(self.Whitelist, "guid", guid)
+        return self.DBWatcher.IsDocument("guid", guid)
 
     def getWhitelistForUser(self, guid):
-        return GetDocument(self.Whitelist, "guid", guid)
+        return self.DBWatcher.GetDocument("guid", guid)
 
     def addWhitelistNumberForUser(self, guid, number):
         AddNumberToPhoneList(self.Whitelist, guid, number)

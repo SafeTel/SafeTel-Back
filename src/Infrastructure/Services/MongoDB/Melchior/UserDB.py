@@ -9,8 +9,8 @@
 import pymongo
 
 # PyMongo Internal Utils
-from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
-from DataBases.InternalUtils.DataWorker import InsertDocument, DeleteDocument
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
 from DataBases.Melchior.InternalUtils.DataWorker import GetAccountsByRole
 
 # Roles import
@@ -24,6 +24,8 @@ class UserDB():
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
         self.Users = self.db['User']
+        self.DBWatcher = MongoDBWatcher(self.Users)
+        self.DBWorker = MongoDBWorker(self.Users)
 
     def addUser(self, user_data, role):
         del user_data["magicNumber"]
@@ -33,7 +35,7 @@ class UserDB():
             user_data['role'] = 'developer'
         elif (role == Roles.ADMIN):
             user_data['role'] = 'admin'
-        InsertDocument(self.Users, user_data)
+        self.DBWorker.InsertDocument(user_data)
 
     def getUsersByRole(self, role):
         target = ""
@@ -46,19 +48,19 @@ class UserDB():
         return GetAccountsByRole(self.Users, target)
 
     def deleteUser(self, guid):
-        DeleteDocument(self.Users, {'guid': guid})
+        self.DBWorker.DeleteDocument({'guid': guid})
 
     def exists(self, email):
-        return IsDocument(self.Users, 'email', email)
+        return self.DBWatcher.IsDocument('email', email)
 
     def getUser(self, email):
-        return GetDocument(self.Users, 'email', email)
+        return self.DBWatcher.GetDocument('email', email)
 
     def existByGUID(self, guid):
-        return IsDocument(self.Users, 'guid', guid)
+        return self.DBWatcher.IsDocument('guid', guid)
 
     def getUserByGUID(self, guid):
-        return GetDocument(self.Users, 'guid', guid)
+        return self.DBWatcher.GetDocument('guid', guid)
 
     def getUserRoleByGUID(self, guid):
-        return GetDocument(self.Users, 'guid', guid)['role']
+        return self.DBWatcher.GetDocument('guid', guid)['role']

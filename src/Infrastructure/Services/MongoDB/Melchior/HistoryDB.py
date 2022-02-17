@@ -9,8 +9,9 @@
 import pymongo
 
 # PyMongo Internal Utils
-from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
-from DataBases.InternalUtils.DataWorker import InsertDocument, DeleteDocument
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
+
 
 import os
 
@@ -20,28 +21,30 @@ class HistoryDB():
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
         self.History = self.db['History']
+        self.DBWatcher = MongoDBWatcher(self.History)
+        self.DBWorker = MongoDBWorker(self.ApiKeyLog)
 
     def newHistory(self, guid):
         data = {
             "guid": guid,
             "History": []
         }
-        InsertDocument(self.History, data)
+        self.DBWorker.InsertDocument(self.History, data)
 
     def deleteHistory(self, guid):
-        DeleteDocument(self.History, {'guid': guid})
+        self.DBWorker.DeleteDocument(self.History, {'guid': guid})
 
     def exists(self, guid):
-        return IsDocument(self.History, "guid", guid)
+        return self.DBWatcher.IsDocument("guid", guid)
 
     def getHistoryForUser(self, guid):
-        return GetDocument(self.History, "guid", guid)
+        return self.DBWatcher.GetDocument("guid", guid)
 
     def delHistoryCallForUser(self, guid, number, timestamp):
         query = {
             'guid': str(guid)
         }
-        result = GetDocument(self.History, "guid", guid)
+        result = self.DBWatcher.GetDocument("guid", guid)
         if result is None:
             return
         updated_values = result["History"]
@@ -56,7 +59,7 @@ class HistoryDB():
         query = {
             'guid': str(guid)
         }
-        result = GetDocument(self.History, "guid", guid)
+        result = self.DBWatcher.GetDocument("guid", guid)
         if result is None:
             return
 

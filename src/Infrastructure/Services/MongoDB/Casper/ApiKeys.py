@@ -5,16 +5,18 @@
 ## ApiKeys
 ##
 
+### INFRA
 # Client mongo db import
+import imp
 import pymongo
-
 # PyMongo Internal Utils
-from DataBases.InternalUtils.DataWatcher import IsDocument
-from DataBases.InternalUtils.DataWorker import InsertDocument
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
 
+### LOGIC
 # time import
 import time
-
+# env var import
 import os
 
 # Object to represent table Contributors
@@ -23,6 +25,8 @@ class ApiKeyLogDB():
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
         self.ApiKeyLog = self.db['ApiKeyLog']
+        self.DBWatcher = MongoDBWatcher(self.ApiKeyLog)
+        self.DBWorker = MongoDBWorker(self.ApiKeyLog)
 
     def logClaimeApiKey(self, apiKey, name, ip):
         document = {
@@ -31,13 +35,13 @@ class ApiKeyLogDB():
             "ip": ip,
             "ts": time.time()
         }
-        return InsertDocument(self.ApiKeyLog, document)
+        return self.DBWorker.InsertDocument(document)
 
     def isApiKeyForContributor(self, name, ip):
-        if (IsDocument(self.ApiKeyLog, "name", name)
-        or IsDocument(self.ApiKeyLog, "ip", ip)):
+        if (self.DBWatcher.IsDocument("name", name)
+        or self.DBWatcher.IsDocument("ip", ip)):
             return True
         return False
 
     def isValidApiKey(self, apiKey):
-        return IsDocument(self.ApiKeyLog, "apiKey", apiKey)
+        return self.DBWatcher.IsDocument("apiKey", apiKey)

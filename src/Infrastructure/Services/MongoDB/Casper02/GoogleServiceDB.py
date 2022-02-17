@@ -5,12 +5,14 @@
 ## GoogleServiceDB
 ##
 
+### INFRA
 # Client mongo db import
 import pymongo
+# MongoDBMongo Internal Utils
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
 
-# PyMongo Internal Utils
-from DataBases.InternalUtils.DataWatcher import GetDocument
-
+### LOGIC
+# env vars import
 import os
 
 # Object to represent table Contributors
@@ -19,9 +21,10 @@ class GoogleServiceDB():
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
         self.GoogleServices = self.db['GoogleServices']
+        self.DBWatcher = MongoDBWatcher(self.GoogleServices)
 
     def PullGMailCreds(self):
-        result = GetDocument(self.GoogleServices, "service", "GMail")
+        result = self.DBWatcher.GetDocument("service", "GMail")
         if (result is None):
             return None
         return (result["credentials"]["email"], result["credentials"]["password"])

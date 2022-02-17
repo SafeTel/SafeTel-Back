@@ -9,8 +9,8 @@
 import pymongo
 
 # PyMongo Internal Utils
-from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
-from DataBases.InternalUtils.DataWorker import InsertDocument, DeleteDocument
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
 
 # Melchior Internal Utils
 from DataBases.Melchior.InternalUtils.DataWorker import AddNumberToPhoneList, DeleteNumberFromPhoneList
@@ -23,22 +23,24 @@ class BlacklistDB():
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
         self.Blacklist = self.db['Blacklist']
+        self.DBWatcher = MongoDBWatcher(self.Blacklist)
+        self.DBWorker = MongoDBWorker(self.Blacklist)
 
     def newBlacklist(self, guid):
         data = {
             "guid": guid,
             "PhoneNumbers": []
         }
-        InsertDocument(self.Blacklist, data)
+        self.DBWorker.InsertDocument(data)
 
     def deleteBlacklist(self, guid):
-        DeleteDocument(self.Blacklist, {'guid': guid})
+        self.DBWorker.DeleteDocument(self.Blacklist, {'guid': guid})
 
     def exists(self, guid):
-        return IsDocument(self.Blacklist, "guid", guid)
+        return self.DBWatcher.IsDocument("guid", guid)
 
     def getBlacklistForUser(self, guid):
-        return GetDocument(self.Blacklist, "guid", guid)
+        return self.DBWatcher.GetDocument("guid", guid)
 
     def addBlacklistNumberForUser(self, guid, number):
         AddNumberToPhoneList(self.Blacklist, guid, number)
