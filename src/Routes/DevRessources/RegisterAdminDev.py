@@ -24,7 +24,7 @@ from Routes.Utils.RouteErrors.Errors import BadRequestError
 
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
-from DataBases.Utils.MelchiorUtils import createDocumentForNewUser
+from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsWorker import UserListsWorker
 
 # DB imports
 from DataBases.Casper.ApiKeys import ApiKeyLogDB
@@ -79,10 +79,11 @@ class RegisterAdminDev(Resource):
             return BadRequestError("bad request"), 400
 
         UserDb.addUser(registration, role)
-        createDocumentForNewUser(guid)
+
+        ULWorker = UserListsWorker()
+        ULWorker.CreateUserLists(guid)
 
         jwtConv = JWTConvert()
-
         return {
             'created': True,
             'userName': registration['userName'],

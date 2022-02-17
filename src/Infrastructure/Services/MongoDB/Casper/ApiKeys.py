@@ -7,7 +7,6 @@
 
 ### INFRA
 # Client mongo db import
-import imp
 import pymongo
 # PyMongo Internal Utils
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher

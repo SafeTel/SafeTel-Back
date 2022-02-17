@@ -9,7 +9,7 @@
 # Client mongo db import
 import pymongo
 # PyMongo Internal Utils
-from DataBases.InternalUtils.DataWatcher import IsDocument
+from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
 
 ### LOGIC
 # env vars import
@@ -20,6 +20,7 @@ class ContributorsDB():
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
         self.Contributors = self.db['Contributors']
+        self.DBWatcher = MongoDBWatcher(self.Contributors)
 
     def IsContributor(self, name):
-        return IsDocument(self.Contributors, 'name', name)
+        return self.DBWatcher.IsDocument('name', name)

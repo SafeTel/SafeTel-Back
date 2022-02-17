@@ -24,7 +24,8 @@ import uuid
 import time
 # Melchior DB imports
 from DataBases.Melchior.UserDB import UserDB
-from DataBases.Utils.MelchiorUtils import createDocumentForNewUser
+from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsWorker import UserListsWorker
+
 
 UserDb = UserDB()
 
@@ -68,10 +69,11 @@ class Register(Resource):
         body["password"] = pwdConv.Serialize(body["password"])
 
         UserDb.addUser(body, Roles.USER)
-        createDocumentForNewUser(guid)
+
+        ULWorker = UserListsWorker()
+        ULWorker.CreateUserLists(guid)
 
         jwtConv = JWTConvert()
-
         return {
             'created': True,
             'userName': body["userName"],
