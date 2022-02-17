@@ -1,23 +1,19 @@
 {
     "Mode": {
         "deployement_mode": "DEV",
-        "env_config_file": "./devOps/deployement/dev-config.env",
         "message": "Launching PROD on purpose without any validation will have consequences"
     },
     "MandatoryEnvVars": [
         "SECRET_KEY",
-
         "DB_CLIENT",
         "DB_PASSWORD",
         "DB_MELCHIOR",
         "DB_CASPER",
         "DB_CASPER_02",
         "DB_URI",
-
         "TELLOWS_BASE_URI",
         "TELLOWS_URI_NUMBER",
         "TELLOWS_API_KEY_MD5",
-
         "PING_URI"
     ]
 }
