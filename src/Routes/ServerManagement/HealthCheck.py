@@ -6,17 +6,11 @@
 ##
 
 # Network imports
-import imp
 from flask import request as fquest
 from flask_restful import Resource
 
 # Client mongo db import
 from flask.globals import request
-import pymongo
-
-# Health Check imports
-from healthcheck import HealthCheck as HealthCheckFromPackage
-from healthcheck import EnvironmentDump
 
 # Utils imports
 import json
@@ -28,11 +22,12 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Request Error
 from Routes.Utils.RouteErrors.Errors import BadRequestError
 
-import os
+# Health CHeck Service
+from Infrastructure.Services.HealthCheck.HealthCheckService import HealthCheckService
 
-# Route to health check
 class HealthCheck(Resource):
     def get(self):
+        hcService = HealthCheckService()
         jwtConv = JWTConvert()
 
         token = request.args["token"]
@@ -40,9 +35,8 @@ class HealthCheck(Resource):
         if request.args.get("token") == None:
             return BadRequestError("bad token"), 400
 
-        self.serverCheck()
-        serverDatas = self.health.run()
-        serverEnvDatas = self.envdump.run()
+        serverDatas = hcService.RunInfraCheck()
+        serverEnvDatas = hcService.RunSoftCheck()
 
         serverCheck = {}
         envCheck = {}
@@ -80,41 +74,3 @@ class HealthCheck(Resource):
                 "environment": envCheck
             }
         }
-
-    def serverCheck(self):
-        self.health = HealthCheckFromPackage()
-        self.envdump = EnvironmentDump()
-
-        self.health.add_check(self.checkMongoDBAvailability)
-        self.health.add_check(self.checkMongoDBCollectionAvailability_User)
-        self.health.add_check(self.checkMongoDBCollectionAvailability_Blacklist)
-        self.health.add_check(self.checkMongoDBCollectionAvailability_Whitelist)
-        self.health.add_check(self.checkMongoDBCollectionAvailability_History)
-        self.envdump.add_section("application", self.getSoftwareData)
-
-    def checkMongoDBAvailability(self):
-        client = pymongo.MongoClient(os.getenv("DB_URI"))
-        # Check if we can access safetel database
-        self.safetelDatabase = client.Melchior
-        return True, "Safetel mongoDB available"
-
-    # Check if we can access the collections
-    def checkMongoDBCollectionAvailability_User(self):
-        _ = self.safetelDatabase.User
-        return True, 'User collection available'
-
-    def checkMongoDBCollectionAvailability_Blacklist(self):
-        _ = self.safetelDatabase.Blacklist
-        return True, 'Blacklist collection available'
-
-    def checkMongoDBCollectionAvailability_Whitelist(self):
-        _ = self.safetelDatabase.Whitelist
-        return True, 'Whitelist collection available'
-
-    def checkMongoDBCollectionAvailability_History(self):
-        _ = self.safetelDatabase.History
-        return True, 'History collection available'
-
-    def getSoftwareData(self):
-        return {"maintainer": "Safetel",
-            "github_repo": "SafeTel-Back"}
