@@ -5,7 +5,7 @@
 ## config
 ##
 
-### LOGIX
+### LOGIC
 import os
 import json
 from pathlib import Path
