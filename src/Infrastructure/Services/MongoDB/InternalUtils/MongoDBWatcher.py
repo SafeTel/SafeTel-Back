@@ -14,6 +14,7 @@ class MongoDBWatcher():
         self.NOT_FOUND = 404
         self.MongoDB = db
 
+
     # Look for a document by giving the db, a query, and data to compare
     def GetDocument(self, query, data):
         query_mongo = {
@@ -21,6 +22,7 @@ class MongoDBWatcher():
         }
         result = self.MongoDB.find_one(query_mongo)
         return result
+
 
     # Look for a document by giving the db, a query, and data to compare
     def IsDocument(self, query, data):

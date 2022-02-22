@@ -24,21 +24,22 @@ from Routes.DevRessources.InitializeDevRessources import InitializeDevRessources
 def InitRoutes(api):
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
+    logging.info("Routes initialization...")
 
     InitializeUserManagementRoutes(api)
-    logging.info("Routes initialized - User Management")
+    logging.info("- User Management")
 
     InitializeUserListsRoutes(api)
-    logging.info("Routes initialized - User Lists")
+    logging.info("- User Lists")
 
     InitializeServicesRoutes(api)
-    logging.info("Routes initialized - Services")
+    logging.info("- Services")
 
     InitializeServerManagementRoutes(api)
-    logging.info("Routes initialized - Server Management")
+    logging.info("- Server Management")
 
     InitializeEmbededRessourceRoutes(api)
-    logging.info("Routes initialized - Embeded Ressources")
+    logging.info("- Embeded Ressources")
 
     InitializeDevRessourcesRoutes(api)
-    logging.info("Routes initialized - Dev Ressources")
+    logging.info("- Dev Ressources")

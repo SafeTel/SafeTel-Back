@@ -24,6 +24,7 @@ class HistoryDB():
         self.DBWatcher = MongoDBWatcher(self.History)
         self.DBWorker = MongoDBWorker(self.History)
 
+
     def newHistory(self, guid):
         data = {
             "guid": guid,
@@ -31,14 +32,18 @@ class HistoryDB():
         }
         self.DBWorker.InsertDocument(self.History, data)
 
+
     def deleteHistory(self, guid):
         self.DBWorker.DeleteDocument(self.History, {'guid': guid})
+
 
     def exists(self, guid):
         return self.DBWatcher.IsDocument("guid", guid)
 
+
     def getHistoryForUser(self, guid):
         return self.DBWatcher.GetDocument("guid", guid)
+
 
     def delHistoryCallForUser(self, guid, number, timestamp):
         query = {
@@ -54,6 +59,7 @@ class HistoryDB():
                 break
         query_values = { "$set": { 'History': updated_values } }
         self.History.update_one(query, query_values)
+
 
     def addHistoryCallForUser(self, guid, number, origin, time):
         query = {

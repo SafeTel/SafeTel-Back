@@ -26,6 +26,7 @@ class WhitelistDB():
         self.DBWorker = MongoDBWorker(self.Whitelist)
         self.ULWorker = UserListsWorker(self.Whitelist)
 
+
     def newWhitelist(self, guid):
         data = {
             "guid": guid,
@@ -33,17 +34,22 @@ class WhitelistDB():
         }
         self.DBWorker.InsertDocument(data)
 
+
     def deleteWhitelist(self, guid):
         self.DBWorker.DeleteDocument({'guid': guid})
+
 
     def exists(self, guid):
         return self.DBWatcher.IsDocument("guid", guid)
 
+
     def getWhitelistForUser(self, guid):
         return self.DBWatcher.GetDocument("guid", guid)
 
+
     def addWhitelistNumberForUser(self, guid, number):
         self.ULWorker.AddNumberFromList(guid, number)
+
 
     def delWhitelistNumberForUser(self, guid, number):
         self.ULWorker.DeleteNumberFromList(guid, number)

@@ -22,5 +22,6 @@ class ContributorsDB():
         self.Contributors = self.db['Contributors']
         self.DBWatcher = MongoDBWatcher(self.Contributors)
 
+
     def IsContributor(self, name):
         return self.DBWatcher.IsDocument('name', name)

@@ -27,6 +27,7 @@ class BlacklistDB():
         self.DBWorker = MongoDBWorker(self.Blacklist)
         self.ULWorker = UserListsWorker(self.Blacklist)
 
+
     def newBlacklist(self, guid):
         data = {
             "guid": guid,
@@ -34,17 +35,22 @@ class BlacklistDB():
         }
         self.DBWorker.InsertDocument(data)
 
+
     def deleteBlacklist(self, guid):
         self.DBWorker.DeleteDocument(self.Blacklist, {'guid': guid})
+
 
     def exists(self, guid):
         return self.DBWatcher.IsDocument("guid", guid)
 
+
     def getBlacklistForUser(self, guid):
         return self.DBWatcher.GetDocument("guid", guid)
 
+
     def addBlacklistNumberForUser(self, guid, number):
         self.ULWorker.AddNumberFromList(guid, number)
+
 
     def delBlacklistNumberForUser(self, guid, number):
         self.ULWorker.DeleteNumberFromList(guid, number)

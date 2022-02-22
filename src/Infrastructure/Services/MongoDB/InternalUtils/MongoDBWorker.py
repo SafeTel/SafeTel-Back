@@ -14,11 +14,13 @@ class MongoDBWorker():
         self.NOT_FOUND = 404
         self.MongoDB = db
 
+
     # Create a document linked in MongoDb
     def InsertDocument(self, data):
         if data == None:
             return
         self.db.insert_one(data)
+
 
     # Delete a document linked to a guid in MongoDb
     def DeleteDocument(self, guid):

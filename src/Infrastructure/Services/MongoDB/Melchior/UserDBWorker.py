@@ -13,6 +13,7 @@ class UserDBWorker():
     def __init__(self, db):
         self.DB = db
 
+
     def UpdateAccountEmail(self, guid, email):
         query = {
             'guid': str(guid)
@@ -22,6 +23,7 @@ class UserDBWorker():
             return
         query_values = { "$set": { 'email': email } }
         self.DB.update_one(query, query_values)
+
 
     def UpdatePersonalInfos(self, guid, customerInfos, localization):
         query = {'guid': str(guid)}

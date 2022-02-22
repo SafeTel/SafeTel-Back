@@ -30,6 +30,7 @@ class UserDB():
         self.DBUserWatcher = UserDBWatcher(self.Users)
         self.DBUserWorker = UserDBWorker(self.Users)
 
+
     def addUser(self, user_data, role):
         del user_data["magicNumber"]
         if (role == Roles.USER):
@@ -39,6 +40,7 @@ class UserDB():
         elif (role == Roles.ADMIN):
             user_data['role'] = 'admin'
         self.DBWorker.InsertDocument(user_data)
+
 
     def getUsersByRole(self, role):
         target = ""
@@ -50,26 +52,34 @@ class UserDB():
             target = "admin"
         return self.DBUserWatcher.GetAccountsByRole(target)
 
+
     def deleteUser(self, guid):
         self.DBWorker.DeleteDocument({'guid': guid})
+
 
     def exists(self, email):
         return self.DBWatcher.IsDocument('email', email)
 
+
     def getUser(self, email):
         return self.DBWatcher.GetDocument('email', email)
+
 
     def existByGUID(self, guid):
         return self.DBWatcher.IsDocument('guid', guid)
 
+
     def getUserByGUID(self, guid):
         return self.DBWatcher.GetDocument('guid', guid)
+
 
     def getUserRoleByGUID(self, guid):
         return self.DBWatcher.GetDocument('guid', guid)['role']
 
+
     def UpdateAccountEmail(self, guid, email):
         self.DBUserWorker.UpdateAccountEmail(guid, email)
+
 
     def UpdatePersonalInfos(self, guid, customerInfos, localization):
         self.DBUserWorker.UpdatePersonalInfos(guid, customerInfos, localization)

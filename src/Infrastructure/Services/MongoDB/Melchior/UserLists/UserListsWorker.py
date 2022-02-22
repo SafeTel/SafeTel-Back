@@ -13,6 +13,7 @@ class UserListsWorker():
     def __init__(self, db):
         self.DB = db
 
+
     def AddNumberFromList(self, guid, number):
         query = {
             'guid': str(guid)
@@ -24,6 +25,7 @@ class UserListsWorker():
         updated_values.append(number)
         query_values = { "$set": { 'PhoneNumbers': updated_values } }
         self.DB.update_one(query, query_values)
+
 
     def DeleteNumberFromList(self, guid, number):
         query = {

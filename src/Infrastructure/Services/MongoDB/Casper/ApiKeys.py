@@ -27,6 +27,7 @@ class ApiKeyLogDB():
         self.DBWatcher = MongoDBWatcher(self.ApiKeyLog)
         self.DBWorker = MongoDBWorker(self.ApiKeyLog)
 
+
     def logClaimeApiKey(self, apiKey, name, ip):
         document = {
             "apiKey": apiKey,
@@ -36,11 +37,13 @@ class ApiKeyLogDB():
         }
         return self.DBWorker.InsertDocument(document)
 
+
     def isApiKeyForContributor(self, name, ip):
         if (self.DBWatcher.IsDocument("name", name)
         or self.DBWatcher.IsDocument("ip", ip)):
             return True
         return False
+
 
     def isValidApiKey(self, apiKey):
         return self.DBWatcher.IsDocument("apiKey", apiKey)

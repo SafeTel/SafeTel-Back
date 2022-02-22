@@ -23,6 +23,7 @@ class GoogleServiceDB():
         self.GoogleServices = self.db['GoogleServices']
         self.DBWatcher = MongoDBWatcher(self.GoogleServices)
 
+
     def PullGMailCreds(self):
         result = self.DBWatcher.GetDocument("service", "GMail")
         if (result is None):

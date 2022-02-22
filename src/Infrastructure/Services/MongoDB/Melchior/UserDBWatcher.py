@@ -13,6 +13,7 @@ class UserDBWatcher():
     def __init__(self, db):
         self.DB = db
 
+
     def GetAccountsByRole(self, roleTarget):
         query = {
             'role': roleTarget
