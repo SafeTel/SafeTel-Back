@@ -26,20 +26,12 @@ class InitiateServerConfig():
             raise ValueError("FATAL ERROR: Environement denied.")
         with open("config.json", 'r') as jsonFile:
             config = json.load(jsonFile)
-            if (["Mode"]["launchMode"] not in config
-            or ["Mode"]["launchSecurity"] not in config
-            or ["Mode"]["message"] not in config
-            or ["MandatoryEnvVars"] not in config):
+            configMode = config["Mode"]
+            if ("launchMode" not in configMode
+            or "message" not in configMode
+            or "launchSecurity" not in configMode
+            or "MandatoryEnvVars" not in config):
                 raise ValueError("FATAL ERROR: Configuration denied.")
-
-    def __ValudateConfig(self, json, keys):
-        for i in keys:
-            if not i in json:
-                return False
-            else:
-                if json[i] == "":
-                    return False
-        return True
 
 
     def __CheckEnvVars(self):
@@ -66,10 +58,6 @@ class InitiateServerConfig():
                 if (launchMode != "DEV"
                 or launchMode != "PROD"
                 or launchMode != "POSTMAN"):
-                    raise ValueError("FATAL ERROR: Configuration denied.")
-                launchMode = launchMode.lower()
-                branch = self.__GetBranchName()
-                if (launchMode != branch):
                     raise ValueError("FATAL ERROR: Launch Mode denied.")
 
 
