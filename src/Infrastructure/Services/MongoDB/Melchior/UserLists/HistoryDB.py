@@ -30,11 +30,11 @@ class HistoryDB():
             "guid": guid,
             "History": []
         }
-        self.DBWorker.InsertDocument(self.History, data)
+        self.DBWorker.InsertDocument(data)
 
 
     def deleteHistory(self, guid):
-        self.DBWorker.DeleteDocument(self.History, {'guid': guid})
+        self.DBWorker.DeleteDocument({'guid': guid})
 
 
     def exists(self, guid):

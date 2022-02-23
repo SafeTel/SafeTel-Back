@@ -26,6 +26,9 @@ import time
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsUtils import UserListsUtils
 
+from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+from Infrastructure.Factory.UserFactory.User import User
+
 
 UserDb = UserDB()
 
@@ -61,21 +64,13 @@ class Register(Resource):
         if UserDb.exists(body["email"]):
             return BadRequestError("this email is already linked to an account"), 400
 
-        pwdConv = PWDConvert()
-
-        body["time"] = time.time()
-        body["guid"] = str(uuid.uuid4())
-        guid = body["guid"]
-        body["password"] = pwdConv.Serialize(body["password"])
-
-        UserDb.addUser(body, Roles.USER)
-
-        ULUtils = UserListsUtils()
-        ULUtils.CreateUserLists(guid)
+        UsrFactory = UserFactory()
+        User = UsrFactory.CreateUser(body)
+        UserInfos = User.PullUserInfos()
 
         jwtConv = JWTConvert()
         return {
             'created': True,
-            'userName': body["userName"],
-            'token': jwtConv.Serialize(guid, Roles.USER)
+            'userName': UserInfos["userName"],
+            'token': jwtConv.Serialize(User.GetGUID(), Roles.USER)
         }, 200

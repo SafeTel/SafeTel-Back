@@ -12,6 +12,7 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import History
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
 
 from Infrastructure.Factory.UserFactory.User import User
+from Logic.Models.Roles import Roles
 
 from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 
@@ -29,7 +30,7 @@ class UserFactory():
     def CreateUser(self, UserInfos):
         guid = str(uuid.uuid4())
         UserInfos = self.__EditUserInfos(UserInfos, guid)
-        self.__CreateUserInDB(guid, UserInfos)
+        self.__CreateUserInDB(UserInfos)
         self.__CreateUserLists(guid)
         return User(guid)
 
@@ -54,7 +55,7 @@ class UserFactory():
 
 
     def __CreateUserInDB(self, UserInfos):
-        self.__UserDB.addUser(UserInfos)
+        self.__UserDB.addUser(UserInfos, Roles.USER)
 
 
     def __CreateUserLists(self, guid):

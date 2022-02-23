@@ -1,11 +1,11 @@
 ##
-## SAFETEL PROJECT, 2022
-## SafeTel-Back
-## File description:
-## DataWorker
+# SAFETEL PROJECT, 2022
+# SafeTel-Back
+# File description:
+# DataWorker
 ##
 
-### INFRA
+# INFRA
 # Client mongo db import
 import pymongo
 
@@ -14,16 +14,14 @@ class MongoDBWorker():
         self.NOT_FOUND = 404
         self.MongoDB = db
 
-
     # Create a document linked in MongoDb
     def InsertDocument(self, data):
         if data == None:
             return
-        self.db.insert_one(data)
-
+        self.MongoDB.insert_one(data)
 
     # Delete a document linked to a guid in MongoDb
     def DeleteDocument(self, guid):
         if guid == None:
             return
-        self.db.delete_one(guid)
+        self.MongoDB.delete_one(guid)
