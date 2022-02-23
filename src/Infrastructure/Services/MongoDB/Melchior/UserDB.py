@@ -5,21 +5,19 @@
 ## UserDB
 ##
 
+### INFRA
 # Client mongo db import
 import pymongo
-
 # PyMongo Internal Utils
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
 from Infrastructure.Services.MongoDB.Melchior.UserDBWatcher import UserDBWatcher
 from Infrastructure.Services.MongoDB.Melchior.UserDBWorker import UserDBWorker
-
 # Roles import
 from Logic.Models.Roles import Roles
-
+# Get env vars
 import os
 
-# Object to represent table User
 class UserDB():
     def __init__(self, db_name=os.getenv("DB_MELCHIOR")):
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
