@@ -20,9 +20,12 @@ from Routes.Utils.RouteErrors.Errors import BadRequestError
 ### INFRA
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
-from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsUtils import UserListsUtils
 
 UserDb = UserDB()
+
+
+from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+from Infrastructure.Factory.UserFactory.User import User
 
 # Validate Body for DeleteAccount route
 def UMDeleteAccountBodyValidation(data):
@@ -54,12 +57,9 @@ class DeleteAccount(Resource):
         if result["userName"] != body["userName"]:
             return BadRequestError("manual security check failed"), 400
 
-        ULUtils = UserListsUtils()
-        ULUtils.DeleteUserLists(guidUsr)
-
-        if ULWorker.IsDeletedUserLists(guidUsr):
-            UserDb.deleteUser(guidUsr)
+        Usr = User(guidUsr)
+        Usr.Delete()
 
         return {
-            'deleted': UserDb.exists(result['email'])
+            'deleted': Usr.IsDeleted()
         }, 200

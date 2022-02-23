@@ -25,9 +25,12 @@ from Routes.Utils.RouteErrors.Errors import BadRequestError
 ### INFRA
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
-from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsUtils import UserListsUtils
 # DB imports
 from Infrastructure.Services.MongoDB.Casper.ApiKeys import ApiKeyLogDB
+# Melchior DB imports
+from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB
+from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
+from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
 
 UserDb = UserDB()
 
@@ -80,8 +83,12 @@ class RegisterAdminDev(Resource):
 
         UserDb.addUser(registration, role)
 
-        ULUtils = UserListsUtils()
-        ULUtils.CreateUserLists(guid)
+        self.BlacklistDb = BlacklistDB()
+        self.WhitelistDb = WhitelistDB()
+        self.HistoryDb = HistoryDB()
+        self.BlacklistDb.newBlacklist(guid)
+        self.WhitelistDb.newWhitelist(guid)
+        self.HistoryDb.newHistory(guid)
 
         jwtConv = JWTConvert()
         return {

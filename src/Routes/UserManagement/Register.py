@@ -24,7 +24,6 @@ import uuid
 import time
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
-from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsUtils import UserListsUtils
 
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 from Infrastructure.Factory.UserFactory.User import User
