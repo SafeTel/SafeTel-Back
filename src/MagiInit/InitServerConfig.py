@@ -13,7 +13,7 @@ from pathlib import Path
 ### INFRA
 from Infrastructure.Utils.HttpClient.HtttpClient import HttpClient
 
-class InitiServerConfig():
+class InitServerConfig():
     def __init__(self):
         self.__IsValidConfig()
         self.__CheckEnvVars()
