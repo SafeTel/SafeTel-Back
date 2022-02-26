@@ -10,12 +10,12 @@ from flask import request as fquest
 from flask_restful import Resource
 
 # Utils check imports
-from Routes.Utils.Request import validateBody
+from Endpoints.Utils.Request import validateBody
 from Logic.Models.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Routes.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError
 
 ### INFRA
 # Melchior DB imports

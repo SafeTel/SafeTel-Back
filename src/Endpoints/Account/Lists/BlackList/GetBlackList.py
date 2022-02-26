@@ -14,7 +14,7 @@ from flask_restful import Resource
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Routes.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError
 
 # DB import
 from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB

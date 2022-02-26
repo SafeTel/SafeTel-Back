@@ -10,13 +10,13 @@ from flask import request as fquest
 from flask_restful import Resource
 
 # Utils check imports
-from Routes.Utils.Request import validateBody
-from Routes.Utils.Types import isValidEmail
+from Endpoints.Utils.Request import validateBody
+from Endpoints.Utils.Types import isValidEmail
 from Logic.Models.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Routes.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError
 
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
@@ -29,9 +29,9 @@ def UMUpdateEmailBodyValidation(data):
         data,
         ["token", "email"]):
         return False
+    if not isValidEmail(data["email"]):
+        return False
     return True
-"""     if not isValidEmail(data["email"]):
-        return False """
 
 # Route to update the email of an account from an auth user
 class UpdateEmail(Resource):

@@ -7,9 +7,9 @@
 
 ### LOGIC
 # Utils check imports
-from Routes.Utils.Request import validateBody
+from Endpoints.Utils.Request import validateBody
 # Request Error
-from Routes.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError
 # JWT import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Password encription import

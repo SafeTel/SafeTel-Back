@@ -15,7 +15,7 @@ from Logic.Models.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Routes.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError
 
 # Route to check a JWT
 class CheckToken(Resource):

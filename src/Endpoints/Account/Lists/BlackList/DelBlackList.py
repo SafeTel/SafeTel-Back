@@ -10,11 +10,11 @@ from flask import request as fquest
 from flask_restful import Resource
 
 # Utils import
-from Routes.Utils.Request import validateBody
+from Endpoints.Utils.Request import validateBody
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Routes.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError
 
 # DB import
 from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB

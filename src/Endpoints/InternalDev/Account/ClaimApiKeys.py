@@ -11,10 +11,10 @@ from flask.globals import request
 from flask_restful import Resource
 
 # Utils check imports
-from Routes.Utils.Request import validateBody
+from Endpoints.Utils.Request import validateBody
 
 # Request Error
-from Routes.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError
 
 # DB imports
 from Infrastructure.Services.MongoDB.Casper.Contributors import ContributorsDB

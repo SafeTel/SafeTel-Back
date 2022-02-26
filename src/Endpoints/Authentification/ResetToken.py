@@ -14,10 +14,10 @@ from flask_restful import Resource
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Utils check imports
-from Routes.Utils.Request import validateBody
+from Endpoints.Utils.Request import validateBody
 
 # Request Error
-from Routes.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError
 
 ### INFRA
 # Melchior DB imports
