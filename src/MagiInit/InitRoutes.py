@@ -10,16 +10,16 @@ import logging
 
 ### INFRA
 # User Routes
-from Routes.UserManagement.InitializeUserManagementRoutes import InitializeUserManagementRoutes
-from Routes.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
+from Endpoints.UserManagement.InitializeUserManagementRoutes import InitializeUserManagementRoutes
+from Endpoints.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
 # Initialize s Routes
-from Routes.Services.InitializeServicesRoutes import InitializeServicesRoutes
+from Endpoints.Services.InitializeServicesRoutes import InitializeServicesRoutes
 # Initialize server ressources routes
-from Routes.ServerManagement.InitializeServerManagementRoutes import InitializeServerManagementRoutes
+from Endpoints.ServerManagement.InitializeServerManagementRoutes import InitializeServerManagementRoutes
 # Initialize embeded ressources routes
-from Routes.EmbededRessources.InitializeEmbededRessourcesRoutes import InitializeEmbededRessourceRoutes
+from Endpoints.EmbededRessources.InitializeEmbededRessourcesRoutes import InitializeEmbededRessourceRoutes
 # Initialize dev ressources routes
-from Routes.DevRessources.InitializeDevRessources import InitializeDevRessourcesRoutes
+from Endpoints.DevRessources.InitializeDevRessources import InitializeDevRessourcesRoutes
 
 def InitRoutes(api):
     format = "%(asctime)s: %(message)s"

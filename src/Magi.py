@@ -23,7 +23,7 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 ####################################
 ### Initiate Server Config BEGIN ###
 logging.warning("--- /!\ Validating Environement /!\\ ----")
-from InitiateServerConfig import InitiateServerConfig
+from MagiInit.InitiateServerConfig import InitiateServerConfig
 InitiateServerConfig()
 logging.warning("---     Environement Validated      ----")
 ###  Initiate Server Config END  ###
@@ -65,7 +65,7 @@ from flask_cors import CORS
 CORS(app)
 
 # Routes Initialization
-from InitRoutes import InitRoutes
+from MagiInit.InitRoutes import InitRoutes
 InitRoutes(api)
 ###  INFRA END  ###
 ###################
