@@ -10,7 +10,6 @@
 ### LOGING SETTINGS BEGIN ###
 # Logs Imports
 import logging
-
 format = "%(asctime)s: %(message)s"
 logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 
@@ -23,8 +22,8 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 ####################################
 ### Initiate Server Config BEGIN ###
 logging.warning("--- /!\ Validating Environement /!\\ ----")
-from MagiInit.InitiateServerConfig import InitiateServerConfig
-InitiateServerConfig()
+from MagiInit.InitEndpoints import InitEndpoints
+InitEndpoints()
 logging.warning("---     Environement Validated      ----")
 ###  Initiate Server Config END  ###
 ####################################
@@ -32,12 +31,10 @@ logging.warning("---     Environement Validated      ----")
 
 ###############################
 ### EXTERNAL SERVICES BEGIN ###
-# import Sentry
-import sentry_sdk
 # Sentry integration
+import sentry_sdk
 sentry_sdk.init(
     "https://840739ef53034860b515d400dc4b6219@o1036766.ingest.sentry.io/6004367",
-
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
     # We recommend adjusting this value in production.
@@ -64,8 +61,8 @@ api = Api(app)
 from flask_cors import CORS
 CORS(app)
 
-# Routes Initialization
-from MagiInit.InitRoutes import InitRoutes
+# Endpoints Initialization
+from MagiInit.INi import InitRoutes
 InitRoutes(api)
 ###  INFRA END  ###
 ###################

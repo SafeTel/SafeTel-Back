@@ -13,7 +13,7 @@ from pathlib import Path
 ### INFRA
 from Infrastructure.Utils.HttpClient.HtttpClient import HttpClient
 
-class InitiateServerConfig():
+class InitiServerConfig():
     def __init__(self):
         self.__IsValidConfig()
         self.__CheckEnvVars()
@@ -59,13 +59,3 @@ class InitiateServerConfig():
                 or launchMode != "PROD"
                 or launchMode != "POSTMAN"):
                     raise ValueError("FATAL ERROR: Launch Mode denied.")
-
-
-    def __GetBranchName():
-        head_dir = Path(".") / ".git" / "HEAD"
-        with head_dir.open("r") as f: content = f.read().splitlines()
-        for line in content:
-            if line[0:4] == "ref:":
-                return line.partition("refs/heads/")[2]
-
-

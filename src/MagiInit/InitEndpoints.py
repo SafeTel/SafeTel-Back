@@ -21,7 +21,7 @@ from Endpoints.EmbededRessources.InitializeEmbededRessourcesRoutes import Initia
 # Initialize dev ressources routes
 from Endpoints.DevRessources.InitializeDevRessources import InitializeDevRessourcesRoutes
 
-def InitRoutes(api):
+def InitEndpoints(api):
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
     logging.info("Routes initialization...")
