@@ -2,44 +2,43 @@
 ## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## launchingRoutes
+## InitEndpoints
 ##
 
 ### LOGIC
 import logging
 
 ### INFRA
-# User Routes
-from Endpoints.UserManagement.InitializeUserManagementRoutes import InitializeUserManagementRoutes
-from Endpoints.UserLists.InitializeUserListsRoutes import InitializeUserListsRoutes
-# Initialize s Routes
-from Endpoints.Services.InitializeServicesRoutes import InitializeServicesRoutes
-# Initialize server ressources routes
-from Endpoints.ServerManagement.InitializeServerManagementRoutes import InitializeServerManagementRoutes
-# Initialize embeded ressources routes
-from Endpoints.EmbededRessources.InitializeEmbededRessourcesRoutes import InitializeEmbededRessourceRoutes
-# Initialize dev ressources routes
-from Endpoints.DevRessources.InitializeDevRessources import InitializeDevRessourcesRoutes
+# Init Endpoints Account import
+from Endpoints.Account.InitAccountEndpoints import InitAccountEndpoints
+# Init Endpoints Authentification import
+from Endpoints.Authentification.InitAuthEndpoints import InitAuthentificationEndpoints
+# Init Endpoints Engine import
+from Endpoints.Engine.InitEngineEndpoints import InitEngineEndpoints
+# Init Endpoints InternalDev import
+from Endpoints.InternalDev.InitInternalDevEndpoints import InitInternalDevEndpoints
 
-def InitEndpoints(api):
-    format = "%(asctime)s: %(message)s"
-    logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
-    logging.info("Routes initialization...")
+class InitEndpoints():
+    def __init__(self, Api):
+        format = "%(asctime)s: %(message)s"
+        logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
+        self.__InitEndpoints(Api)
+        logging.info("All endpoints initialized")
 
-    InitializeUserManagementRoutes(api)
-    logging.info("- User Management")
 
-    InitializeUserListsRoutes(api)
-    logging.info("- User Lists")
+    def __InitEndpoints(self, Api):
+        logging.info("Account endpoints initialization...")
+        InitAccountEndpoints(Api)
+        logging.info("Account endpoints initialized...")
 
-    InitializeServicesRoutes(api)
-    logging.info("- Services")
+        logging.info("Authentification endpoints initialization...")
+        InitAuthentificationEndpoints(Api)
+        logging.info("Authentification endpoints initialized...")
 
-    InitializeServerManagementRoutes(api)
-    logging.info("- Server Management")
+        logging.info("Engine endpoints initialization...")
+        InitEngineEndpoints(Api)
+        logging.info("Engine endpoints initialized...")
 
-    InitializeEmbededRessourceRoutes(api)
-    logging.info("- Embeded Ressources")
-
-    InitializeDevRessourcesRoutes(api)
-    logging.info("- Dev Ressources")
+        logging.info("InternalDev endpoints initialization...")
+        InitInternalDevEndpoints(Api)
+        logging.info("InternalDev endpoints initialized...")
