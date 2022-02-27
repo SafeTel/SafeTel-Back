@@ -1,0 +1,68 @@
+{
+    "user": [
+        {
+            "magicNumber": 42,
+            "email": "michel_test@gmail.com",
+            "userName": "Michel33",
+            "password": "aijdc!AZcas90é&",
+            "customerInfos": {
+                "firstName": "Michel",
+                "lastName": "Zuckerberg",
+                "phoneNumber": "33684739109"
+            },
+            "localization": {
+                "country": "Paris",
+                "region": "Ile De france",
+                "adress": "4 rue de Bretagne"
+            }
+        },
+        {
+            "magicNumber": 42,
+            "email": "franfran_test@gmail.com",
+            "userName": "Francoise",
+            "password": "oa13àeàé&kcASCavr!à",
+            "customerInfos": {
+                "firstName": "Francoise",
+                "lastName": "Canyon",
+                "phoneNumber": "33674536103"
+            },
+            "localization": {
+                "country": "France",
+                "region": "Nouvelle-Aquitaine",
+                "adress": "4 Rue Ducau"
+            }
+        },
+        {
+            "magicNumber": 42,
+            "email": "jean_test@gmail.com",
+            "userName": "Jean",
+            "password": "a0391!apcAZC",
+            "customerInfos": {
+                "firstName": "Jean",
+                "lastName": "Pierre",
+                "phoneNumber": "33701935712"
+            },
+            "localization": {
+                "country": "France",
+                "region": "Nice",
+                "adress": "3 Rue Saint-François de Paule "
+            }
+        },
+        {
+            "magicNumber": 42,
+            "email": "Miku",
+            "userName": "miku_test@gmail.com",
+            "password": "Miasà9403ac!",
+            "customerInfos": {
+                "firstName": "Miku",
+                "lastName": "San",
+                "phoneNumber": "33774631903"
+            },
+            "localization": {
+                "country": "France",
+                "region": "Paris",
+                "adress": "50 Rue de Varenne, 75007 Paris, France"
+            }
+        }
+    ]
+}
