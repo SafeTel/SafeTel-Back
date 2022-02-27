@@ -16,7 +16,7 @@ from flask.globals import request
 import json
 
 # JWT imports
-from Logic.Models.Roles import Roles
+from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error

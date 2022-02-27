@@ -7,7 +7,7 @@
 
 ### MODELS
 # Role import
-from Logic.Models.Roles import Roles
+from Models.Logic.Shared.Roles import Roles
 
 ### LOGIC
 # jwt imports

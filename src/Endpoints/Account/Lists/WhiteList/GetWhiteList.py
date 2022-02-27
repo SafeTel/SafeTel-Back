@@ -11,7 +11,7 @@ from flask.globals import request
 from flask_restful import Resource
 
 # Utils import
-from Logic.Models.Roles import Roles
+from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error

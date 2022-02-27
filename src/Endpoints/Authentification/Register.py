@@ -9,7 +9,7 @@
 # Utils check imports
 from Endpoints.Utils.Request import validateBody
 from Endpoints.Utils.Types import isValidEmail, isValidNumber
-from Logic.Models.Roles import Roles
+from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Request Error
 from Endpoints.Utils.RouteErrors.Errors import BadRequestError

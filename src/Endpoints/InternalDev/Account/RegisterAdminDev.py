@@ -15,7 +15,7 @@ import uuid
 import time
 
 # Utils check imports
-from Logic.Models.Roles import Roles
+from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 from Endpoints.Utils.Request import validateBody
 

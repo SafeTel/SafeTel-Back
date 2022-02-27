@@ -14,7 +14,7 @@ from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBW
 from Infrastructure.Services.MongoDB.Melchior.UserDBWatcher import UserDBWatcher
 from Infrastructure.Services.MongoDB.Melchior.UserDBWorker import UserDBWorker
 # Roles import
-from Logic.Models.Roles import Roles
+from Models.Logic.Shared.Roles import Roles
 # Get env vars
 import os
 

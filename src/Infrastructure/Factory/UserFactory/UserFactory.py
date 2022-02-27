@@ -12,7 +12,7 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import History
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
 
 from Infrastructure.Factory.UserFactory.User import User
-from Logic.Models.Roles import Roles
+from Models.Logic.Shared.Roles import Roles
 
 from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 

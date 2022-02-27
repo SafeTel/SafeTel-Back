@@ -12,7 +12,7 @@ from flask_restful import Resource
 # Utils check imports
 from Endpoints.Utils.Request import validateBody
 from Endpoints.Utils.Types import isValidEmail
-from Logic.Models.Roles import Roles
+from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
