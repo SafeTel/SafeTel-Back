@@ -53,4 +53,3 @@ class UpdateEmail(Resource):
         if (responseErrors != None):
             return InternalLogicError(), 500
         return response.ToDict(), 200
-

@@ -9,8 +9,8 @@
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 # Shared JObject import
-from Models.Endpoints.SharedJObject.AccountInfos.CustomerInfos import CustomerInfos
-from Models.Endpoints.SharedJObject.AccountInfos.Localization import Localization
+from Models.Endpoints.SharedJObject.Account.Infos.CustomerInfos import CustomerInfos
+from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localization
 
 # Represents UpdatePErsonalInfos Request
 class GetInfosResponse(JParent):

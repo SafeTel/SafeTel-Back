@@ -23,8 +23,8 @@ from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 # Models Response imports
 from Models.Endpoints.Account.Infos.GetInfosResponse import GetInfosResponse
-from Models.Endpoints.SharedJObject.AccountInfos.CustomerInfos import CustomerInfos
-from Models.Endpoints.SharedJObject.AccountInfos.Localization import Localization
+from Models.Endpoints.SharedJObject.Account.Infos.CustomerInfos import CustomerInfos
+from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localization
 
 UserDb = UserDB()
 
