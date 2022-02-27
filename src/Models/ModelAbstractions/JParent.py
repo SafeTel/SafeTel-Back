@@ -12,7 +12,11 @@ import json
 # Represent a parent JSON Parent Object
 class JParent():
     def Deserialize(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+    def ToDict(self):
+        jsonRaw = json.dumps(self, default=lambda o: o.__dict__)
+        return json.loads(jsonRaw)
 
     def Load(self, rawJSON):
         if (type(rawJSON) is str): return json.loads(rawJSON)

@@ -16,33 +16,43 @@ from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
 
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
 
+
+from Models.Endpoints.Account.Infos.UpdateEmailRequest import UpdateEmailRequest
+from Models.Endpoints.Account.Infos.UpdateEmailResponse import UpdateEmailResponse
+
 # validate Body for Update email route
-def UMUpdateEmailBodyValidation(data):
+''' def UMUpdateEmailBodyValidation(data):
     if not validateBody(
         data,
         ["token", "email"]):
         return False
     if not isValidEmail(data["email"]):
         return False
-    return True
+    return True '''
 
 # Route to update the email of an account from an auth user
 class UpdateEmail(Resource):
     def post(self):
         body = fquest.get_json()
-        if not UMUpdateEmailBodyValidation(body):
-            return BadRequestError('bad request'), 400
+
+        request = UpdateEmailRequest(body)
+        requestErrors = request.EvaluateModelErrors()
+
+        if (requestErrors != None):
+            return BadRequestError(requestErrors), 400
+
+        ''' if not UMUpdateEmailBodyValidation(body):
+            return BadRequestError('bad request'), 400 '''
 
         jwtConv = JWTConvert()
-
-        deserializedJWT = jwtConv.Deserialize(body["token"])
+        deserializedJWT = jwtConv.Deserialize(request.token)
         if deserializedJWT is None:
             return BadRequestError("bad token"), 400
 
@@ -50,9 +60,12 @@ class UpdateEmail(Resource):
         if result is None:
             return BadRequestError("bad token"), 400
 
-        UserDb.UpdateAccountEmail(deserializedJWT['guid'], body['email'])
+        UserDb.UpdateAccountEmail(deserializedJWT['guid'], request.email)
 
-        return {
-            'updated': not UserDb.exists(result['email'])
-        }, 200
+        response = UpdateEmailResponse(UserDb.exists(result['email']))
+        responseErrors = response.EvaluateModelErrors()
+
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return response.ToDict(), 200
 

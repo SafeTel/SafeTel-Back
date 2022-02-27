@@ -2,15 +2,15 @@
 ## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## UpdateEmail.Request
+## DeleteAccount.Request
 ##
 
 ### MODELS
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 
-# Represents UpdatePErsonalInfos Request
-class UpdatePErsonalInfosRequest(JParent):
+# Represents DeleteAccount Request
+class DeleteAccountRequest(JParent):
     def __init__(self, rawJSON: str):
         loadedJSON = self.Load(rawJSON)
         self.__InitJParent(loadedJSON)
@@ -18,7 +18,7 @@ class UpdatePErsonalInfosRequest(JParent):
     # Values Assignement
     def __InitJParent(self, loadedJSON: dict):
         self.token = self.LoadElement(loadedJSON, "token")
-        self.email = self.LoadElement(loadedJSON, "email")
+        self.userName = self.LoadElement(loadedJSON, "userName")
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -29,6 +29,6 @@ class UpdatePErsonalInfosRequest(JParent):
     def __EvaErrorsJParent(self):
         if (self.token is None): return "Body Denied"
         if (type(self.token) is not str): return "Token denied."
-        if (self.email is None): return "Body Denied"
-        if (type(self.email) is not str): return "Email denied."
+        if (self.userName is None): return "Body Denied"
+        if (type(self.userName) is not str): return "Email denied."
         return None
