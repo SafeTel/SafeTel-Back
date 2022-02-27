@@ -9,7 +9,7 @@
 # Infos endpoint imports
 from Endpoints.Account.Infos.GetInfos import GetInfos
 from Endpoints.Account.Infos.UpdateEmail import UpdateEmail
-from Endpoints.Account.Infos.ChangePersonalInfos import ChangesPersonalInfos
+from Endpoints.Account.Infos.UpdatePersonalInfos import UpdatePersonalInfos
 # Lists endpoints imports
 from Endpoints.Account.Lists.GreyList.GetGreyList import GetGreyList
 from Endpoints.Account.Lists.History.GetHistory import GetHistory
@@ -34,7 +34,7 @@ class InitAccountEndpoints():
     def __InitInfosEndpoints(self, Api):
         Api.add_resource(GetInfos, "/account/infos/getInfos")
         Api.add_resource(UpdateEmail, "/account/infos/updateEmail")
-        Api.add_resource(ChangesPersonalInfos, "/account/infos/update-infos")
+        Api.add_resource(UpdatePersonalInfos, "/account/infos/update-infos")
 
 
     def __InitListsEndpoints(self, Api):

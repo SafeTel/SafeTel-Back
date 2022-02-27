@@ -44,7 +44,7 @@ def UMChangesPersonalInfosValidation(data):
     return True
 
 # Route to Register a user
-class ChangesPersonalInfos(Resource):
+class UpdatePersonalInfos(Resource):
     def post(self):
         body = fquest.get_json()
         if not UMChangesPersonalInfosValidation(body):
