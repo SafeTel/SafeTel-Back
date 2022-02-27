@@ -52,7 +52,7 @@ class UserDB():
 
 
     def deleteUser(self, guid):
-        self.DBWorker.DeleteDocument({'guid': guid})
+        self.DBWorker.DeleteDocument(guid)
 
 
     def exists(self, email):

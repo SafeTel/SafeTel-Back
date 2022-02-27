@@ -14,15 +14,17 @@ from flask_restful import Resource
 from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
-# Utils check imports
-from Endpoints.Utils.Request import validateBody
-
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
 
 ### INFRA
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
+
+# Models Response imports
+from Models.Endpoints.Account.Infos.GetInfosResponse import GetInfosResponse
+from Models.Endpoints.SharedJObject.AccountInfos.CustomerInfos import CustomerInfos
+from Models.Endpoints.SharedJObject.AccountInfos.Localization import Localization
 
 UserDb = UserDB()
 
@@ -46,20 +48,14 @@ class GetInfos(Resource):
 
         user = UserDb.getUserByGUID(guid)
 
-        return {
-            "email": user["email"],
-            "userName": user["userName"],
-            "customerInfos": {
-                "firstName": user["customerInfos"]["firstName"],
-                "lastName": user["customerInfos"]["lastName"],
-                "phoneNumber": user["customerInfos"]["phoneNumber"]
-            },
-            "localization": {
-                "country": user["localization"]["country"],
-                "region": user["localization"]["region"],
-                "adress": user["localization"]["adress"]
-            }
-        }, 200
+        responseLocalization = Localization(user["localization"])
+        responseCustomerInfos = CustomerInfos(user["customerInfos"])
+        response = GetInfosResponse(user["email"], user["userName"], responseCustomerInfos, responseLocalization)
+
+        responseErrors = response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return response.ToDict(), 200
 
     def UserInfosDTO(user):
         del user["_id"]

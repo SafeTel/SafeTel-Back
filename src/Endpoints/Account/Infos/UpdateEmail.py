@@ -10,9 +10,7 @@ from flask import request as fquest
 from flask_restful import Resource
 
 # Utils check imports
-from Endpoints.Utils.Request import validateBody
 from Endpoints.Utils.Types import isValidEmail
-from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
@@ -23,19 +21,9 @@ from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
 
-
+# Models Request & Response imports
 from Models.Endpoints.Account.Infos.UpdateEmailRequest import UpdateEmailRequest
 from Models.Endpoints.Account.Infos.UpdateEmailResponse import UpdateEmailResponse
-
-# validate Body for Update email route
-''' def UMUpdateEmailBodyValidation(data):
-    if not validateBody(
-        data,
-        ["token", "email"]):
-        return False
-    if not isValidEmail(data["email"]):
-        return False
-    return True '''
 
 # Route to update the email of an account from an auth user
 class UpdateEmail(Resource):
@@ -43,13 +31,10 @@ class UpdateEmail(Resource):
         body = fquest.get_json()
 
         request = UpdateEmailRequest(body)
-        requestErrors = request.EvaluateModelErrors()
 
+        requestErrors = request.EvaluateModelErrors()
         if (requestErrors != None):
             return BadRequestError(requestErrors), 400
-
-        ''' if not UMUpdateEmailBodyValidation(body):
-            return BadRequestError('bad request'), 400 '''
 
         jwtConv = JWTConvert()
         deserializedJWT = jwtConv.Deserialize(request.token)
@@ -63,8 +48,8 @@ class UpdateEmail(Resource):
         UserDb.UpdateAccountEmail(deserializedJWT['guid'], request.email)
 
         response = UpdateEmailResponse(UserDb.exists(result['email']))
-        responseErrors = response.EvaluateModelErrors()
 
+        responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
             return InternalLogicError(), 500
         return response.ToDict(), 200

@@ -34,7 +34,7 @@ class HistoryDB():
 
 
     def deleteHistory(self, guid):
-        self.DBWorker.DeleteDocument({'guid': guid})
+        self.DBWorker.DeleteDocument(guid)
 
 
     def exists(self, guid):

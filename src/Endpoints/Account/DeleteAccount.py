@@ -6,6 +6,7 @@
 ##
 
 # Network imports
+from urllib import response
 from flask import request as fquest
 from flask_restful import Resource
 
@@ -13,6 +14,8 @@ from flask_restful import Resource
 from Endpoints.Utils.Request import validateBody
 from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
 
 # Request Error
 from Endpoints.Utils.RouteErrors.Errors import BadRequestError
@@ -27,20 +30,19 @@ UserDb = UserDB()
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 from Infrastructure.Factory.UserFactory.User import User
 
-# Validate Body for DeleteAccount route
-def UMDeleteAccountBodyValidation(data):
-    if not validateBody(
-        data,
-        ["token", "userName"]):
-        return False
-    return True
+# Models Request & Response imports
+from Models.Endpoints.Account.DeleteAccountRequest import DeleteAccountRequest
+from Models.Endpoints.Account.DeleteAccountResponse import DeleteAccountResponse
 
 # Route to delete an account from an auth user
 class DeleteAccount(Resource):
     def delete(self):
         body = fquest.get_json()
-        if not UMDeleteAccountBodyValidation(body):
-            return BadRequestError("bad request"), 400
+        request = DeleteAccountRequest(body)
+
+        requestErrors = request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return BadRequestError(requestErrors), 400
 
         jwtConv = JWTConvert()
 
@@ -60,6 +62,9 @@ class DeleteAccount(Resource):
         Usr = User(guidUsr)
         Usr.Delete()
 
-        return {
-            'deleted': Usr.IsDeleted()
-        }, 200
+        response = DeleteAccountResponse(Usr.IsDeleted())
+
+        responseErrors = response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return response.ToDict(), 200

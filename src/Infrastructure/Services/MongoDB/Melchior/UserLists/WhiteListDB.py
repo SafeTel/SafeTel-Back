@@ -36,7 +36,7 @@ class WhitelistDB():
 
 
     def deleteWhitelist(self, guid):
-        self.DBWorker.DeleteDocument({'guid': guid})
+        self.DBWorker.DeleteDocument(guid)
 
 
     def exists(self, guid):

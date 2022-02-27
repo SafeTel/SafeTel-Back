@@ -14,15 +14,17 @@ class Localization(JObject):
     def __init__(self, loadedJSON: dict):
         if (loadedJSON == None):
             return
-        self.__InitCurrJObjectt(loadedJSON)
+        self.__InitJObjectt(loadedJSON)
 
     # Values Assignement
-    def __InitCurrJObjectt(self, loadedJSON: dict):
+    def __InitJObjectt(self, loadedJSON: dict):
         self.country = self.LoadElement(loadedJSON, "country")
         self.region = self.LoadElement(loadedJSON, "region")
-        self.address = self.LoadElement(loadedJSON, "address")
+        self.address = self.LoadElement(loadedJSON, "adress")
 
     # Errors Evaluation
     def EvaErrorsJObject(self):
         if (type(self.country) is not str): return "Invalid variable type."
+        if (type(self.region) is not str): return "Invalid variable type."
+        if (type(self.address) is not str): return "Invalid variable type."
         return None

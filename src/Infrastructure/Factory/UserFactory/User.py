@@ -12,7 +12,7 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import History
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
 
 class User():
-    def __init__(self, guid):
+    def __init__(self, guid: str):
         self.__UserDB = UserDB()
         self.__BlackListDB = BlacklistDB()
         self.__WhiteListDB = WhitelistDB()

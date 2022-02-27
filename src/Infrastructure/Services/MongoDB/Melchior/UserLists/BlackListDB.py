@@ -37,7 +37,7 @@ class BlacklistDB():
 
 
     def deleteBlacklist(self, guid):
-        self.DBWorker.DeleteDocument(self.Blacklist, {'guid': guid})
+        self.DBWorker.DeleteDocument(guid)
 
 
     def exists(self, guid):

@@ -21,7 +21,7 @@ class MongoDBWorker():
         self.MongoDB.insert_one(data)
 
     # Delete a document linked to a guid in MongoDb
-    def DeleteDocument(self, guid):
+    def DeleteDocument(self, guid: str):
         if guid == None:
             return
-        self.MongoDB.delete_one(guid)
+        self.MongoDB.delete_one({"guid": guid})

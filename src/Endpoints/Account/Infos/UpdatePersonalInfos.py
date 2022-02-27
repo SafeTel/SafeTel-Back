@@ -10,13 +10,12 @@ from flask import request as fquest
 from flask_restful import Resource
 
 # Utils check imports
-from Endpoints.Utils.Request import validateBody
 from Endpoints.Utils.Types import isValidNumber
 from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
 
 ### INFRA
 # Melchior DB imports
@@ -25,30 +24,19 @@ from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
 
-# validate Body for Register route
-def UMChangesPersonalInfosValidation(data):
-    if not validateBody(
-        data,
-        ["token", "customerInfos", "localization"]):
-        return False
-    if not validateBody(
-        data["customerInfos"],
-        ["firstName", "lastName", "phoneNumber"]):
-        return False
-    if not isValidNumber(data["customerInfos"]["phoneNumber"]):
-        return False
-    if not validateBody(
-        data["localization"],
-        ["country", "region", "adress"]):
-        return False
-    return True
+# Models Request & Response imports
+from Models.Endpoints.Account.Infos.UpdatePersonalInfosRequest import UpdatePErsonalInfosRequest
+from Models.Endpoints.Account.Infos.UpdatePersonalInfosResponse import UpdatePersonalInfosResponse
 
 # Route to Register a user
 class UpdatePersonalInfos(Resource):
     def post(self):
         body = fquest.get_json()
-        if not UMChangesPersonalInfosValidation(body):
-            return BadRequestError("bad request"), 400
+        request = UpdatePErsonalInfosRequest(body)
+
+        requestErrors = request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return BadRequestError(requestErrors), 400
 
         jwtConv = JWTConvert()
 
@@ -60,11 +48,14 @@ class UpdatePersonalInfos(Resource):
         if result is None:
             return BadRequestError("bad token"), 400
 
-        customerInfos = body["customerInfos"]
-        localization = body["localization"]
+        customerInfos = request.CustomerInfos.ToDict()
+        localization = request.Localization.ToDict()
 
         UserDb.UpdatePersonalInfos(deserializedJWT['guid'], customerInfos, localization)
 
-        return {
-            'changed': True
-        }, 200
+        response = UpdatePersonalInfosResponse(True)
+
+        responseErrors = response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return response.ToDict(), 200

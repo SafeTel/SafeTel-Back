@@ -14,10 +14,10 @@ class CustomerInfos(JObject):
     def __init__(self, loadedJSON: dict):
         if (loadedJSON == None):
             return
-        self.__InitCurrJObjectt(loadedJSON)
+        self.__InitJObjectt(loadedJSON)
 
     # Values Assignement
-    def __InitCurrJObjectt(self, loadedJSON: dict):
+    def __InitJObjectt(self, loadedJSON: dict):
         self.firstName = self.LoadElement(loadedJSON, "firstName")
         self.lastName = self.LoadElement(loadedJSON, "lastName")
         self.phoneNumber = self.LoadElement(loadedJSON, "phoneNumber")

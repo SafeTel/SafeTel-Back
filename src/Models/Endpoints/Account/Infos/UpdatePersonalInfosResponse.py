@@ -10,7 +10,7 @@
 from Models.ModelAbstractions.JParent import JParent
 
 # Represents UpdatePErsonalInfos Request
-class UpdatePErsonalInfosResponse(JParent):
+class UpdatePersonalInfosResponse(JParent):
     def __init__(self, updated: bool):
         self.__InitJParent(updated)
 
