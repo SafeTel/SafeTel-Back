@@ -6,7 +6,7 @@
 ##
 
 # Role import
-from Logic.Models.Roles import Roles
+from Models.Logic.Shared.Roles import Roles
 
 # JWTConvert import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
