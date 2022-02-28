@@ -17,7 +17,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Request Error
 from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
 
-from Models.Endpoints.Authentification.CheckTokenResponse import CheckTokenResponse
+from Models.Endpoints.Authentification.Token.CheckTokenResponse import CheckTokenResponse
 
 # Route to check a JWT
 class CheckToken(Resource):

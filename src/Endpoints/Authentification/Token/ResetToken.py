@@ -23,7 +23,7 @@ from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicErr
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
-from Models.Endpoints.Authentification.ResetTokenResponse import ResetTokenResponse
+from Models.Endpoints.Authentification.Token.ResetTokenResponse import ResetTokenResponse
 
 UserDb = UserDB()
 

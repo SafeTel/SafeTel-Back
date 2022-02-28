@@ -6,10 +6,9 @@
 ##
 
 ### INFRA
-# Check Token unique endpoint import
-from Endpoints.Authentification.CheckToken import CheckToken
-# Reset Token unique endpoint import
-from Endpoints.Authentification.ResetToken import ResetToken
+# Token endpoints import
+from Endpoints.Authentification.Token.CheckToken import CheckToken
+from Endpoints.Authentification.Token.ResetToken import ResetToken
 # Register unique endpoint import
 from Endpoints.Authentification.Register import Register
 # Login unique endpoint import
@@ -17,17 +16,13 @@ from Endpoints.Authentification.Login import Login
 
 class InitAuthentificationEndpoints():
     def __init__(self, Api):
-        self.__InitCheckTokenEndpoint(Api)
-        self.__InitResetTokenEndpoint(Api)
+        self.__InitCheckTokenEndpoints(Api)
         self.__InitRegisterEndpoint(Api)
         self.__InitLoginEndpoint(Api)
 
 
-    def __InitCheckTokenEndpoint(self, Api):
+    def __InitCheckTokenEndpoints(self, Api):
         Api.add_resource(CheckToken, "/auth/check-token")
-
-
-    def __InitResetTokenEndpoint(self, Api):
         Api.add_resource(ResetToken, "/auth/reset-token")
 
 
