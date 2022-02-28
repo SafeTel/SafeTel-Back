@@ -10,11 +10,8 @@ from flask import request as fquest
 from flask.globals import request
 from flask_restful import Resource
 
-# Utils check imports
-from Endpoints.Utils.Request import validateBody
-
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
 
 # DB imports
 from Infrastructure.Services.MongoDB.Casper.Contributors import ContributorsDB
@@ -23,27 +20,22 @@ from Infrastructure.Services.MongoDB.Casper.ApiKeys import ApiKeyLogDB
 # secret import
 import secrets
 
+from Models.Endpoints.InternalDev.Account.ClaimAPIKeyRequest import ClaimAPIKeyRequest
+from Models.Endpoints.InternalDev.Account.ClaimAPIKeyResponse import ClaimAPIKeyResponse
+
 ContributorsDb = ContributorsDB()
 ApiKeyLogDb = ApiKeyLogDB()
-
-def DRClaimApiKeysValidation(data):
-    if not validateBody(
-        data,
-        ["name", "magicNumber"]):
-        return False
-    if data["magicNumber"] != 84:
-        return False
-    return True
 
 # Route to know if an update is required for the embeded software
 class ClaimApiKeys(Resource):
     def post(self):
-        body = fquest.get_json()
+        Request = ClaimAPIKeyRequest(fquest.get_json())
 
-        if not DRClaimApiKeysValidation(body):
-            return BadRequestError("bad request"), 400
+        requestErrors = Request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return BadRequestError(requestErrors), 400
 
-        claimer = body["name"]
+        claimer = Request.name
 
         if (not ContributorsDb.IsContributor(claimer)):
             return BadRequestError("you are not a contributor"), 400
@@ -54,7 +46,9 @@ class ClaimApiKeys(Resource):
         apiKey = secrets.token_urlsafe(32)
         ApiKeyLogDb.logClaimeApiKey(apiKey, claimer, request.remote_addr)
 
-        return {
-            "apiKey": apiKey,
-            "message": "only one apikey is allowed for an contributor or ip"
-        }
+        Response = ClaimAPIKeyResponse(apiKey)
+
+        responseErrors = Response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return Response.ToDict(), 200

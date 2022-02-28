@@ -9,43 +9,24 @@
 from flask import request as fquest
 from flask_restful import Resource
 
-# Utils check imports
-from Endpoints.Utils.Request import validateBody
+# Request Error
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
 
-def EAvaibleUpdateValidation(data):
-    if not validateBody(
-        data,
-        ["magicNumber", "version"]):
-        return False
-    if data["magicNumber"] != 42:
-        return False
-    return True
+from Models.Endpoints.InternalDev.Embeded.AvaibleUpdateRequest import AvaibleUpdateRequest
+from Models.Endpoints.InternalDev.Embeded.AvaibleUpdateResponse import AvaibleUpdateResponse
 
 # Route to know if an update is required for the embeded software
 class AvaiableUpdate(Resource):
     def post(self):
-        body = fquest.get_json()
+        Request = AvaibleUpdateRequest(fquest.get_json())
 
-        if not EAvaibleUpdateValidation(body):
-            return {
-                'error': 'bad_request'
-            }, 400
+        requestErrors = Request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return BadRequestError(requestErrors), 400
 
-        version = body["version"]
+        Response = AvaibleUpdateResponse(Request.version == 1.0)
 
-        """if self.isReleaseVersion(version):
-            return {
-                'error': 'not a release version'
-            }, 400 """
-
-        if version != "1.0":
-            return {
-                'update': False
-            }
-
-        return {
-            'update': True
-        }
-
-    def isReleaseVersion(self, version): # TODO: verify release from tags on github with version std
-        return not version == "1.0"
+        responseErrors = Response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return Response.ToDict(), 200
