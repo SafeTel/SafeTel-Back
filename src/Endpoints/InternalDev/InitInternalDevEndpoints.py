@@ -30,4 +30,4 @@ class InitInternalDevEndpoints():
 
 
     def __InitHealthCheckEndpoint(self, Api):
-        Api.add_resource(AvaiableUpdate, "/internaldev/healthCheck")
+        Api.add_resource(HealthCheck, "/internaldev/healthCheck")
