@@ -28,9 +28,7 @@ from Models.Endpoints.Account.Infos.UpdateEmailResponse import UpdateEmailRespon
 # Route to update the email of an account from an auth user
 class UpdateEmail(Resource):
     def post(self):
-        body = fquest.get_json()
-
-        request = UpdateEmailRequest(body)
+        request = UpdateEmailRequest(fquest.get_json())
 
         requestErrors = request.EvaluateModelErrors()
         if (requestErrors != None):

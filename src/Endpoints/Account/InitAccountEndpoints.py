@@ -11,16 +11,10 @@ from Endpoints.Account.Infos.GetInfos import GetInfos
 from Endpoints.Account.Infos.UpdateEmail import UpdateEmail
 from Endpoints.Account.Infos.UpdatePersonalInfos import UpdatePersonalInfos
 # Lists endpoints imports
-from Endpoints.Account.Lists.GreyList.GetGreyList import GetGreyList
-from Endpoints.Account.Lists.History.GetHistory import GetHistory
-from Endpoints.Account.Lists.History.DelHistory import DelHistory
-from Endpoints.Account.Lists.History.AddHistory import AddHistory
-from Endpoints.Account.Lists.WhiteList.GetWhiteList import GetWhiteList
-from Endpoints.Account.Lists.WhiteList.DelWhiteList import DelWhiteList
-from Endpoints.Account.Lists.WhiteList.AddWhiteList import AddWhiteList
-from Endpoints.Account.Lists.BlackList.GetBlackList import GetBlackList
-from Endpoints.Account.Lists.BlackList.DelBlackList import DelBlackList
-from Endpoints.Account.Lists.BlackList.AddBlackList import AddBlackList
+from Endpoints.Account.Lists.Greylist import GreyList
+from Endpoints.Account.Lists.History import History
+from Endpoints.Account.Lists.Whitelist import Whitelist
+from Endpoints.Account.Lists.Blacklist import Blacklist
 # Delete unique endpoint import
 from Endpoints.Account.DeleteAccount import DeleteAccount
 
@@ -38,16 +32,10 @@ class InitAccountEndpoints():
 
 
     def __InitListsEndpoints(self, Api):
-        Api.add_resource(GetGreyList, "/account/lists/greylist")
-        Api.add_resource(GetHistory, "/account/lists/history")
-        Api.add_resource(DelHistory, "/account/lists/history")
-        Api.add_resource(AddHistory, "/account/lists/history")
-        Api.add_resource(GetWhiteList, "/account/lists/whitelist")
-        Api.add_resource(DelWhiteList, "/account/lists/whitelist")
-        Api.add_resource(AddWhiteList, "/account/lists/whitelist")
-        Api.add_resource(GetBlackList, "/account/lists/blacklist")
-        Api.add_resource(DelBlackList, "/account/lists/blacklist")
-        Api.add_resource(AddBlackList, "/account/lists/blacklist")
+        Api.add_resource(GreyList, "/account/lists/greylist")
+        Api.add_resource(History, "/account/lists/history")
+        Api.add_resource(Whitelist, "/account/lists/whitelist")
+        Api.add_resource(Blacklist, "/account/lists/blacklist")
 
 
     def __InitDeleteEndpoint(self, Api):

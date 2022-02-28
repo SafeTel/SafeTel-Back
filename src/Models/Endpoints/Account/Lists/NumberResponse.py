@@ -9,8 +9,8 @@
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 
-# Represents Add Number Request
-class AddNumberResponse(JParent):
+# Represents Number Request
+class NumberResponse(JParent):
     def __init__(self, Phonelist: list):
         self.__InitJParent(Phonelist)
 

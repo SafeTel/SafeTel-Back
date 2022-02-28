@@ -70,7 +70,7 @@ class RegisterAdminDev(Resource):
         registration['guid'] = guid
         registration['ts'] = create_ts
 
-        if (not Roles.has_value(body['role'])):
+        if (not Roles.HasValue(body['role'])):
             return BadRequestError("bad request"), 400
         role = Roles.USER
 

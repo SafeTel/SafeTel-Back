@@ -10,7 +10,6 @@ from flask import request as fquest
 from flask_restful import Resource
 
 # Utils import
-from Endpoints.Utils.Request import validateBody
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
@@ -21,24 +20,9 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import Black
 
 BlacklistDb = BlacklistDB()
 
-from Models.Endpoints.Account.Lists.AddNumberRequest import AddNumberRequest
-from Models.Endpoints.Account.Lists.AddNumberResponse import AddNumberResponse
-
-# Validate Body for DelBlackList route
-def ULDelBlackListValidation(data):
-    if not validateBody(
-        data,
-        ["token", "number"]):
-        return False
-    return True
-
-# Validate Body for AddBlackList route
-def ULAddBlackListValidation(data):
-    if not validateBody(
-        data,
-        ["token", "number"]):
-        return False
-    return True
+# Models Request & Response imports
+from Models.Endpoints.Account.Lists.NumberRequest import NumberRequest
+from Models.Endpoints.Account.Lists.NumberResponse import NumberResponse
 
 # Route to add a number to the blacklist of the user
 class Blacklist(Resource):
@@ -55,7 +39,7 @@ class Blacklist(Resource):
 
         guid = deserializedJWT['guid']
 
-        response = AddNumberResponse(BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"])
+        response = NumberResponse(BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"])
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
@@ -65,8 +49,12 @@ class Blacklist(Resource):
 
     def post(self):
         body = fquest.get_json()
-        if not ULAddBlackListValidation(body):
-            return BadRequestError("bad request"), 400
+
+        request = NumberRequest(body)
+
+        requestErrors = request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return BadRequestError(requestErrors), 400
 
         jwtConv = JWTConvert()
 
@@ -76,15 +64,23 @@ class Blacklist(Resource):
 
         guid = deserializedJWT['guid']
         BlacklistDb.addBlacklistNumberForUser(guid, body["number"])
-        return {
-            'BlackList': BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"]
-        }, 200
+
+        response = NumberResponse(BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"])
+
+        responseErrors = response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return response.ToDict(), 200
 
 
     def delete(self):
         body = fquest.get_json()
-        if not ULDelBlackListValidation(body):
-            return BadRequestError("bad request"), 400
+
+        request = NumberRequest(body)
+
+        requestErrors = request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return BadRequestError(requestErrors), 400
 
         jwtConv = JWTConvert()
 
@@ -95,6 +91,10 @@ class Blacklist(Resource):
         guid = deserializedJWT['guid']
         number = body["number"]
         BlacklistDb.delBlacklistNumberForUser(guid, number)
-        return {
-            'BlackList': BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"]
-        }, 200
+
+        response = NumberResponse(BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"])
+
+        responseErrors = response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return response.ToDict(), 200

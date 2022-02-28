@@ -32,7 +32,7 @@ class JWTConvert():
             raise ValueError("The guid can't be empty or null.")
         if (role == None):
             raise ValueError("The role can't be none.")
-        if (not Roles.has_value(role)):
+        if (not Roles.HasValue(role)):
             raise ValueError("It should be an existing one.")
 
         return jwt.encode( {
@@ -56,7 +56,7 @@ class JWTConvert():
         if (curr_ts > exp):
             return None
 
-        if (not Roles.has_value(jwtInfos['role']) or self.UserDb.existByGUID(jwtInfos['guid']) is False):
+        if (not Roles.HasValue(jwtInfos['role']) or self.UserDb.existByGUID(jwtInfos['guid']) is False):
             return None
         return jwtInfos
 

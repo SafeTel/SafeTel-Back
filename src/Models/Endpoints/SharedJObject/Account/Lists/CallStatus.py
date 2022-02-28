@@ -2,15 +2,16 @@
 ## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## Roles
+## CallOrigin
 ##
 
 from enum import IntEnum
 
-class Roles(IntEnum):
-    ADMIN = 1
-    DEVELOPER = 2
-    USER = 3
+class CallStatus(IntEnum):
+    MISSED = 1
+    RECEIVED = 2
+    BLOCKED = 3
+    OUTGOING = 4
 
     @classmethod
     def HasValue(cls, value):
