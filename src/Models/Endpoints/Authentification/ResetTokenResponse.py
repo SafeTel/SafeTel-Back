@@ -2,21 +2,21 @@
 ## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## UpdateEmail.Response
+## ResetTokenResponse
 ##
 
 ### MODELS
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 
-# Represents Update Email Response
-class UpdateEmailResponse(JParent):
-    def __init__(self, updated: bool):
-        self.__InitJParent(updated)
+# Represents Reset Token Response
+class ResetTokenResponse(JParent):
+    def __init__(self, token: str):
+        self.__InitJParent(token)
 
     # Values Assignement
-    def __InitJParent(self, updated: bool):
-        self.updated = updated
+    def __InitJParent(self, token: str):
+        self.token = token
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -25,6 +25,6 @@ class UpdateEmailResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.updated is None): return "Internal server error"
-        if (type(self.updated) is not bool): return "Internal server error"
+        if (self.token is None): return "Internal server error"
+        if (type(self.token) is not str): return "Internal server error"
         return None

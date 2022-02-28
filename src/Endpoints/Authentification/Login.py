@@ -6,10 +6,9 @@
 ##
 
 ### LOGIC
-# Utils check imports
-from Endpoints.Utils.Request import validateBody
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError
+from urllib.request import Request
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
 # JWT import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Password encription import
@@ -24,36 +23,33 @@ from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
 
-# validate Body for Login route
-def UMLoginBodyValidation(data):
-    if not validateBody(
-        data,
-        ["magicNumber", "email", "password"]):
-        return False
-    if data["magicNumber"] != 42:
-        return False
-    return True
+from Models.Endpoints.Authentification.LoginRequest import LoginRequest
+from Models.Endpoints.Authentification.LoginResponse import LoginResponse
 
 # Route to log in a user
 class Login(Resource):
     def post(self):
-        body = fquest.get_json()
-        if not UMLoginBodyValidation(body):
-            return BadRequestError("bad request"), 400
+        Request = LoginRequest(fquest.get_json())
 
-        user = UserDb.getUser(body["email"])
+        requestErrors = Request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return BadRequestError(requestErrors), 400
+
+        user = UserDb.getUser(Request.email)
         if user == None:
             return BadRequestError("this email is not linked to an account"), 400
 
         pwdConv = PWDConvert()
-        if not pwdConv.Compare(body["password"], user["password"]):
+        if not pwdConv.Compare(Request.password, user["password"]):
             return BadRequestError('you can not connect with this combination of email and password'), 400
 
         jwtConv = JWTConvert()
         role = jwtConv.SToRoles(user["role"])
         guid = user["guid"]
 
-        return {
-            'userName': user["userName"],
-            'token': jwtConv.Serialize(guid, role)
-        }, 200
+        Response = LoginResponse(user["userName"], jwtConv.Serialize(guid, role))
+
+        responseErrors = Response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return Response.ToDict(), 200

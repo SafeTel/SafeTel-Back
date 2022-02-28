@@ -17,11 +17,13 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 from Endpoints.Utils.Request import validateBody
 
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
 
 ### INFRA
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
+
+from Models.Endpoints.Authentification.ResetTokenResponse import ResetTokenResponse
 
 UserDb = UserDB()
 
@@ -44,6 +46,9 @@ class ResetToken(Resource):
         if (UserDb.existByGUID(guid) == False):
             return BadRequestError("you are not registred")
 
-        return {
-            'token': jwtConv.Serialize(guid, role),
-        }, 200
+        Response = ResetTokenResponse(jwtConv.Serialize(guid, role))
+
+        responseErrors = Response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return Response.ToDict(), 200

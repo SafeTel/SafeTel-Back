@@ -15,7 +15,9 @@ from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+
+from Models.Endpoints.Authentification.CheckTokenResponse import CheckTokenResponse
 
 # Route to check a JWT
 class CheckToken(Resource):
@@ -30,6 +32,9 @@ class CheckToken(Resource):
         if validity is None:
             return BadRequestError("bad token"), 400
 
-        return {
-            'validity': validity
-        }, 200
+        response = CheckTokenResponse(validity)
+
+        responseErrors = response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return response.ToDict(), 200

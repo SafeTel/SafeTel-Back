@@ -7,12 +7,11 @@
 
 ### LOGIC
 # Utils check imports
-from Endpoints.Utils.Request import validateBody
 from Endpoints.Utils.Types import isValidEmail, isValidNumber
 from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
 # Password encription import
 from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 
@@ -28,48 +27,36 @@ from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 from Infrastructure.Factory.UserFactory.User import User
 
+from Models.Endpoints.Authentification.RegisterRequest import RegisterRequest
+from Models.Endpoints.Authentification.RegisterResponse import RegisterResponse
 
 UserDb = UserDB()
-
-# validate Body for Register route
-def UMRegisterBodyValidation(data):
-    if not validateBody(
-        data,
-        ["magicNumber", "email", "userName", "password", "customerInfos", "localization"]):
-        return False
-    if data["magicNumber"] != 42:
-        return False
-    if not isValidEmail(data["email"]):
-        return False
-    if not validateBody(
-        data["customerInfos"],
-        ["firstName", "lastName", "phoneNumber"]):
-        return False
-    if not isValidNumber(data["customerInfos"]["phoneNumber"]):
-        return False
-    if not validateBody(
-        data["localization"],
-        ["country", "region", "adress"]):
-        return False
-    return True
 
 # Route to Register a user
 class Register(Resource):
     def post(self):
-        body = fquest.get_json()
-        if not UMRegisterBodyValidation(body):
-            return BadRequestError("bad request"), 400
+        Request = RegisterRequest(fquest.get_json())
 
-        if UserDb.exists(body["email"]):
+        requestErrors = Request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return BadRequestError(requestErrors), 400
+
+        if UserDb.exists(Request.email):
             return BadRequestError("this email is already linked to an account"), 400
 
         UsrFactory = UserFactory()
+        body = fquest.get_json()
         User = UsrFactory.CreateUser(body)
         UserInfos = User.PullUserInfos()
 
         jwtConv = JWTConvert()
-        return {
-            'created': True,
-            'userName': UserInfos["userName"],
-            'token': jwtConv.Serialize(User.GetGUID(), Roles.USER)
-        }, 200
+        Response = RegisterResponse(
+            True,
+            UserInfos["userName"],
+            jwtConv.Serialize(User.GetGUID(), Roles.USER)
+        )
+
+        responseErrors = Response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return Response.ToDict(), 200
