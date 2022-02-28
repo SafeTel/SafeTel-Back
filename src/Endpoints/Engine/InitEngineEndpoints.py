@@ -15,4 +15,4 @@ class InitEngineEndpoints():
 
 
     def __InitTellowsEvaEndpoint(self, Api):
-        Api.add_resource(GetTellows, "/engine/tellows-eva")
+        Api.add_resource(GetTellows, "/engine/tellows")

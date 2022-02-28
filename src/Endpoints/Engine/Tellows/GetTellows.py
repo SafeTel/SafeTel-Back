@@ -12,6 +12,11 @@ from flask_restful import Resource
 # Tellows Service
 from Infrastructure.Services.Tellows.Tellows import Tellows
 
+# Request Error
+from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+
+from Models.Endpoints.Engine.TellowsResponse import TellowsResponse
+
 class GetTellows(Resource):
     def get(self):
         phoneNumber = request.args.get('phonenumber')
@@ -28,14 +33,11 @@ class GetTellows(Resource):
         score = tellows.EvaluateNumber(phoneNumber)
 
         if score is None:
-            return {
-                'error': 'not a number OR provider unknonw'
-            }, 400
+            return BadRequestError("Invalid number"), 400
 
-        if score >= 5:
-            return {
-                'valid': True
-            }, 200
-        return {
-            'valid': False
-        }, 200
+        Response = TellowsResponse(score >= 5)
+
+        responseErrors = Response.EvaluateModelErrors()
+        if (responseErrors != None):
+            return InternalLogicError(), 500
+        return Response.ToDict(), 200
