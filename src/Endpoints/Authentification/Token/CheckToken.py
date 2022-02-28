@@ -24,7 +24,7 @@ class CheckToken(Resource):
     def get(self):
         token = request.args["token"]
         if token is None:
-            return BadRequestError("bad request"), 400
+            return BadRequestError("Bad Request"), 400
 
         jwtConv = JWTConvert()
 

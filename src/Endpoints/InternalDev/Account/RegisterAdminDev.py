@@ -62,7 +62,7 @@ class RegisterAdminDev(Resource):
         registrate['ts'] = create_ts
 
         if (not Roles.HasValue(Request.role)):
-            return BadRequestError("bad request"), 400
+            return BadRequestError("Bad Request"), 400
         role = Roles.USER
 
         if (Request.role == 'admin'):
@@ -70,7 +70,7 @@ class RegisterAdminDev(Resource):
         elif (Request.role == 'dev'):
             role = Roles.DEVELOPER
         else:
-            return BadRequestError("bad request"), 400
+            return BadRequestError("Bad Request"), 400
 
         UserDb.addUser(registrate, role)
 
@@ -85,7 +85,7 @@ class RegisterAdminDev(Resource):
 
         Response = RegisterAdminDevResponse(
             True,
-            registrate['userName'],
+            registrate["username"],
             jwtConv.Serialize(guid, role)
         )
 

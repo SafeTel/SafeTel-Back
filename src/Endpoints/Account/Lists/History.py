@@ -30,13 +30,13 @@ class History(Resource):
         if token is None:
             return BadRequestError("bad token"), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(token)
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT['guid']
+        guid = JwtInfos.guid
 
         response = HistoryResponse(HistoryDb.getHistoryForUser(guid)["History"])
 
@@ -47,25 +47,26 @@ class History(Resource):
 
 
     def post(self):
-        request = AddHistoryRequest(fquest.get_json())
+        Request = AddHistoryRequest(fquest.get_json())
 
-        requestErrors = request.EvaluateModelErrors()
+        requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return BadRequestError(requestErrors), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(request.token)
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(Request.token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT['guid']
-        number = request.number
-        origin = request.status
-        time = request.time
-        HistoryDb.addHistoryCallForUser(guid, number, origin, int(time))
+        HistoryDb.addHistoryCallForUser(
+            JwtInfos.guid,
+            Request.number,
+            Request.status,
+            Request.time
+        )
 
-        response = HistoryResponse(HistoryDb.getHistoryForUser(guid)["History"])
+        response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
@@ -73,23 +74,19 @@ class History(Resource):
         return response.ToDict(), 200
 
     def delete(self):
-        request = AddHistoryRequest(fquest.get_json())
+        Request = AddHistoryRequest(fquest.get_json())
 
-        requestErrors = request.EvaluateModelErrors()
+        requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return BadRequestError(requestErrors), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(request.token)
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(Request.token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT['guid']
-        number = request.number
-        time = request.time
-
-        response = HistoryResponse(HistoryDb.getHistoryForUser(guid)["History"])
+        response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):

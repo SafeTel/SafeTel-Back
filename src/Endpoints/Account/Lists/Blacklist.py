@@ -6,6 +6,7 @@
 ##
 
 # Network imports
+from urllib.request import Request
 from flask import request as fquest
 from flask_restful import Resource
 
@@ -31,15 +32,13 @@ class Blacklist(Resource):
         if token is None:
             return BadRequestError("bad token"), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(token)
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT['guid']
-
-        response = NumberResponse(BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"])
+        response = NumberResponse(BlacklistDb.getBlacklistForUser(JwtInfos.guid)["PhoneNumbers"])
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
@@ -48,22 +47,20 @@ class Blacklist(Resource):
 
 
     def post(self):
-        body = fquest.get_json()
+        Request = NumberRequest(fquest.get_json())
 
-        request = NumberRequest(body)
-
-        requestErrors = request.EvaluateModelErrors()
+        requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return BadRequestError(requestErrors), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(body["token"])
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(Request.token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT['guid']
-        BlacklistDb.addBlacklistNumberForUser(guid, body["number"])
+        guid = JwtInfos.guid
+        BlacklistDb.addBlacklistNumberForUser(guid, Request.number)
 
         response = NumberResponse(BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"])
 
@@ -74,22 +71,20 @@ class Blacklist(Resource):
 
 
     def delete(self):
-        body = fquest.get_json()
+        Request = NumberRequest(fquest.get_json())
 
-        request = NumberRequest(body)
-
-        requestErrors = request.EvaluateModelErrors()
+        requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return BadRequestError(requestErrors), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(body["token"])
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(Request.token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT['guid']
-        number = body["number"]
+        guid = JwtInfos.guid
+        number = Request.number
         BlacklistDb.delBlacklistNumberForUser(guid, number)
 
         response = NumberResponse(BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"])

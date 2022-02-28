@@ -7,6 +7,7 @@
 
 # Network imports
 from urllib import response
+from urllib.request import Request
 from flask import request as fquest
 from flask_restful import Resource
 
@@ -37,26 +38,25 @@ from Models.Endpoints.Account.DeleteAccountResponse import DeleteAccountResponse
 # Route to delete an account from an auth user
 class DeleteAccount(Resource):
     def delete(self):
-        body = fquest.get_json()
-        request = DeleteAccountRequest(body)
+        Request = DeleteAccountRequest(fquest.get_json())
 
-        requestErrors = request.EvaluateModelErrors()
+        requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return BadRequestError(requestErrors), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(body["token"])
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(Request.token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guidUsr = deserializedJWT['guid']
+        guidUsr = JwtInfos.guid
 
         result = UserDb.getUserByGUID(guidUsr)
         if result is None:
             return BadRequestError("bad token"), 400
 
-        if result["userName"] != body["userName"]:
+        if result["username"] != Request.userName:
             return BadRequestError("manual security check failed"), 400
 
         Usr = User(guidUsr)

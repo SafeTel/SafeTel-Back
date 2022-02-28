@@ -18,7 +18,7 @@ class DeleteAccountRequest(JParent):
     # Values Assignement
     def __InitJParent(self, loadedJSON: dict):
         self.token = self.LoadElement(loadedJSON, "token")
-        self.userName = self.LoadElement(loadedJSON, "userName")
+        self.userName = self.LoadElement(loadedJSON, "username")
 
     # Errors Evaluation
     def EvaluateModelErrors(self):

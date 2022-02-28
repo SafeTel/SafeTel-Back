@@ -29,15 +29,15 @@ class Whitelist(Resource):
     def get(self):
         token = fquest.args["token"]
         if token is None:
-            return BadRequestError("bad request"), 400
+            return BadRequestError("Bad Request"), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(token)
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT['guid']
+        guid = JwtInfos.guid
 
         response = NumberResponse(WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"])
 
@@ -48,23 +48,19 @@ class Whitelist(Resource):
 
 
     def post(self):
-        body = fquest.get_json()
+        Request = NumberRequest(fquest.get_json())
 
-        request = NumberRequest(body)
-
-        requestErrors = request.EvaluateModelErrors()
+        requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return BadRequestError(requestErrors), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(body["token"])
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(Request.token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT['guid']
-        number = body["number"]
-        WhitelistDb.addWhitelistNumberForUser(guid, number)
+        WhitelistDb.addWhitelistNumberForUser(JwtInfos.guid, Request.number)
 
         response = NumberResponse(WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"])
 
@@ -75,25 +71,21 @@ class Whitelist(Resource):
 
 
     def delete(self):
-        body = fquest.get_json()
+        Request = NumberRequest(fquest.get_json())
 
-        request = NumberRequest(body)
-
-        requestErrors = request.EvaluateModelErrors()
+        requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return BadRequestError(requestErrors), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(body["token"])
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(Request.token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT['guid']
-        number = body["number"]
-        WhitelistDb.delWhitelistNumberForUser(guid, number)
+        WhitelistDb.delWhitelistNumberForUser(JwtInfos.guid, Request.number)
 
-        response = NumberResponse(WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"])
+        response = NumberResponse(WhitelistDb.getWhitelistForUser(JwtInfos.guid)["PhoneNumbers"])
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):

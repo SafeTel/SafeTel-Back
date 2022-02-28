@@ -32,21 +32,23 @@ class ResetToken(Resource):
     def get(self):
         token = request.args["token"]
         if token is None:
-            return BadRequestError("bad request"), 400
+            return BadRequestError("Bad Request"), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(token)
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT["guid"]
-        role = deserializedJWT["role"]
-
-        if (UserDb.existByGUID(guid) == False):
+        if (UserDb.existByGUID(JwtInfos.guid) == False):
             return BadRequestError("you are not registred")
 
-        Response = ResetTokenResponse(jwtConv.Serialize(guid, role))
+        Response = ResetTokenResponse(
+            JwtConv.Serialize(
+                JwtInfos.guid,
+                JwtInfos.role
+            )
+        )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

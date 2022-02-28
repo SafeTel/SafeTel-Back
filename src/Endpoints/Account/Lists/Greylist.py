@@ -33,13 +33,13 @@ class GreyList(Resource):
         if token is None:
             return BadRequestError("bad token"), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(token)
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT['guid']
+        guid = JwtInfos.guid
 
         response = GreylistResponse(
             BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"],

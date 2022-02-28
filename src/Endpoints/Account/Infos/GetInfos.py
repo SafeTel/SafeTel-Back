@@ -33,24 +33,24 @@ class GetInfos(Resource):
     def get(self):
         token = request.args["token"]
         if token is None:
-            return BadRequestError("bad request"), 400
+            return BadRequestError("Bad Request"), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(token)
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        guid = deserializedJWT["guid"]
+        guid = JwtInfos.guid
 
-        if (deserializedJWT["role"] != Roles.USER):
+        if (JwtInfos.role != Roles.USER):
             return BadRequestError("this account is not a user account"), 400
 
         user = UserDb.getUserByGUID(guid)
 
         responseLocalization = Localization(user["localization"])
         responseCustomerInfos = CustomerInfos(user["customerInfos"])
-        response = GetInfosResponse(user["email"], user["userName"], responseCustomerInfos, responseLocalization)
+        response = GetInfosResponse(user["email"], user["username"], responseCustomerInfos, responseLocalization)
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):

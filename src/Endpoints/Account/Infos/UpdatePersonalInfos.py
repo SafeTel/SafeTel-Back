@@ -6,6 +6,7 @@
 ##
 
 # Network imports
+from urllib.request import Request
 from flask import request as fquest
 from flask_restful import Resource
 
@@ -31,27 +32,26 @@ from Models.Endpoints.Account.Infos.UpdatePersonalInfosResponse import UpdatePer
 # Route to Register a user
 class UpdatePersonalInfos(Resource):
     def post(self):
-        body = fquest.get_json()
-        request = UpdatePErsonalInfosRequest(body)
+        Request = UpdatePErsonalInfosRequest(fquest.get_json())
 
-        requestErrors = request.EvaluateModelErrors()
+        requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return BadRequestError(requestErrors), 400
 
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
-        deserializedJWT = jwtConv.Deserialize(body["token"])
-        if deserializedJWT is None:
+        JwtInfos = JwtConv.Deserialize(Request.token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        result = UserDb.getUserByGUID(deserializedJWT['guid'])
+        result = UserDb.getUserByGUID(JwtInfos.guid)
         if result is None:
             return BadRequestError("bad token"), 400
 
-        customerInfos = request.CustomerInfos.ToDict()
-        localization = request.Localization.ToDict()
+        customerInfos = Request.CustomerInfos.ToDict()
+        localization = Request.Localization.ToDict()
 
-        UserDb.UpdatePersonalInfos(deserializedJWT['guid'], customerInfos, localization)
+        UserDb.UpdatePersonalInfos(JwtInfos.guid, customerInfos, localization)
 
         response = UpdatePersonalInfosResponse(True)
 

@@ -24,7 +24,7 @@ class RegisterRequest(JParent):
     def __InitJParent(self, loadedJSON: dict):
         self.magicNumber = self.LoadElement(loadedJSON, "magicNumber")
         self.email = self.LoadElement(loadedJSON, "email")
-        self.username = self.LoadElement(loadedJSON, "userName")
+        self.username = self.LoadElement(loadedJSON, "username")
         self.password = self.LoadElement(loadedJSON, "password")
 
     def __InitCustomerInfosJObject(self, loadedJSON: dict):

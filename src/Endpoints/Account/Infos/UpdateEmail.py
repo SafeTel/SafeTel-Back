@@ -6,6 +6,7 @@
 ##
 
 # Network imports
+from urllib.request import Request
 from flask import request as fquest
 from flask_restful import Resource
 
@@ -28,22 +29,23 @@ from Models.Endpoints.Account.Infos.UpdateEmailResponse import UpdateEmailRespon
 # Route to update the email of an account from an auth user
 class UpdateEmail(Resource):
     def post(self):
-        request = UpdateEmailRequest(fquest.get_json())
+        Request = UpdateEmailRequest(fquest.get_json())
 
-        requestErrors = request.EvaluateModelErrors()
+        requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return BadRequestError(requestErrors), 400
 
-        jwtConv = JWTConvert()
-        deserializedJWT = jwtConv.Deserialize(request.token)
-        if deserializedJWT is None:
+        JwtConv = JWTConvert()
+
+        JwtInfos = JwtConv.Deserialize(Request.token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        result = UserDb.getUserByGUID(deserializedJWT['guid'])
+        result = UserDb.getUserByGUID(JwtInfos.guid)
         if result is None:
             return BadRequestError("bad token"), 400
 
-        UserDb.UpdateAccountEmail(deserializedJWT['guid'], request.email)
+        UserDb.UpdateAccountEmail(JwtInfos.guid, Request.email)
 
         response = UpdateEmailResponse(UserDb.exists(result['email']))
 

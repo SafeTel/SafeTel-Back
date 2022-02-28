@@ -28,7 +28,7 @@ from Infrastructure.Services.HealthCheck.HealthCheckService import HealthCheckSe
 class HealthCheck(Resource):
     def get(self):
         hcService = HealthCheckService()
-        jwtConv = JWTConvert()
+        JwtConv = JWTConvert()
 
         token = request.args["token"]
 
@@ -48,12 +48,13 @@ class HealthCheck(Resource):
             if type(x) == type(''):
                 envCheck = json.loads(x)
 
-        deserializedJWT = jwtConv.Deserialize(token)
+        JwtConv = JWTConvert()
 
-        if (deserializedJWT == None):
+        JwtInfos = JwtConv.Deserialize(token)
+        if JwtInfos is None:
             return BadRequestError("bad token"), 400
 
-        if (deserializedJWT["role"] == Roles.DEVELOPER):
+        if (JwtInfos.role == Roles.DEVELOPER):
             return self.DevDTO(serverCheck, envCheck), 200
         return {
             "healthCheck": {

@@ -47,7 +47,7 @@ class Login(Resource):
         role = jwtConv.SToRoles(user["role"])
         guid = user["guid"]
 
-        Response = LoginResponse(user["userName"], jwtConv.Serialize(guid, role))
+        Response = LoginResponse(user["username"], jwtConv.Serialize(guid, role))
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

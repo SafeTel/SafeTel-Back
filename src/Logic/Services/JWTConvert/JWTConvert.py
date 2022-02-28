@@ -22,12 +22,14 @@ import os
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
+from Models.Logic.SharedJParent.JWTInfos import JWTInfos
+
 class JWTConvert():
     def __init__(self):
         self.UserDb = UserDB()
 
 
-    def Serialize(self, guid, role):
+    def Serialize(self, guid: str, role):
         if (guid == "" or guid is None):
             raise ValueError("The guid can't be empty or null.")
         if (role == None):
@@ -44,24 +46,26 @@ class JWTConvert():
         )
 
 
-    def Deserialize(self, token):
+    def Deserialize(self, token: str):
         try:
             jwtInfos = jwt.decode(jwt=token, key=os.getenv("SECRET_KEY"), algorithms='HS256')
         except Exception as e:
             return None
 
-        exp = jwtInfos['exp']
+        infos = JWTInfos(jwtInfos["guid"], jwtInfos["role"], jwtInfos["exp"])
         curr_ts = time.time()
 
-        if (curr_ts > exp):
+        if (curr_ts > infos.exp):
             return None
 
-        if (not Roles.HasValue(jwtInfos['role']) or self.UserDb.existByGUID(jwtInfos['guid']) is False):
+        if (not Roles.HasValue(infos.role) or self.UserDb.existByGUID(infos.guid) is False):
             return None
-        return jwtInfos
+        if (infos.EvaluateModelErrors() != None):
+            return None
+        return infos
 
 
-    def IsValid(self, token):
+    def IsValid(self, token: str):
         try:
             data = jwt.decode(jwt=token, key=os.getenv("SECRET_KEY"), algorithms='HS256')
         except Exception as e:
@@ -75,11 +79,11 @@ class JWTConvert():
         return True
 
 
-    def SToRoles(self, str):
-        if (str.lower() == "user"):
+    def SToRoles(self, s: str):
+        if (s.lower() == "user"):
             return Roles.USER
-        if (str.lower() == "dev"):
+        if (s.lower() == "dev"):
             return Roles.DEVELOPER
-        if (str.lower() == "adming"):
+        if (s.lower() == "adming"):
             return Roles.ADMIN
         return None

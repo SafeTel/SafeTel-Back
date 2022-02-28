@@ -52,7 +52,7 @@ class Register(Resource):
         jwtConv = JWTConvert()
         Response = RegisterResponse(
             True,
-            UserInfos["userName"],
+            UserInfos["username"],
             jwtConv.Serialize(User.GetGUID(), Roles.USER)
         )
 
