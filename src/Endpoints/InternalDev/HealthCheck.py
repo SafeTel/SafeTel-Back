@@ -52,15 +52,15 @@ class HealthCheck(Resource):
 
         if (deserializedJWT == None):
             return BadRequestError("bad token"), 400
-        elif (deserializedJWT["role"] == Roles.ADMIN or deserializedJWT["role"] == Roles.DEVELOPER):
-            return self.DevDTO(serverCheck, envCheck)
 
+        if (deserializedJWT["role"] == Roles.DEVELOPER):
+            return self.DevDTO(serverCheck, envCheck), 200
         return {
             "healthCheck": {
                 "server": serverCheck,
                 "environment": envCheck
             }
-        }
+        }, 200
 
     def DevDTO(self, serverCheck, envCheck):
         del serverCheck['results']
