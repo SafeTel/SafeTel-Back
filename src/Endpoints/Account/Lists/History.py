@@ -13,7 +13,7 @@ from flask_restful import Resource
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 # DB import
 from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
@@ -26,15 +26,16 @@ HistoryDb = HistoryDB()
 
 class History(Resource):
     def get(self):
+        EndptErrorManager = EndpointErrorManager()
         token = fquest.args["token"]
         if token is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         JwtConv = JWTConvert()
 
         JwtInfos = JwtConv.Deserialize(token)
         if JwtInfos is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         guid = JwtInfos.guid
 
@@ -42,22 +43,23 @@ class History(Resource):
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
-            return InternalLogicError(), 500
+            return EndptErrorManager.CreateInternalLogicError(), 500
         return response.ToDict(), 200
 
 
     def post(self):
+        EndptErrorManager = EndpointErrorManager()
         Request = AddHistoryRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return BadRequestError(requestErrors), 400
+            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
         JwtConv = JWTConvert()
 
         JwtInfos = JwtConv.Deserialize(Request.token)
         if JwtInfos is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         HistoryDb.addHistoryCallForUser(
             JwtInfos.guid,
@@ -70,25 +72,26 @@ class History(Resource):
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
-            return InternalLogicError(), 500
+            return EndptErrorManager.CreateInternalLogicError(), 500
         return response.ToDict(), 200
 
     def delete(self):
+        EndptErrorManager = EndpointErrorManager()
         Request = AddHistoryRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return BadRequestError(requestErrors), 400
+            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
         JwtConv = JWTConvert()
 
         JwtInfos = JwtConv.Deserialize(Request.token)
         if JwtInfos is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
-            return InternalLogicError(), 500
+            return EndptErrorManager.CreateInternalLogicError(), 500
         return response.ToDict(), 200

@@ -20,7 +20,7 @@ from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 # Health CHeck Service
 from Infrastructure.Services.HealthCheck.HealthCheckService import HealthCheckService
@@ -29,11 +29,12 @@ class HealthCheck(Resource):
     def get(self):
         hcService = HealthCheckService()
         JwtConv = JWTConvert()
+        EndptErrorManager = EndpointErrorManager()
 
         token = request.args["token"]
 
         if request.args.get("token") == None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         serverDatas = hcService.RunInfraCheck()
         serverEnvDatas = hcService.RunSoftCheck()
@@ -52,7 +53,7 @@ class HealthCheck(Resource):
 
         JwtInfos = JwtConv.Deserialize(token)
         if JwtInfos is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         if (JwtInfos.role == Roles.DEVELOPER):
             return self.DevDTO(serverCheck, envCheck), 200

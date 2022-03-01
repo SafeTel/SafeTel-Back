@@ -15,26 +15,27 @@ from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 from Models.Endpoints.Authentification.Token.CheckTokenResponse import CheckTokenResponse
 
 # Route to check a JWT
 class CheckToken(Resource):
     def get(self):
+        EndptErrorManager = EndpointErrorManager()
         token = request.args["token"]
         if token is None:
-            return BadRequestError("Bad Request"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Request"), 400
 
         jwtConv = JWTConvert()
 
         validity = jwtConv.IsValid(token)
         if validity is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         response = CheckTokenResponse(validity)
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
-            return InternalLogicError(), 500
+            return EndptErrorManager.CreateInternalLogicError(), 500
         return response.ToDict(), 200

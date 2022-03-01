@@ -11,11 +11,10 @@ from flask import request as fquest
 from flask_restful import Resource
 
 # Utils check imports
-from Endpoints.Utils.Types import isValidEmail
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
@@ -29,21 +28,22 @@ from Models.Endpoints.Account.Infos.UpdateEmailResponse import UpdateEmailRespon
 # Route to update the email of an account from an auth user
 class UpdateEmail(Resource):
     def post(self):
+        EndptErrorManager = EndpointErrorManager()
         Request = UpdateEmailRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return BadRequestError(requestErrors), 400
+            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
         JwtConv = JWTConvert()
 
         JwtInfos = JwtConv.Deserialize(Request.token)
         if JwtInfos is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         result = UserDb.getUserByGUID(JwtInfos.guid)
         if result is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         UserDb.UpdateAccountEmail(JwtInfos.guid, Request.email)
 

@@ -15,7 +15,7 @@ from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### INFRA
 # Melchior DB imports
@@ -31,20 +31,21 @@ UserDb = UserDB()
 # Route to get the information from a user
 class GetInfos(Resource):
     def get(self):
+        EndptErrorManager = EndpointErrorManager()
         token = request.args["token"]
         if token is None:
-            return BadRequestError("Bad Request"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Request"), 400
 
         JwtConv = JWTConvert()
 
         JwtInfos = JwtConv.Deserialize(token)
         if JwtInfos is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         guid = JwtInfos.guid
 
         if (JwtInfos.role != Roles.USER):
-            return BadRequestError("this account is not a user account"), 400
+            return EndptErrorManager.CreateBadRequestError("this account is not a user account"), 400
 
         user = UserDb.getUserByGUID(guid)
 
@@ -54,7 +55,7 @@ class GetInfos(Resource):
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
-            return InternalLogicError(), 500
+            return EndptErrorManager.CreateInternalLogicError(), 500
         return response.ToDict(), 200
 
     def UserInfosDTO(user):

@@ -8,7 +8,7 @@
 ### LOGIC
 # Request Error
 from urllib.request import Request
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 # JWT import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Password encription import
@@ -29,19 +29,20 @@ from Models.Endpoints.Authentification.LoginResponse import LoginResponse
 # Route to log in a user
 class Login(Resource):
     def post(self):
+        EndptErrorManager = EndpointErrorManager()
         Request = LoginRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return BadRequestError(requestErrors), 400
+            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
         user = UserDb.getUser(Request.email)
         if user == None:
-            return BadRequestError("this email is not linked to an account"), 400
+            return EndptErrorManager.CreateBadRequestError("this email is not linked to an account"), 400
 
         pwdConv = PWDConvert()
         if not pwdConv.Compare(Request.password, user["password"]):
-            return BadRequestError('you can not connect with this combination of email and password'), 400
+            return EndptErrorManager.CreateBadRequestError('you can not connect with this combination of email and password'), 400
 
         jwtConv = JWTConvert()
         role = jwtConv.SToRoles(user["role"])
@@ -51,5 +52,5 @@ class Login(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return InternalLogicError(), 500
+            return EndptErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200

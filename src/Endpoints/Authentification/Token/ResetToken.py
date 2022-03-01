@@ -13,11 +13,8 @@ from flask_restful import Resource
 # jwt provider import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
-# Utils check imports
-from Endpoints.Utils.Request import validateBody
-
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### INFRA
 # Melchior DB imports
@@ -30,18 +27,19 @@ UserDb = UserDB()
 # Route to reset a JWT
 class ResetToken(Resource):
     def get(self):
+        EndptErrorManager = EndpointErrorManager()
         token = request.args["token"]
         if token is None:
-            return BadRequestError("Bad Request"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Request"), 400
 
         JwtConv = JWTConvert()
 
         JwtInfos = JwtConv.Deserialize(token)
         if JwtInfos is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         if (UserDb.existByGUID(JwtInfos.guid) == False):
-            return BadRequestError("you are not registred")
+            return EndptErrorManager.CreateBadRequestError("you are not registred")
 
         Response = ResetTokenResponse(
             JwtConv.Serialize(
@@ -52,5 +50,5 @@ class ResetToken(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return InternalLogicError(), 500
+            return EndptErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200

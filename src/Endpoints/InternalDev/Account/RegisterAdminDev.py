@@ -19,7 +19,7 @@ from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### INFRA
 # Melchior DB imports
@@ -40,19 +40,20 @@ ApiKeyLogDb = ApiKeyLogDB()
 
 class RegisterAdminDev(Resource):
     def post(self):
+        EndptErrorManager = EndpointErrorManager()
         Request = RegisterAdminDevRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return BadRequestError(requestErrors), 400
+            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
         if (not ApiKeyLogDb.isValidApiKey(Request.apiKey)):
-            return BadRequestError("apiKey is not valid"), 400
+            return EndptErrorManager.CreateBadRequestError("apiKey is not valid"), 400
 
         Registrattion = Request.Registrattion
 
         if UserDb.exists(Registrattion.email):
-            return BadRequestError("this email is already linked to an account"), 400
+            return EndptErrorManager.CreateBadRequestError("this email is already linked to an account"), 400
 
         create_ts = time.time()
         guid = str(uuid.uuid4())
@@ -62,7 +63,7 @@ class RegisterAdminDev(Resource):
         registrate['ts'] = create_ts
 
         if (not Roles.HasValue(Request.role)):
-            return BadRequestError("Bad Request"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Request"), 400
         role = Roles.USER
 
         if (Request.role == 'admin'):
@@ -70,7 +71,7 @@ class RegisterAdminDev(Resource):
         elif (Request.role == 'dev'):
             role = Roles.DEVELOPER
         else:
-            return BadRequestError("Bad Request"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Request"), 400
 
         UserDb.addUser(registrate, role)
 
@@ -91,5 +92,5 @@ class RegisterAdminDev(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return InternalLogicError(), 500
+            return EndptErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200

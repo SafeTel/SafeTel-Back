@@ -14,7 +14,7 @@ from flask_restful import Resource
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 # DB import
 from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB
@@ -29,15 +29,16 @@ WhitelistDb = WhitelistDB()
 # Route to get the white & black list of the user
 class GreyList(Resource):
     def get(self):
+        EndptErrorManager = EndpointErrorManager()
         token = request.args["token"]
         if token is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         JwtConv = JWTConvert()
 
         JwtInfos = JwtConv.Deserialize(token)
         if JwtInfos is None:
-            return BadRequestError("bad token"), 400
+            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         guid = JwtInfos.guid
 
@@ -48,5 +49,5 @@ class GreyList(Resource):
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
-            return InternalLogicError(), 500
+            return EndptErrorManager.CreateInternalLogicError(), 500
         return response.ToDict(), 200

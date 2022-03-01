@@ -18,18 +18,18 @@ import os
 class Tellows():
     def __init__(self):
         self.uri = os.getenv("TELLOWS_BASE_URI") + os.getenv("TELLOWS_URI_NUMBER")
-        self.queries = {
+        self.query = {
             'apikeyMd5': os.getenv("TELLOWS_API_KEY_MD5"),
             'json': 1
         }
-        self.httpClient = HttpClient()
+        self.HTTPClient = HttpClient()
 
 
     def EvaluateNumber(self, number):
         if (not self.__IsValidNumber(number)):
             return None
 
-        response = self.httpClient.Get(self.uri + number, self.queries)
+        response = self.HTTPClient.Get(self.uri + number, self.query)
 
         if (not "tellows" in response
         and not "score" in response):

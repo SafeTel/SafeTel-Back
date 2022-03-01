@@ -7,11 +7,10 @@
 
 ### LOGIC
 # Utils check imports
-from Endpoints.Utils.Types import isValidEmail, isValidNumber
 from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Request Error
-from Endpoints.Utils.RouteErrors.Errors import BadRequestError, InternalLogicError
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 # Password encription import
 from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 
@@ -35,14 +34,15 @@ UserDb = UserDB()
 # Route to Register a user
 class Register(Resource):
     def post(self):
+        EndptErrorManager = EndpointErrorManager()
         Request = RegisterRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return BadRequestError(requestErrors), 400
+            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
         if UserDb.exists(Request.email):
-            return BadRequestError("this email is already linked to an account"), 400
+            return EndptErrorManager.CreateBadRequestError("this email is already linked to an account"), 400
 
         UsrFactory = UserFactory()
         body = fquest.get_json()
@@ -58,5 +58,5 @@ class Register(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return InternalLogicError(), 500
+            return EndptErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
