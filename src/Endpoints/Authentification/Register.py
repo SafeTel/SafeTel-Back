@@ -45,8 +45,7 @@ class Register(Resource):
             return EndptErrorManager.CreateBadRequestError("this email is already linked to an account"), 400
 
         UsrFactory = UserFactory()
-        body = fquest.get_json()
-        User = UsrFactory.CreateUser(body)
+        User = UsrFactory.CreateUser(Request)
         UserInfos = User.PullUserInfos()
 
         jwtConv = JWTConvert()

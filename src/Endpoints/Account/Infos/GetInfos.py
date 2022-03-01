@@ -5,66 +5,54 @@
 ## GetInfos
 ##
 
-# Network imports
-from flask import request as fquest
+### INFRA
+# Flask imports
 from flask.globals import request
 from flask_restful import Resource
+# Models Response imports
+from Models.Endpoints.Account.Infos.GetInfosResponse import GetInfosResponse
+# User Factory import
+from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+# Endpoint Error Manager import
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
+### LOGC
 # jwt provider import
 from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
-# Request Error
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
-### INFRA
-# Melchior DB imports
-from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
-
-# Models Response imports
-from Models.Endpoints.Account.Infos.GetInfosResponse import GetInfosResponse
-from Models.Endpoints.SharedJObject.Account.Infos.CustomerInfos import CustomerInfos
-from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localization
-
-UserDb = UserDB()
-
-# Route to get the information from a user
+# Route to get the information of a user
 class GetInfos(Resource):
     def __init__(self):
-        self.a = "a"
+        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__JwtConv = JWTConvert()
+        self.__UserFactory = UserFactory()
 
     def get(self):
-        EndptErrorManager = EndpointErrorManager()
         token = request.args["token"]
-        if token is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Request"), 400
+        if (token is None):
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Request"), 400
 
-        JwtConv = JWTConvert()
-
-        JwtInfos = JwtConv.Deserialize(token)
+        JwtInfos = self.__JwtConv.Deserialize(token)
         if (JwtInfos is None):
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
-
-        guid = JwtInfos.guid
-
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
         if (JwtInfos.role != Roles.USER):
-            return EndptErrorManager.CreateBadRequestError("this account is not a user account"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("This account is not a user account"), 400
 
-        user = UserDb.getUserByGUID(guid)
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        responseLocalization = Localization(user["localization"])
-        responseCustomerInfos = CustomerInfos(user["customerInfos"])
-        response = GetInfosResponse(user["email"], user["username"], responseCustomerInfos, responseLocalization)
+        UserInfos = User.PullUserInfos()
+        Response = GetInfosResponse(
+            UserInfos.email,
+            UserInfos.username,
+            UserInfos.CustomerInfos,
+            UserInfos.Localization
+        )
 
-        responseErrors = response.EvaluateModelErrors()
+        responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
-        return response.ToDict(), 200
-
-    def UserInfosDTO(user):
-        del user["_id"]
-        del user["password"]
-        del user['role']
-        del user['time']
-        del user['guid']
-        return user
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+        return Response.ToDict(), 200
