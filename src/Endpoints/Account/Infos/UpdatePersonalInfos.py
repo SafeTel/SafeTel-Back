@@ -5,54 +5,56 @@
 ## ChnagePersonalInfos
 ##
 
-# Network imports
-from urllib.request import Request
+### INFRA
+# Flask imports
 from flask import request as fquest
 from flask_restful import Resource
-
-# Utils check imports
-from Models.Logic.Shared.Roles import Roles
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-
-# Request Error
+# User Factory import
+from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+# Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
-### INFRA
-# Melchior DB imports
-from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
-from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
-
-UserDb = UserDB()
-
+### MODELS
 # Models Request & Response imports
 from Models.Endpoints.Account.Infos.UpdatePersonalInfosRequest import UpdatePErsonalInfosRequest
 from Models.Endpoints.Account.Infos.UpdatePersonalInfosResponse import UpdatePersonalInfosResponse
 
+### LOGIC
+# Utils check imports
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+
 # Route to Register a user
 class UpdatePersonalInfos(Resource):
+    def __init__(self):
+        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__JwtConv = JWTConvert()
+        self.__UserFactory = UserFactory()
+
     def post(self):
-        EndptErrorManager = EndpointErrorManager()
         Request = UpdatePErsonalInfosRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        JwtConv = JWTConvert()
-
-        JwtInfos = JwtConv.Deserialize(Request.token)
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if JwtInfos is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        result = UserDb.getUserByGUID(JwtInfos.guid)
-        if result is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        UserDb.UpdatePersonalInfos(JwtInfos.guid, Request.CustomerInfos, Request.Localization)
+        UserInfos = User.PullUserInfos()
+        if (UserInfos.CustomerInfos.Deserialize() == Request.CustomerInfos.Deserialize()
+        and UserInfos.Localization.Deserialize() == Request.Localization.Deserialize()):
+            return self.__EndpointErrorManager.CreateBadRequestError("Same infos"), 400
 
-        response = UpdatePersonalInfosResponse(True)
+        User.UpdatePersonalInfos(Request.CustomerInfos, Request.Localization)
 
-        responseErrors = response.EvaluateModelErrors()
+        Response = UpdatePersonalInfosResponse(False)
+
+        responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
-        return response.ToDict(), 200
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+        return Response.ToDict(), 200

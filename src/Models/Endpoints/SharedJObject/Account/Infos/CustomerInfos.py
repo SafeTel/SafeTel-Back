@@ -16,6 +16,8 @@ class CustomerInfos(JObject):
             return
         self.__InitJObjectt(loadedJSON)
 
+    # Utils
+
     # Values Assignement
     def __InitJObjectt(self, loadedJSON: dict):
         self.firstName = self.LoadElement(loadedJSON, "firstName")

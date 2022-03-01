@@ -9,16 +9,19 @@
 # Flask imports
 from flask.globals import request
 from flask_restful import Resource
-# Models Response imports
-from Models.Endpoints.Account.Infos.GetInfosResponse import GetInfosResponse
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
-### LOGC
-# jwt provider import
+### MODELS
+# Model Response import
+from Models.Endpoints.Account.Infos.GetInfosResponse import GetInfosResponse
+# Model for Role import
 from Models.Logic.Shared.Roles import Roles
+
+### LOGC
+# JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 
