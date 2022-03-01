@@ -20,6 +20,7 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
+from Models.Endpoints.Authentification.Token.ResetTokenRequest import ResetTokenRequest
 from Models.Endpoints.Authentification.Token.ResetTokenResponse import ResetTokenResponse
 
 UserDb = UserDB()
@@ -28,13 +29,15 @@ UserDb = UserDB()
 class ResetToken(Resource):
     def get(self):
         EndptErrorManager = EndpointErrorManager()
-        token = request.args["token"]
-        if token is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Request"), 400
+        Request = ResetTokenRequest(request.args.to_dict())
+
+        requestErrors = Request.ResetTokenRequest()
+        if (requestErrors != None):
+            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
         JwtConv = JWTConvert()
 
-        JwtInfos = JwtConv.Deserialize(token)
+        JwtInfos = JwtConv.Deserialize(Request.token)
         if JwtInfos is None:
             return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 

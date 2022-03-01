@@ -15,7 +15,8 @@ from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
-# Model Response import
+# Model Request & Response import
+from Models.Endpoints.Account.Infos.GetInfosRequest import GetInfosRequest
 from Models.Endpoints.Account.Infos.GetInfosResponse import GetInfosResponse
 # Model for Role import
 from Models.Logic.Shared.Roles import Roles
@@ -33,15 +34,17 @@ class GetInfos(Resource):
         self.__UserFactory = UserFactory()
 
     def get(self):
-        token = request.args["token"]
-        if (token is None):
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Request"), 400
+        Request = GetInfosRequest(request.args.to_dict())
 
-        JwtInfos = self.__JwtConv.Deserialize(token)
+        requestErrors = Request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return self.__EndpointErrorManager(requestErrors), 400
+
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
         if (JwtInfos.role != Roles.USER):
-            return self.__EndpointErrorManager.CreateBadRequestError("This account is not a user account"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("This account is not a USER account"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User == None):

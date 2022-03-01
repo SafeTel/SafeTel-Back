@@ -25,16 +25,18 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 # Health CHeck Service
 from Infrastructure.Services.HealthCheck.HealthCheckService import HealthCheckService
 
+from Models.Endpoints.InternalDev.HealthCheckRequest import HealthCheckRequest
+
 class HealthCheck(Resource):
     def get(self):
         hcService = HealthCheckService()
         JwtConv = JWTConvert()
         EndptErrorManager = EndpointErrorManager()
+        Request = HealthCheckRequest(request.args.to_dict())
 
-        token = request.args["token"]
-
-        if request.args.get("token") == None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+        requestErrors = Request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
         serverDatas = hcService.RunInfraCheck()
         serverEnvDatas = hcService.RunSoftCheck()

@@ -15,23 +15,20 @@ from Infrastructure.Services.Tellows.Tellows import Tellows
 # Request Error
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
+from Models.Endpoints.Engine.TellowsRequest import TellowsRequest
 from Models.Endpoints.Engine.TellowsResponse import TellowsResponse
 
 class GetTellows(Resource):
     def get(self):
         EndptErrorManager = EndpointErrorManager()
-        phoneNumber = request.args.get('phonenumber')
-        if request.args["magicNumber"] != "42":
-            return {
-                'error': 'bad_request'
-            }, 400
-        if phoneNumber == None:
-            return {
-                'error': 'bad_request - missing phonenumber'
-            }, 400
+        Request = TellowsRequest(request.args.to_dict())
+
+        requestErrors = Request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
         tellows = Tellows()
-        score = tellows.EvaluateNumber(phoneNumber)
+        score = tellows.EvaluateNumber(Request.number)
 
         if score is None:
             return EndptErrorManager.CreateBadRequestError("Invalid number"), 400

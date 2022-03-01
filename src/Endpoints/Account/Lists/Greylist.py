@@ -21,6 +21,7 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import Black
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
 
 # Models Request & Response imports
+from Models.Endpoints.Account.Lists.GetGreyListRequest import GetGreylistRequest
 from Models.Endpoints.Account.Lists.GreylistResponse import GreylistResponse
 
 BlacklistDb = BlacklistDB()
@@ -30,13 +31,15 @@ WhitelistDb = WhitelistDB()
 class GreyList(Resource):
     def get(self):
         EndptErrorManager = EndpointErrorManager()
-        token = request.args["token"]
-        if token is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+        Request = GetGreylistRequest(request.args.to_dict())
+
+        requestErrors = Request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return EndptErrorManager(requestErrors), 400
 
         JwtConv = JWTConvert()
 
-        JwtInfos = JwtConv.Deserialize(token)
+        JwtInfos = JwtConv.Deserialize(Request.token)
         if JwtInfos is None:
             return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
