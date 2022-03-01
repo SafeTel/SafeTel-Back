@@ -6,10 +6,18 @@
 ##
 
 ### INFRA
+# User db import
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
+# Lists db imports
 from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
+### MODELS
+# UserInfos JParent imort
+from Models.Infrastructure.Factory.UserFactory.UserInfos import UserInfos
+# Shared JObject import
+from Models.Endpoints.SharedJObject.Account.Infos.CustomerInfos import CustomerInfos
+from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localization
 
 class User():
     def __init__(self, guid: str):
@@ -27,25 +35,30 @@ class User():
 
 
     def PullUserInfos(self):
-        return self.__MandaroryUserInfosPull()
+        return self.__PullUserInfos()
 
 
-    def __MandaroryUserInfosPull(self):
+    def Exists(self):
+        return self.__UserDB.existByGUID()
+
+
+    def __PullUserInfos(self):
         if (self.__UserInfos == None):
-            self.__UserInfos = self.__UserDB.getUserByGUID(self.__guid)
+            userRaw = self.__UserDB.getUserByGUID(self.__guid)
+            self.__UserInfos = UserInfos(userRaw)
         return self.__UserInfos
 
 
     # UPDATE
-    def UpdateEmail(self, newEmail):
-        self.__MandaroryUserInfosPull()
+    def UpdateEmail(self, newEmail: str):
+        self.__PullUserInfos()
         self.__UserDB.UpdateAccountEmail(self.__guid, newEmail)
 
 
-    def UpdatePersonalInfos(self, NewUserInfos):
-        self.__MandaroryUserInfosPull()
-        NewCustomerInfos = NewUserInfos["customerInfos"]
-        NewLocalization = NewUserInfos["localization"]
+    def UpdatePersonalInfos(self, CustomerInfos: CustomerInfos, Localization: Localization):
+        self.__PullUserInfos()
+        NewCustomerInfos = CustomerInfos.ToDict()
+        NewLocalization = Localization.ToDict()
         self.__UserDB.UpdatePersonalInfos(self.__guid, NewCustomerInfos, NewLocalization)
 
 

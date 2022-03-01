@@ -48,10 +48,7 @@ class UpdatePersonalInfos(Resource):
         if result is None:
             return BadRequestError("bad token"), 400
 
-        customerInfos = Request.CustomerInfos.ToDict()
-        localization = Request.Localization.ToDict()
-
-        UserDb.UpdatePersonalInfos(JwtInfos.guid, customerInfos, localization)
+        UserDb.UpdatePersonalInfos(JwtInfos.guid, Request.CustomerInfos, Request.Localization)
 
         response = UpdatePersonalInfosResponse(True)
 
