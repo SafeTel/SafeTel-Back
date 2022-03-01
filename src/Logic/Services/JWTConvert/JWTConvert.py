@@ -52,17 +52,18 @@ class JWTConvert():
         except Exception as e:
             return None
 
-        infos = JWTInfos(jwtInfos["guid"], jwtInfos["role"], jwtInfos["exp"])
+        Infos = JWTInfos(jwtInfos["guid"], self.__StrToRoles(jwtInfos["role"]), int(jwtInfos["exp"]))
         curr_ts = time.time()
 
-        if (curr_ts > infos.exp):
+        if (curr_ts > Infos.exp):
             return None
 
-        if (not Roles.HasValue(infos.role) or self.UserDb.existByGUID(infos.guid) is False):
+
+        if (not Roles.HasValue(Infos.role) or self.UserDb.existByGUID(Infos.guid) is False):
             return None
-        if (infos.EvaluateModelErrors() != None):
+        if (Infos.EvaluateModelErrors() != None):
             return None
-        return infos
+        return Infos
 
 
     def IsValid(self, token: str):
@@ -79,11 +80,11 @@ class JWTConvert():
         return True
 
 
-    def SToRoles(self, s: str):
-        if (s.lower() == "user"):
-            return Roles.USER
-        if (s.lower() == "dev"):
-            return Roles.DEVELOPER
-        if (s.lower() == "adming"):
+    def __StrToRoles(self, s: int):
+        if (s == 1):
             return Roles.ADMIN
+        if (s == 2):
+            return Roles.DEVELOPER
+        if (s == 3):
+            return Roles.USER
         return None

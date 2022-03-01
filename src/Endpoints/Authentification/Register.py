@@ -41,7 +41,7 @@ class Register(Resource):
         if (requestErrors != None):
             return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
-        if UserDb.exists(Request.email):
+        if (UserDb.exists(Request.email)):
             return EndptErrorManager.CreateBadRequestError("this email is already linked to an account"), 400
 
         UsrFactory = UserFactory()
@@ -52,7 +52,7 @@ class Register(Resource):
         jwtConv = JWTConvert()
         Response = RegisterResponse(
             True,
-            UserInfos["username"],
+            UserInfos.username,
             jwtConv.Serialize(User.GetGUID(), Roles.USER)
         )
 

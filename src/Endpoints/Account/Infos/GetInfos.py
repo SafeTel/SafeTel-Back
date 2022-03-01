@@ -30,6 +30,9 @@ UserDb = UserDB()
 
 # Route to get the information from a user
 class GetInfos(Resource):
+    def __init__(self):
+        self.a = "a"
+
     def get(self):
         EndptErrorManager = EndpointErrorManager()
         token = request.args["token"]
@@ -39,7 +42,7 @@ class GetInfos(Resource):
         JwtConv = JWTConvert()
 
         JwtInfos = JwtConv.Deserialize(token)
-        if JwtInfos is None:
+        if (JwtInfos is None):
             return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         guid = JwtInfos.guid
