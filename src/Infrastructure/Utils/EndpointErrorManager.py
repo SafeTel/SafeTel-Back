@@ -17,7 +17,3 @@ class EndpointErrorManager():
             "error": True,
             "details": "internal logic error"
         }
-
-EndptErrorManager = EndpointErrorManager()
-EndptErrorManager.CreateBadRequestError
-EndptErrorManager.CreateInternalLogicError
