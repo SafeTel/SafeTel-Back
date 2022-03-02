@@ -6,7 +6,7 @@
 ##
 
 # Network imports
-from flask import request as fquest
+from flask import request
 from flask_restful import Resource
 
 # Utils import
@@ -21,6 +21,7 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import White
 WhitelistDb = WhitelistDB()
 
 # Models Request & Response imports
+from Models.Endpoints.Account.Lists.ListGetRequest import ListGetRequest
 from Models.Endpoints.Account.Lists.NumberRequest import NumberRequest
 from Models.Endpoints.Account.Lists.NumberResponse import NumberResponse
 
@@ -28,14 +29,16 @@ from Models.Endpoints.Account.Lists.NumberResponse import NumberResponse
 class Whitelist(Resource):
     def get(self):
         EndptErrorManager = EndpointErrorManager()
-        token = fquest.args["token"]
-        if token is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Request"), 400
+        Request = ListGetRequest(request.args.to_dict())
+
+        requestErrors = Request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
         JwtConv = JWTConvert()
 
-        JwtInfos = JwtConv.Deserialize(token)
-        if JwtInfos is None:
+        JwtInfos = JwtConv.Deserialize(Request.token)
+        if (JwtInfos is None):
             return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         response = NumberResponse(WhitelistDb.getWhitelistForUser(JwtInfos.guid)["PhoneNumbers"])
@@ -48,7 +51,7 @@ class Whitelist(Resource):
 
     def post(self):
         EndptErrorManager = EndpointErrorManager()
-        Request = NumberRequest(fquest.get_json())
+        Request = NumberRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -72,7 +75,7 @@ class Whitelist(Resource):
 
     def delete(self):
         EndptErrorManager = EndpointErrorManager()
-        Request = NumberRequest(fquest.get_json())
+        Request = NumberRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):

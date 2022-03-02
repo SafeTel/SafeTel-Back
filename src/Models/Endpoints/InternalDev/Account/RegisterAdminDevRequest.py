@@ -38,15 +38,15 @@ class RegisterAdminDevRequest(JParent):
 
     def __EvaErrorsJParent(self):
         if (self.magicnumber is None): return "Body Denied"
-        if (type(self.magicnumber) is not int and self.magicnumber != 42): return "Body Denied."
-        if (self.apiKey is None): return "Body Denied."
+        if (type(self.magicnumber) is not int and self.magicnumber != 42): return "Body Denied"
+        if (self.apiKey is None): return "Body Denied"
         if (type(self.apiKey) is not str): return "Invalid variable type."
-        if (self.role is None): return "Body Denied."
+        if (self.role is None): return "Body Denied"
         if (type(self.role) is not str): return "Invalid variable type."
         return None
 
     def __EvaRegistrationJObject(self):
-        if (self.CustomerInfos is None): return "Body Denied."
+        if (self.CustomerInfos is None): return "Body Denied"
         errorJObject = self.CustomerInfos.EvaErrorsJObject()
         if (errorJObject != None): return errorJObject
         return None

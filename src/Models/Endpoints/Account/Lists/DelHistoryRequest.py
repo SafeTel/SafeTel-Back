@@ -29,10 +29,10 @@ class DelHistoryRequest(JParent):
 
     def __EvaErrorsJParent(self):
         if (self.token is None): return "Body Denied"
-        if (type(self.token) is not str): return "Token denied."
+        if (type(self.token) is not str): return "Token Denied"
         if (self.number is None): return "Body Denied"
-        if (type(self.number) is not str): return "Token denied."
+        if (type(self.number) is not str): return "Token Denied"
         if (self.time is None): return "Body Denied"
-        if (type(self.time) is not int): return "Token denied."
+        if (type(self.time) is not int): return "Token Denied"
         return None
 

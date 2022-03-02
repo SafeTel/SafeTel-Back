@@ -28,7 +28,7 @@ class NumberRequest(JParent):
 
     def __EvaErrorsJParent(self):
         if (self.token is None): return "Body Denied"
-        if (type(self.token) is not str): return "Token denied."
+        if (type(self.token) is not str): return "Token Denied"
         if (self.number is None): return "Body Denied"
-        if (type(self.number) is not str): return "Number denied."
+        if (type(self.number) is not str): return "Number Denied"
         return None

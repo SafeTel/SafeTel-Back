@@ -44,17 +44,17 @@ class UpdatePErsonalInfosRequest(JParent):
 
     def __EvaErrorsJParent(self):
         if (self.token is None): return "Body Denied"
-        if (type(self.token) is not str): return "Token Denied."
+        if (type(self.token) is not str): return "Token Denied"
         return None
 
     def __EvaCustomerInfosJObject(self):
-        if (self.CustomerInfos is None): return "Body Denied."
+        if (self.CustomerInfos is None): return "Body Denied"
         errorJObject = self.CustomerInfos.EvaErrorsJObject()
         if (errorJObject != None): return errorJObject
         return None
 
     def __EvaLocalizationJObject(self):
-        if (self.Localization is None): return "Body Denied."
+        if (self.Localization is None): return "Body Denied"
         errorJObject = self.Localization.EvaErrorsJObject()
         if (errorJObject != None):return errorJObject
         return None

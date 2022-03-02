@@ -29,9 +29,9 @@ class LoginRequest(JParent):
 
     def __EvaErrorsJParent(self):
         if (self.magicNumber is None): return "Body Denied"
-        if (type(self.magicNumber) is not int and self.magicNumber != 42): return "Body denied."
+        if (type(self.magicNumber) is not int and self.magicNumber != 42): return "Body Denied"
         if (self.email is None): return "Body Denied"
-        if (type(self.email) is not str): return "Email Denied."
+        if (type(self.email) is not str): return "Email Denied"
         if (self.password is None): return "Body Denied"
-        if (type(self.password) is not str): return "Password Denied."
+        if (type(self.password) is not str): return "Password Denied"
         return None

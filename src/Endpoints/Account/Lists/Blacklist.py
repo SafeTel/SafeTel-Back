@@ -7,7 +7,7 @@
 
 # Network imports
 from urllib.request import Request
-from flask import request as fquest
+from flask import request
 from flask_restful import Resource
 
 # Utils import
@@ -22,6 +22,7 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import Black
 BlacklistDb = BlacklistDB()
 
 # Models Request & Response imports
+from Models.Endpoints.Account.Lists.ListGetRequest import ListGetRequest
 from Models.Endpoints.Account.Lists.NumberRequest import NumberRequest
 from Models.Endpoints.Account.Lists.NumberResponse import NumberResponse
 
@@ -29,14 +30,16 @@ from Models.Endpoints.Account.Lists.NumberResponse import NumberResponse
 class Blacklist(Resource):
     def get(self):
         EndptErrorManager = EndpointErrorManager()
-        token = fquest.args["token"]
-        if token is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+        Request = ListGetRequest(request.args.to_dict())
+
+        requestErrors = Request.EvaluateModelErrors()
+        if (requestErrors != None):
+            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
 
         JwtConv = JWTConvert()
 
-        JwtInfos = JwtConv.Deserialize(token)
-        if JwtInfos is None:
+        JwtInfos = JwtConv.Deserialize(Request.token)
+        if (JwtInfos is None):
             return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
         response = NumberResponse(BlacklistDb.getBlacklistForUser(JwtInfos.guid)["PhoneNumbers"])
@@ -49,7 +52,7 @@ class Blacklist(Resource):
 
     def post(self):
         EndptErrorManager = EndpointErrorManager()
-        Request = NumberRequest(fquest.get_json())
+        Request = NumberRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -74,7 +77,7 @@ class Blacklist(Resource):
 
     def delete(self):
         EndptErrorManager = EndpointErrorManager()
-        Request = NumberRequest(fquest.get_json())
+        Request = NumberRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):

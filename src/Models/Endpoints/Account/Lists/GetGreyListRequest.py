@@ -27,5 +27,5 @@ class GetGreylistRequest(JParent):
 
     def __EvaErrorsJParent(self):
         if (self.token is None): return "Body Denied"
-        if (type(self.token) is not str): return "Token denied."
+        if (type(self.token) is not str): return "Token Denied"
         return None

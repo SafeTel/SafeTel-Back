@@ -20,7 +20,7 @@ class Localization(JObject):
     def __InitJObjectt(self, loadedJSON: dict):
         self.country = self.LoadElement(loadedJSON, "country")
         self.region = self.LoadElement(loadedJSON, "region")
-        self.address = self.LoadElement(loadedJSON, "adress")
+        self.address = self.LoadElement(loadedJSON, "address")
 
     # Errors Evaluation
     def EvaErrorsJObject(self):

@@ -28,7 +28,7 @@ class UpdateEmailRequest(JParent):
 
     def __EvaErrorsJParent(self):
         if (self.token is None): return "Body Denied"
-        if (type(self.token) is not str): return "Token denied."
+        if (type(self.token) is not str): return "Token Denied"
         if (self.email is None): return "Body Denied"
-        if (type(self.email) is not str): return "Email denied."
+        if (type(self.email) is not str): return "Email Denied"
         return None

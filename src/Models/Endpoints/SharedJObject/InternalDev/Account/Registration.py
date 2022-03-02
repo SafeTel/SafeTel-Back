@@ -23,10 +23,10 @@ class Registration(JObject):
 
     # Errors Evaluation
     def EvaErrorsJObject(self):
-        if (self.username is None): return "Body Denied."
+        if (self.username is None): return "Body Denied"
         if (type(self.username) is not str): return "Invalid variable type."
-        if (self.email is None): return "Body Denied."
+        if (self.email is None): return "Body Denied"
         if (type(self.email) is not str): return "Invalid variable type."
-        if (self.password is None): return "Body Denied."
+        if (self.password is None): return "Body Denied"
         if (type(self.password) is not str): return "Invalid variable type."
         return None
