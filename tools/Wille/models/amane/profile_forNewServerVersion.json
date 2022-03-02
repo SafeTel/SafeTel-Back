@@ -3,15 +3,15 @@
     "userName": "Amane",
     "password": "a0391!apcAZC",
     "customerInfos": {
-        "firstName": "Amane",
-        "lastName": "Misa",
+        "firstName": "Jean",
+        "lastName": "Pierre",
         "phoneNumber": "33701935712"
     },
     "localization": {
         "country": "Maroc",
         "region": "Marrakesh",
-        "adress": "186 Derb Rahala Road"
+        "address": "186 Derb Rahala Road"
     },
     "guid": "01f012e0-d01e-4321-a0b1-01c54321e321",
-        "role": "user"
+    "role": "user"
 }
