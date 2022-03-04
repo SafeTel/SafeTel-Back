@@ -25,11 +25,10 @@ from Models.Logic.Shared.Roles import Roles
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
-
-# GET
-# localhost:2407/account/infos/getInfos?token=[JWT]
+# Request:
+# GET: localhost:2407/account/infos/getInfos?token=[JWT]
 #
-# Answer
+# Response:
 # {
 #	"email": "asukathebest@bbbb.cccc",
 #	"username": "Megumin",
