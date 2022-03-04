@@ -55,6 +55,7 @@ class GetInfos(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
+
     def get(self):
         Request = GetInfosRequest(request.args.to_dict())
 

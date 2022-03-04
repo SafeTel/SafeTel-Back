@@ -46,6 +46,7 @@ class UpdateEmail(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
+
     def patch(self):
         Request = UpdateEmailRequest(fquest.get_json())
 

@@ -55,6 +55,7 @@ class UpdatePersonalInfos(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
+
     def patch(self):
         Request = UpdatePErsonalInfosRequest(fquest.get_json())
 

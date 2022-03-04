@@ -50,6 +50,7 @@ class GreyList(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
+
     def get(self):
         Request = GetGreylistRequest(request.args.to_dict())
 

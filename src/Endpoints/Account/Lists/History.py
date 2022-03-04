@@ -12,6 +12,9 @@ from flask_restful import Resource
 # Utils import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+# User Factory import
+from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+
 # Request Error
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
@@ -25,41 +28,49 @@ from Models.Endpoints.Account.Lists.History.AddHistoryRequest import AddHistoryR
 HistoryDb = HistoryDB()
 
 class History(Resource):
+    def __init__(self):
+        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__JwtConv = JWTConvert()
+        self.__UserFactory = UserFactory()
+
+
     def get(self):
-        EndptErrorManager = EndpointErrorManager()
         Request = ListGetRequest(request.args.to_dict())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        JwtConv = JWTConvert()
-
-        JwtInfos = JwtConv.Deserialize(Request.token)
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        responseErrors = response.EvaluateModelErrors()
+        Response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])
+
+        responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
-        return response.ToDict(), 200
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+        return Response.ToDict(), 200
 
 
     def post(self):
-        EndptErrorManager = EndpointErrorManager()
         Request = AddHistoryRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        JwtConv = JWTConvert()
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
+        if (JwtInfos is None):
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        JwtInfos = JwtConv.Deserialize(Request.token)
-        if JwtInfos is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         HistoryDb.addHistoryCallForUser(
             JwtInfos.guid,
@@ -72,26 +83,28 @@ class History(Resource):
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return response.ToDict(), 200
 
+
     def delete(self):
-        EndptErrorManager = EndpointErrorManager()
         Request = AddHistoryRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        JwtConv = JWTConvert()
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
+        if (JwtInfos is None):
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        JwtInfos = JwtConv.Deserialize(Request.token)
-        if JwtInfos is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])
+        Response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])
 
-        responseErrors = response.EvaluateModelErrors()
+        responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
-        return response.ToDict(), 200
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+        return Response.ToDict(), 200
