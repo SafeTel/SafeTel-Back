@@ -30,8 +30,6 @@ class UserFactory():
 
 
     def CreateUser(self, UserInfos: RegisterRequest):
-        if (self.__IsUser(guid)):
-            return None
         guid = str(uuid.uuid4())
         UserInfosEdited = self.__EditUserInfos(UserInfos, guid)
         self.__CreateUserInDB(UserInfosEdited)

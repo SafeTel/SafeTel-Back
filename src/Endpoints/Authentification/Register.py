@@ -18,8 +18,6 @@ from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 # Network imports
 from flask import request as fquest
 from flask_restful import Resource
-import uuid
-import time
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 

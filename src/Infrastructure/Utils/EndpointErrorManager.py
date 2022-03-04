@@ -14,7 +14,7 @@ class EndpointErrorManager():
         }
 
     # Code 500
-    def CreateInternalLogicError():
+    def CreateInternalLogicError(self):
         return {
             "error": True,
             "details": "Internal Logic Error"
