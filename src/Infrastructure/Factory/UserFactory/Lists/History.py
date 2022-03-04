@@ -20,11 +20,10 @@ from Models.Infrastructure.Factory.UserFactory.Lists.HistoryList import HistoryL
 ### /!\ WARNING /!\ ###
 
 # Represents Blacklist at high level usage
-class Blacklist():
-    def __init__(self, guid: str, HistoryDB: HistoryDB, ConflictResolver: NumberConflictResolver):
+class History():
+    def __init__(self, guid: str, HistoryDB: HistoryDB):
         self.__guid = guid
         self.__HistoryDB = HistoryDB
-        self.__ConflictResolver = ConflictResolver
 
 
     def CreateBlacklist(self):
@@ -36,10 +35,10 @@ class Blacklist():
 
 
     def AddNumber(self, number: str):
-        self.__HistoryDB.addHistoryCallForUser()
+        #self.__HistoryDB.addHistoryCallForUser()
         return HistoryList(self.__HistoryDB.GetHistory(self.__guid))
 
 
     def DeleteNumber(self, number: str):
-        self.__BlacklistDB.delBlacklistNumberForUser(self.__guid, number)
+        #self.__HistoryDB.delHistoryCallForUser(self.__guid, number)
         return HistoryList(self.__HistoryDB.GetHistory(self.__guid))

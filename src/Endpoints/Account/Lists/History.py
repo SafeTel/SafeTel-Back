@@ -51,7 +51,9 @@ class History(Resource):
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])
+        Response = HistoryResponse(
+            User.History.PullList().History
+        )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

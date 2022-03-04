@@ -7,31 +7,42 @@
 
 ### MODELS
 # Abstraction import
+from Models.Endpoints.SharedJObject.Account.Lists.CallStatus import CallStatus
 from Models.ModelAbstractions.JParent import JParent
-# Model shared import
+# Model Shared import
 from Models.Endpoints.SharedJObject.Account.Lists.HistoryCall import HistoryCall
+# Model HistoryList Shared import
+from Models.Infrastructure.Factory.UserFactory.Lists.HistoryList import HistoryList
 
 # Represents Number Request
 class HistoryResponse(JParent):
     def __init__(self, History: list):
         self.__InitJParent(History)
 
+
     # Values Assignement
     def __InitJParent(self, History: list):
         self.History = []
         for HCall in History:
             self.History.append(
-                HistoryCall(
-                    HCall["number"],
-                    HCall["status"],
-                    HCall["time"]
-            ))
+                self.__CreateHCbasic(HCall)
+            )
+
+
+    def __CreateHCbasic(self, HCall: HistoryCall):
+        return {
+            "number": HCall.number,
+            "status": CallStatus.EnumToStr(HCall.status),
+            "time": HCall.time
+        }
+
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
         errorJParent = self.__EvaErrorsJParent()
         if (errorJParent != None): return errorJParent
         return None
+
 
     def __EvaErrorsJParent(self):
         if (self.History is None): return "Internal Model Error"
