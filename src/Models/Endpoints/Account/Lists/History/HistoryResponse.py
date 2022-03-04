@@ -34,6 +34,6 @@ class HistoryResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.History is None): return "Internal server error"
-        if (type(self.History) is not list): return "Internal server error"
+        if (self.History is None): return "Internal Model Error"
+        if (type(self.History) is not list): return "Internal Model Error"
         return None

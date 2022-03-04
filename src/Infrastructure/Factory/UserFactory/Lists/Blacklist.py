@@ -15,6 +15,10 @@ from Infrastructure.Factory.UserFactory.Lists.NumberConflictResolver import Numb
 # PhoneList Model import
 from Models.Infrastructure.Factory.UserFactory.Lists.PhoneList import PhoneList
 
+### /!\ WARNING /!\ ###
+# This is an HIGH LEVEL Blacklist INFRA interface including logic, proceed with caution
+### /!\ WARNING /!\ ###
+
 # Represents Blacklist at high level usage
 class Blacklist():
     def __init__(self, guid: str, BlacklistDB: BlacklistDB, ConflictResolver: NumberConflictResolver):
@@ -28,17 +32,32 @@ class Blacklist():
 
 
     def PullList(self):
-        return PhoneList(self.__BlacklistDB.getBlacklistForUser(self.__guid))
+        return PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))
 
 
     def AddNumber(self, number: str):
-        if (self.__ConflictResolver.IsConflict(number)):
+        import sys
+        print('---', file=sys.stderr)
+        BlacklistNumbers = PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))
+
+        if (self.__IsNumberInList(number, BlacklistNumbers)):
+            print('Found in list', file=sys.stderr)
+            return BlacklistNumbers
+
+        if (self.__ConflictResolver.IsConflictForBlacklist(number)):
+            print('Is concflitct', file=sys.stderr)
             self.__ConflictResolver.ResolveIntoBlacklist(number)
         else:
-            self.__BlacklistDB.addBlacklistNumberForUser(number)
-        return PhoneList(self.__BlacklistDB.getBlacklistForUser(self.__guid))
+            print('No concflitct', file=sys.stderr)
+            self.__BlacklistDB.addBlacklistNumberForUser(self.__guid, number)
+
+        return PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))
 
 
     def DeleteNumber(self, number: str):
         self.__BlacklistDB.delBlacklistNumberForUser(self.__guid, number)
-        return PhoneList(self.__BlacklistDB.getBlacklistForUser(self.__guid))
+        return PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))
+
+
+    def __IsNumberInList(self, targetnumber: str, PhoneList: PhoneList):
+        return targetnumber in PhoneList.PhoneNumbers

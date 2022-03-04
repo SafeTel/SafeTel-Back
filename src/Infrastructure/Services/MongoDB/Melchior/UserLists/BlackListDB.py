@@ -48,6 +48,10 @@ class BlacklistDB():
         return self.DBWatcher.GetDocument("guid", guid)
 
 
+    def GetBlacklistNumbers(self, guid: str):
+        return self.DBWatcher.GetDocument("guid", guid)["PhoneNumbers"]
+
+
     def addBlacklistNumberForUser(self, guid: str, number: str):
         self.ULWorker.AddNumberFromList(guid, number)
 

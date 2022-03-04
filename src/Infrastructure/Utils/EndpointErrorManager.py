@@ -17,7 +17,8 @@ class EndpointErrorManager():
     def CreateInternalLogicError(self):
         return {
             "error": True,
-            "details": "Internal Logic Error"
+            "details": "Internal Logic Error",
+            "message": "Contact SafeTel Backend devs"
         }
 
     # Code 403

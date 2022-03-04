@@ -5,93 +5,114 @@
 ## Whitelist
 ##
 
-# Network imports
-from flask import request
+### INFRA
+# Flask imports
+from flask.globals import request
 from flask_restful import Resource
+# User Factory import
+from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+# Endpoint Error Manager import
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
+# High level usage DB
+from Infrastructure.Factory.UserFactory.Lists.Whitelist import Whitelist
 
-# Utils import
+### MODELS
+# Model Request & Response import
+from Models.Endpoints.Account.Lists.Shared.ListGetRequest import ListGetRequest
+from Models.Endpoints.Account.Lists.Shared.NumberRequest import NumberRequest
+from Models.Endpoints.Account.Lists.Whitelist.WhitelistResponse import WhitelistResponse
+
+### LOGC
+# JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
-# Request Error
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 # DB import
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
 
 WhitelistDb = WhitelistDB()
 
-# Models Request & Response imports
-from Models.Endpoints.Account.Lists.Shared.ListGetRequest import ListGetRequest
-from Models.Endpoints.Account.Lists.Shared.NumberRequest import NumberRequest
-from Models.Endpoints.Account.Lists.Whitelist.WhitelistResponse import WhitelistResponse
 
 # Route to add a number to the whitelist of the user
 class Whitelist(Resource):
+    def __init__(self):
+        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__JwtConv = JWTConvert()
+        self.__UserFactory = UserFactory()
+
+
     def get(self):
-        EndptErrorManager = EndpointErrorManager()
         Request = ListGetRequest(request.args.to_dict())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        JwtConv = JWTConvert()
-
-        JwtInfos = JwtConv.Deserialize(Request.token)
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        response = WhitelistResponse(WhitelistDb.getWhitelistForUser(JwtInfos.guid)["PhoneNumbers"])
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        responseErrors = response.EvaluateModelErrors()
+        Response = WhitelistResponse(
+            User.Whitelist.PullList().PhoneNumbers
+        )
+
+        responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
-        return response.ToDict(), 200
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+        return Response.ToDict(), 200
 
 
     def post(self):
-        EndptErrorManager = EndpointErrorManager()
         Request = NumberRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        JwtConv = JWTConvert()
-
-        JwtInfos = JwtConv.Deserialize(Request.token)
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if JwtInfos is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        WhitelistDb.addWhitelistNumberForUser(JwtInfos.guid, Request.number)
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        response = WhitelistResponse(WhitelistDb.getWhitelistForUser(JwtInfos.guid)["PhoneNumbers"])
+        Response = WhitelistResponse(
+            User.Whitelist.AddNumber(Request.number).PhoneNumbers
+        )
 
-        responseErrors = response.EvaluateModelErrors()
+        responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
-        return response.ToDict(), 200
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+        return Response.ToDict(), 200
 
 
     def delete(self):
-        EndptErrorManager = EndpointErrorManager()
         Request = NumberRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        JwtConv = JWTConvert()
-
-        JwtInfos = JwtConv.Deserialize(Request.token)
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if JwtInfos is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
+
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         WhitelistDb.delWhitelistNumberForUser(JwtInfos.guid, Request.number)
 
-        response = WhitelistResponse(WhitelistDb.getWhitelistForUser(JwtInfos.guid)["PhoneNumbers"])
+        Response = WhitelistResponse(
+            User.Whitelist.DeleteNumber(Request.number).PhoneNumbers
+        )
 
-        responseErrors = response.EvaluateModelErrors()
+        responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
-        return response.ToDict(), 200
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+        return Response.ToDict(), 200

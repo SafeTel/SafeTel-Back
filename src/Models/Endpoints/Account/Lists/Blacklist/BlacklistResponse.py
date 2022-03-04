@@ -25,6 +25,6 @@ class BlacklistResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.Blacklist is None): return "Internal server error"
-        if (type(self.Blacklist) is not list): return "Internal server error"
+        if (self.Blacklist is None): return "Internal Model Error"
+        if (type(self.Blacklist) is not list): return "Internal Model Error"
         return None

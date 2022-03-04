@@ -25,6 +25,6 @@ class CheckTokenResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.validity is None): return "Internal server error"
-        if (type(self.validity) is not bool): return "Internal server error"
+        if (self.validity is None): return "Internal Model Error"
+        if (type(self.validity) is not bool): return "Internal Model Error"
         return None

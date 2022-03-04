@@ -47,6 +47,10 @@ class WhitelistDB():
         return self.DBWatcher.GetDocument("guid", guid)
 
 
+    def GetBWhitelistNumbers(self, guid: str):
+        return self.DBWatcher.GetDocument("guid", guid)["PhoneNumbers"]
+
+
     def addWhitelistNumberForUser(self, guid, number):
         self.ULWorker.AddNumberFromList(guid, number)
 

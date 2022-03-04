@@ -27,10 +27,10 @@ class RegisterResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.created is None): return "Internal server error"
-        if (type(self.created) is not bool): return "Internal server error"
-        if (self.username is None): return "Internal server error"
-        if (type(self.username) is not str): return "Internal server error"
-        if (self.token is None): return "Internal server error"
-        if (type(self.token) is not str): return "Internal server error"
+        if (self.created is None): return "Internal Model Error"
+        if (type(self.created) is not bool): return "Internal Model Error"
+        if (self.username is None): return "Internal Model Error"
+        if (type(self.username) is not str): return "Internal Model Error"
+        if (self.token is None): return "Internal Model Error"
+        if (type(self.token) is not str): return "Internal Model Error"
         return None

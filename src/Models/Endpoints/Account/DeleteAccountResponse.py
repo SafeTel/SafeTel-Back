@@ -25,6 +25,6 @@ class DeleteAccountResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.deleted is None): return "Internal server error"
-        if (type(self.deleted) is not bool): return "Internal server error"
+        if (self.deleted is None): return "Internal Model Error"
+        if (type(self.deleted) is not bool): return "Internal Model Error"
         return None

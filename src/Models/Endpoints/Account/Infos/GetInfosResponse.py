@@ -38,21 +38,21 @@ class GetInfosResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.email is None): return "Internal server error"
-        if (type(self.email) is not str): return "Internal server error"
-        if (self.username is None): return "Internal server error"
-        if (type(self.username) is not str): return "Internal server error"
+        if (self.email is None): return "Internal Model Error"
+        if (type(self.email) is not str): return "Internal Model Error"
+        if (self.username is None): return "Internal Model Error"
+        if (type(self.username) is not str): return "Internal Model Error"
         return None
 
     def __EvaCustomerInfosJObject(self):
-        if (self.CustomerInfos is None): return "Internal server error"
+        if (self.CustomerInfos is None): return "Internal Model Error"
         errorJObject = self.CustomerInfos.EvaErrorsJObject()
-        if (errorJObject != None): "Internal server error"
+        if (errorJObject != None): "Internal Model Error"
         return None
 
     def __EvaLocalizationJObject(self):
-        if (self.Localization is None): return "Internal server error"
+        if (self.Localization is None): return "Internal Model Error"
         errorJObject = self.Localization.EvaErrorsJObject()
-        if (errorJObject != None):return "Internal server error"
+        if (errorJObject != None):return "Internal Model Error"
         return None
 

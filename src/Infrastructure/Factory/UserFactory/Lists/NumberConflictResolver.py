@@ -20,24 +20,26 @@ class NumberConflictResolver():
         self.__guid = guid
         self.__BlacklistDB = BlacklistDB
         self.__WhitekistDB = WhitelistDB
-        self.__Blacklist = None
-        self.__Whitelist = None
+        self.__BlacklistNumbers = None
+        self.__WhitelistNumbers = None
 
 
     def ExistInList(self, number: str):
         self.__PullLists()
-        if (self.__FindNumberInList(number, self.__Blacklist)
-        or self.__FindNumberInList(number, self.__Whitelist)):
+        if (self.__IsNumberInList(number, self.__BlacklistNumbers)
+        or self.__IsNumberInList(number, self.__WhitelistNumbers)):
             return True
         return False
 
 
-    def IsConflict(self, number: str):
+    def IsConflictForBlacklist(self, number: str):
         self.__PullLists()
-        if (self.__FindNumberInList(number, self.__Blacklist)
-        and self.__FindNumberInList(number, self.__Whitelist)):
-            return True
-        return False
+        return self.__IsNumberInList(number, self.__WhitelistNumbers)
+
+
+    def IsConflictForWhitelist(self, number: str):
+        self.__PullLists()
+        return self.__IsNumberInList(number, self.__BlacklistNumbers)
 
 
     def ResolveIntoBlacklist(self, number: str):
@@ -51,9 +53,9 @@ class NumberConflictResolver():
 
 
     def __PullLists(self):
-        self.__Blacklist = PhoneList(self.__BlacklistDB.getBlacklistForUser(self.__guid)["PhoneNumbers"])
-        self.__Whitelist = PhoneList(self.__WhitekistDB.getWhitelistForUser(self.__guid)["PhoneNumbers"])
+        self.__BlacklistNumbers = PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))
+        self.__WhitelistNumbers = PhoneList(self.__WhitekistDB.GetBWhitelistNumbers(self.__guid))
 
 
-    def __FindNumberInList(self, number: str, PhoneList: PhoneList):
-        return any(number in string for string in PhoneList.PhoneNumbers)
+    def __IsNumberInList(self, targetnumber: str, PhoneList: PhoneList):
+        return targetnumber in PhoneList.PhoneNumbers

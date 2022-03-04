@@ -29,10 +29,10 @@ class HistoryCall(JObject):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.number is None): return "Internal server error"
-        if (type(self.number) is not str): return "Internal server error"
-        if (self.status is None): return "Internal server error"
-        if (not CallStatus.HasValue(self.status)): return "Internal server error"
-        if (self.time is None): return "Internal server error"
-        if (type(self.time) is not int): return "Internal server error"
+        if (self.number is None): return "Internal Model Error"
+        if (type(self.number) is not str): return "Internal Model Error"
+        if (self.status is None): return "Internal Model Error"
+        if (not CallStatus.HasValue(self.status)): return "Internal Model Error"
+        if (self.time is None): return "Internal Model Error"
+        if (type(self.time) is not int): return "Internal Model Error"
         return None

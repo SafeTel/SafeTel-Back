@@ -69,16 +69,13 @@ class HistoryDB():
         if result is None:
             return
 
-        import sys
 
         updated_values = result["History"]
-        print(updated_values, file=sys.stderr)
         updated_values.append({
                 "number": number,
                 "origin": origin,
                 "time": time
             }
         )
-        print(updated_values, file=sys.stderr)
         query_values = { "$set": { 'History': updated_values } }
         self.History.update_one(query, query_values)

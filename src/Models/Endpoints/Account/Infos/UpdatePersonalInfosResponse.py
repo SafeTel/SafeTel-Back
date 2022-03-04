@@ -25,6 +25,6 @@ class UpdatePersonalInfosResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.updated is None): return "Internal server error"
-        if (type(self.updated) is not bool): return "Internal server error"
+        if (self.updated is None): return "Internal Model Error"
+        if (type(self.updated) is not bool): return "Internal Model Error"
         return None

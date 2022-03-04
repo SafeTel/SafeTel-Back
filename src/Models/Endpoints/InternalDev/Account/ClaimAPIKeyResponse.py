@@ -26,6 +26,6 @@ class ClaimAPIKeyResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.apiKey is None): return "Internal server error"
-        if (type(self.apiKey) is not str): return "Internal server error"
+        if (self.apiKey is None): return "Internal Model Error"
+        if (type(self.apiKey) is not str): return "Internal Model Error"
         return None

@@ -15,26 +15,52 @@ class UserListsWorker():
 
 
     def AddNumberFromList(self, guid, number):
+        CurrentList = self.__PullList(guid)
+        if (CurrentList is None):
+            return
+        NewList = self.__AddNumber(number, CurrentList["PhoneNumbers"])
+        self.__UpdateList(guid, NewList)
+
+
+    def DeleteNumberFromList(self, guid: str, number: str):
+        CurrentList = self.__PullList(guid)
+        if (CurrentList is None):
+            return
+        NewList = self.__DeleteNumber(number, CurrentList["PhoneNumbers"])
+        self.__UpdateList(guid, NewList)
+
+
+    def __PullList(self, guid):
         query = {
             'guid': str(guid)
         }
-        result = self.DB.find_one(query)
-        if result is None:
-            return
-        updated_values = result["PhoneNumbers"]
-        updated_values.append(number)
-        query_values = { "$set": { 'PhoneNumbers': updated_values } }
-        self.DB.update_one(query, query_values)
+        return self.DB.find_one(query)
 
 
-    def DeleteNumberFromList(self, guid, number):
+    def __UpdateList(self, guid: str, List: list):
         query = {
             'guid': str(guid)
         }
-        result = self.DB.find_one(query)
-        if result is None:
-            return
-        updated_values = result["PhoneNumbers"]
-        updated_values.remove(number)
-        query_values = { "$set": { 'PhoneNumbers': updated_values } }
+        query_values = { "$set": {
+                'PhoneNumbers': List
+            }
+        }
         self.DB.update_one(query, query_values)
+
+
+    def __AddNumber(self, number: str, TemporaryList: list):
+        if (not self.__IsNumberInList(number, TemporaryList)):
+            TemporaryList.append(number)
+        return TemporaryList
+
+
+    def __DeleteNumber(self, number: str, TemporaryList: list):
+        if (self.__IsNumberInList(number, TemporaryList)):
+            TemporaryList.remove(number)
+        return TemporaryList
+
+
+    def __IsNumberInList(self, targetnumber: str, Numbers: list):
+        if (targetnumber in Numbers):
+                return True
+        return False
