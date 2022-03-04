@@ -24,6 +24,7 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import History
 from Models.Endpoints.Account.Lists.Shared.ListGetRequest import ListGetRequest
 from Models.Endpoints.Account.Lists.History.HistoryResponse import HistoryResponse
 from Models.Endpoints.Account.Lists.History.AddHistoryRequest import AddHistoryRequest
+from Models.Endpoints.Account.Lists.History.DelHistoryRequest import DelHistoryRequest
 
 HistoryDb = HistoryDB()
 
@@ -88,7 +89,7 @@ class History(Resource):
 
 
     def delete(self):
-        Request = AddHistoryRequest(request.get_json())
+        Request = DelHistoryRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):

@@ -29,11 +29,11 @@ class BlacklistDB():
 
 
     def newBlacklist(self, guid: str):
-        data = {
+        NewBlacklistDocument = {
             "guid": guid,
             "PhoneNumbers": []
         }
-        self.DBWorker.InsertDocument(data)
+        self.DBWorker.InsertDocument(NewBlacklistDocument)
 
 
     def deleteBlacklist(self, guid: str):

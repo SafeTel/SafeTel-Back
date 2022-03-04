@@ -28,11 +28,11 @@ class WhitelistDB():
 
 
     def newWhitelist(self, guid):
-        data = {
+        NewWhitelistDocument = {
             "guid": guid,
             "Whitelist": []
         }
-        self.DBWorker.InsertDocument(data)
+        self.DBWorker.InsertDocument(NewWhitelistDocument)
 
 
     def deleteWhitelist(self, guid):

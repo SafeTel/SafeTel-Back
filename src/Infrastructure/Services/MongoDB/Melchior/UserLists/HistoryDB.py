@@ -20,17 +20,19 @@ class HistoryDB():
     def __init__(self, db_name=os.getenv("DB_MELCHIOR")):
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
-        self.History = self.db['History']
+        self.History = self.db["History"]
         self.DBWatcher = MongoDBWatcher(self.History)
         self.DBWorker = MongoDBWorker(self.History)
 
 
+    ### PUBLIC
+
     def newHistory(self, guid):
-        data = {
+        NewHistoryDocument = {
             "guid": guid,
             "History": []
         }
-        self.DBWorker.InsertDocument(data)
+        self.DBWorker.InsertDocument(NewHistoryDocument)
 
 
     def deleteHistory(self, guid):
@@ -45,37 +47,64 @@ class HistoryDB():
         return self.DBWatcher.GetDocument("guid", guid)
 
 
-    def delHistoryCallForUser(self, guid, number, timestamp):
-        query = {
+    def GetHistory(self, guid):
+        return self.DBWatcher.GetDocument("guid", guid)["History"]
+
+
+    def delHistoryCallForUser(self, guid: str, number: str, time: int):
+        CurrentList = self.__PullList(guid)
+        if CurrentList is None:
+            return
+        NewList = self.__DeleteHistoryCall(
+            number,
+            time,
+            CurrentList["History"]
+        )
+        self.__UpdateList(guid, NewList)
+
+
+    def addHistoryCallForUser(self, guid, number: str, status: str, time: int):
+        CurrentList = self.__PullList(guid)
+        if CurrentList is None:
+            return
+        print(CurrentList, file=sys.stderr)
+        NewList = self.__AddHistoryCall(
+            number,
+            status,
+            time,
+            CurrentList["History"]
+        )
+        self.__UpdateList(guid, NewList)
+
+
+    ### PRIVATE
+
+    def __PullList(self, guid: str):
+        return self.DBWatcher.GetDocument("guid", guid)
+
+
+    def __UpdateList(self, guid: str, NewList: list):
+        QueryGUID = {
             'guid': str(guid)
         }
-        result = self.DBWatcher.GetDocument("guid", guid)
-        if result is None:
-            return
-        updated_values = result["History"]
-        for i in range(len(updated_values)):
-            if updated_values[i]['number'] == number and updated_values[i]['time'] == timestamp:
-                del updated_values[i]
-                break
-        query_values = { "$set": { 'History': updated_values } }
-        self.History.update_one(query, query_values)
+        QueryData = { "$set": { "History": NewList } }
+        self.History.update_one(QueryGUID, QueryData)
 
 
-    def addHistoryCallForUser(self, guid, number, origin, time):
-        query = {
-            'guid': str(guid)
-        }
-        result = self.DBWatcher.GetDocument("guid", guid)
-        if result is None:
-            return
-
-
-        updated_values = result["History"]
-        updated_values.append({
+    def __AddHistoryCall(self, number: str, status: str, time: int, TemporaryList: list):
+        TemporaryList.append({
                 "number": number,
-                "origin": origin,
+                "status": status,
                 "time": time
             }
         )
-        query_values = { "$set": { 'History': updated_values } }
-        self.History.update_one(query, query_values)
+        return TemporaryList
+
+
+    def __DeleteHistoryCall(self, number: str, time: int, TemporaryList: list):
+        for i in range(len(TemporaryList)):
+            if (TemporaryList[i]["number"] == number
+            and TemporaryList[i]["time"] == TemporaryList):
+                del TemporaryList[i]
+                return TemporaryList
+        return TemporaryList

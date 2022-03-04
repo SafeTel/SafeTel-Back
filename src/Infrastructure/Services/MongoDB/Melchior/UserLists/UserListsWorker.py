@@ -14,6 +14,8 @@ class UserListsWorker():
         self.DB = db
 
 
+    ### PUBLIC
+
     def AddNumberFromList(self, guid, number):
         CurrentList = self.__PullList(guid)
         if (CurrentList is None):
@@ -29,6 +31,8 @@ class UserListsWorker():
         NewList = self.__DeleteNumber(number, CurrentList["PhoneNumbers"])
         self.__UpdateList(guid, NewList)
 
+
+    ### PRIVATE
 
     def __PullList(self, guid):
         query = {

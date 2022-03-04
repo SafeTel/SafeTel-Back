@@ -36,8 +36,6 @@ class Blacklist():
 
 
     def AddNumber(self, number: str):
-        import sys
-        print('---', file=sys.stderr)
         BlacklistNumbers = PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))
 
         if (self.__IsNumberInList(number, BlacklistNumbers)):
