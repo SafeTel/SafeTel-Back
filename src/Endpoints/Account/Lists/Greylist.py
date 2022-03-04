@@ -6,7 +6,6 @@
 ##
 
 # Network imports
-from flask import request as fquest
 from flask.globals import request
 from flask_restful import Resource
 
@@ -16,41 +15,62 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Request Error
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
-# DB import
-from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB
-from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
-
 # Models Request & Response imports
 from Models.Endpoints.Account.Lists.Greylist.GetGreylistRequest import GetGreylistRequest
 from Models.Endpoints.Account.Lists.Greylist.GreylistResponse import GreylistResponse
 
-BlacklistDb = BlacklistDB()
-WhitelistDb = WhitelistDB()
+# High level usage DB
+from Infrastructure.Factory.UserFactory.Lists.Blacklist import Blacklist
+from Infrastructure.Factory.UserFactory.Lists.Whitelist import Whitelist
+
+# User Factory import
+from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+
+
+###
+# Request:
+# GET: localhost:2407/account/lists/greylist?token=
+###
+# Response:
+# {
+# 	"Blacklist": [
+# 		"example1"
+# 	],
+# 	"Whitelist": [
+# 		"example2"
+# 	],
+# }
+###
+
 
 # Route to get the white & black list of the user
 class GreyList(Resource):
+    def __init__(self):
+        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__JwtConv = JWTConvert()
+        self.__UserFactory = UserFactory()
+
     def get(self):
-        EndptErrorManager = EndpointErrorManager()
         Request = GetGreylistRequest(request.args.to_dict())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager(requestErrors), 400
+            return self.__EndpointErrorManager(requestErrors), 400
 
-        JwtConv = JWTConvert()
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
+        if (JwtInfos is None):
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        JwtInfos = JwtConv.Deserialize(Request.token)
-        if JwtInfos is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        guid = JwtInfos.guid
-
-        response = GreylistResponse(
-            BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"],
-            WhitelistDb.getWhitelistForUser(guid)["PhoneNumbers"]
+        Response = GreylistResponse(
+            User.Blacklist.PullList().PhoneNumbers,
+            User.Whitelist.PullList().PhoneNumbers
         )
 
-        responseErrors = response.EvaluateModelErrors()
+        responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
-        return response.ToDict(), 200
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+        return Response.ToDict(), 200

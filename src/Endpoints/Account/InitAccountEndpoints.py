@@ -22,7 +22,7 @@ class InitAccountEndpoints():
     def __init__(self, Api):
         self.__InitInfosEndpoints(Api)
         self.__InitListsEndpoints(Api)
-        self.__InitDeleteEndpoint(Api)
+        self.__InitUniqueEndpoint(Api)
 
 
     def __InitInfosEndpoints(self, Api):
@@ -32,11 +32,11 @@ class InitAccountEndpoints():
 
 
     def __InitListsEndpoints(self, Api):
+        Api.add_resource(Blacklist, "/account/lists/blacklist")
+        Api.add_resource(Whitelist, "/account/lists/whitelist")
         Api.add_resource(GreyList, "/account/lists/greylist")
         Api.add_resource(History, "/account/lists/history")
-        Api.add_resource(Whitelist, "/account/lists/whitelist")
-        Api.add_resource(Blacklist, "/account/lists/blacklist")
 
 
-    def __InitDeleteEndpoint(self, Api):
+    def __InitUniqueEndpoint(self, Api):
         Api.add_resource(DeleteAccount, "/account/delete")

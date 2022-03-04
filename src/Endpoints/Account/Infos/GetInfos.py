@@ -28,7 +28,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 ###
 # Request:
-# GET: localhost:2407/account/infos/getInfos?token=[JWT]
+# GET: localhost:2407/account/infos/getInfos?token=
 ###
 # Response:
 # {
