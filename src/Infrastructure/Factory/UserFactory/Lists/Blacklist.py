@@ -39,14 +39,11 @@ class Blacklist():
         BlacklistNumbers = PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))
 
         if (self.__IsNumberInList(number, BlacklistNumbers)):
-            print('Found in list', file=sys.stderr)
             return BlacklistNumbers
 
         if (self.__ConflictResolver.IsConflictForBlacklist(number)):
-            print('Is concflitct', file=sys.stderr)
             self.__ConflictResolver.ResolveIntoBlacklist(number)
         else:
-            print('No concflitct', file=sys.stderr)
             self.__BlacklistDB.addBlacklistNumberForUser(self.__guid, number)
 
         return PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))

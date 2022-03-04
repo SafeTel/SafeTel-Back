@@ -67,7 +67,6 @@ class HistoryDB():
         CurrentList = self.__PullList(guid)
         if CurrentList is None:
             return
-        print(CurrentList, file=sys.stderr)
         NewList = self.__AddHistoryCall(
             number,
             status,
