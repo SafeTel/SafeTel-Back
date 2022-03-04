@@ -5,30 +5,86 @@
 ## History
 ##
 
-# Network imports
-from flask import request
+### INFRA
+# Flask imports
+from flask.globals import request
 from flask_restful import Resource
-
-# Utils import
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-
-# Request Error
+# Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
-# DB import
-from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
-
+### MODELS
+# Model Request & Response import
 from Models.Endpoints.Account.Lists.Shared.ListGetRequest import ListGetRequest
 from Models.Endpoints.Account.Lists.History.HistoryResponse import HistoryResponse
 from Models.Endpoints.Account.Lists.History.AddHistoryRequest import AddHistoryRequest
 from Models.Endpoints.Account.Lists.History.DelHistoryRequest import DelHistoryRequest
-from Models.Logic.SharedJParent.JWTInfos import JWTInfos
 
-HistoryDb = HistoryDB()
+### LOGC
+# JWT converter import
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+
+###
+# Request:
+# GET: localhost:2407/account/lists/history?token=
+###
+# Response:
+# {
+# 	"History": [
+# 		{
+# 			"number": "example",
+# 			"status": "Blocked",
+# 			"time": 1000
+# 		}
+# 	]
+# }
+###
+# Request:
+# POST: localhost:2407/account/lists/history
+# {
+# 	"token": "",
+# 	"HistoryCall": {
+# 		"number": "example",
+# 		"status": "Blocked",
+# 		"time": 1000
+# 	}
+# }
+###
+# Response:
+# {
+# 	"History": [
+# 		{
+# 			"number": "example",
+# 			"status": "Blocked",
+# 			"time": 1000
+# 		}
+# 	]
+# }
+###
+# Request:
+# DELETE: localhost:2407/account/lists/history
+# {
+# 	"token": "",
+# 	"number": "example",
+# 	"time": 1000
+# }
+###
+# Response:
+# {
+# 	"History": [
+# 		{
+# 			"number": "example",
+# 			"status": "Blocked",
+# 			"time": 1000
+# 		}
+# 	]
+# }
+###
+
+
+# Routes to interract with History
 class History(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()

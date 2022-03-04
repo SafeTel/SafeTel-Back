@@ -68,7 +68,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 ###
 
 
-# Route to add a number to the blacklist of the user
+# Route to interract with Blacklist
 class Blacklist(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()

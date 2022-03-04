@@ -68,7 +68,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 ###
 
 
-# Route to add a number to the whitelist of the user
+# Route to interract with Whitelist
 class Whitelist(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()

@@ -48,7 +48,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 ###
 
 
-# Route to get the information of a user
+# Route to get the informations of an account
 class GetInfos(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()

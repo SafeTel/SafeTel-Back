@@ -48,7 +48,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 ###
 
 
-# Route to Register a user
+# Route to update personal infos of an account
 class UpdatePersonalInfos(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
