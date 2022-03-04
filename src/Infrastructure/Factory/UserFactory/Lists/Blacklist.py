@@ -23,6 +23,10 @@ class Blacklist():
         self.__ConflictResolver = ConflictResolver
 
 
+    def CreateBlacklist(self):
+        self.__BlacklistDB.newBlacklist(self.__guid)
+
+
     def PullList(self):
         return PhoneList(self.__BlacklistDB.getBlacklistForUser(self.__guid))
 

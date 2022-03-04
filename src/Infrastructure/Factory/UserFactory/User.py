@@ -12,6 +12,12 @@ from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
+# High level DB usage import
+from Infrastructure.Factory.UserFactory.Lists.Blacklist import Blacklist
+from Infrastructure.Factory.UserFactory.Lists.Whitelist import Whitelist
+# Number Lists Conflict Resolver High level usage import
+from Infrastructure.Factory.UserFactory.Lists.NumberConflictResolver import NumberConflictResolver
+
 ### MODELS
 # UserInfos JParent imort
 from Models.Infrastructure.Factory.UserFactory.UserInfos import UserInfos
@@ -19,16 +25,20 @@ from Models.Infrastructure.Factory.UserFactory.UserInfos import UserInfos
 from Models.Endpoints.SharedJObject.Account.Infos.CustomerInfos import CustomerInfos
 from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localization
 
+# Class to represents the usage of a user inside the server (Worker)
 class User():
     def __init__(self, guid: str):
         self.__UserDB = UserDB()
-        self.__BlackListDB = BlacklistDB()
-        self.__WhiteListDB = WhitelistDB()
-        self.__HistoryDB = HistoryDB()
         self.__guid = guid
         self.__UserInfos = None
-        # init lists objects
-        # create db resolver
+        # TO DO:
+        self.__HistoryDB = HistoryDB()
+        # WIP:
+        self.__BlackListDB = BlacklistDB()
+        self.__WhiteListDB = WhitelistDB()
+        ConflictResolver = NumberConflictResolver(self.__guid, self.__BlackListDB, self.__WhiteListDB)
+        self.Blacklist = Blacklist(self.__guid, self.__BlackListDB, ConflictResolver)
+        self.Whitelist = Whitelist(self.__guid, self.__WhiteListDB, ConflictResolver)
 
     # READ
     def GetGUID(self):
