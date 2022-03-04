@@ -27,6 +27,47 @@ from Models.Endpoints.Account.Lists.Whitelist.WhitelistResponse import Whitelist
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 
+###
+# Request:
+# GET: localhost:2407/account/lists/whitelist?token=
+###
+# Response:
+# {
+# 	"Whitelist": [
+# 		"example"
+# 	]
+# }
+###
+# Request:
+# POST: localhost:2407/account/lists/whitelist
+# {
+# 	"token": "",
+# 	"number": "example"
+# }
+###
+# Response:
+# {
+# 	"Whitelist": [
+# 		"example"
+# 	]
+# }
+###
+# Request:
+# DELETE: localhost:2407/account/lists/whitelist
+# {
+# 	"token": "",
+# 	"number": "example"
+# }
+###
+# Response:
+# {
+# 	"Whitelist": [
+# 		"example"
+# 	]
+# }
+###
+
+
 # Route to add a number to the whitelist of the user
 class Whitelist(Resource):
     def __init__(self):

@@ -26,6 +26,48 @@ from Models.Endpoints.Account.Lists.Blacklist.BlacklistResponse import Blacklist
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+
+###
+# Request:
+# GET: localhost:2407/account/lists/blacklist?token=
+###
+# Response:
+# {
+# 	"Blacklist": [
+# 		"example"
+# 	]
+# }
+###
+# Request:
+# POST: localhost:2407/account/lists/blacklist
+# {
+# 	"token": "",
+# 	"number": "example"
+# }
+###
+# Response:
+# {
+# 	"Blacklist": [
+# 		"example"
+# 	]
+# }
+###
+# Request:
+# DELETE: localhost:2407/account/lists/blacklist
+# {
+# 	"token": "",
+# 	"number": "example"
+# }
+###
+# Response:
+# {
+# 	"Blacklist": [
+# 		"example"
+# 	]
+# }
+###
+
+
 # Route to add a number to the blacklist of the user
 class Blacklist(Resource):
     def __init__(self):
