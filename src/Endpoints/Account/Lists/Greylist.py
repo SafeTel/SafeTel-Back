@@ -5,26 +5,26 @@
 ## Greylist
 ##
 
-# Network imports
+### INFRA
+# Flask imports
 from flask.globals import request
 from flask_restful import Resource
-
-# JWT import
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-
-# Request Error
+# User Factory import
+from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+# Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-
-# Models Request & Response imports
-from Models.Endpoints.Account.Lists.Greylist.GetGreylistRequest import GetGreylistRequest
-from Models.Endpoints.Account.Lists.Greylist.GreylistResponse import GreylistResponse
-
 # High level usage DB
 from Infrastructure.Factory.UserFactory.Lists.Blacklist import Blacklist
 from Infrastructure.Factory.UserFactory.Lists.Whitelist import Whitelist
 
-# User Factory import
-from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+### MODELS
+# Models Request & Response imports
+from Models.Endpoints.Account.Lists.Greylist.GetGreylistRequest import GetGreylistRequest
+from Models.Endpoints.Account.Lists.Greylist.GreylistResponse import GreylistResponse
+
+### LOGC
+# JWT converter import
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 
 ###
