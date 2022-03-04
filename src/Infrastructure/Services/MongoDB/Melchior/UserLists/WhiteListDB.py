@@ -30,7 +30,7 @@ class WhitelistDB():
     def newWhitelist(self, guid):
         data = {
             "guid": guid,
-            "PhoneNumbers": []
+            "Whitelist": []
         }
         self.DBWorker.InsertDocument(data)
 

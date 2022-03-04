@@ -28,7 +28,7 @@ class BlacklistDB():
         self.ULWorker = UserListsWorker(self.Blacklist)
 
 
-    def newBlacklist(self, guid):
+    def newBlacklist(self, guid: str):
         data = {
             "guid": guid,
             "PhoneNumbers": []
@@ -36,21 +36,21 @@ class BlacklistDB():
         self.DBWorker.InsertDocument(data)
 
 
-    def deleteBlacklist(self, guid):
+    def deleteBlacklist(self, guid: str):
         self.DBWorker.DeleteDocument(guid)
 
 
-    def exists(self, guid):
+    def exists(self, guid: str):
         return self.DBWatcher.IsDocument("guid", guid)
 
 
-    def getBlacklistForUser(self, guid):
+    def getBlacklistForUser(self, guid: str):
         return self.DBWatcher.GetDocument("guid", guid)
 
 
-    def addBlacklistNumberForUser(self, guid, number):
+    def addBlacklistNumberForUser(self, guid: str, number: str):
         self.ULWorker.AddNumberFromList(guid, number)
 
 
-    def delBlacklistNumberForUser(self, guid, number):
+    def delBlacklistNumberForUser(self, guid: str, number: str):
         self.ULWorker.DeleteNumberFromList(guid, number)

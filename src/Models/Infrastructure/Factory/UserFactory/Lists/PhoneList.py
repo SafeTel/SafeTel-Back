@@ -2,7 +2,7 @@
 ## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## List
+## PhoneList
 ##
 
 ### MODELS
@@ -11,12 +11,12 @@ from Models.ModelAbstractions.JParent import JParent
 
 # Represents Number Request
 class PhoneList(JParent):
-    def __init__(self, Phonelist: list):
-        self.__InitJParent(Phonelist)
+    def __init__(self, PhoneNumbers: list):
+        self.__InitJParent(PhoneNumbers)
 
     # Values Assignement
-    def __InitJParent(self, Phonelist: list):
-        self.Phonelist = Phonelist
+    def __InitJParent(self, PhoneNumbers: list):
+        self.PhoneNumbers = PhoneNumbers
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -25,6 +25,6 @@ class PhoneList(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.Phonelist is None): return "Internal server error"
-        if (type(self.Phonelist) is not list): return "Internal server error"
+        if (self.PhoneNumbers is None): return "Internal server error"
+        if (type(self.PhoneNumbers) is not list): return "Internal server error"
         return None
