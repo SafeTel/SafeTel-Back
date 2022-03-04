@@ -27,12 +27,6 @@ from Models.Endpoints.Account.Lists.Whitelist.WhitelistResponse import Whitelist
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 
-# DB import
-from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
-
-WhitelistDb = WhitelistDB()
-
-
 # Route to add a number to the whitelist of the user
 class Whitelist(Resource):
     def __init__(self):
@@ -105,8 +99,6 @@ class Whitelist(Resource):
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
-
-        WhitelistDb.delWhitelistNumberForUser(JwtInfos.guid, Request.number)
 
         Response = WhitelistResponse(
             User.Whitelist.DeleteNumber(Request.number).PhoneNumbers
