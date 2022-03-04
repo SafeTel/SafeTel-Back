@@ -5,10 +5,13 @@
 ## ConflictNumberTroubleShooter
 ##
 
+### INFRA
 # Lists db imports
 from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
 
+### MODELS
+# PhoneList Model import
 from Models.Infrastructure.Factory.UserFactory.Lists.PhoneList import PhoneList
 
 class NumberConflictResolver():
@@ -53,7 +56,3 @@ class NumberConflictResolver():
 
     def __FindNumberInList(self, number: str, PhoneList: PhoneList):
         return any(number in string for string in PhoneList.PhoneNumbers)
-
-
-
-
