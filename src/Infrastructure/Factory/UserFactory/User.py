@@ -6,9 +6,9 @@
 ##
 
 ### INFRA
-# User db import
+# User db internal usage import
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
-# Lists db imports
+# Lists db internal usage imports
 from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB

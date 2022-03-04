@@ -15,7 +15,7 @@ from Infrastructure.Factory.UserFactory.Lists.NumberConflictResolver import Numb
 # PhoneList Model import
 from Models.Infrastructure.Factory.UserFactory.Lists.PhoneList import PhoneList
 
-# Represents Blacklist at high level usage
+# Represents Whitelist at high level usage
 class Whitelist():
     def __init__(self, guid: str, WhitelistDB: WhitelistDB, ConflictResolver: NumberConflictResolver):
         self.__guid = guid
