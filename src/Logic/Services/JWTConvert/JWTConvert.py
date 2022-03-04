@@ -29,7 +29,7 @@ class JWTConvert():
         self.UserDb = UserDB()
 
 
-    def Serialize(self, guid: str, role):
+    def Serialize(self, guid: str, role: Roles):
         if (guid == "" or guid is None):
             raise ValueError("The guid can't be empty or null.")
         if (role == None):
@@ -57,7 +57,6 @@ class JWTConvert():
 
         if (curr_ts > Infos.exp):
             return None
-
 
         if (not Roles.HasValue(Infos.role) or self.UserDb.existByGUID(Infos.guid) is False):
             return None

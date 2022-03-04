@@ -23,6 +23,9 @@ from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 UserDb = UserDB()
 
+# Model for Role import
+from Models.Logic.Shared.Roles import Roles
+
 from Models.Endpoints.Authentification.LoginRequest import LoginRequest
 from Models.Endpoints.Authentification.LoginResponse import LoginResponse
 
@@ -45,10 +48,9 @@ class Login(Resource):
             return EndptErrorManager.CreateBadRequestError('you can not connect with this combination of email and password'), 400
 
         jwtConv = JWTConvert()
-        role = jwtConv.SToRoles(user["role"])
         guid = user["guid"]
 
-        Response = LoginResponse(user["username"], jwtConv.Serialize(guid, role))
+        Response = LoginResponse(user["username"], jwtConv.Serialize(guid, Roles.USER))
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
