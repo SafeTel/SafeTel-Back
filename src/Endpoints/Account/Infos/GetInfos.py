@@ -25,9 +25,10 @@ from Models.Logic.Shared.Roles import Roles
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+###
 # Request:
 # GET: localhost:2407/account/infos/getInfos?token=[JWT]
-#
+###
 # Response:
 # {
 #	"email": "asukathebest@bbbb.cccc",
@@ -43,7 +44,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 #		"address": "2 view Useless Aqua"
 #	}
 # }
-
+###
 
 # Route to get the information of a user
 class GetInfos(Resource):

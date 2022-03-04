@@ -24,6 +24,19 @@ from Models.Endpoints.Account.Infos.UpdateEmailResponse import UpdateEmailRespon
 # Utils check imports
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+###
+# Request:
+# PATCH: localhost:2407/account/infos/update-email
+# {
+# 	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJndWlkIjoiZGM5YmFlNWMtM2RiZC00YzJkLWE4N2ItYjMzMDk3ZWFmY2RlIiwicm9sZSI6MywiZXhwIjoxNjQ2NDQ1Mjg3fQ.1uJVP20ev_sre1jwAroRRiZtV-ecbdbR_JJJ7oyLK7c",
+# 	"email": "asuka@the.best"
+# }
+###
+# Response:
+# {
+# 	"updated": false
+# }
+###
 
 # Route to update the email of an account
 class UpdateEmail(Resource):
@@ -32,7 +45,7 @@ class UpdateEmail(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-    def post(self):
+    def patch(self):
         Request = UpdateEmailRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
@@ -47,9 +60,11 @@ class UpdateEmail(Resource):
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        User.UpdateEmail(JwtInfos.guid, Request.email)
+        User.UpdateEmail(Request.email)
 
-        Response = UpdateEmailResponse(User.Exists())
+        Response = UpdateEmailResponse(
+            User.PullUserInfos().email == Request.email
+        )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

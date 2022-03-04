@@ -26,8 +26,8 @@ class InitAccountEndpoints():
 
 
     def __InitInfosEndpoints(self, Api):
-        Api.add_resource(GetInfos, "/account/infos/getInfos")
-        Api.add_resource(UpdateEmail, "/account/infos/updateEmail")
+        Api.add_resource(GetInfos, "/account/infos/get-infos")
+        Api.add_resource(UpdateEmail, "/account/infos/update-email")
         Api.add_resource(UpdatePersonalInfos, "/account/infos/update-infos")
 
 
