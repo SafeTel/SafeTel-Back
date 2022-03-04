@@ -8,20 +8,21 @@
 ### MODELS
 # Abstraction import
 from Models.ModelAbstractions.JObject import JObject
+from Models.ModelAbstractions.JParent import JParent
 # Shared Enum import
 from Models.Endpoints.SharedJObject.Account.Lists.CallStatus import CallStatus
 
 # Represents Number Request
-class HistoryCall(JObject):
-    def __init__(self, number: str, status: CallStatus, time: int):
-        self.__InitJObject(number, status, time)
+class HistoryCallRequest(JObject):
+    def __init__(self, loadedJSON: dict):
+        self.__InitJObject(loadedJSON)
 
 
     # Values Assignement
-    def __InitJObject(self, number: str, status: CallStatus, time: int):
-        self.number = number
-        self.status = CallStatus.EnumToStr(status)
-        self.time = time
+    def __InitJObject(self, loadedJSON: dict):
+        self.number = self.LoadElement(loadedJSON, "number")
+        self.status = CallStatus.StrToEnum(self.LoadElement(loadedJSON, "status"))
+        self.time = self.LoadElement(loadedJSON, "time")
 
 
     # Errors Evaluation
@@ -36,7 +37,7 @@ class HistoryCall(JObject):
         if (type(self.number) is not str): return "Internal Model Error - Invalid variable type"
 
         if (self.status is None): return "Internal Model Error - Model missing element - $status"
-        if (not CallStatus.HasValue(CallStatus.StrToEnum(self.status))): return "Internal Model Error - Invalid variable type"
+        if (not CallStatus.HasValue(self.status)): return "Internal Model Error - Invalid variable type"
 
         if (self.time is None): return "Internal Model Error - Model missing element - $time"
         if (type(self.time) is not int): return "Internal Model Error - Invalid variable type"

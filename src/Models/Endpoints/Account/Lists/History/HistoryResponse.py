@@ -19,12 +19,12 @@ class HistoryResponse(JParent):
     # Values Assignement
     def __InitJParent(self, History: list):
         self.History = []
-        for historyCall in History:
+        for HCall in History:
             self.History.append(
                 HistoryCall(
-                    historyCall["number"],
-                    historyCall["status"],
-                    historyCall["time"]
+                    HCall["number"],
+                    HCall["status"],
+                    HCall["time"]
             ))
 
     # Errors Evaluation

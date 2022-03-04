@@ -76,9 +76,9 @@ class History(Resource):
 
         HistoryDb.addHistoryCallForUser(
             JwtInfos.guid,
-            Request.number,
-            Request.status,
-            Request.time
+            Request.HistoryCall.number,
+            "Request.status",
+            Request.HistoryCall.time
         )
 
         response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])

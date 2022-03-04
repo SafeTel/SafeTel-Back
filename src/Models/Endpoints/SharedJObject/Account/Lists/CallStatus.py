@@ -22,6 +22,8 @@ class CallStatus(IntEnum):
 
     @classmethod
     def StrToEnum(cls, s: str):
+        if (s == None):
+            return None
         if (s.lower() == "missed"):
             return CallStatus.MISSED
         elif (s.lower() == "received"):
