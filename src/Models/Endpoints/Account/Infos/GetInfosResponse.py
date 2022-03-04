@@ -14,18 +14,18 @@ from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localizati
 
 # Represents UpdatePErsonalInfos Request
 class GetInfosResponse(JParent):
-    def __init__(self, email: str, userName: str, customerInfos :CustomerInfos, localization :Localization):
+    def __init__(self, email: str, userName: str, CustomerInfos :CustomerInfos, Localization :Localization):
         self.__InitJParent(email, userName)
-        self.__InitJObject(customerInfos, localization)
+        self.__InitJObject(CustomerInfos, Localization)
 
     # Values Assignement
     def __InitJParent(self, email: str, userName: str):
         self.email = email
         self.userName = userName
 
-    def __InitJObject(self, customerInfos :CustomerInfos, localization :Localization):
-        self.CustomerInfos = customerInfos
-        self.Localization = localization
+    def __InitJObject(self, CustomerInfos :CustomerInfos, Localization :Localization):
+        self.CustomerInfos = CustomerInfos
+        self.Localization = Localization
 
     # Errors Evaluation
     def EvaluateModelErrors(self):

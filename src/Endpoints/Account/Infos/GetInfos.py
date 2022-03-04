@@ -59,9 +59,6 @@ class GetInfos(Resource):
         )
 
         responseErrors = Response.EvaluateModelErrors()
-        import sys
-        print('---', file=sys.stderr)
-        print(responseErrors, file=sys.stderr)
         if (responseErrors != None):
             return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
