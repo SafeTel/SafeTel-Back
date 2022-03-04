@@ -76,14 +76,11 @@ class History(Resource):
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        HistoryDb.addHistoryCallForUser(
-            JwtInfos.guid,
-            Request.HistoryCall.number,
-            "Request.status",
-            Request.HistoryCall.time
-        )
+        User.History.AddHistoryCall(Request.HistoryCall)
 
-        response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])
+        response = HistoryResponse(
+            User.History.PullList().History
+        )
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
@@ -106,13 +103,14 @@ class History(Resource):
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        HistoryDb.delHistoryCallForUser(
-            JwtInfos.guid,
+        User.History.DeleteHistoryCall(
             Request.number,
             Request.time
         )
 
-        Response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])
+        Response = HistoryResponse(
+            User.History.PullList().History
+        )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

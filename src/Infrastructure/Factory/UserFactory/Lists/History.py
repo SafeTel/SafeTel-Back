@@ -8,12 +8,13 @@
 ### INFRA
 # Blacklist db import
 from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
-# Conflict Resolver for number in Lists
-from Infrastructure.Factory.UserFactory.Lists.NumberConflictResolver import NumberConflictResolver
+from Models.Endpoints.SharedJObject.Account.Lists.CallStatus import CallStatus
 
 ### MODELS
 # History Model import
 from Models.Infrastructure.Factory.UserFactory.Lists.HistoryList import HistoryList
+# Sub Model for HistoryCall Request import
+from Models.Endpoints.Account.Lists.History.HistoryCallRequest import HistoryCallRequest
 
 ### /!\ WARNING /!\ ###
 # This is an HIGH LEVEL Blacklist INFRA interface including logic, proceed with caution
@@ -34,11 +35,20 @@ class History():
         return HistoryList(self.__HistoryDB.GetHistory(self.__guid))
 
 
-    def AddNumber(self, number: str):
-        #self.__HistoryDB.addHistoryCallForUser()
+    def AddHistoryCall(self, HistoryCall: HistoryCallRequest):
+        self.__HistoryDB.addHistoryCallForUser(
+            self.__guid,
+            HistoryCall.number,
+            CallStatus.EnumToStr(HistoryCall.status),
+            HistoryCall.time
+        )
         return HistoryList(self.__HistoryDB.GetHistory(self.__guid))
 
 
-    def DeleteNumber(self, number: str):
-        #self.__HistoryDB.delHistoryCallForUser(self.__guid, number)
+    def DeleteHistoryCall(self, number: str, time: int):
+        self.__HistoryDB.delHistoryCallForUser(
+            self.__guid,
+            number,
+            time
+        )
         return HistoryList(self.__HistoryDB.GetHistory(self.__guid))
