@@ -14,6 +14,7 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import White
 # PhoneList Model import
 from Models.Infrastructure.Factory.UserFactory.Lists.PhoneList import PhoneList
 
+# Object to represent conflict in Lists and resolve them
 class NumberConflictResolver():
     def __init__(self, guid: str, BlacklistDB: BlacklistDB, WhitelistDB: WhitelistDB):
         self.__guid = guid
