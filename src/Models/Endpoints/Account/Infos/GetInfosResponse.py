@@ -14,14 +14,14 @@ from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localizati
 
 # Represents UpdatePErsonalInfos Request
 class GetInfosResponse(JParent):
-    def __init__(self, email: str, userName: str, CustomerInfos :CustomerInfos, Localization :Localization):
-        self.__InitJParent(email, userName)
+    def __init__(self, email: str, username: str, CustomerInfos :CustomerInfos, Localization :Localization):
+        self.__InitJParent(email, username)
         self.__InitJObject(CustomerInfos, Localization)
 
     # Values Assignement
-    def __InitJParent(self, email: str, userName: str):
+    def __InitJParent(self, email: str, username: str):
         self.email = email
-        self.userName = userName
+        self.username = username
 
     def __InitJObject(self, CustomerInfos :CustomerInfos, Localization :Localization):
         self.CustomerInfos = CustomerInfos
@@ -40,8 +40,8 @@ class GetInfosResponse(JParent):
     def __EvaErrorsJParent(self):
         if (self.email is None): return "Internal server error"
         if (type(self.email) is not str): return "Internal server error"
-        if (self.userName is None): return "Internal server error"
-        if (type(self.userName) is not str): return "Internal server error"
+        if (self.username is None): return "Internal server error"
+        if (type(self.username) is not str): return "Internal server error"
         return None
 
     def __EvaCustomerInfosJObject(self):

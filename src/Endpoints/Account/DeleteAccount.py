@@ -56,7 +56,7 @@ class DeleteAccount(Resource):
         if result is None:
             return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        if result["username"] != Request.userName:
+        if (result["username"] != Request.username):
             return EndptErrorManager.CreateBadRequestError("manual security check failed"), 400
 
         Usr = User(guidUsr)

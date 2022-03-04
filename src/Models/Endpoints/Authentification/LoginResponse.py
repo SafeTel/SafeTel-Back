@@ -11,12 +11,12 @@ from Models.ModelAbstractions.JParent import JParent
 
 # Represents Login Response
 class LoginResponse(JParent):
-    def __init__(self, userName: str, token: str):
-        self.__InitJParent(userName, token)
+    def __init__(self, username: str, token: str):
+        self.__InitJParent(username, token)
 
     # Values Assignement
-    def __InitJParent(self, userName: str, token: str):
-        self.userName = userName
+    def __InitJParent(self, username: str, token: str):
+        self.username = username
         self.token = token
 
     # Errors Evaluation
@@ -26,8 +26,8 @@ class LoginResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.userName is None): return "Internal server error"
-        if (type(self.userName) is not str): return "Internal server error"
+        if (self.username is None): return "Internal server error"
+        if (type(self.username) is not str): return "Internal server error"
         if (self.token is None): return "Internal server error"
         if (type(self.token) is not str): return "Internal server error"
         return None

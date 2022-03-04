@@ -26,6 +26,26 @@ from Models.Logic.Shared.Roles import Roles
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 
+# GET
+# localhost:2407/account/infos/getInfos?token=[JWT]
+#
+# Answer
+# {
+#	"email": "asukathebest@bbbb.cccc",
+#	"username": "Megumin",
+#	"CustomerInfos": {
+#		"firstName": "Megumin",
+#		"lastName": "Konosuba",
+#		"phoneNumber": "0100000000"
+#	},
+#	"Localization": {
+#		"country": "Terra",
+#		"region": "4568",
+#		"address": "2 view Useless Aqua"
+#	}
+# }
+
+
 # Route to get the information of a user
 class GetInfos(Resource):
     def __init__(self):

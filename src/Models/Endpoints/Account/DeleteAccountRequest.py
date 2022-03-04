@@ -18,7 +18,7 @@ class DeleteAccountRequest(JParent):
     # Values Assignement
     def __InitJParent(self, loadedJSON: dict):
         self.token = self.LoadElement(loadedJSON, "token")
-        self.userName = self.LoadElement(loadedJSON, "username")
+        self.username = self.LoadElement(loadedJSON, "username")
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -29,6 +29,6 @@ class DeleteAccountRequest(JParent):
     def __EvaErrorsJParent(self):
         if (self.token is None): return "Body Denied"
         if (type(self.token) is not str): return "Token Denied"
-        if (self.userName is None): return "Body Denied"
-        if (type(self.userName) is not str): return "Email Denied"
+        if (self.username is None): return "Body Denied"
+        if (type(self.username) is not str): return "Email Denied"
         return None
