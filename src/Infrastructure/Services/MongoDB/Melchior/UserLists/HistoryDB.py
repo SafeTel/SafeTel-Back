@@ -103,7 +103,7 @@ class HistoryDB():
     def __DeleteHistoryCall(self, number: str, time: int, TemporaryList: list):
         for i in range(len(TemporaryList)):
             if (TemporaryList[i]["number"] == number
-            and TemporaryList[i]["time"] == TemporaryList):
+            and TemporaryList[i]["time"] == time):
                 del TemporaryList[i]
                 return TemporaryList
         return TemporaryList

@@ -25,6 +25,7 @@ from Models.Endpoints.Account.Lists.Shared.ListGetRequest import ListGetRequest
 from Models.Endpoints.Account.Lists.History.HistoryResponse import HistoryResponse
 from Models.Endpoints.Account.Lists.History.AddHistoryRequest import AddHistoryRequest
 from Models.Endpoints.Account.Lists.History.DelHistoryRequest import DelHistoryRequest
+from Models.Logic.SharedJParent.JWTInfos import JWTInfos
 
 HistoryDb = HistoryDB()
 
@@ -102,6 +103,12 @@ class History(Resource):
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+
+        HistoryDb.delHistoryCallForUser(
+            JwtInfos.guid,
+            Request.number,
+            Request.time
+        )
 
         Response = HistoryResponse(HistoryDb.getHistoryForUser(JwtInfos.guid)["History"])
 
