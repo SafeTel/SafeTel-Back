@@ -5,7 +5,6 @@
 ## UpdateEmail
 ##
 
-
 ### INFRA
 # Flask imports
 from flask import request as fquest
@@ -24,6 +23,7 @@ from Models.Endpoints.Account.Infos.UpdateEmailResponse import UpdateEmailRespon
 # Utils check imports
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+
 ###
 # Request:
 # PATCH: localhost:2407/account/infos/update-email
@@ -37,6 +37,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # 	"updated": false
 # }
 ###
+
 
 # Route to update the email of an account
 class UpdateEmail(Resource):

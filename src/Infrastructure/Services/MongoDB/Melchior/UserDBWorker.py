@@ -30,7 +30,7 @@ class UserDBWorker():
         result = self.DB.find_one(query)
         if result is None:
             return
-        query_values = { "$set": { 'customerInfos': customerInfos } }
+        query_values = { "$set": { 'CustomerInfos': customerInfos } }
         self.DB.update_one(query, query_values)
-        query_values = { "$set": { 'localization': localization } }
+        query_values = { "$set": { 'Localization': localization } }
         self.DB.update_one(query, query_values)

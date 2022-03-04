@@ -24,7 +24,10 @@ class CustomerInfos(JObject):
 
     # Errors Evaluation
     def EvaErrorsJObject(self):
+        if (self.firstName is None): return "Body demnied"
         if (type(self.firstName) is not str): return "Invalid variable type."
+        if (self.lastName is None): return "Body demnied"
         if (type(self.lastName) is not str): return "Invalid variable type."
+        if (self.phoneNumber is None): return "Body demnied"
         if (type(self.phoneNumber) is not str): return "Invalid variable type."
         return None

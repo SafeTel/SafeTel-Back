@@ -25,11 +25,11 @@ class UpdatePErsonalInfosRequest(JParent):
         self.token = self.LoadElement(loadedJSON, "token")
 
     def __InitCustomerInfosJObject(self, loadedJSON: dict):
-        customerInfosRaw = self.LoadElement(loadedJSON, "customerInfos")
+        customerInfosRaw = self.LoadElement(loadedJSON, "CustomerInfos")
         self.CustomerInfos = None if customerInfosRaw is None else CustomerInfos(customerInfosRaw)
 
     def __InitLocalizationJObject(self, loadedJSON: dict):
-        localizationRaw = self.LoadElement(loadedJSON, "localization")
+        localizationRaw = self.LoadElement(loadedJSON, "Localization")
         self.Localization = None if localizationRaw is None else Localization(localizationRaw)
 
     # Errors Evaluation

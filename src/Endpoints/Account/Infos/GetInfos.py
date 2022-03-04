@@ -25,6 +25,7 @@ from Models.Logic.Shared.Roles import Roles
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+
 ###
 # Request:
 # GET: localhost:2407/account/infos/getInfos?token=[JWT]
@@ -45,6 +46,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 #	}
 # }
 ###
+
 
 # Route to get the information of a user
 class GetInfos(Resource):

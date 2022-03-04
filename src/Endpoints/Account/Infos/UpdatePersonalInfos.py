@@ -23,6 +23,31 @@ from Models.Endpoints.Account.Infos.UpdatePersonalInfosResponse import UpdatePer
 # Utils check imports
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+
+###
+# Request:
+# PATCH: localhost:2407/account/infos/update-infos
+# {
+#     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJndWlkIjoiZGM5YmFlNWMtM2RiZC00YzJkLWE4N2ItYjMzMDk3ZWFmY2RlIiwicm9sZSI6MywiZXhwIjoxNjQ2NDQ1Mjg3fQ.1uJVP20ev_sre1jwAroRRiZtV-ecbdbR_JJJ7oyLK7c",
+#     "CustomerInfos": {
+#         "firstName": "Asuka",
+#         "lastName": "be trong",
+#         "phoneNumber": "$RVphoneNumber"
+#     },
+#     "Localization": {
+#         "country": "$RVcountry",
+#         "region": "$RVregion",
+#         "address": "$RVadress"
+#     }
+# }
+###
+# Response:
+# {
+# 	"updated": false
+# }
+###
+
+
 # Route to Register a user
 class UpdatePersonalInfos(Resource):
     def __init__(self):
@@ -30,7 +55,7 @@ class UpdatePersonalInfos(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-    def post(self):
+    def patch(self):
         Request = UpdatePErsonalInfosRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
@@ -48,11 +73,14 @@ class UpdatePersonalInfos(Resource):
         UserInfos = User.PullUserInfos()
         if (UserInfos.CustomerInfos.Deserialize() == Request.CustomerInfos.Deserialize()
         and UserInfos.Localization.Deserialize() == Request.Localization.Deserialize()):
-            return self.__EndpointErrorManager.CreateBadRequestError("Same infos"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("The given infos and current are the same"), 400
 
         User.UpdatePersonalInfos(Request.CustomerInfos, Request.Localization)
 
-        Response = UpdatePersonalInfosResponse(False)
+        Response = UpdatePersonalInfosResponse(
+            UserInfos.CustomerInfos.Deserialize() == Request.CustomerInfos.Deserialize()
+            and UserInfos.Localization.Deserialize() == Request.Localization.Deserialize()
+        )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

@@ -24,7 +24,10 @@ class Localization(JObject):
 
     # Errors Evaluation
     def EvaErrorsJObject(self):
+        if (self.country is None): return "Body denied"
         if (type(self.country) is not str): return "Invalid variable type."
+        if (self.region is None): return "Body denied"
         if (type(self.region) is not str): return "Invalid variable type."
+        if (self.address is None): return "Body denied"
         if (type(self.address) is not str): return "Invalid variable type."
         return None
