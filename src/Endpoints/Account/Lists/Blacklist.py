@@ -16,9 +16,9 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Account.Lists.ListGetRequest import ListGetRequest
-from Models.Endpoints.Account.Lists.NumberRequest import NumberRequest
-from Models.Endpoints.Account.Lists.NumberResponse import NumberResponse
+from Models.Endpoints.Account.Lists.Shared.ListGetRequest import ListGetRequest
+from Models.Endpoints.Account.Lists.Shared.NumberRequest import NumberRequest
+from Models.Endpoints.Account.Lists.Blacklist.BlacklistResponse import BlacklistResponse
 # Model for Role import
 from Models.Logic.Shared.Roles import Roles
 
@@ -54,7 +54,7 @@ class Blacklist(Resource):
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = NumberResponse(BlacklistDb.getBlacklistForUser(JwtInfos.guid)["PhoneNumbers"])
+        Response = BlacklistResponse(BlacklistDb.getBlacklistForUser(JwtInfos.guid)["PhoneNumbers"])
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
@@ -80,7 +80,7 @@ class Blacklist(Resource):
         guid = JwtInfos.guid
         BlacklistDb.addBlacklistNumberForUser(guid, Request.number)
 
-        Response = NumberResponse(BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"])
+        Response = BlacklistResponse(BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"])
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
@@ -107,7 +107,7 @@ class Blacklist(Resource):
         number = Request.number
         BlacklistDb.delBlacklistNumberForUser(guid, number)
 
-        Response = NumberResponse(BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"])
+        Response = BlacklistResponse(BlacklistDb.getBlacklistForUser(guid)["PhoneNumbers"])
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

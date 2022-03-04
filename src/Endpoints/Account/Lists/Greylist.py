@@ -21,8 +21,8 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import Black
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
 
 # Models Request & Response imports
-from Models.Endpoints.Account.Lists.GetGreyListRequest import GetGreylistRequest
-from Models.Endpoints.Account.Lists.GreylistResponse import GreylistResponse
+from Models.Endpoints.Account.Lists.Greylist.GetGreylistRequest import GetGreylistRequest
+from Models.Endpoints.Account.Lists.Greylist.GreylistResponse import GreylistResponse
 
 BlacklistDb = BlacklistDB()
 WhitelistDb = WhitelistDB()

@@ -32,9 +32,9 @@ class AddHistoryRequest(JParent):
         if (self.token is None): return "Body Denied"
         if (type(self.token) is not str): return "Token Denied"
         if (self.number is None): return "Body Denied"
-        if (type(self.number) is not str): return "Token Denied"
+        if (type(self.number) is not str): return "Number Denied"
         if (self.status is None): return "Body Denied"
-        if (type(self.status) is not str): return "Token Denied"
+        if (type(self.status) is not str): return "Status Denied"
         if (self.time is None): return "Body Denied"
-        if (type(self.time) is not int): return "Token Denied"
+        if (type(self.time) is not int): return "Time Denied"
         return None

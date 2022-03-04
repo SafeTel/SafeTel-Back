@@ -2,21 +2,21 @@
 ## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## AddNumberResponse
+## WhitelistResponse
 ##
 
 ### MODELS
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 
-# Represents Number Request
-class NumberResponse(JParent):
-    def __init__(self, Phonelist: list):
-        self.__InitJParent(Phonelist)
+# Represents Whitelist Response
+class WhitelistResponse(JParent):
+    def __init__(self, Whitelist: list):
+        self.__InitJParent(Whitelist)
 
     # Values Assignement
-    def __InitJParent(self, Phonelist: list):
-        self.Phonelist = Phonelist
+    def __InitJParent(self, Whitelist: list):
+        self.Whitelist = Whitelist
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -25,6 +25,6 @@ class NumberResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.Phonelist is None): return "Internal server error"
-        if (type(self.Phonelist) is not list): return "Internal server error"
+        if (self.Whitelist is None): return "Internal server error"
+        if (type(self.Whitelist) is not list): return "Internal server error"
         return None

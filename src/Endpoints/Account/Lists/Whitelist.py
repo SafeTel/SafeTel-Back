@@ -21,9 +21,9 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import White
 WhitelistDb = WhitelistDB()
 
 # Models Request & Response imports
-from Models.Endpoints.Account.Lists.ListGetRequest import ListGetRequest
-from Models.Endpoints.Account.Lists.NumberRequest import NumberRequest
-from Models.Endpoints.Account.Lists.NumberResponse import NumberResponse
+from Models.Endpoints.Account.Lists.Shared.ListGetRequest import ListGetRequest
+from Models.Endpoints.Account.Lists.Shared.NumberRequest import NumberRequest
+from Models.Endpoints.Account.Lists.Whitelist.WhitelistResponse import WhitelistResponse
 
 # Route to add a number to the whitelist of the user
 class Whitelist(Resource):
@@ -41,7 +41,7 @@ class Whitelist(Resource):
         if (JwtInfos is None):
             return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        response = NumberResponse(WhitelistDb.getWhitelistForUser(JwtInfos.guid)["PhoneNumbers"])
+        response = WhitelistResponse(WhitelistDb.getWhitelistForUser(JwtInfos.guid)["PhoneNumbers"])
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
@@ -65,7 +65,7 @@ class Whitelist(Resource):
 
         WhitelistDb.addWhitelistNumberForUser(JwtInfos.guid, Request.number)
 
-        response = NumberResponse(WhitelistDb.getWhitelistForUser(JwtInfos.guid)["PhoneNumbers"])
+        response = WhitelistResponse(WhitelistDb.getWhitelistForUser(JwtInfos.guid)["PhoneNumbers"])
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):
@@ -89,7 +89,7 @@ class Whitelist(Resource):
 
         WhitelistDb.delWhitelistNumberForUser(JwtInfos.guid, Request.number)
 
-        response = NumberResponse(WhitelistDb.getWhitelistForUser(JwtInfos.guid)["PhoneNumbers"])
+        response = WhitelistResponse(WhitelistDb.getWhitelistForUser(JwtInfos.guid)["PhoneNumbers"])
 
         responseErrors = response.EvaluateModelErrors()
         if (responseErrors != None):

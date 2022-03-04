@@ -27,7 +27,8 @@ class User():
         self.__HistoryDB = HistoryDB()
         self.__guid = guid
         self.__UserInfos = None
-
+        # init lists objects
+        # create db resolver
 
     # READ
     def GetGUID(self):

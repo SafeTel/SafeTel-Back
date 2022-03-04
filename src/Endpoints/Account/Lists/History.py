@@ -18,9 +18,9 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 # DB import
 from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
 
-from Models.Endpoints.Account.Lists.ListGetRequest import ListGetRequest
-from Models.Endpoints.Account.Lists.HistoryResponse import HistoryResponse
-from Models.Endpoints.Account.Lists.AddHistoryRequest import AddHistoryRequest
+from Models.Endpoints.Account.Lists.Shared.ListGetRequest import ListGetRequest
+from Models.Endpoints.Account.Lists.History.HistoryResponse import HistoryResponse
+from Models.Endpoints.Account.Lists.History.AddHistoryRequest import AddHistoryRequest
 
 HistoryDb = HistoryDB()
 
