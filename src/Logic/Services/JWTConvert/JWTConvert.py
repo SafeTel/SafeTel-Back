@@ -8,6 +8,8 @@
 ### MODELS
 # Role import
 from Models.Logic.Shared.Roles import Roles
+# JwtInfos Model import
+from Models.Logic.SharedJParent.JWTInfos import JWTInfos
 
 ### LOGIC
 # jwt imports
@@ -21,8 +23,6 @@ import os
 ### INFRA
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
-
-from Models.Logic.SharedJParent.JWTInfos import JWTInfos
 
 class JWTConvert():
     def __init__(self):
