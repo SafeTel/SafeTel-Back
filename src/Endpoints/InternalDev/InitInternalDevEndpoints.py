@@ -18,6 +18,7 @@ class InitInternalDevEndpoints():
     def __init__(self, Api):
         self.__InitAccountEndpoints(Api)
         self.__InitEmbededEndpoints(Api)
+        self.__InitHealthCheckEndpoint(Api)
 
 
     def __InitAccountEndpoints(self, Api):

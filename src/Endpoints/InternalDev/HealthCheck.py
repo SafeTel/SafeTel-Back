@@ -5,41 +5,52 @@
 ## HealthCheck
 ##
 
-# Network imports
-from flask import request as fquest
-from flask_restful import Resource
-
-# Client mongo db import
+### INFRA
+# Flask imports
 from flask.globals import request
-
-# Utils imports
-import json
-
-# JWT imports
-from Models.Logic.Shared.Roles import Roles
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-
-# Request Error
+from flask_restful import Resource
+# Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-
 # Health CHeck Service
 from Infrastructure.Services.HealthCheck.HealthCheckService import HealthCheckService
 
+### MODELS
+# Model Request & Response import
 from Models.Endpoints.InternalDev.HealthCheckRequest import HealthCheckRequest
+# Model for Role import
+from Models.Logic.Shared.Roles import Roles
+
+### LOGC
+# JWT converter import
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+# JSON  lib import
+import json
+
+
 
 class HealthCheck(Resource):
+    def __init__(self):
+        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__JwtConv = JWTConvert()
+        self.__HealthCheckService = HealthCheckService()
+
+
     def get(self):
-        hcService = HealthCheckService()
-        JwtConv = JWTConvert()
-        EndptErrorManager = EndpointErrorManager()
         Request = HealthCheckRequest(request.args.to_dict())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        serverDatas = hcService.RunInfraCheck()
-        serverEnvDatas = hcService.RunSoftCheck()
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
+        if (JwtInfos is None):
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
+
+        if (JwtInfos.role == Roles.USER):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+
+        serverDatas = self.__HealthCheckService.RunInfraCheck()
+        serverEnvDatas = self.__HealthCheckService.RunSoftCheck()
 
         serverCheck = {}
         envCheck = {}
@@ -51,30 +62,9 @@ class HealthCheck(Resource):
             if type(x) == type(''):
                 envCheck = json.loads(x)
 
-        JwtConv = JWTConvert()
-
-        JwtInfos = JwtConv.Deserialize(token)
-        if JwtInfos is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
-
-        if (JwtInfos.role == Roles.DEVELOPER):
-            return self.DevDTO(serverCheck, envCheck), 200
         return {
             "healthCheck": {
                 "server": serverCheck,
                 "environment": envCheck
             }
         }, 200
-
-    def DevDTO(self, serverCheck, envCheck):
-        del serverCheck['results']
-
-        del envCheck['process']['environ']
-        del envCheck['process']['pid']
-
-        return {
-            "healthCheck": {
-                "server": serverCheck,
-                "environment": envCheck
-            }
-        }
