@@ -5,34 +5,39 @@
 ## DeleteAccount
 ##
 
-# Network imports
-from urllib import response
-from urllib.request import Request
-from flask import request
-from flask_restful import Resource
-
-# Utils check imports
-from Models.Logic.Shared.Roles import Roles
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-
-# Request Error
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-
 ### INFRA
-# Melchior DB imports
-from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
-
-UserDb = UserDB()
-
-
+# Flask imports
+from flask.globals import request
+from flask_restful import Resource
+# User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-from Infrastructure.Factory.UserFactory.User import User
+# Endpoint Error Manager import
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
-# Models Request & Response imports
+### MODELS
+# Model Request & Response import
 from Models.Endpoints.Account.DeleteAccountRequest import DeleteAccountRequest
 from Models.Endpoints.Account.DeleteAccountResponse import DeleteAccountResponse
+
+### LOGC
+# JWT converter import
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+
+
+###
+# Request:
+# DELETE: localhost:2407/account/delete
+# {
+# 	"token": "",
+# 	"username": "Megumin"
+# }
+###
+# Response:
+# {
+# 	"deleted": true
+# }
+###
+
 
 # Route to delete an account from an auth user
 class DeleteAccount(Resource):
