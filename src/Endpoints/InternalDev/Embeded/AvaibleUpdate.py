@@ -5,23 +5,41 @@
 ## AvaibleUpdate
 ##
 
-# Network imports
-from flask import request as fquest
+### INFRA
+# Flask imports
+from flask.globals import request
 from flask_restful import Resource
-
-# Request Error
+# Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
+### MODELS
+# Model Request & Response import
 from Models.Endpoints.InternalDev.Embeded.AvaibleUpdateRequest import AvaibleUpdateRequest
 from Models.Endpoints.InternalDev.Embeded.AvaibleUpdateResponse import AvaibleUpdateResponse
+
+
+###
+# Request:
+# POST: localhost:2407/internaldev/embeded/update
+# {
+# 	"version": 1.0
+# }
+###
+# Response:
+# {
+# 	"update": true
+# }
+###
+
 
 # Route to know if an update is required for the embeded software
 class AvaiableUpdate(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
 
+
     def post(self):
-        Request = AvaibleUpdateRequest(fquest.get_json())
+        Request = AvaibleUpdateRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
