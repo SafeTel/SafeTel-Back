@@ -48,10 +48,13 @@ class RegisterRequest(JParent):
     def __EvaErrorsJParent(self):
         if (self.magicnumber is None): return "Body Denied"
         if (type(self.magicnumber) is not int and self.magicnumber != 42): return "Body Denied"
+
         if (self.email is None): return "Body Denied"
         if (type(self.email) is not str): return "Email Denied"
+
         if (self.username is None): return "Body Denied"
         if (type(self.username) is not str): return "Username Denied"
+
         if (self.password is None): return "Body Denied"
         if (type(self.password) is not str): return "Body Denied"
         return None

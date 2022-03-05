@@ -32,6 +32,7 @@ class ClaimAPIKeyRequest(JParent):
     def __EvaErrorsJParent(self):
         if (self.magicnumber is None): return "Body Denied"
         if (type(self.magicnumber) is not int and self.magicnumber != 42): return "Body Denied"
+
         if (self.name is None): return "Body Denied"
         if (type(self.name) is not str): return "Name Denied"
         return None

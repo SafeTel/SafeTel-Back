@@ -29,6 +29,7 @@ class TellowsRequest(JParent):
     def __EvaErrorsJParent(self):
         if (self.magicnumber is None): return "Body Denied"
         if (type(self.magicnumber) is not int and self.magicnumber != 42): return "Token Denied"
+
         if (self.number is None): return "Body Denied"
         if (type(self.number) is not str): return "Token Denied"
         return None

@@ -29,6 +29,7 @@ class DeleteAccountRequest(JParent):
     def __EvaErrorsJParent(self):
         if (self.token is None): return "Body Denied"
         if (type(self.token) is not str): return "Token Denied"
+
         if (self.username is None): return "Body Denied"
         if (type(self.username) is not str): return "Email Denied"
         return None
