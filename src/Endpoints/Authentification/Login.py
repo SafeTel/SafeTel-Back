@@ -65,10 +65,6 @@ class Login(Resource):
             self.__EndpointErrorManager.CreateBadRequestError(result), 400
 
         guid = result
-        import sys
-        print('---', file=sys.stderr)
-        print(guid, file=sys.stderr)
-
         User = self.__UserFactory.LoadUser(guid)
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
