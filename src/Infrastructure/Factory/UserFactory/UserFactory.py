@@ -40,10 +40,10 @@ class UserFactory():
     def LoginUser(self, email: str, pwd: str):
         user = self.__UserDB.getUser(email)
         if (user == None):
-            return True, "This email is not linked to an account"
+            return False, "This email is not linked to an account"
         if (not self.__PWDConvert.Compare(pwd, user["password"])):
-            return True, "You can not connect with this combination of email and password"
-        return False, user["guid"]
+            return False, "You can not connect with this combination of email and password"
+        return True, user["guid"]
 
 
     def LoadUser(self, guid: str):

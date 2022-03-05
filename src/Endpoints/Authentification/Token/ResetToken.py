@@ -42,6 +42,7 @@ class ResetToken(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
+
     def get(self):
         Request = ResetTokenRequest(request.args.to_dict())
 

@@ -8,9 +8,12 @@
 ### MODELS
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
+# Roles enum import
+from Models.Logic.Shared.Roles import Roles
 # Shared JObject imports
 from Models.Endpoints.SharedJObject.Account.Infos.CustomerInfos import CustomerInfos
 from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localization
+
 
 # Represents UpdatePErsonalInfos Request
 class UserInfos(JParent):
@@ -27,6 +30,7 @@ class UserInfos(JParent):
         self.password = self.LoadElement(loadedJSON, "password")
         self.time = self.LoadElement(loadedJSON, "time")
         self.guid = self.LoadElement(loadedJSON, "guid")
+        self.role = Roles.StrToEnum(self.LoadElement(loadedJSON, "role"))
 
     def __InitCustomerInfosJObject(self, loadedJSON: dict):
         customerInfosRaw = self.LoadElement(loadedJSON, "CustomerInfos")

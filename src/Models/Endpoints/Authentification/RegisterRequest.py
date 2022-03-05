@@ -22,7 +22,7 @@ class RegisterRequest(JParent):
 
     # Values Assignement
     def __InitJParent(self, loadedJSON: dict):
-        self.magicNumber = self.LoadElement(loadedJSON, "magicNumber")
+        self.magicnumber = self.LoadElement(loadedJSON, "magicnumber")
         self.email = self.LoadElement(loadedJSON, "email")
         self.username = self.LoadElement(loadedJSON, "username")
         self.password = self.LoadElement(loadedJSON, "password")
@@ -46,8 +46,8 @@ class RegisterRequest(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.magicNumber is None): return "Body Denied"
-        if (type(self.magicNumber) is not int and self.magicNumber != 42): return "Body Denied"
+        if (self.magicnumber is None): return "Body Denied"
+        if (type(self.magicnumber) is not int and self.magicnumber != 42): return "Body Denied"
         if (self.email is None): return "Body Denied"
         if (type(self.email) is not str): return "Email Denied"
         if (self.username is None): return "Body Denied"

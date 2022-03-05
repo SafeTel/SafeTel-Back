@@ -5,54 +5,82 @@
 ## Login
 ##
 
-### LOGIC
-# Request Error
-from urllib.request import Request
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-# JWT import
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-# Password encription import
-from Logic.Services.PWDConvert.PWDConvert import PWDConvert
-
 ### INFRA
-# Network imports
-from flask import request as fquest
+# Flask imports
+from flask.globals import request
 from flask_restful import Resource
-# Melchior DB imports
-from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
+# User Factory import
+from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+# Endpoint Error Manager import
+from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
-UserDb = UserDB()
-
+### MODELS
+# Model Request & Response import
+from Models.Endpoints.Authentification.LoginRequest import LoginRequest
+from Models.Endpoints.Authentification.LoginResponse import LoginResponse
 # Model for Role import
 from Models.Logic.Shared.Roles import Roles
 
-from Models.Endpoints.Authentification.LoginRequest import LoginRequest
-from Models.Endpoints.Authentification.LoginResponse import LoginResponse
+### LOGC
+# JWT converter import
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
-# Route to log in a user
+
+###
+# Request:
+# POST: localhost:2407/auth/login
+# {
+#     "magicnumber": 42,
+#     "email": "asukat@the.best",
+#     "password": "pwd"
+# }
+###
+# Response:
+# {
+# 	"username": "Megumin",
+# 	"token": ""
+# }
+###
+
+
+# Route to auth a user
 class Login(Resource):
+    def __init__(self):
+        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__JwtConv = JWTConvert()
+        self.__UserFactory = UserFactory()
+
+
     def post(self):
-        EndptErrorManager = EndpointErrorManager()
-        Request = LoginRequest(fquest.get_json())
+        Request = LoginRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        user = UserDb.getUser(Request.email)
-        if user == None:
-            return EndptErrorManager.CreateBadRequestError("this email is not linked to an account"), 400
 
-        pwdConv = PWDConvert()
-        if not pwdConv.Compare(Request.password, user["password"]):
-            return EndptErrorManager.CreateBadRequestError('you can not connect with this combination of email and password'), 400
+        LoginStatus, result = self.__UserFactory.LoginUser(
+            Request.email,
+            Request.password
+        )
+        if (not LoginStatus):
+            self.__EndpointErrorManager.CreateBadRequestError(result), 400
 
-        jwtConv = JWTConvert()
-        guid = user["guid"]
+        guid = result
+        import sys
+        print('---', file=sys.stderr)
+        print(guid, file=sys.stderr)
 
-        Response = LoginResponse(user["username"], jwtConv.Serialize(guid, Roles.USER))
+        User = self.__UserFactory.LoadUser(guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+
+        Response = LoginResponse(
+            User.PullUserInfos().username,
+            self.__JwtConv.Serialize(guid, User.PullUserInfos().role)
+        )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
