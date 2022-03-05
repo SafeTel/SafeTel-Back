@@ -5,16 +5,19 @@
 ## WhiteListDB
 ##
 
+### INFRA
 # Client mongo db import
 import pymongo
-
-# MongoDBMongo Internal Utils
+# PyMongo Internal Utils
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
-
 # Melchior Internal Utils
 from Infrastructure.Services.MongoDB.Melchior.UserLists.UserListsWorker import UserListsWorker
+
+### LOGIC
+# Get env vars import
 import os
+
 
 # Object to represent table Whitelist
 class WhitelistDB():

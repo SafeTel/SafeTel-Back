@@ -5,15 +5,16 @@
 ## Tellows
 ##
 
-### LOGIC
-# regex imports
-import re
-
 ### INFRA
 # HttpClient import
 from Infrastructure.Utils.HttpClient.HtttpClient import HttpClient
 
+### LOGIC
+# regex imports
+import re
+# Get env var import
 import os
+
 
 class Tellows():
     def __init__(self):

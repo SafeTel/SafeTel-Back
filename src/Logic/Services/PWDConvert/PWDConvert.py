@@ -12,7 +12,6 @@ import hashlib
 
 class PWDConvert():
     def __init__(self):
-        # inferior system version import
         if sys.version_info < (3, 6):
            import sha3
 

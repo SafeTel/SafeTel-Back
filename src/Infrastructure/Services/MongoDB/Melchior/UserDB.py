@@ -15,8 +15,11 @@ from Infrastructure.Services.MongoDB.Melchior.UserDBWatcher import UserDBWatcher
 from Infrastructure.Services.MongoDB.Melchior.UserDBWorker import UserDBWorker
 # Roles import
 from Models.Logic.Shared.Roles import Roles
+
+### LOGIC
 # Get env vars
 import os
+
 
 class UserDB():
     def __init__(self, db_name=os.getenv("DB_MELCHIOR")):
