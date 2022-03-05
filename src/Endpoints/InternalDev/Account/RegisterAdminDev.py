@@ -37,6 +37,30 @@ from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 # GUID  creation import
 import uuid
 
+
+###
+# Request:
+# POST: localhost:2407/internaldev/account/register
+# {
+# 	"magicnumber": 42,
+# 	"apiKey": "",
+# 	"role": "admin",
+# 	"Registration": {
+# 		"username": "Example",
+# 		"email": "h@example.c",
+# 		"password": "pwd"
+# 	}
+# }
+###
+# Response:
+# {
+# 	"created": true,
+# 	"username": "Example",
+# 	"token": ""
+# }
+###
+
+
 # Route to register admin & dev account from Api Key
 class RegisterAdminDev(Resource):
     def __init__(self):
