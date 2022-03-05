@@ -17,17 +17,19 @@ from Models.Endpoints.InternalDev.Embeded.AvaibleUpdateResponse import AvaibleUp
 
 # Route to know if an update is required for the embeded software
 class AvaiableUpdate(Resource):
+    def __init__(self):
+        self.__EndpointErrorManager = EndpointErrorManager()
+
     def post(self):
-        EndptErrorManager = EndpointErrorManager()
         Request = AvaibleUpdateRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
         Response = AvaibleUpdateResponse(Request.version == 1.0)
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
