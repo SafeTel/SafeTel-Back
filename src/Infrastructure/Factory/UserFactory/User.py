@@ -26,9 +26,11 @@ from Models.Infrastructure.Factory.UserFactory.UserInfos import UserInfos
 from Models.Endpoints.SharedJObject.Account.Infos.CustomerInfos import CustomerInfos
 from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localization
 
+
 ### /!\ WARNING /!\ ###
 # This is an HIGH LEVEL User INFRA interface including logic, proceed with caution
 ### /!\ WARNING /!\ ###
+
 
 # Class to represents the usage of a user inside the server (Worker)
 class User():

@@ -18,8 +18,6 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 # Model Request & Response import
 from Models.Endpoints.Authentification.LoginRequest import LoginRequest
 from Models.Endpoints.Authentification.LoginResponse import LoginResponse
-# Model for Role import
-from Models.Logic.Shared.Roles import Roles
 
 ### LOGC
 # JWT converter import

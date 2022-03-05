@@ -16,9 +16,11 @@ from Models.Infrastructure.Factory.UserFactory.Lists.HistoryList import HistoryL
 # Sub Model for HistoryCall Request import
 from Models.Endpoints.Account.Lists.History.HistoryCallRequest import HistoryCallRequest
 
+
 ### /!\ WARNING /!\ ###
 # This is an HIGH LEVEL Blacklist INFRA interface including logic, proceed with caution
 ### /!\ WARNING /!\ ###
+
 
 # Represents Blacklist at high level usage
 class History():

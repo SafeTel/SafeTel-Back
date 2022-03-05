@@ -5,55 +5,86 @@
 ## Register
 ##
 
-### LOGIC
-# Utils check imports
-from Models.Logic.Shared.Roles import Roles
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-# Request Error
+### INFRA
+# Flask imports
+from flask.globals import request
+from flask_restful import Resource
+# User Factory import
+from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+# Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
+
+### MODELS
+# Model Request & Response import
+from Models.Endpoints.Authentification.RegisterRequest import RegisterRequest
+from Models.Endpoints.Authentification.RegisterResponse import RegisterResponse
+# Model for Role import
+from Models.Logic.Shared.Roles import Roles
+
+### LOGC
+# JWT converter import
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Password encription import
 from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 
-### INFRA
-# Network imports
-from flask import request as fquest
-from flask_restful import Resource
-# Melchior DB imports
-from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
-from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-from Infrastructure.Factory.UserFactory.User import User
+###
+# Request:
+# POST: localhost:2407/auth/register
+# {
+#     "magicnumber": 42,
+#     "email": "asuka@the.cutest",
+#     "username": "Megumin",
+#     "password": "pwd",
+#     "CustomerInfos": {
+#         "firstName": "Megumin",
+#         "lastName": "Konosuba",
+#         "phoneNumber": "0100000000"
+#     },
+#     "Localization": {
+#         "country": "Terra",
+#         "region": "4568",
+#         "address": "2 view Useless Aqua"
+#     }
+# }
+###
+# Response:
+# {
+# 	"created": true,
+# 	"username": "Megumin",
+# 	"token": ""
+# }
+###
 
-from Models.Endpoints.Authentification.RegisterRequest import RegisterRequest
-from Models.Endpoints.Authentification.RegisterResponse import RegisterResponse
-
-UserDb = UserDB()
 
 # Route to Register a user
 class Register(Resource):
+    def __init__(self):
+        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__JwtConv = JWTConvert()
+        self.__UserFactory = UserFactory()
+
+
     def post(self):
-        EndptErrorManager = EndpointErrorManager()
-        Request = RegisterRequest(fquest.get_json())
+        Request = RegisterRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        if (UserDb.exists(Request.email)):
-            return EndptErrorManager.CreateBadRequestError("this email is already linked to an account"), 400
+        if (self.__UserFactory.IsMailRegitered(Request.email)):
+            return self.__EndpointErrorManager.CreateBadRequestError("This email is already linked to an account"), 400
 
-        UsrFactory = UserFactory()
-        User = UsrFactory.CreateUser(Request)
+        User = self.__UserFactory.CreateUser(Request)
         UserInfos = User.PullUserInfos()
 
-        jwtConv = JWTConvert()
         Response = RegisterResponse(
-            True,
+            self.__UserFactory.IsUser(UserInfos.guid),
             UserInfos.username,
-            jwtConv.Serialize(User.GetGUID(), Roles.USER)
+            self.__JwtConv.Serialize(User.GetGUID(), Roles.USER)
         )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200

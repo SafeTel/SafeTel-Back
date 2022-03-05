@@ -15,9 +15,11 @@ from Infrastructure.Factory.UserFactory.Lists.NumberConflictResolver import Numb
 # PhoneList Model import
 from Models.Infrastructure.Factory.UserFactory.Lists.PhoneList import PhoneList
 
+
 ### /!\ WARNING /!\ ###
 # This is an HIGH LEVEL Blacklist INFRA interface including logic, proceed with caution
 ### /!\ WARNING /!\ ###
+
 
 # Represents Blacklist at high level usage
 class Blacklist():

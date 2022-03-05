@@ -5,21 +5,34 @@
 ## UserFactory
 ##
 
-
+### INFRA
+# High Level interface for DBs imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
-
+# User sub class import
 from Infrastructure.Factory.UserFactory.User import User
+# Roles enum import
 from Models.Logic.Shared.Roles import Roles
 
+### LOGIC
+# Password converter import
 from Logic.Services.PWDConvert.PWDConvert import PWDConvert
-
-from Models.Endpoints.Authentification.RegisterRequest import RegisterRequest
-
+# Guid import
 import uuid
 
+### MODEL
+# Register request model import
+from Models.Endpoints.Authentification.RegisterRequest import RegisterRequest
+
+
+### /!\ WARNING /!\ ###
+# This is an HIGH LEVEL for MELCHIOR DB interface including logic, proceed with caution
+### /!\ WARNING /!\ ###
+
+
+# Factory that load create delete User(s)
 class UserFactory():
     def __init__(self):
         self.__UserDB = UserDB()
@@ -27,6 +40,16 @@ class UserFactory():
         self.__WhiteListDB = WhitelistDB()
         self.__HistoryDB = HistoryDB()
         self.__PWDConvert = PWDConvert()
+
+
+    ### PUBLIC
+
+    def IsMailRegitered(self, email: str):
+        return self.__UserDB.exists(email)
+
+
+    def IsUser(self, guid: str):
+        return self.__UserDB.existByGUID(guid)
 
 
     def CreateUser(self, UserInfos: RegisterRequest):
@@ -51,6 +74,8 @@ class UserFactory():
             return None
         return User(guid)
 
+
+    ### PRIVATE
 
     def __IsUser(self, guid: str):
         return self.__UserDB.existByGUID(guid)
