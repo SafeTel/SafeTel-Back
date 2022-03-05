@@ -8,7 +8,7 @@
 # Network imports
 from urllib import response
 from urllib.request import Request
-from flask import request as fquest
+from flask import request
 from flask_restful import Resource
 
 # Utils check imports
@@ -36,35 +36,32 @@ from Models.Endpoints.Account.DeleteAccountResponse import DeleteAccountResponse
 
 # Route to delete an account from an auth user
 class DeleteAccount(Resource):
+    def __init__(self):
+        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__JwtConv = JWTConvert()
+        self.__UserFactory = UserFactory()
+
     def delete(self):
-        EndptErrorManager = EndpointErrorManager()
-        Request = DeleteAccountRequest(fquest.get_json())
+        Request = DeleteAccountRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        JwtConv = JWTConvert()
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
+        if (JwtInfos is None):
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        JwtInfos = JwtConv.Deserialize(Request.token)
-        if JwtInfos is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        guidUsr = JwtInfos.guid
+        if (User.PullUserInfos().username == Request.username):
+            User.Delete()
 
-        result = UserDb.getUserByGUID(guidUsr)
-        if result is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
+        Response = DeleteAccountResponse(User.IsDeleted())
 
-        if (result["username"] != Request.username):
-            return EndptErrorManager.CreateBadRequestError("manual security check failed"), 400
-
-        Usr = User(guidUsr)
-        Usr.Delete()
-
-        response = DeleteAccountResponse(Usr.IsDeleted())
-
-        responseErrors = response.EvaluateModelErrors()
+        responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
-        return response.ToDict(), 200
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+        return Response.ToDict(), 200
