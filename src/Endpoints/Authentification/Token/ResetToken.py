@@ -5,47 +5,59 @@
 ## ResetToken
 ##
 
-# Network imports
-from flask import request as fquest
+### INFRA
+# Flask imports
 from flask.globals import request
 from flask_restful import Resource
-
-# jwt provider import
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-
-# Request Error
+# User Factory import
+from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
+# Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
-### INFRA
-# Melchior DB imports
-from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
-
+### MODELS
+# Model Request & Response import
 from Models.Endpoints.Authentification.Token.ResetTokenRequest import ResetTokenRequest
 from Models.Endpoints.Authentification.Token.ResetTokenResponse import ResetTokenResponse
 
-UserDb = UserDB()
+### LOGC
+# JWT converter import
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+
+
+###
+# Request:
+# GET: localhost:2407/auth/reset-token?token=
+###
+# Response:
+# {
+# 	"token": ""
+# }
+###
+
 
 # Route to reset a JWT
 class ResetToken(Resource):
+    def __init__(self):
+        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__JwtConv = JWTConvert()
+        self.__UserFactory = UserFactory()
+
     def get(self):
-        EndptErrorManager = EndpointErrorManager()
         Request = ResetTokenRequest(request.args.to_dict())
 
-        requestErrors = Request.ResetTokenRequest()
+        requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        JwtConv = JWTConvert()
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
+        if (JwtInfos is None):
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        JwtInfos = JwtConv.Deserialize(Request.token)
-        if JwtInfos is None:
-            return EndptErrorManager.CreateBadRequestError("Bad Token"), 400
-
-        if (UserDb.existByGUID(JwtInfos.guid) == False):
-            return EndptErrorManager.CreateBadRequestError("you are not registred")
+        if (self.__UserFactory.LoadUser(JwtInfos.guid) == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = ResetTokenResponse(
-            JwtConv.Serialize(
+            self.__JwtConv.Serialize(
                 JwtInfos.guid,
                 JwtInfos.role
             )
@@ -53,5 +65,5 @@ class ResetToken(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
