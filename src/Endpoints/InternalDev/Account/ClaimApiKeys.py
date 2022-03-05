@@ -5,51 +5,71 @@
 ## ApiKeys
 ##
 
-# Network imports
-from flask import request as fquest
+### INFRA
+# Flask imports
 from flask.globals import request
 from flask_restful import Resource
-
-# Request Error
+# Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-
-# DB imports
+# DB imports (doesn't need High Level interface since it's internal dev)
 from Infrastructure.Services.MongoDB.Casper.Contributors import ContributorsDB
 from Infrastructure.Services.MongoDB.Casper.ApiKeys import ApiKeyLogDB
 
-# secret import
-import secrets
-
+### MODELS
+# Model Request & Response import
 from Models.Endpoints.InternalDev.Account.ClaimAPIKeyRequest import ClaimAPIKeyRequest
 from Models.Endpoints.InternalDev.Account.ClaimAPIKeyResponse import ClaimAPIKeyResponse
 
-ContributorsDb = ContributorsDB()
-ApiKeyLogDb = ApiKeyLogDB()
+### LOGC
+# API key encryption import
+import secrets
 
-# Route to know if an update is required for the embeded software
+
+###
+# Request:
+# POST: localhost:2407/account/infos/update-email
+# {
+# 	"magicnumber": 42,
+# 	"name": ""
+# }
+###
+# Response:
+# {
+# 	"apiKey": "",
+# 	"message": "only one apikey is allowed for an contributor or ip"
+# }
+###
+
+
+# Route to get an API key
 class ClaimApiKeys(Resource):
+    def __init__(self):
+        self.__EndpointErrorManager = EndpointErrorManager()
+        self.ContributorsDb = ContributorsDB()
+        self.ApiKeyLogDb = ApiKeyLogDB()
+
+
     def post(self):
-        EndptErrorManager = EndpointErrorManager()
-        Request = ClaimAPIKeyRequest(fquest.get_json())
+        Request = ClaimAPIKeyRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return EndptErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
         claimer = Request.name
 
-        if (not ContributorsDb.IsContributor(claimer)):
-            return EndptErrorManager.CreateBadRequestError("You are not a contributor"), 400
+        if (not self.ContributorsDb.IsContributor(claimer)):
+            return self.__EndpointErrorManager.CreateBadRequestError("You are not a contributor"), 400
 
-        if (ApiKeyLogDb.isApiKeyForContributor(claimer, request.remote_addr)):
-            return EndptErrorManager.CreateBadRequestError("You already own an apiKey"), 400
+        if (self.ApiKeyLogDb.isApiKeyForContributor(claimer, request.remote_addr)):
+            return self.__EndpointErrorManager.CreateBadRequestError("You already have an apiKey"), 400
 
         apiKey = secrets.token_urlsafe(32)
-        ApiKeyLogDb.logClaimeApiKey(apiKey, claimer, request.remote_addr)
+        self.ApiKeyLogDb.logClaimeApiKey(apiKey, claimer, request.remote_addr)
 
         Response = ClaimAPIKeyResponse(apiKey)
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return EndptErrorManager.CreateInternalLogicError(), 500
+            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200

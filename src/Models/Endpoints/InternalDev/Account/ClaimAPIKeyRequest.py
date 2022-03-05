@@ -15,16 +15,19 @@ class ClaimAPIKeyRequest(JParent):
         loadedJSON = self.Load(rawJSON)
         self.__InitJParent(loadedJSON)
 
+
     # Values Assignement
     def __InitJParent(self, loadedJSON: dict):
         self.magicnumber = self.LoadElement(loadedJSON, "magicnumber")
         self.name = self.LoadElement(loadedJSON, "name")
+
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
         errorJParent = self.__EvaErrorsJParent()
         if (errorJParent != None): return errorJParent
         return None
+
 
     def __EvaErrorsJParent(self):
         if (self.magicnumber is None): return "Body Denied"

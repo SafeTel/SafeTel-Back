@@ -29,8 +29,9 @@ class UserDB():
         self.DBUserWorker = UserDBWorker(self.Users)
 
 
-    def addUser(self, user_data, role):
-        del user_data["magicnumber"]
+    def addUser(self, user_data: dict, role: Roles):
+        if ("magicnumber" in user_data):
+            del user_data["magicnumber"]
         if (role == Roles.USER):
             user_data['role'] = 'user'
         elif (role == Roles.DEVELOPER):

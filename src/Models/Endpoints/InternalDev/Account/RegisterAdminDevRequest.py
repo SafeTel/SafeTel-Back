@@ -25,7 +25,7 @@ class RegisterAdminDevRequest(JParent):
         self.role = self.LoadElement(loadedJSON, "role")
 
     def __InitJObject(self, loadedJSON: dict):
-        registrationRaw = self.LoadElement(loadedJSON, "registration")
+        registrationRaw = self.LoadElement(loadedJSON, "Registration")
         self.Registrattion = None if registrationRaw is None else Registration(registrationRaw)
 
     # Errors Evaluation
@@ -46,7 +46,7 @@ class RegisterAdminDevRequest(JParent):
         return None
 
     def __EvaRegistrationJObject(self):
-        if (self.CustomerInfos is None): return "Body Denied"
-        errorJObject = self.CustomerInfos.EvaErrorsJObject()
+        if (self.Registrattion is None): return "Body Denied"
+        errorJObject = self.Registrattion.EvaErrorsJObject()
         if (errorJObject != None): return errorJObject
         return None
