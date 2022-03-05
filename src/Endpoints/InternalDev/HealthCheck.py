@@ -27,7 +27,23 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 import json
 
 
+###
+# Request:
+# GET: localhost:2407/internaldev/healthCheck?token=
+###
+# Response:
+# {
+# 	"healthCheck": {
+# 		"server": {
+# 		},
+# 		"environment": {
+# 		}
+# 	}
+# }
+###
 
+
+# Route check the health of the server
 class HealthCheck(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
