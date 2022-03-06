@@ -1,17 +1,17 @@
 {
     "email": "amane_safetel_wille@gmail.com",
     "userName": "Amane",
-    "password": "a0391!apcAZC",
+    "password": "eb2c51af12b20e5a9fbc66e1814493f2939bbff27ad21337197decff8249ca619f9adea66b4d3a4247bf27b2044fb266b31f6de7c00135eeffed66d899be9e24",
     "customerInfos": {
-        "firstName": "Amane",
-        "lastName": "Misa",
+        "firstName": "Jean",
+        "lastName": "Pierre",
         "phoneNumber": "33701935712"
     },
     "localization": {
         "country": "Maroc",
         "region": "Marrakesh",
-        "adress": "186 Derb Rahala Road"
+        "address": "186 Derb Rahala Road"
     },
     "guid": "01f012e0-d01e-4321-a0b1-01c54321e321",
-        "role": "user"
+    "role": "user"
 }
