@@ -9,29 +9,22 @@ package main
 
 import (
 	cmd "PostmanDbDataImplementation/cmd/WILLE"
-	"log"
+	"fmt"
 	"os"
 )
 
-func configureLogs() {
-	log.SetFlags(log.Ldate | log.Ltime | log.Lmicroseconds | log.Lshortfile)
-}
-
 func main() {
-
-	log.Println("Starting WILLE")
-
+	fmt.Println("Starting WILLE")
 	argv := os.Args[1:] // Don't keep the first arg
-	configureLogs()
 	wille, err := cmd.New()
 
 	if err != nil {
-		log.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 	}
 	err = wille.Run(argv)
 
 	if err != nil {
-		log.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 	}
 
 }
