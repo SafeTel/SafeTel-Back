@@ -16,7 +16,7 @@ class TellowsResponse(JParent):
 
     # Values Assignement
     def __InitJParent(self, validity: bool):
-        self.updated = validity
+        self.validity = validity
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -25,6 +25,6 @@ class TellowsResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.updated is None): return "Internal Model Error"
-        if (type(self.updated) is not bool): return "Internal Model Error"
+        if (self.validity is None): return "Internal Model Error"
+        if (type(self.validity) is not bool): return "Internal Model Error"
         return None
