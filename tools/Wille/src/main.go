@@ -8,13 +8,12 @@
 package main
 
 import (
-	cmd "PostmanDbDataImplementation/cmd/WILLE"
+	cmd "PostmanDbDataImplementation/core"
 	"fmt"
 	"os"
 )
 
 func main() {
-	fmt.Println("Starting WILLE")
 	argv := os.Args[1:] // Don't keep the first arg
 	wille, err := cmd.New()
 
@@ -26,5 +25,4 @@ func main() {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
-
 }

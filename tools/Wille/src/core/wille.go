@@ -8,16 +8,19 @@
 package cmd
 
 import (
-	input "PostmanDbDataImplementation/cmd/WILLE/errors"
+	input "PostmanDbDataImplementation/errors"
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"reflect"
 	"strconv"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -60,6 +63,27 @@ var tabPrefixForJsonPrint = "\t\t"
 
 // Domain Layer - Core Functionalities
 
+func (wille *Wille) openAndUnmarshalJson(path string) (map[string]interface{}, error) {
+	jsonFile, err := os.Open(path)
+
+	if err != nil {
+		return nil, err
+	}
+	defer jsonFile.Close()
+	byteValue, err := ioutil.ReadAll(jsonFile)
+
+	if err != nil {
+		return nil, err
+	}
+	var s map[string]interface{}
+
+	err = json.Unmarshal([]byte(byteValue), &s)
+	if err != nil {
+		return nil, err
+	}
+	return s, err
+}
+
 func (wille *Wille) mongoImport(uri, collection, file string) (err error, onStdOut string, onStdErr string) {
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
@@ -68,27 +92,57 @@ func (wille *Wille) mongoImport(uri, collection, file string) (err error, onStdO
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err = cmd.Run()
-
 	return err, stdout.String(), stderr.String()
 }
 
-func (wille *Wille) printEmptyOrUndefinedKey(key string) {
-	InfoLogger.Println(tabPrefixForJsonPrint, "-\033[36m", key, "\033[0mvalue: \033[31mEmpty or not defined\033[0m")
+func (wille *Wille) checkDataValidity(col *mongo.Collection, filter bson.M) error {
+	var isDocument *map[string]interface{}
+	err := col.FindOne(context.TODO(), filter).Decode(isDocument)
+
+	if err != nil {
+		return err
+	}
+	if isDocument != nil {
+		return errors.New("Data already exist inside the server")
+	}
+
+	return nil
 }
 
-func (wille *Wille) printDefinedKeyWithValue(key string, value interface{}) {
-	InfoLogger.Println(tabPrefixForJsonPrint, "-\033[36m", key, "\033[0mvalue: \033[32mdefined\033[0m Value: \033[36m", value, ResetColor)
+func (wille *Wille) printHelp() {
+	fmt.Println("\nHelp :")
+	fmt.Println("./<binary_name> <command> ")
+	fmt.Println("<binary_name>: the name of the binary")
+	fmt.Println("<command>: show <data> | upload <data> | help")
+	fmt.Println("<data>: The name of a user defined inside the model folder. You can find the available models by doing: ls ./data\n")
 }
 
-func (wille *Wille) checkJsonContent(jsonContent map[string]interface{}, identifiersInSameOrderThanJson []string, identifierOfObjectSameOrderThanJson []string) error {
-	lenIdentifiers := len(identifiersInSameOrderThanJson)
+func (wille *Wille) checkJsonMap(mapContent map[string]interface{}, key string, jsonObjectKeysInOrder []string) ([]string, error) {
+	lenMapContent := len(mapContent)
+	lenIdObjects := len(jsonObjectKeysInOrder)
+	if lenIdObjects < lenMapContent {
+		return nil, errors.New("Missing identifier of Object for json var: \033[31m" + key + ResetColor + ". Len value: " + strconv.Itoa(lenIdObjects))
+	}
+	tabPrefixForJsonPrint += "\t"
+	err := wille.checkAndShowJsonContent(mapContent, jsonObjectKeysInOrder[0:lenMapContent], jsonObjectKeysInOrder[lenMapContent:])
+
+	if err != nil {
+		return nil, err
+	}
+	tabPrefixForJsonPrint = "\t\t"
+
+	return jsonObjectKeysInOrder[lenMapContent:], nil
+}
+
+func (wille *Wille) checkAndShowJsonContent(jsonContent map[string]interface{}, jsonKeysInOrder []string, jsonObjectKeysInOrder []string) error {
+	lenIdentifiers := len(jsonKeysInOrder)
 	key := ""
 
 	if len(jsonContent) != lenIdentifiers {
-		return errors.New("Content and Identifier have to be the same size for checking json content")
+		return errors.New("Content and Identifier have to be the same size for checking json content. Number of identifiers expeted: " + strconv.Itoa(lenIdentifiers) + ", Founded: " + strconv.Itoa(len(jsonContent)))
 	}
 	for i := 0; i < lenIdentifiers; i++ {
-		key = identifiersInSameOrderThanJson[i]
+		key = jsonKeysInOrder[i]
 
 		switch reflect.ValueOf(jsonContent[key]).Kind() {
 		case reflect.Map:
@@ -97,16 +151,12 @@ func (wille *Wille) checkJsonContent(jsonContent map[string]interface{}, identif
 				return errors.New("Missing value inside json")
 			} else {
 				wille.printDefinedKeyWithValue(key, jsonContent[key])
-				mapContent := jsonContent[key].(map[string]interface{})
-				lenMapContent := len(mapContent)
-				lenIdObjects := len(identifierOfObjectSameOrderThanJson)
-				if lenIdObjects < lenMapContent {
-					return errors.New("Missing identifier of Object for json var: \033[31m" + key + ResetColor + ". Len value: " + strconv.Itoa(lenIdObjects))
+				var err error
+
+				jsonObjectKeysInOrder, err = wille.checkJsonMap(jsonContent[key].(map[string]interface{}), key, jsonObjectKeysInOrder)
+				if err != nil {
+					return err
 				}
-				tabPrefixForJsonPrint += "\t"
-				wille.checkJsonContent(mapContent, identifierOfObjectSameOrderThanJson[0:lenMapContent], identifierOfObjectSameOrderThanJson[lenMapContent:])
-				identifierOfObjectSameOrderThanJson = identifierOfObjectSameOrderThanJson[lenMapContent:]
-				tabPrefixForJsonPrint = "\t\t"
 			}
 		case reflect.String:
 			if jsonContent[key] == "" {
@@ -123,7 +173,11 @@ func (wille *Wille) checkJsonContent(jsonContent map[string]interface{}, identif
 				wille.printDefinedKeyWithValue(key, jsonContent[key])
 			}
 		default:
-			InfoLogger.Println(tabPrefixForJsonPrint, "-\033[33m", key, "\033[0mType content: \033[33m", reflect.TypeOf(jsonContent[key]), "\033[0m |!!!|\033[31mNOT HANDLED\033[0m|!!!|")
+			if jsonContent[key] == nil {
+				return errors.New("Missing value inside json for key: \033[31m" + key + "\033[0m")
+			} else {
+				InfoLogger.Println(tabPrefixForJsonPrint, "-\033[33m", key, "\033[0mType content: \033[33m", reflect.TypeOf(jsonContent[key]), "\033[0m |!!!|\033[31mNOT HANDLED\033[0m|!!!|")
+			}
 		}
 	}
 	return nil
@@ -133,9 +187,9 @@ func (wille *Wille) checkJsonContent(jsonContent map[string]interface{}, identif
 
 func (wille *Wille) checkListJsonFolder(name string) (byte, error) {
 	content := byte(0b00000000)
-	listOfFolderContent, err := ioutil.ReadDir("Data/" + name + "/List")
+	listOfFolderContent, err := ioutil.ReadDir("Data/" + name + "/Lists")
 	if err != nil {
-		return 0, &input.Error{Msg: "Unable to open list folder for name: " + name + ". Not Found: Data/" + name + "/List"}
+		return 0, &input.Error{Msg: "Unable to open list folder for name: " + name + ". Not Found: Data/" + name + "/Lists"}
 	}
 	for _, anElem := range listOfFolderContent {
 		if anElem.Name() == "Blacklist.json" {
@@ -162,7 +216,7 @@ func (wille *Wille) checkModelFolder(name string) (byte, error) {
 	for _, anElem := range listOfFolderContent {
 		if anElem.Name() == "Profile.json" {
 			content ^= byte(0b00000001)
-		} else if anElem.Name() == "List" {
+		} else if anElem.Name() == "Lists" {
 			content ^= byte(0b00000010)
 		} else if anElem.Name() == "Show.json" {
 			content ^= byte(0b00000100)
@@ -173,109 +227,7 @@ func (wille *Wille) checkModelFolder(name string) (byte, error) {
 	return content, nil
 }
 
-// Repository Layer
-
-func (wille *Wille) uploadListFile(name string) error {
-	content, err := wille.checkListJsonFolder(name)
-
-	if content&(0b00000001) == valid {
-		err = wille.uploadBlacklistFile(name)
-		if err != nil {
-			return err
-		}
-	}
-	if content&(0b00000010)>>1 == valid {
-		err = wille.uploadHistoryFile(name)
-		if err != nil {
-			return err
-		}
-	}
-	if content&(0b00000100)>>2 == valid {
-		err = wille.uploadWhitelistFile(name)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 // Service Layer - Interface
-
-func (wille *Wille) showListFolder(name string) error {
-	listFolderContent, err := wille.checkListJsonFolder(name)
-
-	if err != nil {
-		return err
-	}
-	if listFolderContent&(0b00000001) == valid {
-		InfoLogger.Println("\t- Blacklist.json: \033[32mFinded\033[0m")
-		err = wille.checkBlacklistJsonContent(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		InfoLogger.Println("\t- Blacklist.json: \033[32mMissing\033[0m")
-	}
-	if listFolderContent&(0b00000010)>>1 == valid {
-		InfoLogger.Println("\t- History.json: \033[32mFinded\033[0m")
-		err = wille.checkHistoryJsonContent(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		InfoLogger.Println("\t- History.json: \033[32mMissing\033[0m")
-	}
-	if listFolderContent&(0b00000100)>>2 == valid {
-		InfoLogger.Println("\t- Whitelist.json: \033[32mFinded\033[0m")
-		err = wille.checkWhitelistJsonContent(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		InfoLogger.Println("\t- Whitelist.json: \033[32mMissing\033[0m")
-	}
-	return nil
-}
-
-func (wille *Wille) show(name string) error {
-	modelFolderContent, err := wille.checkModelFolder(name)
-
-	if err != nil {
-		return err
-	}
-	if modelFolderContent&(0b00000001) == valid {
-		InfoLogger.Println("Profile.json: \033[32mFinded\033[0m")
-		err = wille.checkProfileJsonContent(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		InfoLogger.Println("Profile.json: \033[31mMissing\033[0m")
-	}
-	if modelFolderContent&(0b00000010)>>1 == valid {
-		InfoLogger.Println("List folder: \033[32mFinded\033[0m")
-		err = wille.showListFolder(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		InfoLogger.Println("List folder: \033[31mMissing\033[0m")
-	}
-	if modelFolderContent&(0b00000100)>>2 == valid {
-		InfoLogger.Println("Show.json: \033[32mFinded\033[0m")
-		err = wille.checkShowJsonContent(name)
-		if err != nil {
-			return err
-		}
-		err = wille.printShowJsonFile(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		InfoLogger.Println("Show.json: \033[31mMissing\033[0m")
-	}
-	return nil
-}
 
 func (wille *Wille) random(name string) error {
 	InfoLogger.Println(name)
@@ -284,24 +236,6 @@ func (wille *Wille) random(name string) error {
 
 func (wille *Wille) custom(path string) error {
 	InfoLogger.Println(path)
-	return nil
-}
-
-func (wille *Wille) upload(name string) error {
-	content, err := wille.checkModelFolder(name)
-
-	if content&(0b00000001) == valid {
-		err = wille.uploadProfileFile(name)
-		if err != nil {
-			return err
-		}
-	}
-	if content&(0b00000010) == valid {
-		err = wille.uploadListFile(name)
-		if err != nil {
-			return err
-		}
-	}
 	return nil
 }
 
@@ -338,7 +272,11 @@ func (wille *Wille) compute(options []string) error {
 			i++
 			err := wille.upload(options[i])
 			return err
+		case "help":
+			wille.printHelp()
+			return nil
 		default:
+			wille.printHelp()
 			return &input.Error{Msg: "Unknow pattern"}
 		}
 	}
@@ -346,9 +284,6 @@ func (wille *Wille) compute(options []string) error {
 }
 
 func (wille *Wille) Run(withOptions []string) error {
-
-	InfoLogger.Println("Running Wille")
-
 	err := wille.compute(withOptions)
 
 	if err != nil {
