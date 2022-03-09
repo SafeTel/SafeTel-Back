@@ -17,10 +17,18 @@ import (
 // Domain Layer - Core Functionalities
 
 func (wille *Wille) checkHistoryDataValidity(name string) error {
-	s, err := wille.openAndUnmarshalJson("Data/" + name + "/Lists/History.json")
+	s, err := wille.openAndUnmarshalJson("data/" + name + "/Lists/History.json")
 
 	if err != nil {
 		return err
+	}
+	keys := []string{
+		"guid",
+		"History"}
+
+	err = wille.checkJsonContent(s, keys, nil)
+	if err != nil {
+		return errors.New("Problem with json file " + name + "/Lists/History.json" + ": " + err.Error())
 	}
 	filter := bson.M{"guid": s["guid"]}
 	// keys := []string{"guid"}
@@ -38,7 +46,7 @@ func (wille *Wille) uploadHistoryFile(name string) error {
 	if err != nil {
 		return err
 	}
-	err, inOut, inErr := wille.mongoImport(DEV_URI_USERS_DB, "History", "Data/"+name+"/Lists/History.json")
+	err, inOut, inErr := wille.mongoImport(DEV_URI_USERS_DB, "History", "data/"+name+"/Lists/History.json")
 
 	if err != nil {
 		return &input.Error{Msg: err.Error()}
@@ -53,7 +61,7 @@ func (wille *Wille) uploadHistoryFile(name string) error {
 // Repository Layer - Error Checking
 
 func (wille *Wille) checkAndShowHistoryJsonContent(name string) error {
-	s, err := wille.openAndUnmarshalJson("Data/" + name + "/Lists/History.json")
+	s, err := wille.openAndUnmarshalJson("data/" + name + "/Lists/History.json")
 
 	if err != nil {
 		return err

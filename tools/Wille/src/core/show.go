@@ -29,7 +29,7 @@ func (wille *Wille) printDefinedKeyWithValue(key string, value interface{}) {
 // Repository Layer - Error Checking
 
 func (wille *Wille) checkShowJsonContent(name string) error {
-	s, err := wille.openAndUnmarshalJson("Data/" + name + "/Show.json")
+	s, err := wille.openAndUnmarshalJson("data/" + name + "/Show.json")
 
 	if err != nil {
 		return err
@@ -85,10 +85,6 @@ func (wille *Wille) showListFolder(name string) error {
 
 // Repository Layer
 
-func (wille *Wille) printShowJsonFile(name string) error {
-	return nil
-}
-
 func (wille *Wille) show(name string) error {
 	modelFolderContent, err := wille.checkModelFolder(name)
 
@@ -116,10 +112,6 @@ func (wille *Wille) show(name string) error {
 	if modelFolderContent&(0b00000100)>>2 == valid {
 		InfoLogger.Println("Show.json: \033[32mFinded\033[0m")
 		err = wille.checkShowJsonContent(name)
-		if err != nil {
-			return err
-		}
-		err = wille.printShowJsonFile(name)
 		if err != nil {
 			return err
 		}

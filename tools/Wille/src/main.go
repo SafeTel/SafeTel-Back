@@ -18,11 +18,11 @@ func main() {
 	wille, err := cmd.New()
 
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, "Error: ", err)
 	}
 	err = wille.Run(argv)
 
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, "Error: ", err)
 	}
 }

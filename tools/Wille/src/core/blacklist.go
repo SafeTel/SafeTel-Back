@@ -18,13 +18,20 @@ import (
 // Domain Layer - Core Functionalities
 
 func (wille *Wille) checkBlacklistDataValidity(name string) error {
-	s, err := wille.openAndUnmarshalJson("Data/" + name + "/Lists/Blacklist.json")
+	s, err := wille.openAndUnmarshalJson("data/" + name + "/Lists/Blacklist.json")
 
 	if err != nil {
 		return err
 	}
+	keys := []string{
+		"guid",
+		"PhoneNumbers"}
+	err = wille.checkJsonContent(s, keys, nil)
+
+	if err != nil {
+		return errors.New("Problem with json file " + name + "/Lists/Blacklist.json" + ": " + err.Error())
+	}
 	filter := bson.M{"guid": s["guid"]}
-	// keys := []string{"guid"}
 	err = wille.checkDataValidity(wille.Blacklist, filter)
 
 	if err != nil {
@@ -39,7 +46,7 @@ func (wille *Wille) uploadBlacklistFile(name string) error {
 	if err != nil {
 		return err
 	}
-	err, inOut, inErr := wille.mongoImport(DEV_URI_USERS_DB, "Blacklist", "Data/"+name+"/Lists/Blacklist.json")
+	err, inOut, inErr := wille.mongoImport(DEV_URI_USERS_DB, "Blacklist", "data/"+name+"/Lists/Blacklist.json")
 
 	if err != nil {
 		return &input.Error{Msg: err.Error()}
@@ -54,7 +61,7 @@ func (wille *Wille) uploadBlacklistFile(name string) error {
 // Repository Layer - Error Checking
 
 func (wille *Wille) checkAndShowBlacklistJsonContent(name string) error {
-	s, err := wille.openAndUnmarshalJson("Data/" + name + "/Lists/Blacklist.json")
+	s, err := wille.openAndUnmarshalJson("data/" + name + "/Lists/Blacklist.json")
 
 	if err != nil {
 		return err
