@@ -114,8 +114,9 @@ func (wille *Wille) printHelp() {
 	fmt.Println("\nHelp :")
 	fmt.Println("./<binary_name> <command> ")
 	fmt.Println("<binary_name>: the name of the binary")
-	fmt.Println("<command>: show <data> | upload <data> | help")
-	fmt.Println("<data>: The name of a user defined inside the model folder. You can find the available models by doing: ls ./data\n")
+	fmt.Println("<command>: show <data> | upload <data> | hash <password> | help")
+	fmt.Println("<data>: The name of a user defined inside the model folder. You can find the available models by doing: ls ./data")
+	fmt.Println("<password>: Password to hash\n")
 }
 
 func (wille *Wille) checkJsonMap(mapContent map[string]interface{}, key string, jsonObjectKeysInOrder []string) ([]string, error) {
@@ -303,12 +304,12 @@ func (wille *Wille) compute(options []string) error {
 			i++
 			err := wille.upload(options[i])
 			return err
-		case "encrypt":
+		case "hash":
 			if (i + 1) >= optionsNumber {
-				return &input.Error{Msg: "Missing password for encryption"}
+				return &input.Error{Msg: "Missing password for hashion"}
 			}
 			i++
-			err := wille.encrypt(options[i])
+			err := wille.hash(options[i])
 			return err
 		case "help":
 			wille.printHelp()
