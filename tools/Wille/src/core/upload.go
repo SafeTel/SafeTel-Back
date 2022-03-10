@@ -9,10 +9,7 @@ package cmd
 
 import (
 	input "PostmanDbDataImplementation/errors"
-	"io/ioutil"
 )
-
-// Domain Layer - Core Functionalities
 
 func (wille *Wille) uploadProfileFile(name string) error {
 	err := wille.checkProfileDataValidity(name)
@@ -31,32 +28,8 @@ func (wille *Wille) uploadProfileFile(name string) error {
 	return nil
 }
 
-func (wille *Wille) checkModelFolder(name string) (byte, error) {
-	content := byte(0b00000000)
-	listOfFolderContent, err := ioutil.ReadDir("data/" + name)
-
-	if err != nil {
-		return 0, &input.Error{Msg: "Unable to open folder for name: " + name + ". Not Found: data/" + name}
-	}
-
-	for _, anElem := range listOfFolderContent {
-		if anElem.Name() == "Profile.json" {
-			content ^= byte(0b00000001)
-		} else if anElem.Name() == "Lists" {
-			content ^= byte(0b00000010)
-		} else if anElem.Name() == "Show.json" {
-			content ^= byte(0b00000100)
-		} else {
-			InfoLogger.Println("Unknow Content: \033[33m", anElem.Name(), "\033[0m")
-		}
-	}
-	return content, nil
-}
-
-// Repository Layer
-
 func (wille *Wille) uploadListFile(name string) error {
-	content, err := wille.checkListJsonFolder(name)
+	content, err := wille.JsonWorker.checkListJsonFolder(name)
 
 	if content&(0b00000001) == valid {
 		err = wille.uploadBlacklistFile(name)

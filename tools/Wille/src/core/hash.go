@@ -11,14 +11,6 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-// Domain Layer - Core Functionalities
-
-// Repository Layer - Error Checking
-
-// Service Layer - Interface
-
-// Repository Layer
-
 func (wille *Wille) hash(password string) error {
 	h := sha3.New512()
 

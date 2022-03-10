@@ -14,10 +14,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// Domain Layer - Core Functionalities
-
 func (wille *Wille) checkWhitelistDataValidity(name string) error {
-	s, err := wille.openAndUnmarshalJson("data/" + name + "/Lists/Whitelist.json")
+	s, err := wille.JsonWorker.openAndUnmarshalJson("data/" + name + "/Lists/Whitelist.json")
 
 	if err != nil {
 		return err
@@ -25,13 +23,13 @@ func (wille *Wille) checkWhitelistDataValidity(name string) error {
 	keys := []string{
 		"guid",
 		"PhoneNumbers"}
-	err = wille.checkJsonContent(s, keys, nil)
+	err = wille.JsonWorker.checkJsonContent(s, keys, nil)
 
 	if err != nil {
 		return errors.New("Problem with json file " + name + "/Lists/Whitelist.json" + ": " + err.Error())
 	}
 	filter := bson.M{"guid": s["guid"]}
-	err = wille.checkDataValidity(wille.Whitelist, filter)
+	err = wille.JsonWorker.checkDataValidity(wille.Whitelist, filter)
 
 	if err != nil {
 		return err
@@ -56,23 +54,20 @@ func (wille *Wille) uploadWhitelistFile(name string) error {
 	return nil
 }
 
-// Repository Layer - Error Checking
-
 func (wille *Wille) checkAndShowWhitelistJsonContent(name string) error {
-	s, err := wille.openAndUnmarshalJson("data/" + name + "/Lists/Whitelist.json")
+	s, err := wille.JsonWorker.openAndUnmarshalJson("data/" + name + "/Lists/Whitelist.json")
 
 	if err != nil {
 		return err
 	}
+	// Basics keys of elements of the json object
 	keys := []string{
 		"guid",
 		"PhoneNumbers"}
 
-	err = wille.checkAndShowJsonContent(s, keys, nil)
+	err = wille.JsonWorker.checkAndShowJsonContent(s, keys, nil)
 	if err != nil {
 		return errors.New("Problem with json file " + name + "/Lists/Whitelist.json" + ": " + err.Error())
 	}
 	return nil
 }
-
-// Repository Layer

@@ -14,10 +14,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// Domain Layer - Core Functionalities
-
 func (wille *Wille) checkHistoryDataValidity(name string) error {
-	s, err := wille.openAndUnmarshalJson("data/" + name + "/Lists/History.json")
+	s, err := wille.JsonWorker.openAndUnmarshalJson("data/" + name + "/Lists/History.json")
 
 	if err != nil {
 		return err
@@ -26,13 +24,13 @@ func (wille *Wille) checkHistoryDataValidity(name string) error {
 		"guid",
 		"History"}
 
-	err = wille.checkJsonContent(s, keys, nil)
+	err = wille.JsonWorker.checkJsonContent(s, keys, nil)
 	if err != nil {
 		return errors.New("Problem with json file " + name + "/Lists/History.json" + ": " + err.Error())
 	}
 	filter := bson.M{"guid": s["guid"]}
 	// keys := []string{"guid"}
-	err = wille.checkDataValidity(wille.History, filter)
+	err = wille.JsonWorker.checkDataValidity(wille.History, filter)
 
 	if err != nil {
 		return err
@@ -58,23 +56,21 @@ func (wille *Wille) uploadHistoryFile(name string) error {
 	return nil
 }
 
-// Repository Layer - Error Checking
-
+// Check the content of the Blacklist.json file and print it
 func (wille *Wille) checkAndShowHistoryJsonContent(name string) error {
-	s, err := wille.openAndUnmarshalJson("data/" + name + "/Lists/History.json")
+	s, err := wille.JsonWorker.openAndUnmarshalJson("data/" + name + "/Lists/History.json")
 
 	if err != nil {
 		return err
 	}
+	// Basics keys of elements of the json object
 	keys := []string{
 		"guid",
 		"History"}
 
-	err = wille.checkAndShowJsonContent(s, keys, nil)
+	err = wille.JsonWorker.checkAndShowJsonContent(s, keys, nil)
 	if err != nil {
 		return errors.New("Problem with json file " + name + "/Lists/History.json" + ": " + err.Error())
 	}
 	return nil
 }
-
-// Repository Layer
