@@ -55,6 +55,9 @@ func (jsonWorker *JsonWorker) openAndUnmarshalJson(path string) (map[string]inte
 	return s, err
 }
 
+// Check if the Collection given as first argument contain the elements finded using the filter
+// If it's the case, return an error stipulating the data has already been posted on the db
+// Otherwise, return nil
 func (jsonWorker *JsonWorker) checkDataValidity(col *mongo.Collection, filter bson.M) error {
 	var isDocument []bson.M
 	cursor, err := col.Find(context.TODO(), filter)
@@ -62,6 +65,7 @@ func (jsonWorker *JsonWorker) checkDataValidity(col *mongo.Collection, filter bs
 	if err != nil {
 		return err
 	}
+	// Check if some documents have been founded
 	err = cursor.All(context.TODO(), &isDocument)
 
 	if isDocument != nil {
@@ -70,6 +74,8 @@ func (jsonWorker *JsonWorker) checkDataValidity(col *mongo.Collection, filter bs
 	return nil
 }
 
+// Parse the content of the Map of a json map value
+// This map is called by checkJsonContent, and call this function RECURSIVELY
 func (jsonWorker *JsonWorker) checkJsonMap(mapContent map[string]interface{}, key string, jsonObjectKeysInOrder []string) ([]string, error) {
 	lenMapContent := len(mapContent)
 	lenIdObjects := len(jsonObjectKeysInOrder)
@@ -85,6 +91,19 @@ func (jsonWorker *JsonWorker) checkJsonMap(mapContent map[string]interface{}, ke
 	return jsonObjectKeysInOrder[lenMapContent:], nil
 }
 
+// Parse the content of the json and interpret the keys:
+// jsonKeysInOrder: the order of the elements inside the json, in the same order than inside the json (same order for parsing optimisation reasons)
+//					In this way, the jsonContent is parse, and when a key is not founded, is missing, or if the value is empty, it print it and return an error
+// jsonObjectKeysInOrder:	The order of the elements of an object inside the json, in order for the same reasons as jsonKeysInOrder
+//							This allow better printing, error handling, and better logic
+// The idea behind this function is to parse and check the json in this way:
+// json example: {					jsonKeysInOrder:	[		jsonObjectKeysInOrder:
+//		"A": "a", -> 									"A",
+// 		"B": "b",										"B",
+//		"C": {											"C"							.:	[
+//				"a_of_C": a_Of_C						]								"a_of_C"
+//		}																				]
+// }
 func (jsonWorker *JsonWorker) checkJsonContent(jsonContent map[string]interface{}, jsonKeysInOrder []string, jsonObjectKeysInOrder []string) error {
 	lenIdentifiers := len(jsonKeysInOrder)
 	key := ""
@@ -123,8 +142,8 @@ func (jsonWorker *JsonWorker) checkJsonContent(jsonContent map[string]interface{
 	return nil
 }
 
-// Parse the content of the Map of a json map value
-// This map is called by checkAndShowJsonContent, and call this function RECURSIVELY
+// Same as checkJsonMap function:
+// 		Called by checkAndShowJsonContent and call it for printing
 func (jsonWorker *JsonWorker) checkAndShowJsonMap(mapContent map[string]interface{}, key string, jsonObjectKeysInOrder []string) ([]string, error) {
 	lenMapContent := len(mapContent)
 	lenIdObjects := len(jsonObjectKeysInOrder)
@@ -146,19 +165,8 @@ func (jsonWorker *JsonWorker) checkAndShowJsonMap(mapContent map[string]interfac
 	return jsonObjectKeysInOrder[lenMapContent:], nil
 }
 
-// Parse the content of the json and interpret the keys:
-// jsonKeysInOrder: the order of the elements inside the json, in the same order than inside the json (same order for parsing optimisation reasons)
-//					In this way, the jsonContent is parse, and when a key is not founded, is missing, or if the value is empty, it print it and return an error
-// jsonObjectKeysInOrder:	The order of the elements of an object inside the json, in order for the same reasons as jsonKeysInOrder
-//							This allow better printing, error handling, and better logic
-// The idea behind this function is to parse and check the json in this way:
-// json example: {					jsonKeysInOrder:	[		jsonObjectKeysInOrder:
-//		"A": "a", -> 									"A",
-// 		"B": "b",										"B",
-//		"C": {											"C"							.:	[
-//				"a_of_C": a_Of_C						]								"a_of_C"
-//		}																				]
-// }
+// Same as checkJsonContent function:
+// 		Print the finded results
 func (jsonWorker *JsonWorker) checkAndShowJsonContent(jsonContent map[string]interface{}, jsonKeysInOrder []string, jsonObjectKeysInOrder []string) error {
 	lenIdentifiers := len(jsonKeysInOrder)
 	key := ""

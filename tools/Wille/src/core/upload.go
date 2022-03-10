@@ -7,28 +7,11 @@
 
 package cmd
 
-import (
-	input "PostmanDbDataImplementation/errors"
-)
-
-func (wille *Wille) uploadProfileFile(name string) error {
-	err := wille.checkProfileDataValidity(name)
-
-	if err != nil {
-		return err
-	}
-	err, inOut, inErr := wille.mongoImport(DEV_URI_USERS_DB, "User", "data/"+name+"/Profile.json")
-
-	if err != nil {
-		return &input.Error{Msg: err.Error()}
-	}
-	InfoLogger.Println("StdOut: Uploading the profile file of ", name, ": ", inOut)
-	InfoLogger.Println("StdErr: Uploading the profile file of ", name, ": ", inErr)
-
-	return nil
-}
-
-func (wille *Wille) uploadListFile(name string) error {
+// Upload the content of Lists folder. The files that will be uploaded are:
+// data/name/Lists:	Blacklist.json
+//					History.json
+//					Whitelist.json
+func (wille *Wille) uploadListFiles(name string) error {
 	content, err := wille.checkListFolder(name)
 
 	if content&(0b00000001) == valid {
@@ -52,6 +35,13 @@ func (wille *Wille) uploadListFile(name string) error {
 	return nil
 }
 
+// Upload wille command
+// upload a model to the database
+// Upload the following files
+// data/Name:	Profile.json
+//				Lists/:	Blacklist.json
+//						History.json
+//						Whitelist.json
 func (wille *Wille) upload(name string) error {
 	content, err := wille.checkModelFolder(name)
 
@@ -62,7 +52,7 @@ func (wille *Wille) upload(name string) error {
 		}
 	}
 	if content&(0b00000010)>>1 == valid {
-		err = wille.uploadListFile(name)
+		err = wille.uploadListFiles(name)
 		if err != nil {
 			return err
 		}

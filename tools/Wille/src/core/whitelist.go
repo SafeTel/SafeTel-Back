@@ -14,12 +14,14 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+// Check the content of the Whitelist.json file and check if the data has not been uploaded yet
 func (wille *Wille) checkWhitelistDataValidity(name string) error {
 	s, err := wille.JsonWorker.openAndUnmarshalJson("data/" + name + "/Lists/Whitelist.json")
 
 	if err != nil {
 		return err
 	}
+	// Basics keys of elements of the json object
 	keys := []string{
 		"guid",
 		"PhoneNumbers"}
@@ -28,6 +30,7 @@ func (wille *Wille) checkWhitelistDataValidity(name string) error {
 	if err != nil {
 		return errors.New("Problem with json file " + name + "/Lists/Whitelist.json" + ": " + err.Error())
 	}
+	// Generating a bson filter using the value of guid
 	filter := bson.M{"guid": s["guid"]}
 	err = wille.JsonWorker.checkDataValidity(wille.Whitelist, filter)
 
@@ -37,6 +40,7 @@ func (wille *Wille) checkWhitelistDataValidity(name string) error {
 	return nil
 }
 
+// Upload the Whitelist.json file
 func (wille *Wille) uploadWhitelistFile(name string) error {
 	err := wille.checkWhitelistDataValidity(name)
 
@@ -54,6 +58,7 @@ func (wille *Wille) uploadWhitelistFile(name string) error {
 	return nil
 }
 
+// Check the content of the Whitelist.json file and print it
 func (wille *Wille) checkAndShowWhitelistJsonContent(name string) error {
 	s, err := wille.JsonWorker.openAndUnmarshalJson("data/" + name + "/Lists/Whitelist.json")
 
