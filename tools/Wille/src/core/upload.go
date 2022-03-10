@@ -29,7 +29,7 @@ func (wille *Wille) uploadProfileFile(name string) error {
 }
 
 func (wille *Wille) uploadListFile(name string) error {
-	content, err := wille.JsonWorker.checkListJsonFolder(name)
+	content, err := wille.checkListFolder(name)
 
 	if content&(0b00000001) == valid {
 		err = wille.uploadBlacklistFile(name)
