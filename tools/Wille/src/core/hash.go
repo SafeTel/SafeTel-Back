@@ -11,6 +11,8 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
+// Hash Wille command
+// Hash using sha3 in 512 bytes the input
 func (wille *Wille) hash(password string) error {
 	h := sha3.New512()
 
