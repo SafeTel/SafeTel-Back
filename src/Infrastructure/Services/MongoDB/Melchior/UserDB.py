@@ -55,33 +55,37 @@ class UserDB():
         return self.DBUserWatcher.GetAccountsByRole(target)
 
 
-    def deleteUser(self, guid):
+    def deleteUser(self, guid: str):
         self.DBWorker.DeleteDocument(guid)
 
 
-    def exists(self, email):
+    def exists(self, email: str):
         return self.DBWatcher.IsDocument('email', email)
 
 
-    def getUser(self, email):
+    def getUser(self, email: str):
         return self.DBWatcher.GetDocument('email', email)
 
 
-    def existByGUID(self, guid):
+    def existByGUID(self, guid: str):
         return self.DBWatcher.IsDocument('guid', guid)
 
 
-    def getUserByGUID(self, guid):
+    def getUserByGUID(self, guid: str):
         return self.DBWatcher.GetDocument('guid', guid)
 
 
-    def getUserRoleByGUID(self, guid):
+    def getUserRoleByGUID(self, guid: str):
         return self.DBWatcher.GetDocument('guid', guid)['role']
 
 
-    def UpdateAccountEmail(self, guid, email):
+    def UpdateLostPasswordMode(self, guid: str, mode: bool):
+        self.DBUserWorker.LostPasswordMode(guid, mode)
+
+
+    def UpdateAccountEmail(self, guid: str, email: str):
         self.DBUserWorker.UpdateAccountEmail(guid, email)
 
 
-    def UpdatePersonalInfos(self, guid, customerInfos, localization):
+    def UpdatePersonalInfos(self, guid: str, customerInfos: dict, localization: dict):
         self.DBUserWorker.UpdatePersonalInfos(guid, customerInfos, localization)

@@ -68,15 +68,18 @@ class User():
             self.__UserInfos = UserInfos(userRaw)
         return self.__UserInfos
 
+    # SECURITY
+
+    def LostPasswordMode(self, mode: bool = False):
+        self.__UserDB.UpdateLostPasswordMode(self.__guid, mode)
+
 
     # UPDATE
     def UpdateEmail(self, newEmail: str):
-        self.__PullUserInfos()
         self.__UserDB.UpdateAccountEmail(self.__guid, newEmail)
 
 
     def UpdatePersonalInfos(self, CustomerInfos: CustomerInfos, Localization: Localization):
-        self.__PullUserInfos()
         NewCustomerInfos = CustomerInfos.ToDict()
         NewLocalization = Localization.ToDict()
         self.__UserDB.UpdatePersonalInfos(self.__guid, NewCustomerInfos, NewLocalization)

@@ -79,6 +79,13 @@ class UserFactory():
         return User(guid)
 
 
+    def LoadUserByMail(self, email: str):
+        if (not self.__UserDB.exists(email)):
+            return None
+        guid = self.__UserDB.getUser(email)["guid"]
+        return User(guid)
+
+
     ### PRIVATE
 
     def __IsUser(self, guid: str):
