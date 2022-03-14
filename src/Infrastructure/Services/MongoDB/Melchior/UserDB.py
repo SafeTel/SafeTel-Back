@@ -80,7 +80,11 @@ class UserDB():
 
 
     def UpdateLostPasswordMode(self, guid: str, mode: bool):
-        self.DBUserWorker.LostPasswordMode(guid, mode)
+        self.DBUserWorker.ChangeToLostPasswordMode(guid, mode)
+
+
+    def UpdateLostPassword(self, guid: str, newpassword: str):
+        self.DBUserWorker.UpdateLostPassword(guid, newpassword)
 
 
     def UpdateAccountEmail(self, guid: str, email: str):

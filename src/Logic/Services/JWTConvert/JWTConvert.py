@@ -27,6 +27,7 @@ from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 class JWTConvert():
     def __init__(self):
         self.UserDb = UserDB()
+        self.SECRET_KEY = os.getenv("SECRET_KEY")
 
 
     def Serialize(self, guid: str, role: Roles, lostpassword: bool = False):
@@ -38,9 +39,10 @@ class JWTConvert():
             raise ValueError("It should be an existing one.")
 
         return jwt.encode( {
-                'guid': guid,
-                'role': role,
-                'exp': datetime.utcnow() + timedelta(hours=24)
+                "guid": guid,
+                "role": role,
+                "exp": datetime.utcnow() + timedelta(hours=24),
+                "lostpassword": lostpassword
             },
             os.getenv("SECRET_KEY")
         )
@@ -48,11 +50,16 @@ class JWTConvert():
 
     def Deserialize(self, token: str):
         try:
-            jwtInfos = jwt.decode(jwt=token, key=os.getenv("SECRET_KEY"), algorithms='HS256')
+            jwtInfos = jwt.decode(jwt=token, key=self.SECRET_KEY, algorithms='HS256')
         except Exception as e:
             return None
 
-        Infos = JWTInfos(jwtInfos["guid"], self.__StrToRoles(jwtInfos["role"]), int(jwtInfos["exp"]))
+        Infos = JWTInfos(
+            jwtInfos["guid"],
+            self.__StrToRoles(jwtInfos["role"]),
+            int(jwtInfos["exp"]),
+            jwtInfos["lostpassword"]
+        )
         curr_ts = time.time()
 
         if (curr_ts > Infos.exp):
@@ -71,7 +78,7 @@ class JWTConvert():
         except Exception as e:
             return None
 
-        exp = data['exp']
+        exp = data["exp"]
         curr_ts = time.time()
 
         if (curr_ts > exp):

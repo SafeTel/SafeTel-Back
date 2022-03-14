@@ -2,83 +2,79 @@
 ## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## ResetPassword
+## UpdatePassword
 ##
 
 ### INFRA
 # Flask imports
+import imp
 from flask.globals import request
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-# Service import
-from Infrastructure.Services.GMail.GMail import GMail
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Authentification.LostPassword.LostPasswordRequest import LostPasswordRequest
-from Models.Endpoints.Authentification.LostPassword.LostPasswordResponse import LostPasswordResponse
+from Models.Endpoints.Authentification.LostPassword.UpdateLostPasswordRequest import UpdateLostPasswordRequest
+from Models.Endpoints.Authentification.LostPassword.UpdateLostPasswordResponse import UpdateLostPasswordResponse
 
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-from Models.Infrastructure.Factory.UserFactory.UserInfos import UserInfos
 
 
 ###
 # Request:
 # POST: localhost:2407/auth/reset-password
 # {
-#     "email": "asukat@the.best"
+#     "token": ""
+#     "password": "newpassword"
 # }
 ###
 # Response:
 # {
-#     "mailsent": true
+#     "passwordupdated": true
 # }
 ###
 
 
-# Route to auth a user
-class ResetPassword(Resource):
+# Route to edit a lost password
+class UpdateLostPassword(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
-        self.__GMail = GMail()
 
 
-    def post(self):
-        Request = LostPasswordRequest(request.get_json())
+    def patch(self):
+        Request = UpdateLostPasswordRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        User = self.__UserFactory.LoadUserByMail(Request.email)
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
+        if (JwtInfos is None or not JwtInfos.lostpassord):
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
+
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        User.LostPasswordMode(True)
         UserInfos = User.PullUserInfos()
 
-        token = self.__JwtConv.Serialize(
-            UserInfos.guid,
-            UserInfos.role,
-            True
-        )
+        if (not UserInfos.Administrative.passwordlost):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        self.__GMail.SendMail(
-            UserInfos.email,
-            "SafeTel: " + UserInfos.username + " it looks like you lost your password",
-            "safetel.fr/resetpassword?token=" + token
-        )
+        User.UpdateLostPassword(Request.password)
+        User.LostPasswordMode(False)
 
-        Response = LostPasswordResponse(True)
+        Response = UpdateLostPasswordResponse(True)
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
             return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
+

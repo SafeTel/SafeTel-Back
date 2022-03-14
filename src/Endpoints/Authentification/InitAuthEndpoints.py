@@ -11,6 +11,7 @@ from Endpoints.Authentification.Token.CheckToken import CheckToken
 from Endpoints.Authentification.Token.ResetToken import ResetToken
 # LostPassword endpoints import
 from Endpoints.Authentification.LostPassword.ResetPassword import ResetPassword
+from Endpoints.Authentification.LostPassword.UpdateLostPassword import UpdateLostPassword
 # Register unique endpoint import
 from Endpoints.Authentification.Register import Register
 # Login unique endpoint import
@@ -25,7 +26,8 @@ class InitAuthentificationEndpoints():
 
 
     def __InitLostPasswordEndpoints(self, Api):
-        Api.add_resource(ResetPassword, "/auth/lostpassword/reset-password")
+        Api.add_resource(ResetPassword, "/auth/lost-password/reset-password")
+        Api.add_resource(UpdateLostPassword, "/auth/lost-password/update-password")
 
 
     def __InitCheckTokenEndpoints(self, Api):

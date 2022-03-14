@@ -26,6 +26,10 @@ from Models.Infrastructure.Factory.UserFactory.UserInfos import UserInfos
 from Models.Endpoints.SharedJObject.Account.Infos.CustomerInfos import CustomerInfos
 from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localization
 
+### LOGIC
+# Password converter import
+from Logic.Services.PWDConvert.PWDConvert import PWDConvert
+
 
 ### /!\ WARNING /!\ ###
 # This is an HIGH LEVEL User INFRA interface including logic, proceed with caution
@@ -37,6 +41,8 @@ class User():
     def __init__(self, guid: str):
         self.__guid = guid
         self.__UserInfos = None
+
+        self.__PWDConvert = PWDConvert()
 
         self.__UserDB = UserDB()
         self.__HistoryDB = HistoryDB()
@@ -72,6 +78,11 @@ class User():
 
     def LostPasswordMode(self, mode: bool = False):
         self.__UserDB.UpdateLostPasswordMode(self.__guid, mode)
+
+
+    def UpdateLostPassword(self, newpassword: str):
+        hashedpassword = self.__PWDConvert.Serialize(newpassword)
+        self.__UserDB.UpdateLostPassword(self.__guid, hashedpassword)
 
 
     # UPDATE
