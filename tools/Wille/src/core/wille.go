@@ -59,10 +59,10 @@ var tabPrefixForJsonPrint = "\t\t"
 
 // Print help
 func (wille *Wille) printHelp() {
-	fmt.Println("\nHelp :")
-	fmt.Println("./<binary_name> <command> ")
+	fmt.Println("\nOVERVIEW: Wille command tool to post data on safetel server")
+	fmt.Println("\nUSAGE: ./<binary_name> {command} ")
 	fmt.Println("<binary_name>: the name of the binary")
-	fmt.Println("<command>: show <data> | upload <data> | hash <password> | help")
+	fmt.Println("command: show <data | upload <data> | hash <password> | help")
 	fmt.Println("<data>: The name of a user defined inside the model folder. You can find the available models by doing: ls ./data")
 	fmt.Println("<password>: Password to hash\n")
 }
