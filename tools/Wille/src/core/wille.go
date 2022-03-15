@@ -33,7 +33,7 @@ type Wille struct {
 	Whitelist  *mongo.Collection
 	User       *mongo.Collection
 	Greylist   *mongo.Collection
-	JsonWorker *JsonWorker
+	JsonReader *JsonReader
 }
 
 // Global Var
@@ -244,7 +244,7 @@ func NewWille() (*Wille, error) {
 	wille.Whitelist = wille.DB.Collection("Whitelist")
 	wille.User = wille.DB.Collection("User")
 	wille.Greylist = wille.DB.Collection("Greylist")
-	wille.JsonWorker, err = NewJsonWorker()
+	wille.JsonReader, err = NewJsonReader()
 
 	if err != nil {
 		return nil, err

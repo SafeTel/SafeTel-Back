@@ -22,19 +22,19 @@ import (
 	// "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type JsonWorker struct {
+type JsonReader struct {
 	ctx context.Context
 }
 
-func (jsonWorker *JsonWorker) printEmptyOrUndefinedKey(key string) {
+func (jsonReader *JsonReader) printEmptyOrUndefinedKey(key string) {
 	InfoLogger.Println(tabPrefixForJsonPrint, "-\033[36m", key, "\033[0mvalue: \033[31mEmpty or not defined\033[0m")
 }
 
-func (jsonWorker *JsonWorker) printDefinedKeyWithValue(key string, value interface{}) {
+func (jsonReader *JsonReader) printDefinedKeyWithValue(key string, value interface{}) {
 	InfoLogger.Println(tabPrefixForJsonPrint, "-\033[36m", key, "\033[0mvalue: \033[32mdefined\033[0m Value: \033[36m", value, ResetColor)
 }
 
-func (jsonWorker *JsonWorker) openAndUnmarshalJson(path string) (map[string]interface{}, error) {
+func (jsonReader *JsonReader) openAndUnmarshalJson(path string) (map[string]interface{}, error) {
 	jsonFile, err := os.Open(path)
 
 	if err != nil {
@@ -58,7 +58,7 @@ func (jsonWorker *JsonWorker) openAndUnmarshalJson(path string) (map[string]inte
 // Check if the Collection given as first argument contain the elements finded using the filter
 // If it's the case, return an error stipulating the data has already been posted on the db
 // Otherwise, return nil
-func (jsonWorker *JsonWorker) checkDataValidity(col *mongo.Collection, filter bson.M) error {
+func (jsonReader *JsonReader) checkDataValidity(col *mongo.Collection, filter bson.M) error {
 	var isDocument []bson.M
 	cursor, err := col.Find(context.TODO(), filter)
 
@@ -76,13 +76,13 @@ func (jsonWorker *JsonWorker) checkDataValidity(col *mongo.Collection, filter bs
 
 // Parse the content of the Map of a json map value
 // This map is called by checkJsonContent, and call this function RECURSIVELY
-func (jsonWorker *JsonWorker) checkJsonMap(mapContent map[string]interface{}, key string, jsonObjectKeysInOrder []string) ([]string, error) {
+func (jsonReader *JsonReader) checkJsonMap(mapContent map[string]interface{}, key string, jsonObjectKeysInOrder []string) ([]string, error) {
 	lenMapContent := len(mapContent)
 	lenIdObjects := len(jsonObjectKeysInOrder)
 	if lenIdObjects < lenMapContent {
 		return nil, errors.New("Missing identifier of Object for json var: \033[31m" + key + ResetColor + ". Len value: " + strconv.Itoa(lenIdObjects))
 	}
-	err := jsonWorker.checkJsonContent(mapContent, jsonObjectKeysInOrder[0:lenMapContent], jsonObjectKeysInOrder[lenMapContent:])
+	err := jsonReader.checkJsonContent(mapContent, jsonObjectKeysInOrder[0:lenMapContent], jsonObjectKeysInOrder[lenMapContent:])
 
 	if err != nil {
 		return nil, err
@@ -104,7 +104,7 @@ func (jsonWorker *JsonWorker) checkJsonMap(mapContent map[string]interface{}, ke
 //				"a_of_C": a_Of_C						]								"a_of_C"
 //		}																				]
 // }
-func (jsonWorker *JsonWorker) checkJsonContent(jsonContent map[string]interface{}, jsonKeysInOrder []string, jsonObjectKeysInOrder []string) error {
+func (jsonReader *JsonReader) checkJsonContent(jsonContent map[string]interface{}, jsonKeysInOrder []string, jsonObjectKeysInOrder []string) error {
 	lenIdentifiers := len(jsonKeysInOrder)
 	key := ""
 
@@ -120,7 +120,7 @@ func (jsonWorker *JsonWorker) checkJsonContent(jsonContent map[string]interface{
 				return errors.New("Missing value inside json")
 			} else {
 				var err error
-				jsonObjectKeysInOrder, err = jsonWorker.checkJsonMap(jsonContent[key].(map[string]interface{}), key, jsonObjectKeysInOrder)
+				jsonObjectKeysInOrder, err = jsonReader.checkJsonMap(jsonContent[key].(map[string]interface{}), key, jsonObjectKeysInOrder)
 				if err != nil {
 					return err
 				}
@@ -144,7 +144,7 @@ func (jsonWorker *JsonWorker) checkJsonContent(jsonContent map[string]interface{
 
 // Same as checkJsonMap function:
 // 		Called by checkAndShowJsonContent and call it for printing
-func (jsonWorker *JsonWorker) checkAndShowJsonMap(mapContent map[string]interface{}, key string, jsonObjectKeysInOrder []string) ([]string, error) {
+func (jsonReader *JsonReader) checkAndShowJsonMap(mapContent map[string]interface{}, key string, jsonObjectKeysInOrder []string) ([]string, error) {
 	lenMapContent := len(mapContent)
 	lenIdObjects := len(jsonObjectKeysInOrder)
 	// Check if the json object array has enought keys to check the content of the json map content
@@ -153,7 +153,7 @@ func (jsonWorker *JsonWorker) checkAndShowJsonMap(mapContent map[string]interfac
 	}
 	// add a tab to prefix
 	tabPrefixForJsonPrint += "\t"
-	err := jsonWorker.checkAndShowJsonContent(mapContent, jsonObjectKeysInOrder[0:lenMapContent], jsonObjectKeysInOrder[lenMapContent:])
+	err := jsonReader.checkAndShowJsonContent(mapContent, jsonObjectKeysInOrder[0:lenMapContent], jsonObjectKeysInOrder[lenMapContent:])
 
 	if err != nil {
 		return nil, err
@@ -167,7 +167,7 @@ func (jsonWorker *JsonWorker) checkAndShowJsonMap(mapContent map[string]interfac
 
 // Same as checkJsonContent function:
 // 		Print the finded results
-func (jsonWorker *JsonWorker) checkAndShowJsonContent(jsonContent map[string]interface{}, jsonKeysInOrder []string, jsonObjectKeysInOrder []string) error {
+func (jsonReader *JsonReader) checkAndShowJsonContent(jsonContent map[string]interface{}, jsonKeysInOrder []string, jsonObjectKeysInOrder []string) error {
 	lenIdentifiers := len(jsonKeysInOrder)
 	key := ""
 	// Check if the json content has the same number of elements than the values to checks
@@ -181,32 +181,32 @@ func (jsonWorker *JsonWorker) checkAndShowJsonContent(jsonContent map[string]int
 		switch reflect.ValueOf(jsonContent[key]).Kind() {
 		case reflect.Map:
 			if jsonContent[key] == nil {
-				jsonWorker.printEmptyOrUndefinedKey(key)
+				jsonReader.printEmptyOrUndefinedKey(key)
 				return errors.New("Missing value inside json")
 			} else {
-				jsonWorker.printDefinedKeyWithValue(key, jsonContent[key])
+				jsonReader.printDefinedKeyWithValue(key, jsonContent[key])
 				var err error
 				// Check the content of the json object and print the content.
 				// The content of the json object is the content stored inside the 3th parameter of the function
-				jsonObjectKeysInOrder, err = jsonWorker.checkAndShowJsonMap(jsonContent[key].(map[string]interface{}), key, jsonObjectKeysInOrder)
+				jsonObjectKeysInOrder, err = jsonReader.checkAndShowJsonMap(jsonContent[key].(map[string]interface{}), key, jsonObjectKeysInOrder)
 				if err != nil {
 					return err
 				}
 			}
 		case reflect.String:
 			if jsonContent[key] == "" {
-				jsonWorker.printEmptyOrUndefinedKey(key)
+				jsonReader.printEmptyOrUndefinedKey(key)
 				return errors.New("Missing value inside json")
 			} else {
-				jsonWorker.printDefinedKeyWithValue(key, jsonContent[key])
+				jsonReader.printDefinedKeyWithValue(key, jsonContent[key])
 			}
 		// Type of an array when stored inside a variable of type: map[string]interface{}
 		case reflect.TypeOf([]interface{}{}).Kind():
 			if jsonContent[key] == nil {
-				jsonWorker.printEmptyOrUndefinedKey(key)
+				jsonReader.printEmptyOrUndefinedKey(key)
 				return errors.New("Missing value inside json")
 			} else {
-				jsonWorker.printDefinedKeyWithValue(key, jsonContent[key])
+				jsonReader.printDefinedKeyWithValue(key, jsonContent[key])
 			}
 		default:
 			if jsonContent[key] == nil {
@@ -220,8 +220,8 @@ func (jsonWorker *JsonWorker) checkAndShowJsonContent(jsonContent map[string]int
 }
 
 // Check the content of the Lists folder and print it
-func (jsonWorker *JsonWorker) checkShowJsonContent(name string) error {
-	s, err := jsonWorker.openAndUnmarshalJson("data/" + name + "/Show.json")
+func (jsonReader *JsonReader) checkShowJsonContent(name string) error {
+	s, err := jsonReader.openAndUnmarshalJson("data/" + name + "/Show.json")
 
 	if err != nil {
 		return err
@@ -231,15 +231,15 @@ func (jsonWorker *JsonWorker) checkShowJsonContent(name string) error {
 		"infos",
 		"password"}
 
-	err = jsonWorker.checkAndShowJsonContent(s, keys, nil)
+	err = jsonReader.checkAndShowJsonContent(s, keys, nil)
 	if err != nil {
 		return errors.New("Problem with json file " + name + "/Show.json" + ": " + err.Error())
 	}
 	return nil
 }
 
-func NewJsonWorker() (*JsonWorker, error) {
-	jsonWorker := JsonWorker{ctx: context.TODO()}
+func NewJsonReader() (*JsonReader, error) {
+	jsonReader := JsonReader{ctx: context.TODO()}
 
 	// wille.DB = wille.Client.Database("Melchior")
 	// wille.Blacklist = wille.DB.Collection("Blacklist")
@@ -247,11 +247,11 @@ func NewJsonWorker() (*JsonWorker, error) {
 	// wille.Whitelist = wille.DB.Collection("Whitelist")
 	// wille.User = wille.DB.Collection("User")
 	// wille.Greylist = wille.DB.Collection("Greylist")
-	// wille.JsonWorker = cmd.NewJsonWorker()
+	// wille.JsonReader = cmd.NewJsonReader()
 
 	// InfoLogger = log.New(os.Stdin, "", log.Ldate|log.Ltime)
 	// WarningLogger = log.New(os.Stderr, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
 	// ErrorLogger = log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
 
-	return &jsonWorker, nil
+	return &jsonReader, nil
 }

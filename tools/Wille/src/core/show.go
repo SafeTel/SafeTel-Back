@@ -87,7 +87,7 @@ func (wille *Wille) show(name string) error {
 	if modelFolderContent&(0b00000100)>>2 == valid {
 		InfoLogger.Println("Show.json: \033[32mFinded\033[0m")
 		// Check the content of the Show.json file and print the elements
-		err = wille.JsonWorker.checkShowJsonContent(name)
+		err = wille.JsonReader.checkShowJsonContent(name)
 		if err != nil {
 			return err
 		}

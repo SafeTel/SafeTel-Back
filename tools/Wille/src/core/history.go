@@ -16,7 +16,7 @@ import (
 
 // Check the content of the History.json file and check if the data has not been uploaded yet
 func (wille *Wille) checkHistoryDataValidity(name string) error {
-	s, err := wille.JsonWorker.openAndUnmarshalJson("data/" + name + "/Lists/History.json")
+	s, err := wille.JsonReader.openAndUnmarshalJson("data/" + name + "/Lists/History.json")
 
 	if err != nil {
 		return err
@@ -26,14 +26,14 @@ func (wille *Wille) checkHistoryDataValidity(name string) error {
 		"guid",
 		"History"}
 
-	err = wille.JsonWorker.checkJsonContent(s, keys, nil)
+	err = wille.JsonReader.checkJsonContent(s, keys, nil)
 	if err != nil {
 		return errors.New("Problem with json file " + name + "/Lists/History.json" + ": " + err.Error())
 	}
 	// Generating a bson filter using the value of guid
 	filter := bson.M{"guid": s["guid"]}
 	// keys := []string{"guid"}
-	err = wille.JsonWorker.checkDataValidity(wille.History, filter)
+	err = wille.JsonReader.checkDataValidity(wille.History, filter)
 
 	if err != nil {
 		return err
@@ -62,7 +62,7 @@ func (wille *Wille) uploadHistoryFile(name string) error {
 
 // Check the content of the Blacklist.json file and print it
 func (wille *Wille) checkAndShowHistoryJsonContent(name string) error {
-	s, err := wille.JsonWorker.openAndUnmarshalJson("data/" + name + "/Lists/History.json")
+	s, err := wille.JsonReader.openAndUnmarshalJson("data/" + name + "/Lists/History.json")
 
 	if err != nil {
 		return err
@@ -72,7 +72,7 @@ func (wille *Wille) checkAndShowHistoryJsonContent(name string) error {
 		"guid",
 		"History"}
 
-	err = wille.JsonWorker.checkAndShowJsonContent(s, keys, nil)
+	err = wille.JsonReader.checkAndShowJsonContent(s, keys, nil)
 	if err != nil {
 		return errors.New("Problem with json file " + name + "/Lists/History.json" + ": " + err.Error())
 	}

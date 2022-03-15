@@ -16,7 +16,7 @@ import (
 
 // Check the content of the Profile.json file and check if the data has not been uploaded yet
 func (wille *Wille) checkProfileDataValidity(name string) error {
-	s, err := wille.JsonWorker.openAndUnmarshalJson("data/" + name + "/Profile.json")
+	s, err := wille.JsonReader.openAndUnmarshalJson("data/" + name + "/Profile.json")
 
 	if err != nil {
 		return err
@@ -40,13 +40,13 @@ func (wille *Wille) checkProfileDataValidity(name string) error {
 		"region",
 		"adress"}
 
-	err = wille.JsonWorker.checkJsonContent(s, keys, objectKeys)
+	err = wille.JsonReader.checkJsonContent(s, keys, objectKeys)
 	if err != nil {
 		return errors.New("Problem with json file " + name + "/Profile.json" + ": " + err.Error())
 	}
 	// Generating a bson filter using the values of guid and email
 	filter := bson.M{"email": s["email"], "guid": s["guid"]}
-	err = wille.JsonWorker.checkDataValidity(wille.User, filter)
+	err = wille.JsonReader.checkDataValidity(wille.User, filter)
 
 	if err != nil {
 		return err
@@ -74,7 +74,7 @@ func (wille *Wille) uploadProfileFile(name string) error {
 
 // Check the content of the Profile.json file and print it
 func (wille *Wille) checkAndShowProfileJsonContent(name string) error {
-	s, err := wille.JsonWorker.openAndUnmarshalJson("data/" + name + "/Profile.json")
+	s, err := wille.JsonReader.openAndUnmarshalJson("data/" + name + "/Profile.json")
 
 	if err != nil {
 		return err
@@ -98,7 +98,7 @@ func (wille *Wille) checkAndShowProfileJsonContent(name string) error {
 		"region",
 		"adress"}
 
-	err = wille.JsonWorker.checkAndShowJsonContent(s, keys, objectKeys)
+	err = wille.JsonReader.checkAndShowJsonContent(s, keys, objectKeys)
 	if err != nil {
 		return errors.New("Problem with json file " + name + "/Profile.json" + ": " + err.Error())
 	}
