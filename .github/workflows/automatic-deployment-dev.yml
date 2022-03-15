@@ -40,6 +40,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT_DEV }}
           script: |
-            cd /home/backadmin/SafeTel-Back/devOps/deployement/
+            cd /home/backadmin/SafeTel-Back/devOps/cd/
             docker-compose pull magi_dev
             docker-compose up -d --force-recreate --no-deps --build magi_dev
