@@ -7,8 +7,7 @@
 
 ### INFRA
 # Flask imports
-import imp
-from flask.globals import request
+from flask import request as fquest
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
@@ -16,47 +15,50 @@ from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
-# Model Request & Response import
-from Models.Endpoints.Authentification.LostPassword.UpdateLostPasswordRequest import UpdateLostPasswordRequest
-from Models.Endpoints.Authentification.LostPassword.UpdateLostPasswordResponse import UpdateLostPasswordResponse
+# Models Request & Response imports
+from Models.Endpoints.Account.Infos.UpdatePasswordrequest import UpdatePasswordRequest
+from Models.Endpoints.Account.Infos.UpdatePasswordResponse import UpdatePasswordResponse
 
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-
+# Password converter import
+from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 
 ###
 # Request:
-# POST: localhost:2407/auth/reset-password
+# PATCH: localhost:2407/account/infos/update-password
 # {
-#     "token": ""
-#     "password": "newpassword"
+#     "token": "",
+#     "oldpassword": "pwd",
+#     "newpassword": "newpwd",
 # }
 ###
 # Response:
 # {
-#     "passwordupdated": true
+# 	  "updated": false
 # }
 ###
 
 
-# Route to edit a lost password
-class UpdateLostPassword(Resource):
+# Route to update passwword of an account
+class UpdatePassword(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
+        self.__PWDConvert = PWDConvert()
 
 
     def patch(self):
-        Request = UpdateLostPasswordRequest(request.get_json())
+        Request = UpdatePasswordRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
-        if (JwtInfos is None or not JwtInfos.lostpassord):
+        if JwtInfos is None:
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
@@ -64,14 +66,16 @@ class UpdateLostPassword(Resource):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         UserInfos = User.PullUserInfos()
+        hashednewpassword = self.__PWDConvert.Serialize(Request.newpassword)
+        if (UserInfos.password == hashednewpassword):
+            return self.__EndpointErrorManager.CreateBadRequestError("The old and new password are the same"), 400
 
-        if (not UserInfos.Administrative.passwordlost):
-            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+        User.UpdatePassword(Request.newpassword)
 
-        User.UpdatePassword(Request.password)
-        User.LostPasswordMode(False)
-
-        Response = UpdateLostPasswordResponse(True)
+        UserInfos = User.PullUserInfos()
+        Response = UpdatePasswordResponse(
+            UserInfos.password == hashednewpassword
+        )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

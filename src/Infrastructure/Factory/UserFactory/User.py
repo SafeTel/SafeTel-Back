@@ -80,7 +80,7 @@ class User():
         self.__UserDB.UpdateLostPasswordMode(self.__guid, mode)
 
 
-    def UpdateLostPassword(self, newpassword: str):
+    def UpdatePassword(self, newpassword: str):
         hashedpassword = self.__PWDConvert.Serialize(newpassword)
         self.__UserDB.UpdateLostPassword(self.__guid, hashedpassword)
 
