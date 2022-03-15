@@ -16,10 +16,10 @@ class GMail:
     def __init__(self):
         self.db = GoogleServiceDB()
         cred_login, cred_password = self.db.PullGMailCreds()
-        self.emailLogin = cred_login
-        self.emailPassword = cred_password
+        self.emaillogin = cred_login
+        self.emailpassword = cred_password
 
-    def sendMail(self, userEmail, object, content):
+    def SendMail(self, useremail, object, content):
         with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
             smtp.ehlo()
             smtp.starttls()
@@ -27,5 +27,5 @@ class GMail:
 
             mail_data = f'Subject: {object}\n\n{content}'
 
-            smtp.login(self.emailLogin, self.emailPassword)
-            smtp.sendmail(self.emailLogin, userEmail, mail_data)
+            smtp.login(self.emaillogin, self.emailpassword)
+            smtp.sendmail(self.emaillogin, useremail, mail_data)

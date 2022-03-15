@@ -1,9 +1,3 @@
-##
-## EPITECH PROJECT, 2022
-## SafeTel-Back
-## File description:
-## UserInfos
-##
 
 ### MODELS
 # Abstraction import
@@ -15,23 +9,27 @@ from Models.Endpoints.SharedJObject.Account.Infos.CustomerInfos import CustomerI
 from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localization
 from Models.Endpoints.SharedJObject.Account.Infos.Administrative import Administrative
 
-# Represents UpdatePErsonalInfos Request
-class UserInfos(JParent):
-    def __init__(self, rawJSON: str):
+### LOGIC
+# time import
+import time
+
+# Represents InternalUser
+class InternalUser(JParent):
+    def __init__(self, rawJSON: str, guid: str, password: str):
         loadedJSON = self.Load(rawJSON)
-        self.__InitJParent(loadedJSON)
+        self.__InitJParent(loadedJSON, guid, password)
         self.__InitCustomerInfosJObject(loadedJSON)
         self.__InitLocalizationJObject(loadedJSON)
-        self.__InitAdministrativeJObject(loadedJSON)
+        self.__InitAdministrativeJObject()
 
     # Values Assignement
-    def __InitJParent(self, loadedJSON: dict):
+    def __InitJParent(self, loadedJSON: dict, guid: str, password: str):
         self.email = self.LoadElement(loadedJSON, "email")
         self.username = self.LoadElement(loadedJSON, "username")
-        self.password = self.LoadElement(loadedJSON, "password")
-        self.time = self.LoadElement(loadedJSON, "time")
-        self.guid = self.LoadElement(loadedJSON, "guid")
-        self.role = Roles.StrToEnum(self.LoadElement(loadedJSON, "role"))
+        self.password = password
+        self.time = time.time()
+        self.guid = guid
+        self.role = Roles.USER
 
     def __InitCustomerInfosJObject(self, loadedJSON: dict):
         customerInfosRaw = self.LoadElement(loadedJSON, "CustomerInfos")
@@ -41,9 +39,8 @@ class UserInfos(JParent):
         localizationRaw = self.LoadElement(loadedJSON, "Localization")
         self.Localization = None if localizationRaw is None else Localization(localizationRaw)
 
-    def __InitAdministrativeJObject(self, loadedJSON: dict):
-        administrativeRaw = self.LoadElement(loadedJSON, "Administrative")
-        self.Administrative = None if administrativeRaw is None else Administrative(administrativeRaw)
+    def __InitAdministrativeJObject(self):
+        self.Administrative = Administrative()
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -56,7 +53,7 @@ class UserInfos(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.email is None): return ""
+        if (self.email is None): return "Body Denied"
         if (type(self.email) is not str): return "Email Denied"
         if (self.username is None): return "Body Denied"
         if (type(self.username) is not str): return "Username Denied"
@@ -77,11 +74,5 @@ class UserInfos(JParent):
     def __EvaLocalizationJObject(self):
         if (self.Localization is None): return "Body Denied"
         errorJObject = self.Localization.EvaErrorsJObject()
-        if (errorJObject != None):return errorJObject
-        return None
-
-    def __EvaAdministrativeJObject(self):
-        if (self.Administrative is None): return "Body Denied"
-        errorJObject = self.Administrative.EvaErrorsJObject()
         if (errorJObject != None):return errorJObject
         return None
