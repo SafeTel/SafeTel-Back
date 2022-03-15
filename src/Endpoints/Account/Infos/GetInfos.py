@@ -66,8 +66,6 @@ class GetInfos(Resource):
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
-        if (JwtInfos.role != Roles.USER):
-            return self.__EndpointErrorManager.CreateBadRequestError("This account is not a USER account"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User == None):
