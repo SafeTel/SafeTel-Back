@@ -17,6 +17,7 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 # Network Imports
 import requests
 import os
+import config
 from flask import Flask
 from Routes.Utils.JWTProvider.Roles import Roles
 from flask_restful import Api
@@ -34,14 +35,15 @@ sentry_sdk.init(
     # We recommend adjusting this value in production.
     traces_sample_rate=1.0
 )
-
 logging.info("Connected to sentry")
+
 
 # ---
 # Flask initialitation
 app = Flask(__name__)
 app.debug = True
 api = Api(app)
+
 
 # ---
 ## Initialization of routes imports
@@ -83,10 +85,11 @@ logging.info("Routes initialized - Dev Ressources")
 # Logs imports
 import socket
 
-if __name__ == "__main__":
-    logging.warning("You are starting the server connected with Mongo DB, this is a shared DB")
-    logging.warning("Be aware of the current git branch DEV or PROD")
 
+from flask_cors import CORS
+CORS(app)
+
+if __name__ == "__main__":
     env_port = os.getenv('SERVER_PORT', '2407')
 
     logging.info("Launching API on : 0.0.0.0:2407")
