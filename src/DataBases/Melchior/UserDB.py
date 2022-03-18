@@ -8,11 +8,8 @@
 # Client mongo db import
 import pymongo
 
-# Import db name
-from config import dbname
-
-# Melchior uri import
-from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
+# Import db name and db URI
+from config import dbname, URI_MELCHIOR
 
 # PyMongo Internal Utils
 from DataBases.InternalUtils.DataWatcher import GetDocument, IsDocument
@@ -30,6 +27,7 @@ class UserDB():
         self.Users = self.db['User']
 
     def addUser(self, user_data, role):
+        del user_data["magicNumber"]
         if (role == Roles.USER):
             user_data['role'] = 'user'
         elif (role == Roles.DEVELOPER):

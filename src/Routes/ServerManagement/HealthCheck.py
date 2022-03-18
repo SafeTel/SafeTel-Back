@@ -13,12 +13,12 @@ from flask_restful import Resource
 from flask.globals import request
 import pymongo
 
+# Import db name and db URI
+from config import dbname, URI_MELCHIOR
+
 # Health Check imports
 from healthcheck import HealthCheck as HealthCheckFromPackage
 from healthcheck import EnvironmentDump
-
-# Melchior uri import
-from DataBases.Melchior.MelchiorConfig import URI_MELCHIOR
 
 # Utils imports
 import json

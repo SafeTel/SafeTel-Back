@@ -49,7 +49,7 @@ class ClaimApiKeys(Resource):
             return BadRequestError("you are not a contributor"), 400
 
         if (ApiKeyLogDb.isApiKeyForContributor(claimer, request.remote_addr)):
-            return BadRequestError("you already own an apiKey")
+            return BadRequestError("you already own an apiKey"), 400
 
         apiKey = secrets.token_urlsafe(32)
         ApiKeyLogDb.logClaimeApiKey(apiKey, claimer, request.remote_addr)
