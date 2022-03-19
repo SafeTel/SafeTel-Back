@@ -27,3 +27,10 @@ class MongoDBWorker():
         if guid == None:
             return
         self.MongoDB.delete_one({"guid": guid})
+
+
+    # Delete a document linked to a prop in MongoDb
+    def DeleteDocumentByProp(self, prop: str, guid: str):
+        if guid == None:
+            return
+        self.MongoDB.delete_one({"guid": guid})
