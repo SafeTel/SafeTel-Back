@@ -16,19 +16,19 @@ from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBW
 # env var import
 import os
 
-# Object to represent table Contributors
-class UnclaimedBoxesDB():
+# Object to represent table Unclaimed Boxes
+class UnclaimedBoxsDB():
     def __init__(self, db_name=os.getenv("DB_BALTHASAR")):
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
-        self.UnclaimedBoxes = self.db['UnclaimedBoxes']
-        self.DBWatcher = MongoDBWatcher(self.UnclaimedBoxes)
-        self.DBWorker = MongoDBWorker(self.UnclaimedBoxes)
+        self.UnclaimedBoxs = self.db['UnclaimedBoxes']
+        self.DBWatcher = MongoDBWatcher(self.UnclaimedBoxs)
+        self.DBWorker = MongoDBWorker(self.UnclaimedBoxs)
 
 
     def isValidBoxid(self, boxid: str):
         return self.DBWatcher.IsDocument("boxid", boxid)
 
 
-    def deleteBoxid(self, boxid: str):
+    def deleteByBoxid(self, boxid: str):
         self.DBWorker.DeleteDocumentByProp("boxid", boxid)

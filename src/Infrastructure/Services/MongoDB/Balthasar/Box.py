@@ -16,8 +16,8 @@ from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBW
 # env var import
 import os
 
-# Object to represent table Contributors
-class BoxesDB():
+# Object to represent table Box
+class BoxDB():
     def __init__(self, db_name=os.getenv("DB_BALTHASAR")):
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
