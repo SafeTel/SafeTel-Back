@@ -55,8 +55,5 @@ class BoxList(JObject):
 
 
     def __EvaErrorBox(self, Box: Box):
-        errorHistoryCall = Box.EvaluateModelErrors()
-        if (errorHistoryCall != None):
-            return errorHistoryCall
-        return None
-
+        errorBox = Box.EvaluateModelErrors()
+        return errorBox

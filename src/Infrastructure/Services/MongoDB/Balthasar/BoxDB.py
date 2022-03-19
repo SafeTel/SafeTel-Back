@@ -26,12 +26,12 @@ class BoxDB():
         self.DBWorker = MongoDBWorker(self.Box)
 
 
-    def createDataBox(self, boxdata: dict):
-        self.DBWorker.InsertDocument(boxdata)
-
-
-    def addBox(self, boxdata: dict):
-        return # update the box list
+    def newDataBox(self, guid: str):
+        NewBoxDocument = {
+            "guid": guid,
+            "Boxes": []
+        }
+        self.DBWorker.InsertDocument(NewBoxDocument)
 
 
     def getBoxData(self, guid: str):
@@ -44,3 +44,40 @@ class BoxDB():
 
     def delete(self, guid: str):
         self.DBWorker.DeleteDocument(guid)
+
+
+    def addBox(self, guid: str, boxid: str, activity: bool, severity: str):
+        Current = self.__PullData(guid)
+        if Current is None:
+            return
+        NewList = self.__AddBox(
+            boxid,
+            activity,
+            severity,
+            Current["Boxes"]
+        )
+        self.__UpdateList(guid, NewList)
+
+
+    ### PRIVATE
+
+    def __PullData(self, guid: str):
+        return self.DBWatcher.GetDocument("guid", guid)
+
+
+    def __UpdateList(self, guid: str, NewList: list):
+        QueryGUID = {
+            'guid': str(guid)
+        }
+        QueryData = { "$set": { "Boxes": NewList } }
+        self.Box.update_one(QueryGUID, QueryData)
+
+
+    def __AddBox(self, boxid: str, activity: bool, severity: str, TemporaryList: list):
+        TemporaryList.append({
+                "boxid": boxid,
+                "activity": activity,
+                "severity": severity
+            }
+        )
+        return TemporaryList

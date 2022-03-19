@@ -14,6 +14,7 @@ from Infrastructure.Services.MongoDB.Balthasar.UnclaimedBoxs import UnclaimedBox
 # Box Model import
 from Models.Infrastructure.Factory.UserFactory.Box.Box import Box
 from Models.Infrastructure.Factory.UserFactory.Box.BoxList import BoxList
+from Models.Infrastructure.Factory.UserFactory.Box.BoxSeverity import BoxSeverity
 
 
 ### /!\ WARNING /!\ ###
@@ -36,14 +37,33 @@ class FactBox():
 
 
     # WRITE
-    def ClaimBox(self, boxid):
-        box = 0 # init the unique box model
-        # looks if there is already a box for this user
-            # yes -> addbox
-        self.__BoxDB.addBox(box)
-            # no -> init the whole model
-        self.__BoxDB.createDataBox(box)
+    def ClaimBox(self, boxid: str):
+        ClaimingBox = Box(boxid, True, BoxSeverity.NORMAL)
 
+        if (not self.__UnclaimedBoxsDB.isValidBoxid(boxid)):
+            return "This box isn't claimable"
+
+        UserBoxes = self.__PullBoxData()
+
+        for UserBox in UserBoxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                return "This box is already claimed by this account"
+
+        self.__BoxDB.addBox(
+            self.__guid,
+            ClaimingBox.boxid,
+            ClaimingBox.activity,
+            BoxSeverity.EnumToStr(ClaimingBox.severity)
+        )
         self.__UnclaimedBoxsDB.deleteByBoxid(boxid)
 
         return BoxList(self.__BoxDB.getBoxData(self.__guid)["Boxes"])
+
+
+    # PRIVATE
+    def __PullBoxData(self):
+        return BoxList(self.__BoxDB.getBoxData(self.__guid)["Boxes"])
+
+
+    def __CheckBoxid(self, UserBox: Box, boxid: str):
+        return UserBox.boxid == boxid

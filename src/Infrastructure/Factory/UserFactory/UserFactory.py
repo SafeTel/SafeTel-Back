@@ -6,11 +6,12 @@
 ##
 
 ### INFRA
-# High Level interface for DBs imports
+# Low Level interface for DBs imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
+from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 # User sub class import
 from Infrastructure.Factory.UserFactory.User import User
 # Roles enum import
@@ -39,6 +40,7 @@ class UserFactory():
         self.__BlackListDB = BlacklistDB()
         self.__WhiteListDB = WhitelistDB()
         self.__HistoryDB = HistoryDB()
+        self.__BoxDB = BoxDB()
         self.__PWDConvert = PWDConvert()
 
 
@@ -100,3 +102,4 @@ class UserFactory():
         self.__BlackListDB.newBlacklist(guid)
         self.__WhiteListDB.newWhitelist(guid)
         self.__HistoryDB.newHistory(guid)
+        self.__BoxDB.newDataBox(guid)

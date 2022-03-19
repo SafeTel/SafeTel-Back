@@ -66,7 +66,7 @@ class HistoryDB():
         self.__UpdateList(guid, NewList)
 
 
-    def addHistoryCallForUser(self, guid, number: str, status: str, time: int):
+    def addHistoryCallForUser(self, guid: str, number: str, status: str, time: int):
         CurrentList = self.__PullList(guid)
         if CurrentList is None:
             return
