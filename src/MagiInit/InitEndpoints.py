@@ -17,6 +17,8 @@ from Endpoints.Authentification.InitAuthEndpoints import InitAuthentificationEnd
 from Endpoints.Engine.InitEngineEndpoints import InitEngineEndpoints
 # Init Endpoints InternalDev import
 from Endpoints.InternalDev.InitInternalDevEndpoints import InitInternalDevEndpoints
+# Init Endpoints Embeded import
+from Endpoints.Embeded.InitEmbededEndpints import InitEmbededEndpoints
 
 class InitEndpoints():
     def __init__(self, Api):
@@ -29,16 +31,20 @@ class InitEndpoints():
     def __InitEndpoints(self, Api):
         logging.info("Account endpoints initialization...")
         InitAccountEndpoints(Api)
-        logging.info("Account endpoints initialized...")
+        logging.info("Account endpoints initialized")
 
         logging.info("Authentification endpoints initialization...")
         InitAuthentificationEndpoints(Api)
-        logging.info("Authentification endpoints initialized...")
+        logging.info("Authentification endpoints initialized")
+
+        logging.info("Embeded endpoints initialization...")
+        InitEmbededEndpoints(Api)
+        logging.info("Embeded endpoints initialized")
 
         logging.info("Engine endpoints initialization...")
         InitEngineEndpoints(Api)
-        logging.info("Engine endpoints initialized...")
+        logging.info("Engine endpoints initialized")
 
         logging.info("InternalDev endpoints initialization...")
         InitInternalDevEndpoints(Api)
-        logging.info("InternalDev endpoints initialized...")
+        logging.info("InternalDev endpoints initialized")

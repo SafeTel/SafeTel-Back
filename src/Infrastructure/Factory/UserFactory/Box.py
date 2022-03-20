@@ -22,7 +22,7 @@ from Models.Infrastructure.Factory.UserFactory.Box.BoxSeverity import BoxSeverit
 ### /!\ WARNING /!\ ###
 
 
-# Class to represents the usage of a user inside the server (Worker)
+# Class to represents the usage of a Box inside the server (Worker)
 class FactBox():
     def __init__(self, guid: str):
         self.__guid = guid
@@ -58,6 +58,15 @@ class FactBox():
         self.__UnclaimedBoxsDB.deleteByBoxid(boxid)
 
         return BoxList(self.__BoxDB.getBoxData(self.__guid)["Boxes"])
+
+
+    def IsClaimedByUser(self, boxid: str):
+        UserBoxes = self.__PullBoxData()
+
+        for UserBox in UserBoxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                return True
+        return False
 
 
     # PRIVATE

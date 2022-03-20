@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## GetInfos
+## GetBoxInfos
 ##
 
 ### INFRA
@@ -13,13 +13,13 @@ from flask_restful import Resource
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
+# import low level interface Box
+from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Account.Infos.GetInfosRequest import GetInfosRequest
-from Models.Endpoints.Account.Infos.GetInfosResponse import GetInfosResponse
-# Model for Role import
-from Models.Logic.Shared.Roles import Roles
+from Models.Endpoints.Embeded.BoxInfos.BoxInfosRequest import BoxInfosRequest
+from Models.Endpoints.Embeded.BoxInfos.BoxInfosResponse import BoxInfosResponse
 
 ### LOGC
 # JWT converter import
@@ -28,28 +28,28 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 ###
 # Request:
-# GET: localhost:2407/account/infos/getInfos?token=
+# GET: localhost:2407/embeded/box-infos?token=
 ###
 # Response:
 # {
-#	"email": "asukathebest@bbbb.cccc",
-#	"username": "Megumin",
-#	"CustomerInfos": {
-#		"firstName": "Megumin",
-#		"lastName": "Konosuba",
-#		"phoneNumber": "0100000000"
-#	},
-#	"Localization": {
-#		"country": "Terra",
-#		"region": "4568",
-#		"address": "2 view Useless Aqua"
-#	}
+#    "Boxes": [
+#        {
+#            "boxid": "1234567890",
+#            "activity": true,
+#            "severity": "normal"
+#        },
+#        {
+#            "boxid": "2345678901",
+#            "activity": false,
+#            "severity": "low"
+#        }
+#    ]
 # }
 ###
 
 
-# Route to get the informations of an account
-class GetInfos(Resource):
+# Route to get infos of box
+class BoxInfos(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
@@ -57,7 +57,7 @@ class GetInfos(Resource):
 
 
     def get(self):
-        Request = GetInfosRequest(request.args.to_dict())
+        Request = BoxInfosRequest(request.args.to_dict())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -71,15 +71,12 @@ class GetInfos(Resource):
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        UserInfos = User.PullUserInfos()
-        Response = GetInfosResponse(
-            UserInfos.email,
-            UserInfos.username,
-            UserInfos.CustomerInfos,
-            UserInfos.Localization
+        Response = BoxInfosResponse(
+            User.Box.PullBoxData().Boxes
         )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
             return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
+

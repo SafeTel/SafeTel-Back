@@ -7,12 +7,13 @@
 
 ### MODELS
 # Abstraction import
-from Models.Endpoints.SharedJObject.Account.Lists.CallStatus import CallStatus
 from Models.ModelAbstractions.JParent import JParent
 # Model Shared import
 from Models.Endpoints.SharedJObject.Account.Lists.HistoryCall import HistoryCall
 # Model HistoryList Shared import
 from Models.Infrastructure.Factory.UserFactory.Lists.HistoryList import HistoryList
+# Enum import
+from Models.Endpoints.SharedJObject.Account.Lists.CallStatus import CallStatus
 
 # Represents Number Request
 class HistoryResponse(JParent):

@@ -21,7 +21,7 @@ class BoxDB():
     def __init__(self, db_name=os.getenv("DB_BALTHASAR")):
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
-        self.Box = self.db['Box']
+        self.Box = self.db['Boxes']
         self.DBWatcher = MongoDBWatcher(self.Box)
         self.DBWorker = MongoDBWorker(self.Box)
 
@@ -35,7 +35,7 @@ class BoxDB():
 
 
     def getBoxData(self, guid: str):
-        self.DBWatcher.GetDocument("guid", guid)
+        return self.DBWatcher.GetDocument("guid", guid)
 
 
     def isBox(self, guid: str):
@@ -57,6 +57,20 @@ class BoxDB():
             Current["Boxes"]
         )
         self.__UpdateList(guid, NewList)
+
+
+    def RSUserByBoxID(self, boxid: str):
+        result =  self.Box.find({'Boxes': {'$elemMatch': {'boxid':boxid}}})
+        for tmp in result:
+            return tmp["guid"]
+        return None
+
+
+    def RSByBoxID(self, boxid: str):
+        result =  self.Box.find({'Boxes': {'$elemMatch': {'boxid':boxid}}})
+        for tmp in result:
+            return tmp
+        return None
 
 
     ### PRIVATE

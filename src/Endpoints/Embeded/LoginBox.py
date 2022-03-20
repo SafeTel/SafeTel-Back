@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## Greylist
+## LoginBox
 ##
 
 ### INFRA
@@ -13,14 +13,13 @@ from flask_restful import Resource
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-# High level usage DB
-from Infrastructure.Factory.UserFactory.Lists.Blacklist import Blacklist
-from Infrastructure.Factory.UserFactory.Lists.Whitelist import Whitelist
+# import low level interface Box
+from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
-# Models Request & Response imports
-from Models.Endpoints.Account.Lists.Greylist.GetGreylistRequest import GetGreylistRequest
-from Models.Endpoints.Account.Lists.Greylist.GreylistResponse import GreylistResponse
+# Model Request & Response import
+from Models.Endpoints.Embeded.LoginBox.LoginBoxRequest import LoginBoxRequest
+from Models.Endpoints.Embeded.LoginBox.LoginBoxResponse import LoginBoxResponse
 
 ### LOGC
 # JWT converter import
@@ -29,46 +28,47 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 ###
 # Request:
-# GET: localhost:2407/account/lists/greylist?token=
+# POST: localhost:2407/embeded/login-box
+# {
+#     "boxid": "boxid"
+# }
 ###
 # Response:
 # {
-# 	"Blacklist": [
-# 		"example1"
-# 	],
-# 	"Whitelist": [
-# 		"example2"
-# 	],
+# 	  "token": "1234567890"
 # }
 ###
 
 
-# Route to get the white & black list of the user
-class GreyList(Resource):
+# Route to login a box
+class LoginBox(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert()
+        self.__JwtConv = JWTConvert(168)
         self.__UserFactory = UserFactory()
+        self.__BoxDB = BoxDB()
 
 
-    def get(self):
-        Request = GetGreylistRequest(request.args.to_dict())
+    def post(self):
+        Request = LoginBoxRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        JwtInfos = self.__JwtConv.Deserialize(Request.token)
-        if (JwtInfos is None):
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
+        guid = self.__BoxDB.RSUserByBoxID(Request.boxid)
+        if (guid == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        User = self.__UserFactory.LoadUser(guid)
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = GreylistResponse(
-            User.Blacklist.PullList().PhoneNumbers,
-            User.Whitelist.PullList().PhoneNumbers
+        Response = LoginBoxResponse(
+            self.__JwtConv.Serialize(
+                guid,
+                User.PullUserInfos().role
+            )
         )
 
         responseErrors = Response.EvaluateModelErrors()

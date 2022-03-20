@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## GetInfos
+## LinkBox
 ##
 
 ### INFRA
@@ -16,10 +16,8 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Account.Infos.GetInfosRequest import GetInfosRequest
-from Models.Endpoints.Account.Infos.GetInfosResponse import GetInfosResponse
-# Model for Role import
-from Models.Logic.Shared.Roles import Roles
+from Models.Endpoints.Embeded.LinkBox.LinkBoxRequest import LinkBoxRequest
+from Models.Endpoints.Embeded.LinkBox.LinkBoxResponse import LinkBoxResponse
 
 ### LOGC
 # JWT converter import
@@ -28,36 +26,29 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 ###
 # Request:
-# GET: localhost:2407/account/infos/getInfos?token=
+# POST: localhost:2407/embeded/link-box
+# {
+#     "token": "cutest jwt goes here",
+#     "boxid": "boxid"
+# }
 ###
 # Response:
 # {
-#	"email": "asukathebest@bbbb.cccc",
-#	"username": "Megumin",
-#	"CustomerInfos": {
-#		"firstName": "Megumin",
-#		"lastName": "Konosuba",
-#		"phoneNumber": "0100000000"
-#	},
-#	"Localization": {
-#		"country": "Terra",
-#		"region": "4568",
-#		"address": "2 view Useless Aqua"
-#	}
+# 	  "linked": true
 # }
 ###
 
 
-# Route to get the informations of an account
-class GetInfos(Resource):
+# Route to link a box to a user
+class LinkBox(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
 
-    def get(self):
-        Request = GetInfosRequest(request.args.to_dict())
+    def post(self):
+        Request = LinkBoxRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -71,12 +62,12 @@ class GetInfos(Resource):
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        UserInfos = User.PullUserInfos()
-        Response = GetInfosResponse(
-            UserInfos.email,
-            UserInfos.username,
-            UserInfos.CustomerInfos,
-            UserInfos.Localization
+        result = User.Box.ClaimBox(Request.boxid)
+        if (type(result) is str):
+            return self.__EndpointErrorManager.CreateBadRequestError(result), 400
+
+        Response = LinkBoxResponse(
+            True
         )
 
         responseErrors = Response.EvaluateModelErrors()
