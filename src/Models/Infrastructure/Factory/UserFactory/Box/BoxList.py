@@ -22,12 +22,12 @@ class BoxList(JObject):
     # Values Assignement
     def __InitJObject(self, Boxes: list):
         self.Boxes = []
-        for Box in Boxes:
+        for Bx in Boxes:
             self.Boxes.append(
                 Box(
-                    Box["boxid"],
-                    Box["activity"],
-                    BoxSeverity.StrToEnum(Box["severity"])
+                    Bx["boxid"],
+                    Bx["activity"],
+                    BoxSeverity.StrToEnum(Bx["severity"])
             ))
 
 

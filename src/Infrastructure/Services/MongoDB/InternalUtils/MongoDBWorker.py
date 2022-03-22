@@ -33,4 +33,4 @@ class MongoDBWorker():
     def DeleteDocumentByProp(self, prop: str, guid: str):
         if guid == None:
             return
-        self.MongoDB.delete_one({"guid": guid})
+        self.MongoDB.delete_one({prop: guid})

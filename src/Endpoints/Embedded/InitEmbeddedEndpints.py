@@ -22,6 +22,7 @@ class InitEmbeddedEndpoints():
         self.__InitLoginBoxEndpoint(Api)
         self.__InitLinkBoxEndpoint(Api)
         self.__InitBoxInfosEndpoint(Api)
+        self.__InitAvaibleUpdateEndpoint(Api)
 
     def __InitLoginBoxEndpoint(self, Api):
         Api.add_resource(LoginBox, "/embedded/login-box")
@@ -35,5 +36,5 @@ class InitEmbeddedEndpoints():
         Api.add_resource(BoxInfos, "/embedded/box-infos")
 
 
-    def __InitBoxInfosEndpoint(self, Api):
+    def __InitAvaibleUpdateEndpoint(self, Api):
         Api.add_resource(AvaiableUpdate, "/embedded/update")

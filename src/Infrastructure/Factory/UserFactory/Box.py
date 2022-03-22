@@ -43,7 +43,7 @@ class FactBox():
         if (not self.__UnclaimedBoxsDB.isValidBoxid(boxid)):
             return "This box isn't claimable"
 
-        UserBoxes = self.__PullBoxData()
+        UserBoxes = self.__PullBoxData().Boxes
 
         for UserBox in UserBoxes:
             if (self.__CheckBoxid(UserBox, boxid)):
