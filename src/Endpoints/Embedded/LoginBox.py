@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## GetBoxInfos
+## LoginBox
 ##
 
 ### INFRA
@@ -18,8 +18,8 @@ from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embeded.BoxInfos.BoxInfosRequest import BoxInfosRequest
-from Models.Endpoints.Embeded.BoxInfos.BoxInfosResponse import BoxInfosResponse
+from Models.Endpoints.Embedded.LoginBox.LoginBoxRequest import LoginBoxRequest
+from Models.Endpoints.Embedded.LoginBox.LoginBoxResponse import LoginBoxResponse
 
 ### LOGC
 # JWT converter import
@@ -28,55 +28,50 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 ###
 # Request:
-# GET: localhost:2407/embeded/box-infos?token=
+# POST: localhost:2407/embedded/login-box
+# {
+#     "boxid": "boxid"
+# }
 ###
 # Response:
 # {
-#    "Boxes": [
-#        {
-#            "boxid": "1234567890",
-#            "activity": true,
-#            "severity": "normal"
-#        },
-#        {
-#            "boxid": "2345678901",
-#            "activity": false,
-#            "severity": "low"
-#        }
-#    ]
+# 	  "token": "1234567890"
 # }
 ###
 
 
-# Route to get infos of box
-class BoxInfos(Resource):
+# Route to login a box
+class LoginBox(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert()
+        self.__JwtConv = JWTConvert(168)
         self.__UserFactory = UserFactory()
+        self.__BoxDB = BoxDB()
 
 
-    def get(self):
-        Request = BoxInfosRequest(request.args.to_dict())
+    def post(self):
+        Request = LoginBoxRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        JwtInfos = self.__JwtConv.Deserialize(Request.token)
-        if (JwtInfos is None):
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
+        guid = self.__BoxDB.RSUserByBoxID(Request.boxid)
+        if (guid == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        User = self.__UserFactory.LoadUser(guid)
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = BoxInfosResponse(
-            User.Box.PullBoxData().Boxes
+        Response = LoginBoxResponse(
+            self.__JwtConv.Serialize(
+                guid,
+                User.PullUserInfos().role
+            )
         )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
             return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
-

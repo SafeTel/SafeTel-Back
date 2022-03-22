@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## LinkBox
+## GetBoxInfos
 ##
 
 ### INFRA
@@ -13,11 +13,13 @@ from flask_restful import Resource
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
+# import low level interface Box
+from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embeded.LinkBox.LinkBoxRequest import LinkBoxRequest
-from Models.Endpoints.Embeded.LinkBox.LinkBoxResponse import LinkBoxResponse
+from Models.Endpoints.Embedded.BoxInfos.BoxInfosRequest import BoxInfosRequest
+from Models.Endpoints.Embedded.BoxInfos.BoxInfosResponse import BoxInfosResponse
 
 ### LOGC
 # JWT converter import
@@ -26,29 +28,36 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 ###
 # Request:
-# POST: localhost:2407/embeded/link-box
-# {
-#     "token": "cutest jwt goes here",
-#     "boxid": "boxid"
-# }
+# GET: localhost:2407/embedded/box-infos?token=
 ###
 # Response:
 # {
-# 	  "linked": true
+#    "Boxes": [
+#        {
+#            "boxid": "1234567890",
+#            "activity": true,
+#            "severity": "normal"
+#        },
+#        {
+#            "boxid": "2345678901",
+#            "activity": false,
+#            "severity": "low"
+#        }
+#    ]
 # }
 ###
 
 
-# Route to link a box to a user
-class LinkBox(Resource):
+# Route to get infos of box
+class BoxInfos(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
 
-    def post(self):
-        Request = LinkBoxRequest(request.get_json())
+    def get(self):
+        Request = BoxInfosRequest(request.args.to_dict())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -62,15 +71,12 @@ class LinkBox(Resource):
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        result = User.Box.ClaimBox(Request.boxid)
-        if (type(result) is str):
-            return self.__EndpointErrorManager.CreateBadRequestError(result), 400
-
-        Response = LinkBoxResponse(
-            True
+        Response = BoxInfosResponse(
+            User.Box.PullBoxData().Boxes
         )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
             return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
+

@@ -14,13 +14,13 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.InternalDev.Embeded.AvaibleUpdateRequest import AvaibleUpdateRequest
-from Models.Endpoints.InternalDev.Embeded.AvaibleUpdateResponse import AvaibleUpdateResponse
+from Models.Endpoints.Embedded.AvaibleUpdate.AvaibleUpdateRequest import AvaibleUpdateRequest
+from Models.Endpoints.Embedded.AvaibleUpdate.AvaibleUpdateResponse import AvaibleUpdateResponse
 
 
 ###
 # Request:
-# POST: localhost:2407/internaldev/embeded/update
+# POST: localhost:2407/internaldev/embedembededded/update
 # {
 # 	"version": 1.0
 # }
@@ -32,7 +32,7 @@ from Models.Endpoints.InternalDev.Embeded.AvaibleUpdateResponse import AvaibleUp
 ###
 
 
-# Route to know if an update is required for the embeded software
+# Route to know if an update is required for the embedded software
 class AvaiableUpdate(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
