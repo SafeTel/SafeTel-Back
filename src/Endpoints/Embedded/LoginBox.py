@@ -44,7 +44,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 class LoginBox(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert(168)
+        self.__JwtConv = JWTConvert(24)
         self.__UserFactory = UserFactory()
         self.__BoxDB = BoxDB()
 

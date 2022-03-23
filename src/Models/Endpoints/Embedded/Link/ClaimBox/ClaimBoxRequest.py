@@ -10,7 +10,7 @@
 from Models.ModelAbstractions.JParent import JParent
 
 # Represents Login Request
-class LinkBoxRequest(JParent):
+class ClaimBoxRequest(JParent):
     def __init__(self, rawJSON: str):
         loadedJSON = self.Load(rawJSON)
         self.__InitJParent(loadedJSON)

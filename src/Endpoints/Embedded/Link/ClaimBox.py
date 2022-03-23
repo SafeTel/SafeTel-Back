@@ -16,8 +16,8 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.LinkBox.LinkBoxRequest import LinkBoxRequest
-from Models.Endpoints.Embedded.LinkBox.LinkBoxResponse import LinkBoxResponse
+from Models.Endpoints.Embedded.Link.ClaimBox.ClaimBoxRequest import ClaimBoxRequest
+from Models.Endpoints.Embedded.Link.ClaimBox.ClaimBoxResponse import ClaimBoxResponse
 
 ### LOGC
 # JWT converter import
@@ -26,7 +26,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 ###
 # Request:
-# POST: localhost:2407/embedded/link-box
+# POST: localhost:2407/embedded/link/claim-box
 # {
 #     "token": "cutest jwt goes here",
 #     "boxid": "boxid"
@@ -40,7 +40,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 
 # Route to link a box to a user
-class LinkBox(Resource):
+class ClaimBox(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
@@ -48,7 +48,7 @@ class LinkBox(Resource):
 
 
     def post(self):
-        Request = LinkBoxRequest(request.get_json())
+        Request = ClaimBoxRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -66,7 +66,7 @@ class LinkBox(Resource):
         if (type(result) is str):
             return self.__EndpointErrorManager.CreateBadRequestError(result), 400
 
-        Response = LinkBoxResponse(
+        Response = ClaimBoxResponse(
             True
         )
 

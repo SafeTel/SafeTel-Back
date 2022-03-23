@@ -10,7 +10,7 @@
 from Models.ModelAbstractions.JParent import JParent
 
 # Represents Login Response
-class LinkBoxResponse(JParent):
+class ClaimBoxResponse(JParent):
     def __init__(self, linked: bool):
         self.__InitJParent(linked)
 
