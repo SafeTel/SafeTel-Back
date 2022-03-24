@@ -1,16 +1,16 @@
 ##
-## SAFETEL PROJECT, 2022
+## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## AvaibleUpdateRequest
+## AvailableUpdateRequest
 ##
 
 ### MODELS
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 
-# Represents Avaible Update Request
-class AvaibleUpdateRequest(JParent):
+# Represents Available Update Request
+class AvailableUpdateRequest(JParent):
     def __init__(self, rawJSON: str):
         loadedJSON = self.Load(rawJSON)
         self.__InitJParent(loadedJSON)

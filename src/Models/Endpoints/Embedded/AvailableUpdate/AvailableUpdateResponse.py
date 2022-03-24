@@ -1,5 +1,5 @@
 ##
-## SAFETEL PROJECT, 2022
+## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## AvaibleUpdateResponse
@@ -9,8 +9,8 @@
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 
-# Represents Avaible Update Response
-class AvaibleUpdateResponse(JParent):
+# Represents Available Update Response
+class AvailableUpdateResponse(JParent):
     def __init__(self, update: bool):
         self.__InitJParent(update)
 

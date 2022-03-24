@@ -14,8 +14,8 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.AvaibleUpdate.AvaibleUpdateRequest import AvaibleUpdateRequest
-from Models.Endpoints.Embedded.AvaibleUpdate.AvaibleUpdateResponse import AvaibleUpdateResponse
+from Models.Endpoints.Embedded.AvailableUpdate.AvailableUpdateRequest import AvailableUpdateRequest
+from Models.Endpoints.Embedded.AvailableUpdate.AvailableUpdateResponse import AvailableUpdateResponse
 
 
 ###
@@ -39,13 +39,13 @@ class AvaiableUpdate(Resource):
 
 
     def post(self):
-        Request = AvaibleUpdateRequest(request.get_json())
+        Request = AvailableUpdateRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        Response = AvaibleUpdateResponse(Request.version == 1.0)
+        Response = AvailableUpdateResponse(Request.version == 1.0)
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
