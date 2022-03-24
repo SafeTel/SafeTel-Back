@@ -9,8 +9,8 @@
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 
-# Represents Avaible Update Response
-class AvaibleUpdateResponse(JParent):
+# Represents Available Update Response
+class AvailableUpdateResponse(JParent):
     def __init__(self, update: bool):
         self.__InitJParent(update)
 

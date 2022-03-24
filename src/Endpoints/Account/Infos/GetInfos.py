@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## GetInfos
@@ -61,7 +61,7 @@ class GetInfos(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__EndpointErrorManager(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
