@@ -24,14 +24,14 @@ type Blacklist struct {
 	PhoneNumbers []string `json:"PhoneNumbers"`
 }
 
+// Check the content of a Blacklist object
 func (wille *Wille) checkBlacklistObjectDataValidity(name string, blacklist Blacklist) error {
 	if blacklist.Guid == "" {
 		return errors.New("Problem with json file " + name + "/Lists/Blacklist.json" + ": Missing Blacklist Guid value")
 	}
-
 	for _, phonenumber := range blacklist.PhoneNumbers {
 		if phonenumber == "" {
-			return errors.New("Problem with json file " + name + "/Lists/Blacklist.json" + ": Missing Blacklist Guid value")
+			return errors.New("Problem with json file " + name + "/Lists/Blacklist.json" + ": Missing Blacklist PhoneNumber value")
 		}
 	}
 	return nil
@@ -54,13 +54,11 @@ func (wille *Wille) checkBlacklistDataValidity(name string) (Blacklist, error) {
 
 	decoder := json.NewDecoder(bytes.NewReader(byteValue))
 	decoder.DisallowUnknownFields()
-
 	if err = decoder.Decode(&blacklist); err != nil {
 		return Blacklist{}, err
 	}
 
 	// check Json Content
-
 	if err = wille.checkBlacklistObjectDataValidity(name, blacklist); err != nil {
 		return Blacklist{}, err
 	}
@@ -72,9 +70,7 @@ func (wille *Wille) checkBlacklistDataValidity(name string) (Blacklist, error) {
 	if err != nil {
 		return Blacklist{}, err
 	}
-
 	return blacklist, nil
-
 }
 
 // Upload the Blacklist.json file
@@ -87,10 +83,8 @@ func (wille *Wille) uploadBlacklistFile(name string) error {
 	if err != nil {
 		return &input.Error{Msg: err.Error()}
 	}
-
 	InfoLogger.Println("StdOut: Uploading the blacklist file of ", name, ": ", inOut)
 	InfoLogger.Println("StdErr: Uploading the blacklist file of ", name, ": ", inErr)
-
 	return nil
 }
 
