@@ -5,47 +5,81 @@
 // wille
 //
 
-package cmd
+package wille
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"os"
 
 	input "PostmanDbDataImplementation/errors"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// Check the content of the Blacklist.json file and check if the data has not been uploaded yet
-func (wille *Wille) checkBlacklistDataValidity(name string) error {
-	s, err := wille.JsonReader.openAndUnmarshalJson("data/" + name + "/Lists/Blacklist.json")
+type Blacklist struct {
+	Guid         string   `json:"guid"`
+	PhoneNumbers []string `json:"PhoneNumbers"`
+}
 
-	if err != nil {
-		return err
+func (wille *Wille) checkBlacklistObjectDataValidity(name string, blacklist Blacklist) error {
+	if blacklist.Guid == "" {
+		return errors.New("Problem with json file " + name + "/Lists/Blacklist.json" + ": Missing Blacklist Guid value")
 	}
-	// Basics keys of elements of the json object
-	keys := []string{
-		"guid",
-		"PhoneNumbers"}
-	err = wille.JsonReader.checkJsonContent(s, keys, nil)
 
-	if err != nil {
-		return errors.New("Problem with json file " + name + "/Lists/Blacklist.json" + ": " + err.Error())
-	}
-	// Generating a bson filter using the value of guid
-	filter := bson.M{"guid": s["guid"]}
-	err = wille.JsonReader.checkDataValidity(wille.Blacklist, filter)
-
-	if err != nil {
-		return err
+	for _, phonenumber := range blacklist.PhoneNumbers {
+		if phonenumber == "" {
+			return errors.New("Problem with json file " + name + "/Lists/Blacklist.json" + ": Missing Blacklist Guid value")
+		}
 	}
 	return nil
 }
 
-// Upload the Blacklist.json file
-func (wille *Wille) uploadBlacklistFile(name string) error {
-	err := wille.checkBlacklistDataValidity(name)
+// Check the content of the Blacklist.json file and check if the data has not been uploaded yet
+func (wille *Wille) checkBlacklistDataValidity(name string) (Blacklist, error) {
+	jsonFile, err := os.Open("data/" + name + "/Lists/Blacklist.json")
 
 	if err != nil {
+		return Blacklist{}, err
+	}
+	defer jsonFile.Close()
+	byteValue, err := ioutil.ReadAll(jsonFile)
+
+	if err != nil {
+		return Blacklist{}, err
+	}
+	var blacklist Blacklist
+
+	decoder := json.NewDecoder(bytes.NewReader(byteValue))
+	decoder.DisallowUnknownFields()
+
+	if err = decoder.Decode(&blacklist); err != nil {
+		return Blacklist{}, err
+	}
+
+	// check Json Content
+
+	if err = wille.checkBlacklistObjectDataValidity(name, blacklist); err != nil {
+		return Blacklist{}, err
+	}
+
+	// Generating a bson filter using the value of guid
+	filter := bson.M{"guid": blacklist.Guid}
+	err = wille.checkDataValidityOnStorage(wille.Blacklist, filter)
+
+	if err != nil {
+		return Blacklist{}, err
+	}
+
+	return blacklist, nil
+
+}
+
+// Upload the Blacklist.json file
+func (wille *Wille) uploadBlacklistFile(name string) error {
+	if _, err := wille.checkBlacklistDataValidity(name); err != nil {
 		return err
 	}
 	err, inOut, inErr := wille.mongoImport(DEV_URI_USERS_DB, "Blacklist", "data/"+name+"/Lists/Blacklist.json")
@@ -60,21 +94,18 @@ func (wille *Wille) uploadBlacklistFile(name string) error {
 	return nil
 }
 
+func (wille *Wille) ShowBlacklist(blacklist Blacklist) {
+	InfoLogger.Println(tabPrefixForJsonPrint, Cyan, "Guid", ResetColor, "value: ", Green, "defined", ResetColor, "Value: ", Cyan, blacklist.Guid, ResetColor)
+	InfoLogger.Println(tabPrefixForJsonPrint, Cyan, "PhoneNumbers", ResetColor, "value: ", Green, "defined", ResetColor, "Value: ", Cyan, blacklist.PhoneNumbers, ResetColor)
+}
+
 // Check the content of the Blacklist.json file and print it
 func (wille *Wille) checkAndShowBlacklistJsonContent(name string) error {
-	s, err := wille.JsonReader.openAndUnmarshalJson("data/" + name + "/Lists/Blacklist.json")
-
+	blacklist, err := wille.checkBlacklistDataValidity(name)
 	if err != nil {
 		return err
 	}
-	// Basics keys of elements of the json object
-	keys := []string{
-		"guid",
-		"PhoneNumbers"}
 
-	err = wille.JsonReader.checkAndShowJsonContent(s, keys, nil)
-	if err != nil {
-		return errors.New("Problem with json file " + name + "/Lists/Blacklist.json" + ": " + err.Error())
-	}
+	wille.ShowBlacklist(blacklist)
 	return nil
 }
