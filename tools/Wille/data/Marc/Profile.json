@@ -10,7 +10,7 @@
     "localization": {
         "country": "France",
         "region": "Paris",
-        "adress": "108 Boulevard Richard-Lenoir, Paris 75011"
+        "address": "108 Boulevard Richard-Lenoir, Paris 75011"
     },
     "guid": "04f024e0-d04e-4324-a0b4-04c54324e324",
     "role": "user"
