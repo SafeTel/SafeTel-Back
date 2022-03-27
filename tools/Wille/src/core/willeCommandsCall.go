@@ -9,31 +9,28 @@ package wille
 
 import (
 	input "PostmanDbDataImplementation/errors"
+	"bufio"
 	"fmt"
+	"log"
+	"os"
 )
 
 // Print help
 func (wille *Wille) printHelp() {
-	fmt.Println("")
-	fmt.Println("Usage:")
-	fmt.Println("./wille [options] argument...")
-	fmt.Println("")
-	fmt.Println("Options:")
-	fmt.Println("\tshow\tShow the user configuration")
-	fmt.Println("\t./wille show <data>")
-	fmt.Println("")
-	fmt.Println("\tupload\tUpload on the database the user configuration")
-	fmt.Println("\t./wille upload <data>")
-	fmt.Println("")
-	fmt.Println("\thash\tHash a password")
-	fmt.Println("\t./wille hash <password>")
-	fmt.Println("")
-	fmt.Println("Arguments:")
-	fmt.Println("\t<data> The name of a user defined inside the model folder")
-	fmt.Println("")
-	fmt.Println("\t<password> Plain text password")
-	fmt.Println("")
+	file, err := os.Open("src/help.txt")
 
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
 }
 
 // Random command

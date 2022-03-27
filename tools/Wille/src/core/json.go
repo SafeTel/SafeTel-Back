@@ -9,7 +9,6 @@ package wille
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"io/ioutil"
 	"os"
@@ -17,11 +16,7 @@ import (
 	// "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type JsonReader struct {
-	ctx context.Context
-}
-
-func (jsonReader *JsonReader) openAndGenerateJsonDecoder(file string) (*json.Decoder, error) {
+func OpenAndGenerateJsonDecoder(file string) (*json.Decoder, error) {
 	jsonFile, err := os.Open(file)
 
 	if err != nil {
@@ -35,9 +30,4 @@ func (jsonReader *JsonReader) openAndGenerateJsonDecoder(file string) (*json.Dec
 	}
 	decoder := json.NewDecoder(bytes.NewReader(byteValue))
 	return decoder, nil
-}
-
-func NewJsonReader() (*JsonReader, error) {
-	jsonReader := JsonReader{ctx: context.TODO()}
-	return &jsonReader, nil
 }

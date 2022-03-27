@@ -12,6 +12,9 @@
         "region": "Paris",
         "address": "108 Boulevard Richard-Lenoir, Paris 75011"
     },
+    "Administrative": {
+        "passwordlost": false
+    },
     "guid": "04f024e0-d04e-4324-a0b4-04c54324e324",
     "role": "user"
 }

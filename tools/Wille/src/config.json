@@ -1,0 +1,9 @@
+{
+    "MandatoryEnvVars": [
+        "DEV_DB_CLIENT",
+        "DEV_DB_PASSWORD",
+        "DEV_DB_USERS_NAME",
+        "DEV_DB_DEVELOPERS_NAME",
+        "DEV_URI_USERS_DB"
+    ]
+}

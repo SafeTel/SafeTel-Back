@@ -12,6 +12,9 @@
         "region": "Auvergne-Rhône-Alpes",
         "address": "62 Bd Gustave Flaubert, Clermont-Ferrand 63000"
     },
+    "Administrative": {
+        "passwordlost": false
+    },
     "guid": "06f026e0-d06e-4326-a0b6-06c54326e326",
     "role": "user"
 }

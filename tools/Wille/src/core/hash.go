@@ -14,22 +14,15 @@ import (
 // Hash Wille command
 // Hash using sha3 in 512 bytes the input
 func (wille *Wille) hash(password string) error {
-	h := sha3.New512()
-
-	InfoLogger.Println("You are going to hash the password: '", password, "' using SHA 3 in 512 bytes")
-	InfoLogger.Println("Processing...")
-	InfoLogger.Println("Hashing the password...")
-	_, err := h.Write([]byte(password))
+	hasher := sha3.New512()
+	_, err := hasher.Write([]byte(password))
 
 	if err != nil {
 		return err
 	}
+	sum := hasher.Sum(nil)
 
-	sum := h.Sum(nil)
-
-	InfoLogger.Println("Done!")
-	InfoLogger.Println("Your hashed password is:")
-	InfoLogger.Printf("%x\n", sum)
+	InfoLogger.Printf("Your hashed password is: %x\n", sum)
 
 	return nil
 }

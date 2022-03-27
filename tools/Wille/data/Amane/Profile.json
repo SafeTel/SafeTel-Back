@@ -12,6 +12,9 @@
         "region": "Marrakesh",
         "address": "186 Derb Rahala Road"
     },
+    "Administrative": {
+        "passwordlost": false
+    },
     "guid": "01f012e0-d01e-4321-a0b1-01c54321e321",
     "role": "user"
 } 

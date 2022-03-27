@@ -10,6 +10,7 @@ package wille
 import (
 	"bytes"
 	"context"
+	"errors"
 	"os"
 	"os/exec"
 
@@ -22,15 +23,24 @@ import (
 	"time"
 )
 
+// Structure used to check environnement variable validity
+type Config struct {
+	MandatoryEnvVars []string `json:"MandatoryEnvVars"`
+}
+
 type Wille struct {
-	Client     *mongo.Client
-	DB         *mongo.Database
-	Blacklist  *mongo.Collection
-	History    *mongo.Collection
-	Whitelist  *mongo.Collection
-	User       *mongo.Collection
-	Greylist   *mongo.Collection
-	JsonReader *JsonReader
+	Client                 *mongo.Client
+	DB                     *mongo.Database
+	Blacklist              *mongo.Collection
+	History                *mongo.Collection
+	Whitelist              *mongo.Collection
+	User                   *mongo.Collection
+	Greylist               *mongo.Collection
+	DEV_DB_CLIENT          string
+	DEV_DB_PASSWORD        string
+	DEV_DB_USERS_NAME      string
+	DEV_DB_DEVELOPERS_NAME string
+	DEV_URI_USERS_DB       string
 }
 
 // Global Var
@@ -48,7 +58,6 @@ var Yellow = "\033[33m"
 var Blue = "\033[34m"
 var Cyan = "\033[36m"
 var valid byte = 1
-
 var tabPrefixForJsonPrint = "\t\t"
 
 // Mongo Import
@@ -71,16 +80,39 @@ func (wille *Wille) mongoImport(uri, collection, file string) (err error, onStdO
 }
 
 func (wille *Wille) Run(withOptions []string) error {
-	err := wille.compute(withOptions)
-
-	if err != nil {
+	if err := wille.compute(withOptions); err != nil {
 		return err
 	}
 	return nil
 }
 
+func checkEnv() error {
+	var config Config
+
+	// Get Mandatory env variable
+	decoder, err := OpenAndGenerateJsonDecoder("src/config.json")
+	if err != nil {
+		return err
+	}
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&config); err != nil {
+		return err
+	}
+
+	for _, envVar := range config.MandatoryEnvVars {
+		if value, isSet := os.LookupEnv(envVar); !isSet || value == "" {
+			return errors.New("Problem with Environment variables: " + envVar + " is not set")
+		}
+	}
+	return nil
+}
+
 func NewWille() (*Wille, error) {
+	if err := checkEnv(); err != nil {
+		return nil, err
+	}
 	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
+	DEV_URI_USERS_DB := os.Getenv("DEV_URI_USERS_DB")
 	clientOptions := options.Client().
 		ApplyURI(DEV_URI_USERS_DB).
 		SetServerAPIOptions(serverAPIOptions)
@@ -99,11 +131,13 @@ func NewWille() (*Wille, error) {
 	wille.Whitelist = wille.DB.Collection("Whitelist")
 	wille.User = wille.DB.Collection("User")
 	wille.Greylist = wille.DB.Collection("Greylist")
-	wille.JsonReader, err = NewJsonReader()
 
-	if err != nil {
-		return nil, err
-	}
+	wille.DEV_DB_CLIENT = os.Getenv("DEV_DB_CLIENT")
+	wille.DEV_DB_PASSWORD = os.Getenv("DEV_DB_PASSWORD")
+	wille.DEV_DB_USERS_NAME = os.Getenv("DEV_DB_USERS_NAME")
+	wille.DEV_DB_DEVELOPERS_NAME = os.Getenv("DEV_DB_DEVELOPERS_NAME")
+	wille.DEV_URI_USERS_DB = DEV_URI_USERS_DB
+
 	InfoLogger = log.New(os.Stdin, "", log.Ldate|log.Ltime)
 	WarningLogger = log.New(os.Stderr, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
 	ErrorLogger = log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)

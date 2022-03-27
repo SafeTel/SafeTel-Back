@@ -16,7 +16,3 @@ type Error struct {
 func (e *Error) Error() string {
 	return fmt.Sprintf("Input error: %v", e.Msg)
 }
-
-func throwError() error {
-	return &Error{Msg: "False cmd as input"}
-}

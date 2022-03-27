@@ -37,7 +37,7 @@ func (wille *Wille) checkBlacklistObjectDataValidity(name string, blacklist Blac
 func (wille *Wille) checkBlacklistDataValidity(name string) (Blacklist, error) {
 	var blacklist Blacklist
 
-	decoder, err := wille.JsonReader.openAndGenerateJsonDecoder("data/" + name + "/Lists/Blacklist.json")
+	decoder, err := OpenAndGenerateJsonDecoder("data/" + name + "/Lists/Blacklist.json")
 	if err != nil {
 		return Blacklist{}, err
 	}
@@ -65,7 +65,7 @@ func (wille *Wille) uploadBlacklistFile(name string) error {
 		return err
 	}
 	// Upload
-	err, inOut, inErr := wille.mongoImport(DEV_URI_USERS_DB, "Blacklist", "data/"+name+"/Lists/Blacklist.json")
+	err, inOut, inErr := wille.mongoImport(wille.DEV_URI_USERS_DB, "Blacklist", "data/"+name+"/Lists/Blacklist.json")
 
 	if err != nil {
 		return &input.Error{Msg: err.Error()}

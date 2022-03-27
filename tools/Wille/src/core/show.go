@@ -29,7 +29,7 @@ func (wille *Wille) checkShowObjectDataValidity(name string, show Show) error {
 func (wille *Wille) checkShowDataValidity(name string) (Show, error) {
 	var show Show
 
-	decoder, err := wille.JsonReader.openAndGenerateJsonDecoder("data/" + name + "/Show.json")
+	decoder, err := OpenAndGenerateJsonDecoder("data/" + name + "/Show.json")
 	if err != nil {
 		return Show{}, err
 	}
@@ -50,7 +50,7 @@ func (wille *Wille) showShow(show Show) {
 	wille.printDefinedKeyWithValue("Password", show.Password)
 }
 
-// Check the content of the Blacklist.json file and print it
+// Check the content of the Show.json file and print it
 func (wille *Wille) checkAndShowShowJsonContent(name string) error {
 	show, err := wille.checkShowDataValidity(name)
 	if err != nil {

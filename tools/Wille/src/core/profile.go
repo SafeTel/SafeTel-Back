@@ -14,6 +14,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+type Administrative struct {
+	Passwordlost bool `json:"passwordlost"`
+}
+
 type CustomerInfos struct {
 	Firstname   string `json:"firstName"`
 	Lastname    string `json:"lastName"`
@@ -27,13 +31,14 @@ type Localization struct {
 }
 
 type Profile struct {
-	Email         string        `json:"email"`
-	Username      string        `json:"userName"`
-	Password      string        `json:"password"`
-	CustomerInfos CustomerInfos `json:"customerInfos"`
-	Localization  Localization  `json:"localization"`
-	Guid          string        `json:"guid"`
-	Role          string        `json:"role"`
+	Email          string         `json:"email"`
+	Username       string         `json:"userName"`
+	Password       string         `json:"password"`
+	CustomerInfos  CustomerInfos  `json:"customerInfos"`
+	Localization   Localization   `json:"localization"`
+	Administrative Administrative `json:"Administrative"`
+	Guid           string         `json:"guid"`
+	Role           string         `json:"role"`
 }
 
 // Check the content of a Profile object
@@ -76,6 +81,11 @@ func (wille *Wille) checkProfileObjectDataValidity(name string, profile Profile)
 	if profile.Localization.Address == "" {
 		return errors.New("Problem with json file " + name + "/Lists/Profile.json" + ": Missing Profile Localization.Address value")
 	}
+	emptyAdministrative := Administrative{}
+
+	if profile.Administrative == emptyAdministrative {
+		return errors.New("Problem with json file " + name + "/Lists/Profile.json" + ": Missing Profile Administrative value")
+	}
 	if profile.Guid == "" {
 		return errors.New("Problem with json file " + name + "/Lists/Profile.json" + ": Missing Profile Guid value")
 	}
@@ -89,7 +99,7 @@ func (wille *Wille) checkProfileObjectDataValidity(name string, profile Profile)
 func (wille *Wille) checkProfileDataValidity(name string) (Profile, error) {
 	var profile Profile
 
-	decoder, err := wille.JsonReader.openAndGenerateJsonDecoder("data/" + name + "/Profile.json")
+	decoder, err := OpenAndGenerateJsonDecoder("data/" + name + "/Profile.json")
 	if err != nil {
 		return Profile{}, err
 	}
@@ -117,7 +127,7 @@ func (wille *Wille) uploadProfileFile(name string) error {
 		return err
 	}
 	// Upload
-	err, inOut, inErr := wille.mongoImport(DEV_URI_USERS_DB, "User", "data/"+name+"/Profile.json")
+	err, inOut, inErr := wille.mongoImport(wille.DEV_URI_USERS_DB, "User", "data/"+name+"/Profile.json")
 
 	if err != nil {
 		return &input.Error{Msg: err.Error()}
@@ -144,6 +154,11 @@ func (wille *Wille) showProfile(profile Profile) {
 	wille.printDefinedKeyWithValue("Country", profile.Localization.Country)
 	wille.printDefinedKeyWithValue("Region", profile.Localization.Region)
 	wille.printDefinedKeyWithValue("Address", profile.Localization.Address)
+	wille.resetTabForPrint()
+	// Print Administrative object
+	wille.printDefinedKeyWithValue("Administrative", profile.Administrative)
+	wille.addOneTabForPrint()
+	wille.printDefinedKeyWithValue("Passwordlost", profile.Administrative.Passwordlost)
 	wille.resetTabForPrint()
 	wille.printDefinedKeyWithValue("Guid", profile.Guid)
 	wille.printDefinedKeyWithValue("Role", profile.Guid)

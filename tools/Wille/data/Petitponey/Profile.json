@@ -12,6 +12,9 @@
         "region": "Ile-De-France",
         "address": "Rue des Caves Ferronières, Chapet 78130"
     },
+    "Administrative": {
+        "passwordlost": false
+    },
     "guid": "05f025e0-d05e-4325-a0b5-05c54325e325",
     "role": "user"
 }

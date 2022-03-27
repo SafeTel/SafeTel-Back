@@ -44,7 +44,7 @@ func (wille *Wille) checkHistoryObjectDataValidity(name string, history History)
 func (wille *Wille) checkHistoryDataValidity(name string) (History, error) {
 	var history History
 
-	decoder, err := wille.JsonReader.openAndGenerateJsonDecoder("data/" + name + "/Lists/History.json")
+	decoder, err := OpenAndGenerateJsonDecoder("data/" + name + "/Lists/History.json")
 	if err != nil {
 		return History{}, err
 	}
@@ -73,7 +73,7 @@ func (wille *Wille) uploadHistoryFile(name string) error {
 		return err
 	}
 	// Upload
-	err, inOut, inErr := wille.mongoImport(DEV_URI_USERS_DB, "History", "data/"+name+"/Lists/History.json")
+	err, inOut, inErr := wille.mongoImport(wille.DEV_URI_USERS_DB, "History", "data/"+name+"/Lists/History.json")
 
 	if err != nil {
 		return &input.Error{Msg: err.Error()}
@@ -96,7 +96,7 @@ func (wille *Wille) showHistory(history History) {
 	wille.resetTabForPrint()
 }
 
-// Check the content of the Blacklist.json file and print it
+// Check the content of the History.json file and print it
 func (wille *Wille) checkAndShowHistoryJsonContent(name string) error {
 	history, err := wille.checkHistoryDataValidity(name)
 	if err != nil {
