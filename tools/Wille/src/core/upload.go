@@ -5,7 +5,7 @@
 // wille
 //
 
-package cmd
+package wille
 
 // Upload the content of Lists folder. The files that will be uploaded are:
 // data/name/Lists:	Blacklist.json

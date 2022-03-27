@@ -9,11 +9,7 @@ package wille
 
 import (
 	input "PostmanDbDataImplementation/errors"
-	"bytes"
-	"encoding/json"
 	"errors"
-	"io/ioutil"
-	"os"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -46,20 +42,12 @@ func (wille *Wille) checkHistoryObjectDataValidity(name string, history History)
 
 // Check the content of the History.json file and check if the data has not been uploaded yet
 func (wille *Wille) checkHistoryDataValidity(name string) (History, error) {
-	jsonFile, err := os.Open("data/" + name + "/Lists/History.json")
-
-	if err != nil {
-		return History{}, err
-	}
-	defer jsonFile.Close()
-	byteValue, err := ioutil.ReadAll(jsonFile)
-
-	if err != nil {
-		return History{}, err
-	}
 	var history History
 
-	decoder := json.NewDecoder(bytes.NewReader(byteValue))
+	decoder, err := wille.JsonReader.openAndGenerateJsonDecoder("data/" + name + "/Lists/History.json")
+	if err != nil {
+		return History{}, err
+	}
 	decoder.DisallowUnknownFields()
 	if err = decoder.Decode(&history); err != nil {
 		return History{}, err
@@ -69,20 +57,22 @@ func (wille *Wille) checkHistoryDataValidity(name string) (History, error) {
 	if err = wille.checkHistoryObjectDataValidity(name, history); err != nil {
 		return History{}, err
 	}
-
-	// Generating a bson filter using the value of guid
-	filter := bson.M{"guid": history.Guid}
-	if err = wille.checkDataValidityOnStorage(wille.History, filter); err != nil {
-		return History{}, err
-	}
 	return history, nil
 }
 
 // Upload the History.json file
 func (wille *Wille) uploadHistoryFile(name string) error {
-	if _, err := wille.checkHistoryDataValidity(name); err != nil {
+	history, err := wille.checkHistoryDataValidity(name)
+
+	if err != nil {
 		return err
 	}
+	// Generating a bson filter using the value of guid
+	filter := bson.M{"guid": history.Guid}
+	if err = wille.checkDataValidityOnStorage(wille.History, filter); err != nil {
+		return err
+	}
+	// Upload
 	err, inOut, inErr := wille.mongoImport(DEV_URI_USERS_DB, "History", "data/"+name+"/Lists/History.json")
 
 	if err != nil {
@@ -93,9 +83,17 @@ func (wille *Wille) uploadHistoryFile(name string) error {
 	return nil
 }
 
-func (wille *Wille) ShowHistory(history History) {
-	InfoLogger.Println(tabPrefixForJsonPrint, Cyan, "Guid", ResetColor, "value: ", Green, "defined", ResetColor, "Value: ", Cyan, history.Guid, ResetColor)
-	InfoLogger.Println(tabPrefixForJsonPrint, Cyan, "PhoneNumbers", ResetColor, "value: ", Green, "defined", ResetColor, "Value: ", Cyan, history.Calls, ResetColor)
+func (wille *Wille) showHistory(history History) {
+	wille.printDefinedKeyWithValue("Guid", history.Guid)
+	wille.printDefinedKeyWithValue("Calls", history.Calls)
+	wille.addOneTabForPrint()
+	for index, call := range history.Calls {
+		wille.print("Call number " + string(index))
+		wille.printDefinedKeyWithValue("Call", call.Number)
+		wille.printDefinedKeyWithValue("Call", call.Status)
+		wille.printDefinedKeyWithValue("Call", call.Time)
+	}
+	wille.resetTabForPrint()
 }
 
 // Check the content of the Blacklist.json file and print it
@@ -105,6 +103,6 @@ func (wille *Wille) checkAndShowHistoryJsonContent(name string) error {
 		return err
 	}
 
-	wille.ShowHistory(history)
+	wille.showHistory(history)
 	return nil
 }

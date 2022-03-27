@@ -5,7 +5,61 @@
 // wille
 //
 
-package cmd
+package wille
+
+import "errors"
+
+type Show struct {
+	Infos    string `json:"infos"`
+	Password string `json:"password"`
+}
+
+// Check the content of a Show object
+func (wille *Wille) checkShowObjectDataValidity(name string, show Show) error {
+	if show.Infos == "" {
+		return errors.New("Problem with json file " + name + "/Show.json" + ": Missing Show Infos value")
+	}
+	if show.Password == "" {
+		return errors.New("Problem with json file " + name + "/Show.json" + ": Missing Show Password value")
+	}
+	return nil
+}
+
+// Check the content of the Show.json file and check if the data has not been uploaded yet
+func (wille *Wille) checkShowDataValidity(name string) (Show, error) {
+	var show Show
+
+	decoder, err := wille.JsonReader.openAndGenerateJsonDecoder("data/" + name + "/Show.json")
+	if err != nil {
+		return Show{}, err
+	}
+	decoder.DisallowUnknownFields()
+	if err = decoder.Decode(&show); err != nil {
+		return Show{}, err
+	}
+	// check Json Content
+	if err = wille.checkShowObjectDataValidity(name, show); err != nil {
+		return Show{}, err
+	}
+
+	return show, nil
+}
+
+func (wille *Wille) showShow(show Show) {
+	wille.printDefinedKeyWithValue("Infos", show.Infos)
+	wille.printDefinedKeyWithValue("Password", show.Password)
+}
+
+// Check the content of the Blacklist.json file and print it
+func (wille *Wille) checkAndShowShowJsonContent(name string) error {
+	show, err := wille.checkShowDataValidity(name)
+	if err != nil {
+		return err
+	}
+
+	wille.showShow(show)
+	return nil
+}
 
 // Check the content of the Lists folder and print it
 func (wille *Wille) showListFolder(name string) error {
@@ -87,7 +141,7 @@ func (wille *Wille) show(name string) error {
 	if modelFolderContent&(0b00000100)>>2 == valid {
 		InfoLogger.Println("Show.json: \033[32mFinded\033[0m")
 		// Check the content of the Show.json file and print the elements
-		err = wille.JsonReader.checkShowJsonContent(name)
+		err = wille.checkAndShowShowJsonContent(name)
 		if err != nil {
 			return err
 		}

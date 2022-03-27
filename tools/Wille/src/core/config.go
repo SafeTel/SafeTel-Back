@@ -5,7 +5,7 @@
 // config
 //
 
-package cmd
+package wille
 
 var DEV_DB_CLIENT string = "SafeTelBackEndUser"
 var DEV_DB_PASSWORD string = "aSEFTHUKOM1!"

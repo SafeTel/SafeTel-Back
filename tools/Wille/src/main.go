@@ -21,9 +21,8 @@ func main() {
 		fmt.Fprintln(os.Stderr, "Error: ", err)
 	}
 	// Running
-	err = wille.Run(argv)
-
-	if err != nil {
+	if err = wille.Run(argv); err != nil {
 		fmt.Fprintln(os.Stderr, "Error: ", err)
+		os.Exit(1)
 	}
 }

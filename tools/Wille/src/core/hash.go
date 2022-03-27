@@ -5,7 +5,7 @@
 // wille
 //
 
-package cmd
+package wille
 
 import (
 	"golang.org/x/crypto/sha3"

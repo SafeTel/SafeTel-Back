@@ -8,11 +8,7 @@
 package wille
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
-	"io/ioutil"
-	"os"
 
 	input "PostmanDbDataImplementation/errors"
 
@@ -39,35 +35,18 @@ func (wille *Wille) checkBlacklistObjectDataValidity(name string, blacklist Blac
 
 // Check the content of the Blacklist.json file and check if the data has not been uploaded yet
 func (wille *Wille) checkBlacklistDataValidity(name string) (Blacklist, error) {
-	jsonFile, err := os.Open("data/" + name + "/Lists/Blacklist.json")
-
-	if err != nil {
-		return Blacklist{}, err
-	}
-	defer jsonFile.Close()
-	byteValue, err := ioutil.ReadAll(jsonFile)
-
-	if err != nil {
-		return Blacklist{}, err
-	}
 	var blacklist Blacklist
 
-	decoder := json.NewDecoder(bytes.NewReader(byteValue))
+	decoder, err := wille.JsonReader.openAndGenerateJsonDecoder("data/" + name + "/Lists/Blacklist.json")
+	if err != nil {
+		return Blacklist{}, err
+	}
 	decoder.DisallowUnknownFields()
 	if err = decoder.Decode(&blacklist); err != nil {
 		return Blacklist{}, err
 	}
-
 	// check Json Content
 	if err = wille.checkBlacklistObjectDataValidity(name, blacklist); err != nil {
-		return Blacklist{}, err
-	}
-
-	// Generating a bson filter using the value of guid
-	filter := bson.M{"guid": blacklist.Guid}
-	err = wille.checkDataValidityOnStorage(wille.Blacklist, filter)
-
-	if err != nil {
 		return Blacklist{}, err
 	}
 	return blacklist, nil
@@ -75,9 +54,17 @@ func (wille *Wille) checkBlacklistDataValidity(name string) (Blacklist, error) {
 
 // Upload the Blacklist.json file
 func (wille *Wille) uploadBlacklistFile(name string) error {
-	if _, err := wille.checkBlacklistDataValidity(name); err != nil {
+	blacklist, err := wille.checkBlacklistDataValidity(name)
+
+	if err != nil {
 		return err
 	}
+	// Generating a bson filter using the value of guid
+	filter := bson.M{"guid": blacklist.Guid}
+	if err = wille.checkDataValidityOnStorage(wille.Blacklist, filter); err != nil {
+		return err
+	}
+	// Upload
 	err, inOut, inErr := wille.mongoImport(DEV_URI_USERS_DB, "Blacklist", "data/"+name+"/Lists/Blacklist.json")
 
 	if err != nil {
@@ -88,9 +75,9 @@ func (wille *Wille) uploadBlacklistFile(name string) error {
 	return nil
 }
 
-func (wille *Wille) ShowBlacklist(blacklist Blacklist) {
-	InfoLogger.Println(tabPrefixForJsonPrint, Cyan, "Guid", ResetColor, "value: ", Green, "defined", ResetColor, "Value: ", Cyan, blacklist.Guid, ResetColor)
-	InfoLogger.Println(tabPrefixForJsonPrint, Cyan, "PhoneNumbers", ResetColor, "value: ", Green, "defined", ResetColor, "Value: ", Cyan, blacklist.PhoneNumbers, ResetColor)
+func (wille *Wille) showBlacklist(blacklist Blacklist) {
+	wille.printDefinedKeyWithValue("Guid", blacklist.Guid)
+	wille.printDefinedKeyWithValue("PhoneNumbers", blacklist.PhoneNumbers)
 }
 
 // Check the content of the Blacklist.json file and print it
@@ -100,6 +87,6 @@ func (wille *Wille) checkAndShowBlacklistJsonContent(name string) error {
 		return err
 	}
 
-	wille.ShowBlacklist(blacklist)
+	wille.showBlacklist(blacklist)
 	return nil
 }
