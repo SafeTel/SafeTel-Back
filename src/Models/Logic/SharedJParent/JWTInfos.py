@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## JWTInfos
@@ -13,14 +13,15 @@ from Models.Logic.Shared.Roles import Roles
 
 # Represents Update Email Response
 class JWTInfos(JParent):
-    def __init__(self, guid: str, role: Roles, exp: int):
-        self.__InitJParent(guid, role, exp)
+    def __init__(self, guid: str, role: Roles, exp: int, lostpassword: bool = False):
+        self.__InitJParent(guid, role, exp, lostpassword)
 
     # Values Assignement
-    def __InitJParent(self, guid: str, role: Roles, exp: int):
+    def __InitJParent(self, guid: str, role: Roles, exp: int, lostpassword: bool):
         self.guid = guid
         self.role = role
         self.exp = exp
+        self.lostpassord = lostpassword
 
     # Errors Evaluation
     def EvaluateModelErrors(self):

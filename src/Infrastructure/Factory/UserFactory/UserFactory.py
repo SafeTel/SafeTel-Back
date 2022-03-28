@@ -1,16 +1,17 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## UserFactory
 ##
 
 ### INFRA
-# High Level interface for DBs imports
+# Low Level interface for DBs imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.BlackListDB import BlacklistDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.HistoryDB import HistoryDB
 from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import WhitelistDB
+from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 # User sub class import
 from Infrastructure.Factory.UserFactory.User import User
 # Roles enum import
@@ -25,7 +26,7 @@ import uuid
 ### MODEL
 # Register request model import
 from Models.Endpoints.Authentification.RegisterRequest import RegisterRequest
-
+from Models.Infrastructure.Factory.InternalUser import InternalUser
 
 ### /!\ WARNING /!\ ###
 # This is an HIGH LEVEL for MELCHIOR DB interface including logic, proceed with caution
@@ -39,6 +40,7 @@ class UserFactory():
         self.__BlackListDB = BlacklistDB()
         self.__WhiteListDB = WhitelistDB()
         self.__HistoryDB = HistoryDB()
+        self.__BoxDB = BoxDB()
         self.__PWDConvert = PWDConvert()
 
 
@@ -54,8 +56,12 @@ class UserFactory():
 
     def CreateUser(self, UserInfos: RegisterRequest):
         guid = str(uuid.uuid4())
-        UserInfosEdited = self.__EditUserInfos(UserInfos, guid)
-        self.__CreateUserInDB(UserInfosEdited)
+        IntUser = InternalUser(
+            UserInfos.ToDict(),
+            guid,
+            self.__PWDConvert.Serialize(UserInfos.password)
+        )
+        self.__CreateUserInDB(IntUser.ToDict())
         self.__CreateUserLists(guid)
         return User(guid)
 
@@ -75,17 +81,17 @@ class UserFactory():
         return User(guid)
 
 
+    def LoadUserByMail(self, email: str):
+        if (not self.__UserDB.exists(email)):
+            return None
+        guid = self.__UserDB.getUser(email)["guid"]
+        return User(guid)
+
+
     ### PRIVATE
 
     def __IsUser(self, guid: str):
         return self.__UserDB.existByGUID(guid)
-
-
-    def __EditUserInfos(self, UserInfos: RegisterRequest, guid: str):
-        UserInfosDict = UserInfos.ToDict()
-        UserInfosDict["guid"] = guid
-        UserInfosDict["password"] = self.__PWDConvert.Serialize(UserInfos.password)
-        return UserInfosDict
 
 
     def __CreateUserInDB(self, UserInfos: dict):
@@ -96,3 +102,4 @@ class UserFactory():
         self.__BlackListDB.newBlacklist(guid)
         self.__WhiteListDB.newWhitelist(guid)
         self.__HistoryDB.newHistory(guid)
+        self.__BoxDB.newDataBox(guid)

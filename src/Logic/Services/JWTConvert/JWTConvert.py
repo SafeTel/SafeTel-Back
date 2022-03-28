@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## Provider
@@ -25,11 +25,13 @@ import os
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 class JWTConvert():
-    def __init__(self):
-        self.UserDb = UserDB()
+    def __init__(self, expiration = 24):
+        self.__UserDb = UserDB()
+        self.__SECRET_KEY = os.getenv("SECRET_KEY")
+        self.__expiration = expiration
 
 
-    def Serialize(self, guid: str, role: Roles):
+    def Serialize(self, guid: str, role: Roles, lostpassword: bool = False):
         if (guid == "" or guid is None):
             raise ValueError("The guid can't be empty or null.")
         if (role == None):
@@ -38,27 +40,33 @@ class JWTConvert():
             raise ValueError("It should be an existing one.")
 
         return jwt.encode( {
-                'guid': guid,
-                'role': role,
-                'exp': datetime.utcnow() + timedelta(hours=24)
+                "guid": guid,
+                "role": role,
+                "exp": datetime.utcnow() + timedelta(hours=self.__expiration),
+                "lostpassword": lostpassword
             },
-            os.getenv("SECRET_KEY")
+            self.__SECRET_KEY
         )
 
 
     def Deserialize(self, token: str):
         try:
-            jwtInfos = jwt.decode(jwt=token, key=os.getenv("SECRET_KEY"), algorithms='HS256')
+            jwtInfos = jwt.decode(jwt=token, key=self.__SECRET_KEY, algorithms='HS256')
         except Exception as e:
             return None
 
-        Infos = JWTInfos(jwtInfos["guid"], self.__StrToRoles(jwtInfos["role"]), int(jwtInfos["exp"]))
+        Infos = JWTInfos(
+            jwtInfos["guid"],
+            self.__StrToRoles(jwtInfos["role"]),
+            int(jwtInfos["exp"]),
+            jwtInfos["lostpassword"]
+        )
         curr_ts = time.time()
 
         if (curr_ts > Infos.exp):
             return None
 
-        if (not Roles.HasValue(Infos.role) or self.UserDb.existByGUID(Infos.guid) is False):
+        if (not Roles.HasValue(Infos.role) or self.__UserDb.existByGUID(Infos.guid) is False):
             return None
         if (Infos.EvaluateModelErrors() != None):
             return None
@@ -71,7 +79,7 @@ class JWTConvert():
         except Exception as e:
             return None
 
-        exp = data['exp']
+        exp = data["exp"]
         curr_ts = time.time()
 
         if (curr_ts > exp):

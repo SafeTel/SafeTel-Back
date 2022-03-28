@@ -1,23 +1,23 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## AvaibleUpdateRequest
+## LostPassword.Request
 ##
 
 ### MODELS
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 
-# Represents Avaible Update Request
-class AvaibleUpdateRequest(JParent):
+# Represents LostPassword Request
+class LostPasswordRequest(JParent):
     def __init__(self, rawJSON: str):
         loadedJSON = self.Load(rawJSON)
         self.__InitJParent(loadedJSON)
 
     # Values Assignement
     def __InitJParent(self, loadedJSON: dict):
-        self.version = self.LoadElement(loadedJSON, "version")
+        self.email = self.LoadElement(loadedJSON, "email")
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -26,6 +26,6 @@ class AvaibleUpdateRequest(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.version is None): return "Body Denied"
-        if (type(self.version) is not float): return "Invalid variable type"
+        if (self.email is None): return "Body Denied"
+        if (type(self.email) is not str): return "Email Denied"
         return None

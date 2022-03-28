@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## UserInfos
@@ -13,7 +13,7 @@ from Models.Logic.Shared.Roles import Roles
 # Shared JObject imports
 from Models.Endpoints.SharedJObject.Account.Infos.CustomerInfos import CustomerInfos
 from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localization
-
+from Models.Endpoints.SharedJObject.Account.Infos.Administrative import Administrative
 
 # Represents UpdatePErsonalInfos Request
 class UserInfos(JParent):
@@ -22,6 +22,7 @@ class UserInfos(JParent):
         self.__InitJParent(loadedJSON)
         self.__InitCustomerInfosJObject(loadedJSON)
         self.__InitLocalizationJObject(loadedJSON)
+        self.__InitAdministrativeJObject(loadedJSON)
 
     # Values Assignement
     def __InitJParent(self, loadedJSON: dict):
@@ -39,6 +40,10 @@ class UserInfos(JParent):
     def __InitLocalizationJObject(self, loadedJSON: dict):
         localizationRaw = self.LoadElement(loadedJSON, "Localization")
         self.Localization = None if localizationRaw is None else Localization(localizationRaw)
+
+    def __InitAdministrativeJObject(self, loadedJSON: dict):
+        administrativeRaw = self.LoadElement(loadedJSON, "Administrative")
+        self.Administrative = None if administrativeRaw is None else Administrative(administrativeRaw)
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -72,5 +77,11 @@ class UserInfos(JParent):
     def __EvaLocalizationJObject(self):
         if (self.Localization is None): return "Body Denied"
         errorJObject = self.Localization.EvaErrorsJObject()
+        if (errorJObject != None):return errorJObject
+        return None
+
+    def __EvaAdministrativeJObject(self):
+        if (self.Administrative is None): return "Body Denied"
+        errorJObject = self.Administrative.EvaErrorsJObject()
         if (errorJObject != None):return errorJObject
         return None

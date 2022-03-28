@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## GetInfos
@@ -61,13 +61,11 @@ class GetInfos(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__EndpointErrorManager(requestErrors), 400
+            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
-        if (JwtInfos.role != Roles.USER):
-            return self.__EndpointErrorManager.CreateBadRequestError("This account is not a USER account"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User == None):

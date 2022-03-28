@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## User
@@ -16,6 +16,7 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import White
 from Infrastructure.Factory.UserFactory.Lists.Blacklist import Blacklist
 from Infrastructure.Factory.UserFactory.Lists.Whitelist import Whitelist
 from Infrastructure.Factory.UserFactory.Lists.History import History
+from Infrastructure.Factory.UserFactory.Box import FactBox
 # Number Lists Conflict Resolver High level usage import
 from Infrastructure.Factory.UserFactory.Lists.NumberConflictResolver import NumberConflictResolver
 
@@ -25,6 +26,10 @@ from Models.Infrastructure.Factory.UserFactory.UserInfos import UserInfos
 # Shared JObject import
 from Models.Endpoints.SharedJObject.Account.Infos.CustomerInfos import CustomerInfos
 from Models.Endpoints.SharedJObject.Account.Infos.Localization import Localization
+
+### LOGIC
+# Password converter import
+from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 
 
 ### /!\ WARNING /!\ ###
@@ -38,6 +43,8 @@ class User():
         self.__guid = guid
         self.__UserInfos = None
 
+        self.__PWDConvert = PWDConvert()
+
         self.__UserDB = UserDB()
         self.__HistoryDB = HistoryDB()
         self.__BlackListDB = BlacklistDB()
@@ -48,6 +55,9 @@ class User():
         self.Blacklist = Blacklist(self.__guid, self.__BlackListDB, ConflictResolver)
         self.Whitelist = Whitelist(self.__guid, self.__WhiteListDB, ConflictResolver)
         self.History = History(self.__guid, self.__HistoryDB)
+
+        self.Box = FactBox(self.__guid)
+
 
     # READ
     def GetGUID(self):
@@ -68,15 +78,23 @@ class User():
             self.__UserInfos = UserInfos(userRaw)
         return self.__UserInfos
 
+    # SECURITY
+
+    def LostPasswordMode(self, mode: bool = False):
+        self.__UserDB.UpdateLostPasswordMode(self.__guid, mode)
+
+
+    def UpdatePassword(self, newpassword: str):
+        hashedpassword = self.__PWDConvert.Serialize(newpassword)
+        self.__UserDB.UpdateLostPassword(self.__guid, hashedpassword)
+
 
     # UPDATE
     def UpdateEmail(self, newEmail: str):
-        self.__PullUserInfos()
         self.__UserDB.UpdateAccountEmail(self.__guid, newEmail)
 
 
     def UpdatePersonalInfos(self, CustomerInfos: CustomerInfos, Localization: Localization):
-        self.__PullUserInfos()
         NewCustomerInfos = CustomerInfos.ToDict()
         NewLocalization = Localization.ToDict()
         self.__UserDB.UpdatePersonalInfos(self.__guid, NewCustomerInfos, NewLocalization)
