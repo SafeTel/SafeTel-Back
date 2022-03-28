@@ -2,8 +2,9 @@ version: "3.3"
 
 services:
     magi:
+        env_file: ./devOps/dev-config.env
         build:
-            ./
+            context: ./
         ports:
             - 2407:2407
         restart:
