@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## EndpointErrorManager
@@ -25,5 +25,6 @@ class EndpointErrorManager():
     def CreateForbiddenAccessError(self):
         return {
             "error": True,
-            "details": "Access Denied"
+            "details": "Access Denied",
+            "message": "Your token may be corrupted"
         }

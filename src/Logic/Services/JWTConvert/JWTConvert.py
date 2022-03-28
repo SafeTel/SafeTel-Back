@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## Provider
@@ -25,9 +25,10 @@ import os
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 class JWTConvert():
-    def __init__(self):
-        self.UserDb = UserDB()
-        self.SECRET_KEY = os.getenv("SECRET_KEY")
+    def __init__(self, expiration = 24):
+        self.__UserDb = UserDB()
+        self.__SECRET_KEY = os.getenv("SECRET_KEY")
+        self.__expiration = expiration
 
 
     def Serialize(self, guid: str, role: Roles, lostpassword: bool = False):
@@ -41,16 +42,16 @@ class JWTConvert():
         return jwt.encode( {
                 "guid": guid,
                 "role": role,
-                "exp": datetime.utcnow() + timedelta(hours=24),
+                "exp": datetime.utcnow() + timedelta(hours=self.__expiration),
                 "lostpassword": lostpassword
             },
-            os.getenv("SECRET_KEY")
+            self.__SECRET_KEY
         )
 
 
     def Deserialize(self, token: str):
         try:
-            jwtInfos = jwt.decode(jwt=token, key=self.SECRET_KEY, algorithms='HS256')
+            jwtInfos = jwt.decode(jwt=token, key=self.__SECRET_KEY, algorithms='HS256')
         except Exception as e:
             return None
 
@@ -65,7 +66,7 @@ class JWTConvert():
         if (curr_ts > Infos.exp):
             return None
 
-        if (not Roles.HasValue(Infos.role) or self.UserDb.existByGUID(Infos.guid) is False):
+        if (not Roles.HasValue(Infos.role) or self.__UserDb.existByGUID(Infos.guid) is False):
             return None
         if (Infos.EvaluateModelErrors() != None):
             return None
