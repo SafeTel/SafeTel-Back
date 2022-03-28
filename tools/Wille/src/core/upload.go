@@ -7,27 +7,46 @@
 
 package wille
 
+import utils "PostmanDbDataImplementation/core/Utils"
+
 // Upload the content of Lists folder. The files that will be uploaded are:
 // data/name/Lists:	Blacklist.json
 //					History.json
 //					Whitelist.json
 func (wille *Wille) uploadListFiles(name string) error {
-	content, err := wille.checkListFolder(name)
+	content, err := utils.CheckListFolder(name)
+	var valid byte = 1
 
 	if content&(0b00000001) == valid {
-		err = wille.uploadBlacklistFile(name)
+		err = wille.Blacklist.UploadBlacklistFile(name)
 		if err != nil {
 			return err
 		}
 	}
 	if content&(0b00000010)>>1 == valid {
-		err = wille.uploadHistoryFile(name)
+		err = wille.History.UploadHistoryFile(name)
 		if err != nil {
 			return err
 		}
 	}
 	if content&(0b00000100)>>2 == valid {
-		err = wille.uploadWhitelistFile(name)
+		err = wille.Whitelist.UploadWhitelistFile(name)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Upload the content of Embedded folder. The files that will be uploaded are:
+// data/name/Embedded:	Box.json
+//
+func (wille *Wille) uploadEmbeddedFiles(name string) error {
+	content, err := utils.CheckEmbeddedFolder(name)
+	var valid byte = 1
+
+	if content&(0b00000001) == valid {
+		err = wille.Box.UploadBoxFile(name)
 		if err != nil {
 			return err
 		}
@@ -42,17 +61,25 @@ func (wille *Wille) uploadListFiles(name string) error {
 //				Lists/:	Blacklist.json
 //						History.json
 //						Whitelist.json
+//				Embedded/: Box.json
 func (wille *Wille) upload(name string) error {
-	content, err := wille.checkModelFolder(name)
+	content, err := utils.CheckModelFolder(name)
+	var valid byte = 1
 
 	if content&(0b00000001) == valid {
-		err = wille.uploadProfileFile(name)
+		err = wille.Profile.UploadProfileFile(name)
 		if err != nil {
 			return err
 		}
 	}
 	if content&(0b00000010)>>1 == valid {
 		err = wille.uploadListFiles(name)
+		if err != nil {
+			return err
+		}
+	}
+	if content&(0b00001000)>>3 == valid {
+		err = wille.uploadEmbeddedFiles(name)
 		if err != nil {
 			return err
 		}

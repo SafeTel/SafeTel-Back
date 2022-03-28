@@ -7,7 +7,10 @@
 
 package wille
 
-import "errors"
+import (
+	utils "PostmanDbDataImplementation/core/Utils"
+	"errors"
+)
 
 type Show struct {
 	Infos    string `json:"infos"`
@@ -17,10 +20,10 @@ type Show struct {
 // Check the content of a Show object
 func (wille *Wille) checkShowObjectDataValidity(name string, show Show) error {
 	if show.Infos == "" {
-		return errors.New("Problem with json file " + name + "/Show.json" + ": Missing Show Infos value")
+		return errors.New("Problem with json file " + name + "/Show.jsonBox Missing Show Infos value")
 	}
 	if show.Password == "" {
-		return errors.New("Problem with json file " + name + "/Show.json" + ": Missing Show Password value")
+		return errors.New("Problem with json file " + name + "/Show.jsonBox Missing Show Password value")
 	}
 	return nil
 }
@@ -29,7 +32,7 @@ func (wille *Wille) checkShowObjectDataValidity(name string, show Show) error {
 func (wille *Wille) checkShowDataValidity(name string) (Show, error) {
 	var show Show
 
-	decoder, err := OpenAndGenerateJsonDecoder("data/" + name + "/Show.json")
+	decoder, err := utils.OpenAndGenerateJsonDecoder("data/" + name + "/Show.json")
 	if err != nil {
 		return Show{}, err
 	}
@@ -46,8 +49,8 @@ func (wille *Wille) checkShowDataValidity(name string) (Show, error) {
 }
 
 func (wille *Wille) showShow(show Show) {
-	wille.printDefinedKeyWithValue("Infos", show.Infos)
-	wille.printDefinedKeyWithValue("Password", show.Password)
+	wille.Print.DefinedKeyWithValueWithTab("Infos", show.Infos)
+	wille.Print.DefinedKeyWithValueWithTab("Password", show.Password)
 }
 
 // Check the content of the Show.json file and print it
@@ -63,40 +66,61 @@ func (wille *Wille) checkAndShowShowJsonContent(name string) error {
 
 // Check the content of the Lists folder and print it
 func (wille *Wille) showListFolder(name string) error {
-	listFolderContent, err := wille.checkListFolder(name)
+	listFolderContent, err := utils.CheckListFolder(name)
+	var valid byte = 1
 
 	if err != nil {
 		return err
 	}
 	if listFolderContent&(0b00000001) == valid {
-		InfoLogger.Println("\t- Blacklist.json: \033[32mFinded\033[0m")
+		wille.Print.Info("\t- Blacklist.json: \033[32mFinded\033[0m")
 		// Check the content of the Blacklist.json file and print the elements
-		err = wille.checkAndShowBlacklistJsonContent(name)
+		err = wille.Blacklist.CheckAndShowBlacklistJsonContent(name)
 		if err != nil {
 			return err
 		}
 	} else {
-		InfoLogger.Println("\t- Blacklist.json: \033[32mMissing\033[0m")
+		wille.Print.Info("\t- Blacklist.json: \033[32mMissing\033[0m")
 	}
 	if listFolderContent&(0b00000010)>>1 == valid {
-		InfoLogger.Println("\t- History.json: \033[32mFinded\033[0m")
+		wille.Print.Info("\t- History.json: \033[32mFinded\033[0m")
 		// Check the content of the History.json file and print the elements
-		err = wille.checkAndShowHistoryJsonContent(name)
+		err = wille.History.CheckAndShowHistoryJsonContent(name)
 		if err != nil {
 			return err
 		}
 	} else {
-		InfoLogger.Println("\t- History.json: \033[32mMissing\033[0m")
+		wille.Print.Info("\t- History.json: \033[32mMissing\033[0m")
 	}
 	if listFolderContent&(0b00000100)>>2 == valid {
-		InfoLogger.Println("\t- Whitelist.json: \033[32mFinded\033[0m")
+		wille.Print.Info("\t- Whitelist.json: \033[32mFinded\033[0m")
 		// Check the content of the Whitelist.json file and print the elements
-		err = wille.checkAndShowWhitelistJsonContent(name)
+		err = wille.Whitelist.CheckAndShowWhitelistJsonContent(name)
 		if err != nil {
 			return err
 		}
 	} else {
-		InfoLogger.Println("\t- Whitelist.json: \033[32mMissing\033[0m")
+		wille.Print.Info("\t- Whitelist.json: \033[32mMissing\033[0m")
+	}
+	return nil
+}
+
+func (wille *Wille) showEmbeddedFolder(name string) error {
+	listFolderContent, err := utils.CheckEmbeddedFolder(name)
+	var valid byte = 1
+
+	if err != nil {
+		return err
+	}
+	if listFolderContent&(0b00000001) == valid {
+		wille.Print.Info("\t- Box.json: \033[32mFinded\033[0m")
+		// Check the content of the Box.json file and print the elements
+		err = wille.Box.CheckAndShowBoxJsonContent(name)
+		if err != nil {
+			return err
+		}
+	} else {
+		wille.Print.Info("\t- Blacklist.json: \033[32mMissing\033[0m")
 	}
 	return nil
 }
@@ -113,40 +137,56 @@ func (wille *Wille) showListFolder(name string) error {
 // The missing content is printed in Red
 // The unknown content is printed in Yellow
 func (wille *Wille) show(name string) error {
-	modelFolderContent, err := wille.checkModelFolder(name) // Return, stored inside a bit, the available files and folders of the model(name) folder
+	modelFolderContent, err := utils.CheckModelFolder(name) // Return, stored inside a bit, the available files and folders of the model(name) folder
+	var valid byte = 1
 
 	if err != nil {
 		return err
 	}
 	if modelFolderContent&(0b00000001) == valid {
-		InfoLogger.Println("Profile.json: \033[32mFinded\033[0m")
+		wille.Print.Info("Profile.json: \033[32mFinded\033[0m")
 		// Check the content of the Profile.json file and print the elements
-		err = wille.checkAndShowProfileJsonContent(name)
+		err = wille.Profile.CheckAndShowProfileJsonContent(name)
 		if err != nil {
 			return err
 		}
 	} else {
-		InfoLogger.Println("Profile.json: \033[31mMissing\033[0m")
+		wille.Print.Info("Profile.json: \033[31mMissing\033[0m")
+		return errors.New("Missing " + name + "/Profile.json file")
 	}
 	if modelFolderContent&(0b00000010)>>1 == valid {
-		InfoLogger.Println("Lists folder: \033[32mFinded\033[0m")
+		wille.Print.Info("Lists folder: \033[32mFinded\033[0m")
 		// Check the content of the Lists folder and print the elements
 		err = wille.showListFolder(name)
 		if err != nil {
 			return err
 		}
 	} else {
-		InfoLogger.Println("Lists folder: \033[31mMissing\033[0m")
+		wille.Print.Info("Lists folder: \033[31mMissing\033[0m")
+		return errors.New("Missing " + name + "/Lists folder")
 	}
 	if modelFolderContent&(0b00000100)>>2 == valid {
-		InfoLogger.Println("Show.json: \033[32mFinded\033[0m")
+		wille.Print.Info("Show.json: \033[32mFinded\033[0m")
 		// Check the content of the Show.json file and print the elements
 		err = wille.checkAndShowShowJsonContent(name)
 		if err != nil {
 			return err
 		}
 	} else {
-		InfoLogger.Println("Show.json: \033[31mMissing\033[0m")
+		wille.Print.Info("Show.json: \033[31mMissing\033[0m")
+		return errors.New("Missing " + name + "/Show.json file")
 	}
+	if modelFolderContent&(0b00001000)>>3 == valid {
+		wille.Print.Info("Embedded folder: \033[32mFinded\033[0m")
+		// Check the content of the Embedded folder and print the elements
+		err = wille.showEmbeddedFolder(name)
+		if err != nil {
+			return err
+		}
+	} else {
+		wille.Print.Info("Embedded folder: \033[31mMissing\033[0m")
+		return errors.New("Missing " + name + "/Embedded folder")
+	}
+
 	return nil
 }

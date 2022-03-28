@@ -1,9 +1,8 @@
 {
-    "MandatoryEnvVars": [
-        "DEV_DB_CLIENT",
-        "DEV_DB_PASSWORD",
-        "DEV_DB_USERS_NAME",
-        "DEV_DB_DEVELOPERS_NAME",
-        "DEV_URI_USERS_DB"
-    ]
+    "DEV_DB_CLIENT": "SafeTelBackEndUser",
+    "DEV_DB_PASSWORD": "aSEFTHUKOM1!",
+    "DEV_DB_USERS_NAME": "Melchior",
+    "DEV_DB_BOXES_NAME": "Balthasar",
+    "DEV_DB_DEVELOPERS_NAME": "Casper",
+    "DEV_URI_USERS_DB": "mongodb+srv://SafeTelBackEndUser:aSEFTHUKOM1!@safetel-back-dev-cluste.kicvi.mongodb.net/Melchior?retryWrites=true&w=majority"
 }
