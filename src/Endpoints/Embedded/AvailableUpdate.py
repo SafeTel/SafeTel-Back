@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## AvaibleUpdate
@@ -14,13 +14,13 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.InternalDev.Embeded.AvaibleUpdateRequest import AvaibleUpdateRequest
-from Models.Endpoints.InternalDev.Embeded.AvaibleUpdateResponse import AvaibleUpdateResponse
+from Models.Endpoints.Embedded.AvailableUpdate.AvailableUpdateRequest import AvailableUpdateRequest
+from Models.Endpoints.Embedded.AvailableUpdate.AvailableUpdateResponse import AvailableUpdateResponse
 
 
 ###
 # Request:
-# POST: localhost:2407/internaldev/embeded/update
+# POST: localhost:2407/internaldev/embedembededded/update
 # {
 # 	"version": 1.0
 # }
@@ -32,20 +32,20 @@ from Models.Endpoints.InternalDev.Embeded.AvaibleUpdateResponse import AvaibleUp
 ###
 
 
-# Route to know if an update is required for the embeded software
+# Route to know if an update is required for the embedded software
 class AvaiableUpdate(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
 
 
     def post(self):
-        Request = AvaibleUpdateRequest(request.get_json())
+        Request = AvailableUpdateRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        Response = AvaibleUpdateResponse(Request.version == 1.0)
+        Response = AvailableUpdateResponse(Request.version == 1.0)
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

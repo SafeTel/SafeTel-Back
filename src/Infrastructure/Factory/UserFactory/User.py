@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## User
@@ -16,6 +16,7 @@ from Infrastructure.Services.MongoDB.Melchior.UserLists.WhiteListDB import White
 from Infrastructure.Factory.UserFactory.Lists.Blacklist import Blacklist
 from Infrastructure.Factory.UserFactory.Lists.Whitelist import Whitelist
 from Infrastructure.Factory.UserFactory.Lists.History import History
+from Infrastructure.Factory.UserFactory.Box import FactBox
 # Number Lists Conflict Resolver High level usage import
 from Infrastructure.Factory.UserFactory.Lists.NumberConflictResolver import NumberConflictResolver
 
@@ -54,6 +55,9 @@ class User():
         self.Blacklist = Blacklist(self.__guid, self.__BlackListDB, ConflictResolver)
         self.Whitelist = Whitelist(self.__guid, self.__WhiteListDB, ConflictResolver)
         self.History = History(self.__guid, self.__HistoryDB)
+
+        self.Box = FactBox(self.__guid)
+
 
     # READ
     def GetGUID(self):
