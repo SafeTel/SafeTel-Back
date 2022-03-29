@@ -62,7 +62,7 @@ class EvaluateNumber(Resource):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = EvaluateNumberResponse(
-            # TODO: see if the number should be blocked or not
+            User.Blacklist.IsNumber(Request.number)
         )
 
         responseErrors = Response.EvaluateModelErrors()
