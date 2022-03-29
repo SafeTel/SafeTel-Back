@@ -39,7 +39,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 ###
 
 
-# Route to avluate a number from an auth user
+# Route to evaluate a number from an auth user
 class EvaluateNumber(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
