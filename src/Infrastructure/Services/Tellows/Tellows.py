@@ -33,8 +33,7 @@ class Tellows():
         response = self.HTTPClient.Get(self.uri + number, self.query)
         if (response == None):
             return None
-        if (not "tellows" in response
-        and not "score" in response):
+        if (not "tellows" in response and not "score" in response):
             return None
         return int(response['tellows']['score'])
 

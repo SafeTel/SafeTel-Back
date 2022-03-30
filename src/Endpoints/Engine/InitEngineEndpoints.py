@@ -6,13 +6,13 @@
 ##
 
 ### INFRA
-# Tellows evaluation unique endpoint import
-from Endpoints.Engine.Tellows.GetTellows import GetTellows
+# Evaluate Number unique endpoint import
+from Endpoints.Engine.EvaluateNumber import EvaluateNumber
 
 class InitEngineEndpoints():
     def __init__(self, Api):
-        self.__InitTellowsEvaEndpoint(Api)
+        self.__InitEvaluateNumberEndpoint(Api)
 
 
-    def __InitTellowsEvaEndpoint(self, Api):
-        Api.add_resource(GetTellows, "/engine/tellows")
+    def __InitEvaluateNumberEndpoint(self, Api):
+        Api.add_resource(EvaluateNumber, "/engine/evaluate-number")

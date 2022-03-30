@@ -79,7 +79,6 @@ class User():
         return self.__UserInfos
 
     # SECURITY
-
     def LostPasswordMode(self, mode: bool = False):
         self.__UserDB.UpdateLostPasswordMode(self.__guid, mode)
 

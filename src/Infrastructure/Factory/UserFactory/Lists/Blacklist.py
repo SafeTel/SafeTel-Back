@@ -36,6 +36,11 @@ class Blacklist():
     def PullList(self):
         return PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))
 
+    def IsNumber(self, number: str):
+        return self.__IsNumberInList(
+            number,
+            PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))
+        )
 
     def AddNumber(self, number: str):
         BlacklistNumbers = PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))
