@@ -1,4 +1,54 @@
 {
     "guid": "05f025e0-d05e-4325-a0b5-05c54325e325",
-    "History": []
-}
+    "History": [
+        {
+            "number": "0752183754",
+            "status": "Missed",
+            "time": 20180116180225
+        },
+        {
+            "number": "0690068125",
+            "status": "Missed",
+            "time": 20180217200530
+        },
+        {
+            "number": "0628445354",
+            "status": "Received",
+            "time": 20180418220835
+        },
+        {
+            "number": "0627408005",
+            "status": "Received",
+            "time": 20180619001140
+        },
+        {
+            "number": "0717955032",
+            "status": "Received",
+            "time": 20180820021445
+        },
+        {
+            "number": "0674609236",
+            "status": "Received",
+            "time": 20181021041750
+        },
+        {
+            "number": "0730691973",
+            "status": "Blocked",
+            "time": 20181222062055
+        },
+        {
+            "number": "0745594595",
+            "status": "Blocked",
+            "time": 20180123082300
+        },
+        {
+            "number": "0634321219",
+            "status": "Outgoing",
+            "time": 20180324102605
+        },
+        {
+            "number": "0775511147",
+            "status": "Outgoing",
+            "time": 20180525122910
+        }
+    ]}
