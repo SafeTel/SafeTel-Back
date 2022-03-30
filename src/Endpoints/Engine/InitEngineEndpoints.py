@@ -11,8 +11,8 @@ from Endpoints.Engine.EvaluateNumber import EvaluateNumber
 
 class InitEngineEndpoints():
     def __init__(self, Api):
-        self.__InitTellowsEvaEndpoint(Api)
+        self.__InitEvaluateNumberEndpoint(Api)
 
 
-    def __InitTellowsEvaEndpoint(self, Api):
+    def __InitEvaluateNumberEndpoint(self, Api):
         Api.add_resource(EvaluateNumber, "/engine/evaluate-number")
