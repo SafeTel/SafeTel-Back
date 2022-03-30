@@ -47,6 +47,7 @@ type Wille struct {
 	DEV_DB_BOXES_NAME      string
 	DEV_DB_DEVELOPERS_NAME string
 	DEV_URI_USERS_DB       string
+	DEV_URI_BOXES_DB       string
 }
 
 // Print help
@@ -154,6 +155,7 @@ func New() (*Wille, error) {
 	wille.DEV_DB_BOXES_NAME = config.DEV_DB_BOXES_NAME
 	wille.DEV_DB_DEVELOPERS_NAME = config.DEV_DB_DEVELOPERS_NAME
 	wille.DEV_URI_USERS_DB = config.DEV_URI_USERS_DB
+	wille.DEV_URI_BOXES_DB = config.DEV_URI_BOXES_DB
 
 	wille.DBForUsers = wille.Client.Database(wille.DEV_DB_USERS_NAME)
 	wille.DBForBox = wille.Client.Database(wille.DEV_DB_BOXES_NAME)

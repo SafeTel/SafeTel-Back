@@ -27,7 +27,7 @@ type Box struct {
 	BoxCollection     *mongo.Collection
 	Print             *print.Print
 	DEV_DB_BOXES_NAME string
-	DEV_URI_USERS_DB  string
+	DEV_URI_BOXES_DB  string
 }
 
 type Data struct {
@@ -87,7 +87,7 @@ func (box *Box) UploadBoxFile(name string) error {
 		return nil
 	}
 	// Upload
-	err, inOut, inErr := mongoUtils.Import(box.DEV_URI_USERS_DB, "Boxes", "data/"+name+"/Embedded/Box.json")
+	err, inOut, inErr := mongoUtils.Import(box.DEV_URI_BOXES_DB, "Boxes", "data/"+name+"/Embedded/Box.json")
 
 	if err != nil {
 		return err
@@ -136,7 +136,7 @@ func New(client *mongo.Client, print *print.Print) (*Box, error) {
 
 	box := Box{Client: client}
 	box.DEV_DB_BOXES_NAME = config.DEV_DB_BOXES_NAME
-	box.DEV_URI_USERS_DB = config.DEV_URI_USERS_DB
+	box.DEV_URI_BOXES_DB = config.DEV_URI_BOXES_DB
 
 	box.DB = box.Client.Database(box.DEV_DB_BOXES_NAME)
 
