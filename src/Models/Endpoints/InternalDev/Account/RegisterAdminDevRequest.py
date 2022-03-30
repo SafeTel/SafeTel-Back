@@ -38,7 +38,7 @@ class RegisterAdminDevRequest(JParent):
 
     def __EvaErrorsJParent(self):
         if (self.magicnumber is None): return "Body Denied"
-        if (type(self.magicnumber) is not int and self.magicnumber != 42): return "Body Denied"
+        if (type(self.magicnumber) is not int or self.magicnumber != 42): return "Body Denied"
 
         if (self.apiKey is None): return "Body Denied"
         if (type(self.apiKey) is not str): return "Invalid variable type."
