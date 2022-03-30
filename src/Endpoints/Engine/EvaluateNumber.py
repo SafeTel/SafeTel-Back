@@ -26,7 +26,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 ###
 # Request:
-# DELETE: localhost:2407/engine/evaluate-number
+# POST: localhost:2407/engine/evaluate-number
 # {
 # 	"token": "",
 # 	"number": "0123456789"
@@ -46,7 +46,7 @@ class EvaluateNumber(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-    def delete(self):
+    def post(self):
         Request = EvaluateNumberRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
