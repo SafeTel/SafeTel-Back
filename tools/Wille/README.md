@@ -17,7 +17,7 @@ You need to install golang:
 
 - [Install Golang](https://go.dev/doc/install)
 
-then, you can run the project:
+Then, you can run the project:
 
 Command:
 ```sh
