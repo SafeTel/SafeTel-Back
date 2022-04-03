@@ -11,11 +11,11 @@ import json
 from pathlib import Path
 
 ### INFRA
-from Infrastructure.Utils.HttpClient.HtttpClient import HttpClient
 import requests
 
-class InitScriptConfig(InitServerConfig):
+class InitScriptConfig():
     def __init__(self):
+        self.validationCode = 200
         self.__IsValidConfig()
         self.__CheckEnvVars()
         self.__Ping()
