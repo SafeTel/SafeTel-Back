@@ -11,7 +11,7 @@ from typing import Any
 import pymongo
 
 class MongoDBWorker():
-    def __init__(self, db):
+    def __init__(self, db = None):
         self.MongoDB = db
     
     def setMongoDB(self, db):
