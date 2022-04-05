@@ -61,7 +61,7 @@ class FactBox():
 
 
     def IsClaimedByUser(self, boxid: str):
-        UserBoxes = self.__PullBoxData()
+        UserBoxes = self.__PullBoxData().Boxes
 
         for UserBox in UserBoxes:
             if (self.__CheckBoxid(UserBox, boxid)):
@@ -70,11 +70,11 @@ class FactBox():
 
 
     def UpdateActivity(self, boxid: str, activity: bool):
-        UserBoxes = self.__PullBoxData()
+        UserBoxes = self.__PullBoxData().Boxes
 
         for UserBox in UserBoxes:
             if (self.__CheckBoxid(UserBox, boxid)):
-                return self.__ChangeActivity()
+                return self.__ChangeActivity(UserBox, activity)
         return "You don't own this Box"
 
 

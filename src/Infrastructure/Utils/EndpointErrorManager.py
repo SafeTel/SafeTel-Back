@@ -30,7 +30,7 @@ class EndpointErrorManager():
         }
 
     # Code 403
-    def CreateForbiddenAccessError(self, message):
+    def CreateForbiddenAccessErrorWithMessage(self, message):
         return {
             "error": True,
             "details": "Access Denied",

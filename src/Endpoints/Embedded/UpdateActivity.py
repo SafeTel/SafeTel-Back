@@ -67,7 +67,7 @@ class UpdateActivity(Resource):
         )
 
         if (error != None):
-            return self.__EndpointErrorManager.CreateForbiddenAccessError(error), 403
+            return self.__EndpointErrorManager.CreateForbiddenAccessErrorWithMessage(error), 403
 
         Response = UpdateActivityResponse(
             True
