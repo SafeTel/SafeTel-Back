@@ -1,8 +1,8 @@
 ##
-## SAFETEL PROJECT, 2022
+## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## LoginBoxResponse
+## UpdateActivityResponse
 ##
 
 ### MODELS
@@ -10,13 +10,13 @@
 from Models.ModelAbstractions.JParent import JParent
 
 # Represents Login Response
-class LoginBoxResponse(JParent):
-    def __init__(self, token: str):
-        self.__InitJParent(token)
+class UpdateActivityResponse(JParent):
+    def __init__(self, updated: bool):
+        self.__InitJParent(updated)
 
     # Values Assignement
-    def __InitJParent(self, token: str):
-        self.token = token
+    def __InitJParent(self, updated: bool):
+        self.updated = updated
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -25,6 +25,6 @@ class LoginBoxResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.token is None): return "Internal Model Error"
-        if (type(self.token) is not str): return "Internal Model Error"
+        if (self.updated is None): return "Internal Model Error"
+        if (type(self.updated) is not bool): return "Internal Model Error"
         return None

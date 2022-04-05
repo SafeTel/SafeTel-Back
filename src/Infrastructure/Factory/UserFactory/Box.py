@@ -33,7 +33,7 @@ class FactBox():
 
     # READ
     def PullBoxData(self):
-        return BoxList(self.__BoxDB.getBoxData(self.__guid)["Boxes"])
+        return self.__PullBoxData()
 
 
     # WRITE
@@ -69,6 +69,15 @@ class FactBox():
         return False
 
 
+    def UpdateActivity(self, boxid: str, activity: bool):
+        UserBoxes = self.__PullBoxData()
+
+        for UserBox in UserBoxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                return self.__ChangeActivity()
+        return "You don't own this Box"
+
+
     # PRIVATE
     def __PullBoxData(self):
         return BoxList(self.__BoxDB.getBoxData(self.__guid)["Boxes"])
@@ -76,3 +85,7 @@ class FactBox():
 
     def __CheckBoxid(self, UserBox: Box, boxid: str):
         return UserBox.boxid == boxid
+
+    # UTILS
+    def __ChangeActivity(self, UserBox: Box, acitivity: bool):
+        UserBox.activity = acitivity

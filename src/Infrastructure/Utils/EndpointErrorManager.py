@@ -28,3 +28,11 @@ class EndpointErrorManager():
             "details": "Access Denied",
             "message": "Your token may be corrupted"
         }
+
+    # Code 403
+    def CreateForbiddenAccessError(self, message):
+        return {
+            "error": True,
+            "details": "Access Denied",
+            "message": message
+        }
