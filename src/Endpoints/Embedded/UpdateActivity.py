@@ -21,6 +21,10 @@ from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 from Models.Endpoints.Embedded.UpdateActivity.UpdateActivityRequest import UpdateActivityRequest
 from Models.Endpoints.Embedded.UpdateActivity.UpdateActivityResponse import UpdateActivityResponse
 
+### LOGC
+# JWT converter import
+from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+
 
 ###
 # Request:
@@ -42,6 +46,7 @@ from Models.Endpoints.Embedded.UpdateActivity.UpdateActivityResponse import Upda
 class UpdateActivity(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
+        self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
         self.__BoxDB = BoxDB()
 
@@ -53,11 +58,11 @@ class UpdateActivity(Resource):
         if (requestErrors != None):
             return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        guid = self.__BoxDB.RSUserByBoxID(Request.boxid)
-        if (guid == None):
-            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
+        if (JwtInfos is None):
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        User = self.__UserFactory.LoadUser(guid)
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 

@@ -70,12 +70,24 @@ class FactBox():
 
 
     def UpdateActivity(self, boxid: str, activity: bool):
-        UserBoxes = self.__PullBoxData().Boxes
+        UserBoxes = self.__PullBoxData()
+        error = True
 
-        for UserBox in UserBoxes:
+        if (UserBoxes.Boxes.count == 0):
+            return "Unkwown Box"
+
+        for UserBox in UserBoxes.Boxes:
             if (self.__CheckBoxid(UserBox, boxid)):
-                return self.__ChangeActivity(UserBox, activity)
-        return "You don't own this Box"
+                error = False
+                self.__ChangeActivity(UserBox, activity)
+
+        if (error):
+            return "Unkwonw Box"
+
+        self.__BoxDB.updateBoxes(
+            self.__guid,
+            UserBoxes.ToDict()["Boxes"]
+        )
 
 
     # PRIVATE

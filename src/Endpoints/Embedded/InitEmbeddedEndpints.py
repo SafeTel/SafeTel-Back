@@ -33,7 +33,7 @@ class InitEmbeddedEndpoints():
 
 
     def __InitLoginBoxEndpoint(self, Api):
-        Api.add_resource(LoginBox, "/embedded/login")
+        Api.add_resource(LoginBox, "/embedded/login-box")
 
 
     def __InitBoxInfosEndpoint(self, Api):
