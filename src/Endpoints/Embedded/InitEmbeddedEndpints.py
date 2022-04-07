@@ -15,6 +15,8 @@ from Endpoints.Embedded.BoxInfos import BoxInfos
 # Avaible Update unique endpoint import
 from Endpoints.Embedded.UpdateActivity import UpdateActivity
 # Avaible Update unique endpoint import
+from Endpoints.Embedded.UpdateSeverity import UpdateSeverity
+# Avaible Update unique endpoint import
 from Endpoints.Embedded.AvailableUpdate import AvaiableUpdate
 
 
@@ -25,6 +27,7 @@ class InitEmbeddedEndpoints():
         self.__InitLoginBoxEndpoint(Api)
         self.__InitBoxInfosEndpoint(Api)
         self.__InitUpdateActivityEndpoint(Api)
+        self.__InitUpdateSeverityEndpoint(Api)
         self.__InitAvaiableUpdateEndpoint(Api)
 
 
@@ -42,6 +45,10 @@ class InitEmbeddedEndpoints():
 
     def __InitUpdateActivityEndpoint(self, Api):
         Api.add_resource(UpdateActivity, "/embedded/update-activity")
+
+
+    def __InitUpdateSeverityEndpoint(self, Api):
+        Api.add_resource(UpdateSeverity, "/embedded/update-severity")
 
 
     def __InitAvaiableUpdateEndpoint(self, Api):

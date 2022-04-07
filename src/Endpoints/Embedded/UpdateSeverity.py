@@ -2,11 +2,12 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## UpdateActivity
+## UpdateBoxMode
 ##
 
 ### INFRA
 # Flask imports
+import imp
 from flask.globals import request
 from flask_restful import Resource
 # User Factory import
@@ -16,8 +17,8 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.UpdateActivity.UpdateActivityRequest import UpdateActivityRequest
-from Models.Endpoints.Embedded.UpdateActivity.UpdateActivityResponse import UpdateActivityResponse
+from Models.Endpoints.Embedded.UpdateBoxMode.UpdateBoxModeRequest import UpdateBoxModeRequest
+from Models.Endpoints.Embedded.UpdateBoxMode.UpdateBoxModeResponse import UpdateBoxModeResponse
 
 ### LOGC
 # JWT converter import
@@ -26,11 +27,11 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 ###
 # Request:
-# PATCH: localhost:2407/embedded/update-activity
+# PATCH: localhost:2407/embedded/update-severity
 # {
 #     "token": "jwt",
 #     "boxid": "1234567890",
-#     "activity": true
+#     "severity": "normal"
 # }
 ###
 # Response:
@@ -40,8 +41,8 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 ###
 
 
-# Route to update the activity of a box
-class UpdateActivity(Resource):
+# Route to update a box severity
+class UpdateSeverity(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
@@ -49,7 +50,7 @@ class UpdateActivity(Resource):
 
 
     def patch(self):
-        Request = UpdateActivityRequest(request.get_json())
+        Request = UpdateBoxModeRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -63,15 +64,15 @@ class UpdateActivity(Resource):
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        error = User.Box.UpdateActivity(
+        error = User.Box.UpdateSeverity(
             Request.boxid,
-            Request.activity
+            Request.severity
         )
 
         if (error != None):
             return self.__EndpointErrorManager.CreateForbiddenAccessErrorWithMessage(error), 403
 
-        Response = UpdateActivityResponse(
+        Response = UpdateBoxModeResponse(
             True
         )
 
