@@ -33,7 +33,7 @@ class FactBox():
 
     # READ
     def PullBoxData(self):
-        return BoxList(self.__BoxDB.getBoxData(self.__guid)["Boxes"])
+        return self.__PullBoxData()
 
 
     # WRITE
@@ -61,12 +61,33 @@ class FactBox():
 
 
     def IsClaimedByUser(self, boxid: str):
-        UserBoxes = self.__PullBoxData()
+        UserBoxes = self.__PullBoxData().Boxes
 
         for UserBox in UserBoxes:
             if (self.__CheckBoxid(UserBox, boxid)):
                 return True
         return False
+
+
+    def UpdateActivity(self, boxid: str, activity: bool):
+        UserBoxes = self.__PullBoxData()
+        error = True
+
+        if (UserBoxes.Boxes.count == 0):
+            return "Unkwown Box"
+
+        for UserBox in UserBoxes.Boxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                error = False
+                self.__ChangeActivity(UserBox, activity)
+
+        if (error):
+            return "Unkwonw Box"
+
+        self.__BoxDB.updateBoxes(
+            self.__guid,
+            UserBoxes.ToDict()["Boxes"]
+        )
 
 
     # PRIVATE
@@ -76,3 +97,7 @@ class FactBox():
 
     def __CheckBoxid(self, UserBox: Box, boxid: str):
         return UserBox.boxid == boxid
+
+    # UTILS
+    def __ChangeActivity(self, UserBox: Box, acitivity: bool):
+        UserBox.activity = acitivity
