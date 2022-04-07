@@ -26,7 +26,7 @@ services:
     clean_db:
         build: # "context" and "dockerfile" fields have to be under "build"
             context: ../../
-            dockerfile: tools/CleanDB/Dockerfile              
+            dockerfile: tools/Amane/Dockerfile              
         restart:
             on-failure
         env_file: ../dev-config.env
