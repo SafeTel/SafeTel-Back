@@ -21,24 +21,51 @@ from Endpoints.Account.DeleteAccount import DeleteAccount
 
 class InitAccountEndpoints():
     def __init__(self, Api):
+        self.ACCOUNT_URI_BASE_DOMAIN = "/account/"
         self.__InitInfosEndpoints(Api)
         self.__InitListsEndpoints(Api)
         self.__InitUniqueEndpoint(Api)
 
 
     def __InitInfosEndpoints(self, Api):
-        Api.add_resource(GetInfos, "/account/infos/get-infos")
-        Api.add_resource(UpdateEmail, "/account/infos/update-email")
-        Api.add_resource(UpdatePersonalInfos, "/account/infos/update-infos")
-        Api.add_resource(UpdatePassword, "/account/infos/update-password")
+        Api.add_resource(
+            GetInfos,
+            self.ACCOUNT_URI_BASE_DOMAIN + "infos/get-infos"
+        )
+        Api.add_resource(
+            UpdateEmail,
+            self.ACCOUNT_URI_BASE_DOMAIN + "infos/update-email"
+        )
+        Api.add_resource(
+            UpdatePersonalInfos,
+            self.ACCOUNT_URI_BASE_DOMAIN + "infos/update-infos"
+        )
+        Api.add_resource(
+            UpdatePassword,
+            self.ACCOUNT_URI_BASE_DOMAIN + "infos/update-password"
+        )
 
 
     def __InitListsEndpoints(self, Api):
-        Api.add_resource(Blacklist, "/account/lists/blacklist")
-        Api.add_resource(Whitelist, "/account/lists/whitelist")
-        Api.add_resource(GreyList, "/account/lists/greylist")
-        Api.add_resource(History, "/account/lists/history")
+        Api.add_resource(
+            Blacklist,
+            self.ACCOUNT_URI_BASE_DOMAIN + "lists/blacklist"
+        )
+        Api.add_resource(
+            Whitelist,
+            self.ACCOUNT_URI_BASE_DOMAIN + "lists/whitelist")
+        Api.add_resource(
+            GreyList,
+            self.ACCOUNT_URI_BASE_DOMAIN + "lists/greylist"
+        )
+        Api.add_resource(
+            History,
+            "/account/lists/history"
+        )
 
 
     def __InitUniqueEndpoint(self, Api):
-        Api.add_resource(DeleteAccount, "/account/delete")
+        Api.add_resource(
+            DeleteAccount,
+            self.ACCOUNT_URI_BASE_DOMAIN + "delete"
+        )
