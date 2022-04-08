@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## UpdateActivityResponse
+## UpdateBoxModeResponse
 ##
 
 ### MODELS
@@ -10,7 +10,7 @@
 from Models.ModelAbstractions.JParent import JParent
 
 # Represents Login Response
-class UpdateActivityResponse(JParent):
+class UpdateBoxModeResponse(JParent):
     def __init__(self, updated: bool):
         self.__InitJParent(updated)
 

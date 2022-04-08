@@ -71,23 +71,30 @@ class FactBox():
 
     def UpdateActivity(self, boxid: str, activity: bool):
         UserBoxes = self.__PullBoxData()
-        error = True
-
-        if (UserBoxes.Boxes.count == 0):
-            return "Unkwown Box"
 
         for UserBox in UserBoxes.Boxes:
             if (self.__CheckBoxid(UserBox, boxid)):
-                error = False
                 self.__ChangeActivity(UserBox, activity)
+                self.__BoxDB.updateBoxes(
+                    self.__guid,
+                    UserBoxes.ToDict()["Boxes"]
+                )
+                return None
+        return "Unkwonw Box"
 
-        if (error):
-            return "Unkwonw Box"
 
-        self.__BoxDB.updateBoxes(
-            self.__guid,
-            UserBoxes.ToDict()["Boxes"]
-        )
+    def UpdateSeverity(self, boxid: str, severity: BoxSeverity):
+        UserBoxes = self.__PullBoxData()
+
+        for UserBox in UserBoxes.Boxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                self.__ChangBoxMode(UserBox, severity)
+                self.__BoxDB.updateBoxes(
+                    self.__guid,
+                    UserBoxes.ToDict()["Boxes"]
+                )
+                return None
+        return "Unkwonw Box"
 
 
     # PRIVATE
@@ -101,3 +108,7 @@ class FactBox():
     # UTILS
     def __ChangeActivity(self, UserBox: Box, acitivity: bool):
         UserBox.activity = acitivity
+
+
+    def __ChangBoxMode(self, UserBox: Box, severity: BoxSeverity):
+        UserBox.severity = severity
