@@ -39,3 +39,4 @@ jobs:
           newman run https://api.getpostman.com/collections/13182887-93e525f5-4a5c-49f5-8fc1-7a4e62bad530?apikey=$API_KEY --environment https://api.getpostman.com/environments/13182887-27b5e4d9-672d-46e3-a376-46091c3e8bc5?apikey=$API_KEY
         env:
           API_KEY: ${{secrets.POSTMAN_API_KEY}}
+  
