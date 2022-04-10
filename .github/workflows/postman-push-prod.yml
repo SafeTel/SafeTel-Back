@@ -36,6 +36,6 @@ jobs:
 
       - name: Run POSTMAN collection with PROD env
         run: |
-          newman run https://api.getpostman.com/collections/13182887-93e525f5-4a5c-49f5-8fc1-7a4e62bad530?apikey=$API_KEY --environment https://api.getpostman.com/environments/13182887-202afc19-c14a-4da2-8ca8-e3cdb3b64f41?apikey=$API_KEY
+          newman run https://api.getpostman.com/collections/13182887-93e525f5-4a5c-49f5-8fc1-7a4e62bad530?apikey=$API_KEY --environment https://api.getpostman.com/environments/13182887-aaeffc8e-2997-4fde-a21d-ecf08ed7f3db?apikey=$API_KEY
         env:
           API_KEY: ${{secrets.POSTMAN_API_KEY}}
