@@ -12,6 +12,10 @@
         "region": "California",
         "address": "7089 N Marks Avenue, Fresno"
     },
+    "Administrative": {
+        "passwordlost": false
+    },
+    "time": 1649617188.8572538,
     "guid": "02f022e0-d02e-4322-a0b2-02c54322e322",
     "role": "user"
 }
