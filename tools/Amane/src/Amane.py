@@ -48,7 +48,7 @@ from DBClean import DBClean
 
 if __name__ == "__main__":
     Client = pymongo.MongoClient(os.getenv("DB_URI"))
-    
+
     MongoDBClean = DBClean(Client)
     MongoDBClean.setDatabasesCollectionPair(os.getenv("DB_MELCHIOR"), ['Blacklist', 'History', 'User', 'Whitelist'])
     MongoDBClean.setDatabasesCollectionPair(os.getenv("DB_CASPER"), ['ApiKeyLog', 'Contributors'])
