@@ -1,6 +1,6 @@
 {
     "email": "marc_feu_safetel_wille@gmail.com",
-    "userName": "Marc",
+    "username": "Marc",
     "password": "ee5a77f34e6431232a8e404957c03d9a311f885fd9ea01e401a72f246333f1b44b53aa5e6670f72b31eb00f7e70e6da9d2696f45b99550aad3e7c802cd55a47a",
     "customerInfos": {
         "firstName": "Marc",
@@ -15,6 +15,7 @@
     "Administrative": {
         "passwordlost": false
     },
+    "time": 1649617188.8572538,
     "guid": "04f024e0-d04e-4324-a0b4-04c54324e324",
     "role": "user"
 }

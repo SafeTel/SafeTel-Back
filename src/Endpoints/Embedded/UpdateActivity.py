@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## EvaluateNumber
+## UpdateActivity
 ##
 
 ### INFRA
@@ -16,8 +16,8 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Engine.EvaluateNumberRequest import EvaluateNumberRequest
-from Models.Endpoints.Engine.EvaluateNumberResponse import EvaluateNumberResponse
+from Models.Endpoints.Embedded.UpdateActivity.UpdateActivityRequest import UpdateActivityRequest
+from Models.Endpoints.Embedded.UpdateActivity.UpdateActivityResponse import UpdateActivityResponse
 
 ### LOGC
 # JWT converter import
@@ -26,28 +26,30 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 ###
 # Request:
-# POST: localhost:2407/engine/evaluate-number
+# PATCH: localhost:2407/embedded/update-activity
 # {
-# 	"token": "",
-# 	"number": "0123456789"
+#     "token": "jwt",
+#     "boxid": "1234567890",
+#     "activity": true
 # }
 ###
 # Response:
 # {
-# 	"block": true
+#       "updated": true
 # }
 ###
 
 
-# Route to evaluate a number from an auth user
-class EvaluateNumber(Resource):
+# Route to update the activity of a box
+class UpdateActivity(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-    def post(self):
-        Request = EvaluateNumberRequest(request.get_json())
+
+    def patch(self):
+        Request = UpdateActivityRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -61,12 +63,19 @@ class EvaluateNumber(Resource):
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = EvaluateNumberResponse(
-            User.Blacklist.IsNumber(Request.number)
+        error = User.Box.UpdateActivity(
+            Request.boxid,
+            Request.activity
+        )
+
+        if (error != None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessErrorWithMessage(error), 403
+
+        Response = UpdateActivityResponse(
+            True
         )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
             return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
-

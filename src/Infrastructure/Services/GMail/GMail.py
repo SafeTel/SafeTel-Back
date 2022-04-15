@@ -20,12 +20,16 @@ class GMail:
         self.emailpassword = cred_password
 
     def SendMail(self, useremail, object, content):
-        with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-            smtp.ehlo()
-            smtp.starttls()
-            smtp.ehlo()
+        try:
+            with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+                smtp.ehlo()
+                smtp.starttls()
+                smtp.ehlo()
 
-            mail_data = f'Subject: {object}\n\n{content}'
+                mail_data = f'Subject: {object}\n\n{content}'
 
-            smtp.login(self.emaillogin, self.emailpassword)
-            smtp.sendmail(self.emaillogin, useremail, mail_data)
+                smtp.login(self.emaillogin, self.emailpassword)
+                smtp.sendmail(self.emaillogin, useremail, mail_data)
+        except ValueError:
+            import sys
+            print("/!\\ WARNING: GMail Service not connected to any Account! /!\\",  file=sys.stderr)

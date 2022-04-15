@@ -12,6 +12,10 @@ import pymongo
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
 
+### MODELS
+# Box Model import
+from Models.Infrastructure.Factory.UserFactory.Box.BoxSeverity import BoxSeverity
+
 ### LOGIC
 # env var import
 import os
@@ -59,6 +63,12 @@ class BoxDB():
         self.__UpdateList(guid, NewList)
 
 
+    def updateBoxes(self, guid: str, UserBoxes: list):
+        for UserBox in UserBoxes:
+            UserBox["severity"] = BoxSeverity.EnumToStr(UserBox["severity"])
+        self.__UpdateList(guid, UserBoxes)
+
+
     def RSUserByBoxID(self, boxid: str):
         result =  self.Box.find({'Boxes': {'$elemMatch': {'boxid':boxid}}})
         for tmp in result:
@@ -83,7 +93,9 @@ class BoxDB():
         QueryGUID = {
             'guid': str(guid)
         }
-        QueryData = { "$set": { "Boxes": NewList } }
+        QueryData = {
+            "$set": { "Boxes": NewList }
+        }
         self.Box.update_one(QueryGUID, QueryData)
 
 

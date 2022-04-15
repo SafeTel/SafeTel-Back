@@ -19,6 +19,7 @@ from Endpoints.Authentification.Login import Login
 
 class InitAuthentificationEndpoints():
     def __init__(self, Api):
+        self.AUTHENTIFICATION_URI_BASE_DOMAIN = "/auth/"
         self.__InitLostPasswordEndpoints(Api)
         self.__InitCheckTokenEndpoints(Api)
         self.__InitRegisterEndpoint(Api)
@@ -26,18 +27,36 @@ class InitAuthentificationEndpoints():
 
 
     def __InitLostPasswordEndpoints(self, Api):
-        Api.add_resource(ResetPassword, "/auth/lost-password/reset-password")
-        Api.add_resource(UpdateLostPassword, "/auth/lost-password/update-password")
+        Api.add_resource(
+            ResetPassword,
+            self.AUTHENTIFICATION_URI_BASE_DOMAIN + "lost-password/reset-password"
+        )
+        Api.add_resource(
+            UpdateLostPassword,
+            self.AUTHENTIFICATION_URI_BASE_DOMAIN + "lost-password/update-password"
+        )
 
 
     def __InitCheckTokenEndpoints(self, Api):
-        Api.add_resource(CheckToken, "/auth/token/check-token")
-        Api.add_resource(ResetToken, "/auth/token/reset-token")
+        Api.add_resource(
+            CheckToken,
+            self.AUTHENTIFICATION_URI_BASE_DOMAIN + "token/check-token"
+        )
+        Api.add_resource(
+            ResetToken,
+            self.AUTHENTIFICATION_URI_BASE_DOMAIN + "token/reset-token"
+        )
 
 
     def __InitRegisterEndpoint(self, Api):
-        Api.add_resource(Register, "/auth/register")
+        Api.add_resource(
+            Register,
+            self.AUTHENTIFICATION_URI_BASE_DOMAIN + "register"
+        )
 
 
     def __InitLoginEndpoint(self, Api):
-        Api.add_resource(Login, "/auth/login")
+        Api.add_resource(
+            Login,
+            self.AUTHENTIFICATION_URI_BASE_DOMAIN + "login"
+        )

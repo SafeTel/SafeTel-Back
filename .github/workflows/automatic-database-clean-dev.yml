@@ -1,0 +1,26 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - 'DEV'
+
+jobs:
+  build: # job_id
+    name: pushing new dev docker image on docker hub and deploy # job name
+    runs-on: ubuntu-latest # hosted OS
+
+    steps:
+      - 
+        name: executing remote ssh commands for deployment using ssh_key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST_DEV }}
+          username: ${{ secrets.SSH_USERNAME_DEV }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT_DEV }}
+          script: |
+            cd /home/backadmin/SafeTel-Back/
+            git pull origin DEV
+            cd devOps/cd/
+            docker-compose up -d --force-recreate --no-deps --build clean_db

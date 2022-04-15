@@ -51,6 +51,7 @@ type Data struct {
 	Administrative Administrative `json:"Administrative"`
 	Guid           string         `json:"guid"`
 	Role           string         `json:"role"`
+	Time           float64        `json:"time"`
 }
 
 // Check the content of a Profile object
@@ -98,6 +99,9 @@ func (profile *Profile) checkProfileObjectDataValidity(name string, data Data) e
 	}
 	if data.Role == "" {
 		return errors.New("Problem with json file " + name + "/Lists/Profile.jsonBox Missing Profile Role value")
+	}
+	if data.Time == 0 {
+		return errors.New("Problem with json file " + name + "/Lists/Profile.jsonBox Missing Profile Time value")
 	}
 	return nil
 }
