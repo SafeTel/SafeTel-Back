@@ -13,7 +13,7 @@ from pathlib import Path
 ### INFRA
 import requests
 
-class InitScriptConfig():
+class ScriptConfig():
     def __init__(self):
         self.validationCode = 200
         self.__IsValidConfig()
@@ -56,6 +56,6 @@ class InitScriptConfig():
             launchSecurity = config["Mode"]["launchSecurity"]
             if (launchSecurity):
                 if (launchMode != "DEV"
-                or launchMode != "PROD"
-                or launchMode != "POSTMAN"):
+                and launchMode != "PROD"
+                and launchMode != "POSTMAN"):
                     raise ValueError("FATAL ERROR: Launch Mode Denied")
