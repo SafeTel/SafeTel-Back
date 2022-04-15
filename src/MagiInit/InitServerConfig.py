@@ -56,6 +56,6 @@ class InitServerConfig():
             launchSecurity = config["Mode"]["launchSecurity"]
             if (launchSecurity):
                 if (launchMode != "DEV"
-                or launchMode != "PROD"
-                or launchMode != "POSTMAN"):
+                and launchMode != "PROD"
+                and launchMode != "POSTMAN"):
                     raise ValueError("FATAL ERROR: Launch Mode Denied")
