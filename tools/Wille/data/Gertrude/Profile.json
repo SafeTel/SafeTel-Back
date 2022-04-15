@@ -1,6 +1,6 @@
 {
     "email": "gertrude_safetel_wille@gmail.com",
-    "userName": "Gertrude",
+    "username": "Gertrude",
     "password": "0d9896cd28748c3448d3d6502431980f37fed57af1b6ec6497c39cfe693fd69942a2f2333eccf0942527c8d78d0973ad5ce2f91694eb91c7da74aa04c8bd584b",
     "customerInfos": {
         "firstName": "Gertrude",
@@ -15,6 +15,7 @@
     "Administrative": {
         "passwordlost": false
     },
+    "time": 1649617188.8572538,
     "guid": "03f023e0-d03e-4323-a0b3-03c54323e323",
     "role": "user"
 }
