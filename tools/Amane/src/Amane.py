@@ -30,6 +30,8 @@ import sys
 if len(sys.argv) == 2:
     if sys.argv[1] == '--force-now':
         AmaneConfig()
+    elif sys.argv[1] == "--force":
+        AmaneConfig()
 ScriptConfig()
 logging.warning("---     Environement Validated      ----")
 ###  Initiate Server Config END  ###
@@ -71,6 +73,9 @@ if __name__ == "__main__":
         if sys.argv[1] == '--force-now':
             MongoDBClean.run()
             exit(0)
+        elif sys.argv[1] == '--force':
+            signal.signal(signal.SIGINT, handler)
+            schedule.every().day.at("10:00:42").do(MongoDBClean.run)
     else:
         signal.signal(signal.SIGINT, handler)
         schedule.every().day.at("10:00:42").do(MongoDBClean.run)
