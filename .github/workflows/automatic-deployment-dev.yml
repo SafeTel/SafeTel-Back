@@ -46,6 +46,7 @@ jobs:
           port: ${{ secrets.SSH_PORT_DEV }}
           script: |
             cd /home/backadmin/SafeTel-Back/
+            git checkout DEV
             git pull origin DEV
             cd devOps/cd/
             docker-compose pull magi_postman
@@ -61,6 +62,7 @@ jobs:
           port: ${{ secrets.SSH_PORT_DEV }}
           script: |
             cd /home/backadmin/SafeTel-Back/
+            git checkout DEV
             git pull origin DEV
             cd devOps/cd/
             docker-compose pull magi_dev
