@@ -46,6 +46,8 @@ class DeleteAccount(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
+    from flasgger.utils import swag_from
+    @swag_from("a.yml")
     def delete(self):
         Request = DeleteAccountRequest(request.get_json())
 

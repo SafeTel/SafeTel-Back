@@ -54,6 +54,21 @@ from flask_restful import Api
 
 # Flask initialitation
 app = Flask(__name__)
+
+from flasgger import Swagger
+
+swagger = Swagger(app)
+
+app.config['SWAGGER'] = {
+    'openapi': '3.0.0'
+}
+
+from flasgger.utils import swag_from
+@app.route('/v1/decorated_utf32/<username>', endpoint='should_be_v1_only_username_utf32')
+@swag_from("a.yml")
+def fromfile_decorated_utf32(username):
+    return ({'username': username})
+
 app.debug = True
 api = Api(app)
 
