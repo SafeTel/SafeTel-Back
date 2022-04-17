@@ -39,6 +39,8 @@ jobs:
             cd devOps/cd/
             docker-compose pull magi_postman
             docker-compose up -d --force-recreate --no-deps --build magi_postman
+            docker-compose up -d --force-recreate --no-deps --build clean_db_postman_force_now
+            echo "y" | docker system prune
 
       - name: Install newman # installing newman, CLI to run postman tests
         run: |
