@@ -50,7 +50,7 @@ jobs:
       - name: Build the docker-compose of the project # running docker
         run: docker-compose up -d
 
-      - name: Run POSTMAN collection with DEV env # running POSTMAN tests with postman-env
+      - name: Run POSTMAN collection with Postman env # running POSTMAN tests with postman-env
         run: |
           newman run https://api.getpostman.com/collections/13182887-93e525f5-4a5c-49f5-8fc1-7a4e62bad530?apikey=$API_KEY --environment https://api.getpostman.com/environments/13182887-0b3ed845-907b-418e-a771-70d268e7153d?apikey=$API_KEY
         env:
