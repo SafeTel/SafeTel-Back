@@ -20,7 +20,7 @@ import time
 
 # Object to represent table LandNumberDB
 class NumberDB():
-    def __init__(self, country: str, identifier: str, db_name=os.getenv("DB_BALTHASAR")):
+    def __init__(self, country: str, identifier: str, db_name=os.getenv("DB_BALTHASAR_02")):
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
         self.NumberDB = self.db[country]
@@ -49,7 +49,7 @@ class NumberDB():
         self.__UpdateList(number, NewList)
 
 
-    def addNumberFromUser(self, number: str, guid: str, boxid: str, score: int):
+    def addNumber(self, number: str, guid: str, boxid: str, score: int):
         Document = {
             "number": number,
             "identifier": self.identifier,
@@ -89,6 +89,6 @@ class NumberDB():
             'number': str(number)
         }
         QueryData = {
-            "$set": { "Boxes": NewList }
+            "$set": { "Reports": NewList }
         }
         self.NumberDB.update_one(QueryNumber, QueryData)
