@@ -43,7 +43,7 @@ class BoxDB():
 
 
     def isBox(self, guid: str):
-        self.DBWatcher.IsDocument("guid", guid)
+        return self.DBWatcher.IsDocument("guid", guid)
 
 
     def delete(self, guid: str):
@@ -88,6 +88,14 @@ class BoxDB():
     def __PullData(self, guid: str):
         return self.DBWatcher.GetDocument("guid", guid)
 
+    def __AddBox(self, boxid: str, activity: bool, severity: str, TemporaryList: list):
+        TemporaryList.append({
+                "boxid": boxid,
+                "activity": activity,
+                "severity": severity
+            }
+        )
+        return TemporaryList
 
     def __UpdateList(self, guid: str, NewList: list):
         QueryGUID = {
@@ -98,12 +106,3 @@ class BoxDB():
         }
         self.Box.update_one(QueryGUID, QueryData)
 
-
-    def __AddBox(self, boxid: str, activity: bool, severity: str, TemporaryList: list):
-        TemporaryList.append({
-                "boxid": boxid,
-                "activity": activity,
-                "severity": severity
-            }
-        )
-        return TemporaryList
