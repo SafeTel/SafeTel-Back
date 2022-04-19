@@ -55,20 +55,6 @@ from flask_restful import Api
 # Flask initialitation
 app = Flask(__name__)
 
-from flasgger import Swagger
-
-swagger = Swagger(app)
-
-app.config['SWAGGER'] = {
-    'openapi': '3.0.0'
-}
-
-from flasgger.utils import swag_from
-@app.route('/v1/decorated_utf32/<username>', endpoint='should_be_v1_only_username_utf32')
-@swag_from("a.yml")
-def fromfile_decorated_utf32(username):
-    return ({'username': username})
-
 app.debug = True
 api = Api(app)
 
@@ -81,6 +67,57 @@ from MagiInit.InitEndpoints import InitEndpoints
 InitEndpoints(api)
 ###  INFRA END  ###
 ###################
+
+
+#############################
+### SWAGGER SERVICE BEGIN ###
+from flasgger import Swagger
+
+''' swagger_config = {
+    "headers": [
+        ('Access-Control-Allow-Origin', '*'),
+        ('Access-Control-Allow-Methods', "GET, POST, DELETE, PATCH"),
+        ('Access-Control-Allow-Credentials', "true"),
+    ],
+    "specs": [
+        {
+            "endpoint": '',
+            "route": '/apispec_1.json',
+            "rule_filter": lambda rule: True,  # all in
+            "model_filter": lambda tag: True,  # all in
+        }
+    ],
+    "static_url_path": "/flasgger_static",
+    # "static_folder": "static",  # must be set by user
+    "swagger_ui": True,
+    "specs_route": "/apidocs/"
+} '''
+
+swagger_config = {
+    "swagger_version": "2.0",
+    "title": "Magi",
+    "swagger_ui": True,
+    "specs_route": "/apidocs/",
+    "static_url_path": "/flasgger_static",
+    "headers": [
+    ],
+    "specs": [
+        {
+            "version": "BETA 1.0",
+            "title": "Magi API",
+            "endpoint": 'v1_spec',
+            "description": 'Magi is SafeTel\'s server, documentation: https://github.com/SafeTel/SafeTel-Doc-Backend/wiki',
+            "route": '/apispec_1.json',
+            "rule_filter": lambda rule: True,  # all in
+            "model_filter": lambda tag: True   # all in
+        }
+    ]
+}
+
+
+swagger = Swagger(app, config=swagger_config)
+###  SWAGGER SERVICE END  ###
+#############################
 
 
 ##########################
