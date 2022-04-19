@@ -11,14 +11,27 @@ import json
 from pathlib import Path
 
 ### INFRA
-from Infrastructure.Utils.HttpClient.HtttpClient import HttpClient
+import requests
 
-class InitServerConfig():
+class AmaneConfig():
     def __init__(self):
+        self.validationCode = 200
         self.__IsValidConfig()
+        self.__SecurityLaunchCheck()
+        self.__SetEnvVars()
         self.__CheckEnvVars()
         self.__Ping()
-        self.__SecurityLaunchCheck()
+
+    def __SecurityLaunchCheck(self):
+        with open("config.json", 'r') as jsonFile:
+            config = json.load(jsonFile)
+            launchMode = config["Mode"]["launchMode"]
+            launchSecurity = config["Mode"]["launchSecurity"]
+            if (launchSecurity):
+                if (launchMode != "DEV"
+                and launchMode != "PROD"
+                and launchMode != "POSTMAN"):
+                    raise ValueError("FATAL ERROR: Launch Mode Denied")
 
 
     def __IsValidConfig(self):
@@ -34,6 +47,13 @@ class InitServerConfig():
                 raise ValueError("FATAL ERROR: Configuration Denied")
 
 
+    def __SetEnvVars(self):
+        with open("config.json", 'r') as jsonFile:
+            config = json.load(jsonFile)
+            for envVarToSet in config["VariableToSetOptionally"]:
+                os.environ[envVarToSet] = config["VariableToSetOptionally"][envVarToSet]
+
+
     def __CheckEnvVars(self):
         with open("config.json", 'r') as jsonFile:
             config = json.load(jsonFile)
@@ -43,19 +63,7 @@ class InitServerConfig():
 
 
     def __Ping(self):
-        httpClient = HttpClient()
         pingUri = os.getenv("PING_URI")
-        if httpClient.IsUp(pingUri) == None:
+        response = requests.get(pingUri)
+        if (response.status_code != self.validationCode):
             raise ValueError("FATAL ERROR: Environement Denied")
-
-
-    def __SecurityLaunchCheck(self):
-        with open("config.json", 'r') as jsonFile:
-            config = json.load(jsonFile)
-            launchMode = config["Mode"]["launchMode"]
-            launchSecurity = config["Mode"]["launchSecurity"]
-            if (launchSecurity):
-                if (launchMode != "DEV"
-                and launchMode != "PROD"
-                and launchMode != "POSTMAN"):
-                    raise ValueError("FATAL ERROR: Launch Mode Denied")

@@ -1,4 +1,4 @@
-name: ci
+name: safetel-prod-cd
 
 on:
   push:
@@ -31,8 +31,9 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/safetel-back:prod
-      - 
-        name: executing remote ssh commands for deployment using ssh_key
+
+      -
+        name: executing remote ssh commands for Prod deployment using ssh_key
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -41,6 +42,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /home/backadmin/SafeTel-Back/
+            git checkout master
             git pull origin master
             cd devOps/cd/
             docker-compose pull magi_prod

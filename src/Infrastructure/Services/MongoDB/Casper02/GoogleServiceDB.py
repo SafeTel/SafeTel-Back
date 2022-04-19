@@ -28,4 +28,4 @@ class GoogleServiceDB():
         result = self.DBWatcher.GetDocument("service", "GMail")
         if (result is None):
             return None
-        return (result["credentials"]["email"], result["credentials"]["password"])
+        return result["credentials"]["email"], result["credentials"]["password"]

@@ -12,6 +12,17 @@ services:
             - SERVER_PORT=4270
         env_file: ../dev-config.env
 
+    magi_postman:
+        image:
+            safetel/safetel-back:dev
+        ports:
+            - 4207:4207
+        restart:
+            on-failure
+        environment:
+            - SERVER_PORT=4207
+        env_file: ../postman-config.env
+
     magi_prod:
         image:
             safetel/safetel-back:prod
@@ -29,4 +40,13 @@ services:
             dockerfile: ./Dockerfile              
         restart:
             on-failure
-        env_file: ../dev-config.env 
+        env_file: ../dev-config.env
+
+    clean_db_postman_force_now:
+        build:
+            context: ../../tools/Amane/
+            dockerfile: ./Dockerfile
+        command: ["python3", "./src/Amane.py", "--force-now"]
+        restart:
+            on-failure
+        env_file: ../postman-config.env

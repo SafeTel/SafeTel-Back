@@ -35,3 +35,5 @@ Command:
 ```sh
 $ sudo docker system prune -a
 ```
+
+kill me pls
