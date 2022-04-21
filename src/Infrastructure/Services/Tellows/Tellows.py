@@ -26,19 +26,13 @@ class Tellows():
         self.HTTPClient = HttpClient()
 
 
-    def EvaluateNumber(self, number):
+    def GetEvaluation(self, number: str):
         if (not self.__IsValidNumber(number)):
             return None
-
-        response = self.HTTPClient.Get(self.uri + number, self.query)
-        if (response == None):
-            return None
-        if (not "tellows" in response and not "score" in response):
-            return None
-        return int(response['tellows']['score'])
+        return self.HTTPClient.Get(self.uri + number, self.query)
 
 
-    def __IsValidNumber(self, number):
+    def __IsValidNumber(self, number: str):
         number = number.replace(' ', '')
         match = re.search('^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$', number)
         if (match == None):

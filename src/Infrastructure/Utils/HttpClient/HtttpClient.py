@@ -10,36 +10,45 @@ import requests
 
 class HttpClient():
     def __init__(self):
-        self.validationCode = 200
-        self.header = "text/html; charset=UTF-8"
+        self.NominalCode = 200
+        self.NominalHeaders = [
+            "text/json; charset=utf-8",
+            "text/html; charset=UTF-8"
+        ]
 
 
-    def IsUp(self, uri):
+    def Ping(self, uri: str):
         response = requests.get(uri)
-        if (response.status_code != self.validationCode):
+        if (self.__IsValidResponse(response)):
             return False
         return True
 
 
-    def Get(self, uri, queries):
+    def Get(self, uri: str, queries: dict = {}):
         response = requests.get(uri, queries)
-        if (response.status_code != self.validationCode
-        or response.headers != self.header):
+        if (self.__IsValidResponse(response)):
             return None
         return response.json()
 
 
-    def Post(self, uri, body):
+    def Post(self, uri: str, body: dict):
         response = requests.post(uri, body)
-        if (response.status_code != self.validationCode
-        or response.headers != self.header):
+        if (self.__IsValidResponse(response)):
             return None
         return response.json()
 
 
-    def Delete(self, uri, body):
+    def Delete(self, uri: str, body: dict):
         response = requests.delete(uri, body)
-        if (response.status_code != self.validationCode
-        or response.headers != self.header):
+        if (self.__IsValidResponse(response)):
             return None
         return response.json()
+
+
+    def __IsValidResponse(self, response: requests.Response):
+        if (response.status_code != self.NominalCode):
+            return False
+        for NominalHeader in self.NominalHeaders:
+            if (response.headers == NominalHeader):
+                return True
+        return False
