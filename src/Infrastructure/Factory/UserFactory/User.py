@@ -73,7 +73,7 @@ class User():
 
 
     def __PullUserInfos(self):
-        if (self.__UserInfos == None):
+        if (self.__UserInfos is None):
             userRaw = self.__UserDB.getUserByGUID(self.__guid)
             self.__UserInfos = UserInfos(userRaw)
         return self.__UserInfos

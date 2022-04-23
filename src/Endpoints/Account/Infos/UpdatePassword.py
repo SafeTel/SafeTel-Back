@@ -25,6 +25,11 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Password converter import
 from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
+
 ###
 # Request:
 # PATCH: localhost:2407/account/infos/update-password
@@ -50,6 +55,7 @@ class UpdatePassword(Resource):
         self.__PWDConvert = PWDConvert()
 
 
+    @swag_from("Swagger-UpdatePassword.yml")
     def patch(self):
         Request = UpdatePasswordRequest(fquest.get_json())
 

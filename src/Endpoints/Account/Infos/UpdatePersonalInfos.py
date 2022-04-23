@@ -23,6 +23,10 @@ from Models.Endpoints.Account.Infos.UpdatePersonalInfosResponse import UpdatePer
 # Utils check imports
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -55,7 +59,7 @@ class UpdatePersonalInfos(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-
+    @swag_from("Swagger-UpdatePersonalInfos.yml")
     def patch(self):
         Request = UpdatePErsonalInfosRequest(fquest.get_json())
 

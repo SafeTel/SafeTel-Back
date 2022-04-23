@@ -23,12 +23,15 @@ from Models.Endpoints.Account.Infos.UpdateEmailResponse import UpdateEmailRespon
 # Utils check imports
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
 
 ###
 # Request:
 # PATCH: localhost:2407/account/infos/update-email
 # {
-# 	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJndWlkIjoiZGM5YmFlNWMtM2RiZC00YzJkLWE4N2ItYjMzMDk3ZWFmY2RlIiwicm9sZSI6MywiZXhwIjoxNjQ2NDQ1Mjg3fQ.1uJVP20ev_sre1jwAroRRiZtV-ecbdbR_JJJ7oyLK7c",
+# 	"token": "heyiloveevangelion",
 # 	"email": "asuka@the.best"
 # }
 ###
@@ -46,7 +49,7 @@ class UpdateEmail(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-
+    @swag_from("Swagger-UpdateEmail.yml")
     def patch(self):
         Request = UpdateEmailRequest(fquest.get_json())
 
