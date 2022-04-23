@@ -1,0 +1,35 @@
+summary: "Delete an account"
+description: "Delete the account of an authentificated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Account#delete-account"
+
+tags:
+- Account
+
+produces:
+- "application/json"
+
+parameters:
+- name: Request
+  in: body
+  schema:
+    type: object
+    required:
+    - token
+    - username
+    properties:
+      token:
+        type: string
+        maxLength: 31
+        description: JWT token
+      username:
+        type: string
+        description: Name of the user
+
+responses:
+  200:
+    description: "Success"
+  400:
+    description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  403:
+    description: "There is something wrong with the token, check if the account still exists"
+  500:
+    description: "Internal Logic Error - Please report all theses errors"

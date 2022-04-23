@@ -23,6 +23,10 @@ from Models.Endpoints.Account.DeleteAccountResponse import DeleteAccountResponse
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -46,8 +50,7 @@ class DeleteAccount(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-    from flasgger.utils import swag_from
-    @swag_from("a.yml")
+    @swag_from("SwaggerDeleteAccount.yml")
     def delete(self):
         Request = DeleteAccountRequest(request.get_json())
 
@@ -60,7 +63,7 @@ class DeleteAccount(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         if (User.PullUserInfos().username == Request.username):
