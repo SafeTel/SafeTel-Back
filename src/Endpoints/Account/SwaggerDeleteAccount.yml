@@ -18,7 +18,6 @@ parameters:
     properties:
       token:
         type: string
-        maxLength: 31
         description: JWT token
       username:
         type: string
