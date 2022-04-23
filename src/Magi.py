@@ -29,6 +29,16 @@ logging.warning("---     Environement Validated      ----")
 ####################################
 
 
+####################################
+### Initiate Local DB BEGIN ###
+logging.warning("--- /!\ Configuring Local DB depends on Launch mode  /!\\ ----")
+from MagiInit.InitLocalServer import InitLocalServer
+InitLocalServer()
+logging.warning("---     Local DB Configuration Ended      ----")
+
+###  Initiate Local DB END  ###
+####################################
+
 ###############################
 ### EXTERNAL SERVICES BEGIN ###
 # Sentry integration
