@@ -25,6 +25,10 @@ from Models.Endpoints.Account.Lists.History.DelHistoryRequest import DelHistoryR
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -92,6 +96,7 @@ class History(Resource):
         self.__UserFactory = UserFactory()
 
 
+    @swag_from("../../../../swagger/Account/Lists/History/Swagger-History-GET.yml")
     def get(self):
         Request = ListGetRequest(request.args.to_dict())
 
@@ -104,7 +109,7 @@ class History(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = HistoryResponse(
@@ -117,6 +122,7 @@ class History(Resource):
         return Response.ToDict(), 200
 
 
+    @swag_from("../../../../swagger/Account/Lists/History/Swagger-History-POST.yml")
     def post(self):
         Request = AddHistoryRequest(request.get_json())
 
@@ -129,7 +135,7 @@ class History(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         User.History.AddHistoryCall(Request.HistoryCall)
@@ -144,6 +150,7 @@ class History(Resource):
         return response.ToDict(), 200
 
 
+    @swag_from("../../../../swagger/Account/Lists/History/Swagger-History-DELETE.yml")
     def delete(self):
         Request = DelHistoryRequest(request.get_json())
 
@@ -156,7 +163,7 @@ class History(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         User.History.DeleteHistoryCall(
