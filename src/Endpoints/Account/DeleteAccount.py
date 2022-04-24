@@ -50,7 +50,7 @@ class DeleteAccount(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-    @swag_from("Swagger-DeleteAccount.yml")
+    @swag_from("../../../../swagger/Account/Swagger-DeleteAccount.yml")
     def delete(self):
         Request = DeleteAccountRequest(request.get_json())
 

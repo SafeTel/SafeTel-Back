@@ -59,7 +59,7 @@ class GetInfos(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-    @swag_from("Swagger-GetInfo.yml")
+    @swag_from("../../../../swagger/Account/Infos/Swagger-GetInfos.yml")
     def get(self):
         Request = GetInfosRequest(request.args.to_dict())
 

@@ -32,7 +32,7 @@ from flasgger.utils import swag_from
 # Request:
 # PATCH: localhost:2407/account/infos/update-infos
 # {
-#     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJndWlkIjoiZGM5YmFlNWMtM2RiZC00YzJkLWE4N2ItYjMzMDk3ZWFmY2RlIiwicm9sZSI6MywiZXhwIjoxNjQ2NDQ1Mjg3fQ.1uJVP20ev_sre1jwAroRRiZtV-ecbdbR_JJJ7oyLK7c",
+#     "token": "heygimmeajwt",
 #     "CustomerInfos": {
 #         "firstName": "Asuka",
 #         "lastName": "be trong",
@@ -59,7 +59,7 @@ class UpdatePersonalInfos(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-    @swag_from("Swagger-UpdatePersonalInfos.yml")
+    @swag_from("../../../../swagger/Account/Infos/Swagger-UpdatePersonalInfos.yml")
     def patch(self):
         Request = UpdatePErsonalInfosRequest(fquest.get_json())
 

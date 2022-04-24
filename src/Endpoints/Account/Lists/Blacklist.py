@@ -26,6 +26,9 @@ from Models.Endpoints.Account.Lists.Blacklist.BlacklistResponse import Blacklist
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
 
 ###
 # Request:
@@ -76,6 +79,7 @@ class Blacklist(Resource):
         self.__UserFactory = UserFactory()
 
 
+    #@swag_from("../Swagger-DeleteAccount.yml")
     def get(self):
         Request = ListGetRequest(request.args.to_dict())
 

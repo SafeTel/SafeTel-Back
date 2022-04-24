@@ -55,7 +55,7 @@ class UpdatePassword(Resource):
         self.__PWDConvert = PWDConvert()
 
 
-    @swag_from("Swagger-UpdatePassword.yml")
+    @swag_from("../../../../swagger/Account/Infos/Swagger-UpdatePassword.yml")
     def patch(self):
         Request = UpdatePasswordRequest(fquest.get_json())
 

@@ -49,7 +49,7 @@ class UpdateEmail(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-    @swag_from("Swagger-UpdateEmail.yml")
+    @swag_from("../../../../swagger/Account/Infos/Swagger-UpdateEmail.yml")
     def patch(self):
         Request = UpdateEmailRequest(fquest.get_json())
 
