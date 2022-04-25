@@ -27,6 +27,10 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Password encription import
 from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -65,6 +69,7 @@ class Register(Resource):
         self.__UserFactory = UserFactory()
 
 
+    @swag_from("../../../../swagger/Authentification/Swagger-Register.yml")
     def post(self):
         Request = RegisterRequest(request.get_json())
 
