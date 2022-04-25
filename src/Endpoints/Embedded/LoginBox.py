@@ -25,6 +25,10 @@ from Models.Endpoints.Embedded.LoginBox.LoginBoxResponse import LoginBoxResponse
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -49,6 +53,7 @@ class LoginBox(Resource):
         self.__BoxDB = BoxDB()
 
 
+    @swag_from("../../../../swagger/Embedded/Swagger-LoginBox.yml")
     def post(self):
         Request = LoginBoxRequest(request.get_json())
 

@@ -24,6 +24,10 @@ from Models.Endpoints.Embedded.UpdateBoxMode.UpdateBoxModeResponse import Update
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -49,6 +53,7 @@ class UpdateSeverity(Resource):
         self.__UserFactory = UserFactory()
 
 
+    @swag_from("../../../../swagger/Embedded/Swagger-UpdateSeverity.yml")
     def patch(self):
         Request = UpdateBoxModeRequest(request.get_json())
 
