@@ -10,4 +10,3 @@ py-healthcheck
 sentry-sdk
 pygit2
 flasgger
-flask_swagger_ui
