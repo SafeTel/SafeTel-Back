@@ -78,15 +78,15 @@ InitEndpoints(api)
 import json
 from flasgger import Swagger
 
-if (not os.path.isfile("SwaggerConfig.json")):
+if (not os.path.isfile("configuration/SwaggerConfig.json")):
     raise ValueError("FATAL ERROR: Environement Denied")
 
 SwaggerConfig = []
 
-with open('SwaggerConfig.json') as JsonFile:
+with open('configuration/SwaggerConfig.json') as JsonFile:
     SwaggerConfig = json.load(JsonFile)
 
-swagger = Swagger(app, config=SwaggerConfig)
+swagger = Swagger(app, SwaggerConfig)
 
 ###  SWAGGER SERVICE END  ###
 #############################
