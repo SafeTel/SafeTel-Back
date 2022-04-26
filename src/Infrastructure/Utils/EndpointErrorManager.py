@@ -10,7 +10,7 @@ class EndpointErrorManager():
     def CreateBadRequestError(self, details):
         return {
             "error": True,
-            "detail": details
+            "details": details
         }
 
     # Code 500
