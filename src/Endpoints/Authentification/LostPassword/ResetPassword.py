@@ -26,10 +26,14 @@ from Models.Endpoints.Authentification.LostPassword.LostPasswordResponse import 
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 from Models.Infrastructure.Factory.UserFactory.UserInfos import UserInfos
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
-# POST: localhost:2407/auth/reset-password
+# POST: localhost:2407/auth/lost-password/reset-password
 # {
 #     "email": "asukat@the.best"
 # }
@@ -50,6 +54,7 @@ class ResetPassword(Resource):
         self.__GMail = GMail()
 
 
+    @swag_from("../../../../swagger/Authentification/LostPassword/Swagger-ResetPassword.yml")
     def post(self):
         Request = LostPasswordRequest(request.get_json())
 

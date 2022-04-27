@@ -26,6 +26,10 @@ from Models.Endpoints.Account.Lists.Whitelist.WhitelistResponse import Whitelist
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -76,6 +80,7 @@ class Whitelist(Resource):
         self.__UserFactory = UserFactory()
 
 
+    @swag_from("../../../../swagger/Account/Lists/Whitelist/Swagger-Whitelist-GET.yml")
     def get(self):
         Request = ListGetRequest(request.args.to_dict())
 
@@ -88,7 +93,7 @@ class Whitelist(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = WhitelistResponse(
@@ -101,6 +106,7 @@ class Whitelist(Resource):
         return Response.ToDict(), 200
 
 
+    @swag_from("../../../../swagger/Account/Lists/Whitelist/Swagger-Whitelist-GET.yml")
     def post(self):
         Request = NumberRequest(request.get_json())
 
@@ -113,7 +119,7 @@ class Whitelist(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = WhitelistResponse(
@@ -126,6 +132,7 @@ class Whitelist(Resource):
         return Response.ToDict(), 200
 
 
+    @swag_from("../../../../swagger/Account/Lists/Whitelist/Swagger-Whitelist-GET.yml")
     def delete(self):
         Request = NumberRequest(request.get_json())
 
@@ -138,7 +145,7 @@ class Whitelist(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = WhitelistResponse(

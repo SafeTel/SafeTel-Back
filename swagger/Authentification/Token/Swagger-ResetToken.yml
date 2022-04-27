@@ -1,0 +1,25 @@
+summary: "Reset the validity of a JWT token"
+description: "Reset the validity of a JWT token\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Authentification.Token#reset-token"
+
+tags:
+- Authentification.Token
+
+produces:
+- "application/json"
+
+parameters:
+  - name: token
+    type: string
+    in: query
+    required: True
+    minimum: 1
+
+responses:
+  200:
+    description: "Success"
+  400:
+    description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  403:
+    description: "There is something wrong with the token, check if the account still exists"
+  500:
+    description: "Internal Logic Error - Please report all theses errors"

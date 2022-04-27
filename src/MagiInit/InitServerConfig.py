@@ -8,7 +8,6 @@
 ### LOGIC
 import os
 import json
-from pathlib import Path
 
 ### INFRA
 from Infrastructure.Utils.HttpClient.HtttpClient import HttpClient
@@ -24,8 +23,8 @@ class InitServerConfig():
     def __IsValidConfig(self):
         if (not os.path.isfile("config.json")):
             raise ValueError("FATAL ERROR: Environement Denied")
-        with open("config.json", 'r') as jsonFile:
-            config = json.load(jsonFile)
+        with open("config.json", 'r') as JsonFile:
+            config = json.load(JsonFile)
             configMode = config["Mode"]
             if ("launchMode" not in configMode
             or "message" not in configMode
@@ -35,8 +34,8 @@ class InitServerConfig():
 
 
     def __CheckEnvVars(self):
-        with open("config.json", 'r') as jsonFile:
-            config = json.load(jsonFile)
+        with open("config.json", 'r') as JsonFile:
+            config = json.load(JsonFile)
             for mandatoryEnvVar in config["MandatoryEnvVars"]:
                 if (mandatoryEnvVar in os.environ) == False:
                     raise ValueError("FATAL ERROR: Environement Denied")
@@ -50,8 +49,8 @@ class InitServerConfig():
 
 
     def __SecurityLaunchCheck(self):
-        with open("config.json", 'r') as jsonFile:
-            config = json.load(jsonFile)
+        with open("config.json", 'r') as JsonFile:
+            config = json.load(JsonFile)
             launchMode = config["Mode"]["launchMode"]
             launchSecurity = config["Mode"]["launchSecurity"]
             if (launchSecurity):

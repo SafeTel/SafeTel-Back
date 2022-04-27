@@ -25,6 +25,10 @@ from Models.Logic.Shared.Roles import Roles
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -45,6 +49,7 @@ class CheckToken(Resource):
         self.__UserFactory = UserFactory()
 
 
+    @swag_from("../../../../swagger/Authentification/Token/Swagger-CheckToken.yml")
     def get(self):
         Request = CheckTokenRequest(request.args.to_dict())
 

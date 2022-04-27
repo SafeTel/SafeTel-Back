@@ -26,6 +26,10 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # JSON  lib import
 import json
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -51,6 +55,7 @@ class HealthCheck(Resource):
         self.__HealthCheckService = HealthCheckService()
 
 
+    @swag_from("../../../../swagger/InternalDev/Swagger-HealthCheck.yml")
     def get(self):
         Request = HealthCheckRequest(request.args.to_dict())
 
@@ -62,7 +67,7 @@ class HealthCheck(Resource):
         if (JwtInfos is None):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
-        if (JwtInfos.role == Roles.USER):
+        if (JwtInfos.role is Roles.USER):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         serverDatas = self.__HealthCheckService.RunInfraCheck()
