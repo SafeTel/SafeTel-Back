@@ -22,6 +22,8 @@ from Models.Endpoints.Engine.VerifyNumberResponse import VerifyNumberResponse
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+# Engine
+from Engine.Logic.Engine import Engine
 
 ### SWAGGER
 # flasgger import
@@ -50,8 +52,10 @@ class VerifyNumber(Resource):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
+        self.__Engine = Engine()
 
-    # TODO: ROUTE CHANGE: Fix postman tests, Fixed in models, doc & swagger
+
+    # TODO: ROUTE CHANGE: Fix postman tests
     @swag_from("../../../../swagger/Engine/Swagger-VerifyNumber.yml")
     def post(self):
         Request = VerifyNumberRequest(request.get_json())
@@ -69,7 +73,11 @@ class VerifyNumber(Resource):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = VerifyNumberResponse(
-            User.Blacklist.IsNumber(Request.number)
+            self.__Engine.Verify(
+                User,
+                Request.boxid,
+                Request.number
+            )
         )
 
         responseErrors = Response.EvaluateModelErrors()
