@@ -76,7 +76,7 @@ class BoxInfos(Resource):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = BoxInfosResponse(
-            User.Box.PullBoxData().Boxes
+            User.Box.PullBoxes().Boxes
         )
 
         responseErrors = Response.EvaluateModelErrors()

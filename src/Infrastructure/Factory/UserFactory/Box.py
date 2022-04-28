@@ -32,8 +32,16 @@ class FactBox():
 
 
     # READ
-    def PullBoxData(self):
+    def PullBoxes(self):
         return self.__PullBoxData()
+
+
+    def PullBox(self, boxid: str):
+        UserBoxes = self.__PullBoxData().Boxes
+        for UserBox in UserBoxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                return UserBox
+        return None
 
 
     # WRITE
