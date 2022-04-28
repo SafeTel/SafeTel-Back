@@ -28,6 +28,7 @@ class NumberDB():
         self.DBWorker = MongoDBWorker(self.NumberDB)
         self.identifier = identifier
 
+    ### PUBLIC
 
     def getNumber(self, number: str):
         return self.__PullNumber(number)
@@ -49,7 +50,19 @@ class NumberDB():
         self.__UpdateList(number, NewList)
 
 
-    def addNumber(self, number: str, guid: str, boxid: str, score: int):
+    def addNumberWithoutReport(self, number: str, TellowsResponse: dict, score: int = 5):
+        Document = {
+            "number": number,
+            "identifier": self.identifier,
+            "score": score,
+            "source": "User",
+            "Reports": [],
+            "TellowsResponse": TellowsResponse
+        }
+        self.DBWorker.InsertDocument(Document)
+
+
+    def addNumber(self, number: str, TellowsResponse: dict, guid: str, boxid: str, score: int = 5):
         Document = {
             "number": number,
             "identifier": self.identifier,
@@ -61,14 +74,13 @@ class NumberDB():
                     "boxid": boxid,
                     "timestamp": time.time()
                 }
-            ]
+            ],
+            "TellowsResponse": TellowsResponse
         }
         self.DBWorker.InsertDocument(Document)
 
 
-    # addNumberFromTellows: TODO: See if there is any interest to make the difference
-
-    # PRIVATE
+    ### PRIVATE
 
     def __PullNumber(self, number: str):
         return self.DBWatcher.GetDocument('number', number)

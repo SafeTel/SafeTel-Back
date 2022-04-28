@@ -39,10 +39,23 @@ class Engine():
 
     # Just veify the number
     def Verify(self, User: User, boxid: str, number: str):
-        # TODO: 1 - If the number is not in our DB, create it with a perfect score
+        # TODO: Verify the number country by regex
+        TellowsResponse = self.__Tellows.GetEvaluation(number)
+        if (TellowsResponse is None):
+            return "Internal Error"
+
+        if (self.__NumberDB.isNumber(number)):
+            score = 5
+            if (TellowsResponse["score"] != 5):
+                score = TellowsResponse["score"]
+
+            self.__NumberDB.addNumberWithoutReport(
+                number,
+                TellowsResponse,
+                score
+            )
 
         UserBox:Box = User.Box.PullBox(boxid)
-
         if (UserBox is None):
             return "Unknown Box"
 
@@ -52,7 +65,7 @@ class Engine():
         )
 
 
-    # At the end of the call, report or not, status of the call
+    # At the end of the call, report or not, status of the call, ..;
     def ProcessCall(self, User: User, boxid: str, Status: CallStatus, report: bool, number: str):
         # TODO: 1.1 - Block for the user if not in blacklist
         # TODO: 1.2 - Unblock for the user if in the blacklist & return
@@ -76,4 +89,4 @@ class Engine():
             return True
         elif (severity is BoxSeverity.MAX):
             return True
-        return None
+        return None # TODO: means there is a bug internal error, maybe autofix ?
