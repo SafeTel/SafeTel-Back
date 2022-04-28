@@ -26,9 +26,10 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
 ###
 # Request:
-# POST: localhost:2407/engine/evaluate-number
+# POST: localhost:2407/engine/verify-number
 # {
 # 	"token": "",
+#   "boxid": "",
 # 	"number": "0123456789"
 # }
 ###
@@ -46,6 +47,7 @@ class EvaluateNumber(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
+    # TODO: Fix postman test
     def post(self):
         Request = EvaluateNumberRequest(request.get_json())
 

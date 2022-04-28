@@ -18,12 +18,12 @@ import os
 # timestamp generation
 import time
 
-# Object to represent table LandNumberDB
+# Object to represent table NumberDB
 class NumberDB():
-    def __init__(self, country: str, identifier: str, db_name=os.getenv("DB_BALTHASAR_02")):
+    def __init__(self, country_id: str, identifier: str, db_name=os.getenv("DB_BALTHASAR_02")):
         self.client = pymongo.MongoClient(os.getenv("DB_URI"))
         self.db = self.client[db_name]
-        self.NumberDB = self.db[country]
+        self.NumberDB = self.db[country_id]
         self.DBWatcher = MongoDBWatcher(self.NumberDB)
         self.DBWorker = MongoDBWorker(self.NumberDB)
         self.identifier = identifier
