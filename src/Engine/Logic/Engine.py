@@ -13,7 +13,7 @@ from Engine.Infrastructure.Services.Tellows import Tellows
 # DataBase service
 from Engine.Infrastructure.DataBase.NumberDB import NumberDB
 
-class ReportEngine():
+class Engine():
     def __init__(self):
         self.__Tellows = Tellows()
         self.__NumberDB = NumberDB("FR-0033", "0033")

@@ -57,7 +57,7 @@ class ResetToken(Resource):
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
 
         if (self.__UserFactory.LoadUser(JwtInfos.guid) == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
