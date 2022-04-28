@@ -51,7 +51,7 @@ class EvaluateNumber(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-    # TODO: Fix postman test
+    # TODO: Fix postman test, Fixed in models, doc & swagger
     @swag_from("../../../../swagger/Engine/Swagger-EvaluateNumber.yml")
     def post(self):
         Request = EvaluateNumberRequest(request.get_json())

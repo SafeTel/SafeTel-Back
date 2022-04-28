@@ -14,11 +14,15 @@ parameters:
     type: object
     required:
     - token
+    - boxid
     - number
     properties:
       token:
         type: string
         description: JWT token
+      boxid:
+        type: string
+        description: Box ID
       number:
         type: string
         description: Number to evaluate
