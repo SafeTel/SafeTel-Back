@@ -65,7 +65,7 @@ class Engine():
         )
 
 
-    # At the end of the call, report or not, status of the call, ..;
+    # At the end of the call, report or not, status of the call, ...
     def ProcessCall(self, User: User, boxid: str, Status: CallStatus, report: bool, number: str):
         # TODO: 1.1 - Block for the user if not in blacklist
         # TODO: 1.2 - Unblock for the user if in the blacklist & return
@@ -78,6 +78,7 @@ class Engine():
         return
 
     ### PRIVATE
+
     def __EvaBoxAlgorithm(self, severity: BoxSeverity, number: str):
         if (severity is BoxSeverity.NONE):
             return False
