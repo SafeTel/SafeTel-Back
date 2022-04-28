@@ -7,7 +7,7 @@
 
 ### INFRA
 # Evaluate Number unique endpoint import
-from Endpoints.Engine.EvaluateNumber import EvaluateNumber
+from Endpoints.Engine.VerifyNumber import EvaluateNumber
 
 class InitEngineEndpoints():
     def __init__(self, Api):
@@ -18,5 +18,5 @@ class InitEngineEndpoints():
     def __InitEvaluateNumberEndpoint(self, Api):
         Api.add_resource(
             EvaluateNumber,
-            self.ENGINE_URI_BASE_DOMAIN + "evaluate-number"
+            self.ENGINE_URI_BASE_DOMAIN + "verify-number"
         )

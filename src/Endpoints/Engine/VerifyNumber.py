@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## EvaluateNumber
+## VerifyNumber
 ##
 
 ### INFRA
@@ -16,8 +16,8 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Engine.EvaluateNumberRequest import EvaluateNumberRequest
-from Models.Endpoints.Engine.EvaluateNumberResponse import EvaluateNumberResponse
+from Models.Endpoints.Engine.VerifyNumberRequest import VerifyNumberRequest
+from Models.Endpoints.Engine.VerifyNumberResponse import VerifyNumberResponse
 
 ### LOGC
 # JWT converter import
@@ -45,16 +45,16 @@ from flasgger.utils import swag_from
 
 
 # Route to evaluate a number from an auth user
-class EvaluateNumber(Resource):
+class VerifyNumber(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-    # TODO: Fix postman test, Fixed in models, doc & swagger
-    @swag_from("../../../../swagger/Engine/Swagger-EvaluateNumber.yml")
+    # TODO: ROUTE CHANGE: Fix postman tests, Fixed in models, doc & swagger
+    @swag_from("../../../../swagger/Engine/Swagger-VerifyNumber.yml")
     def post(self):
-        Request = EvaluateNumberRequest(request.get_json())
+        Request = VerifyNumberRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -68,7 +68,7 @@ class EvaluateNumber(Resource):
         if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = EvaluateNumberResponse(
+        Response = VerifyNumberResponse(
             User.Blacklist.IsNumber(Request.number)
         )
 

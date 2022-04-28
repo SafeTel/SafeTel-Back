@@ -48,6 +48,10 @@ class BlockAlgorithm():
         return False
 
 
+    def BlockMax(self, User: User, number: str):
+        return self.IsWhitelisted(User, number)
+
+
     ### PRIVATE
 
     def IsBlacklisted(self, User: User, number: str):
@@ -56,3 +60,7 @@ class BlockAlgorithm():
         return False
 
 
+    def IsWhitelisted(self, User: User, number: str):
+        if (User.Whitelist.IsNumber(number)):
+            return True
+        return False

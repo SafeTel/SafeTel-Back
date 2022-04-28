@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## EvaluateNumberRequest
+## VerifyNumberRequest
 ##
 
 ### MODELS
@@ -10,7 +10,7 @@
 from Models.ModelAbstractions.JParent import JParent
 
 # Represents Tellows Request
-class EvaluateNumberRequest(JParent):
+class VerifyNumberRequest(JParent):
     def __init__(self, rawJSON: str):
         loadedJSON = self.Load(rawJSON)
         self.__InitJParent(loadedJSON)
