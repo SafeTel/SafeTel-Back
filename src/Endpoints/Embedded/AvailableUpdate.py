@@ -17,6 +17,9 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 from Models.Endpoints.Embedded.AvailableUpdate.AvailableUpdateRequest import AvailableUpdateRequest
 from Models.Endpoints.Embedded.AvailableUpdate.AvailableUpdateResponse import AvailableUpdateResponse
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
 
 ###
 # Request:
@@ -38,6 +41,7 @@ class AvaiableUpdate(Resource):
         self.__EndpointErrorManager = EndpointErrorManager()
 
 
+    @swag_from("../../../../swagger/Embedded/Swagger-AvaiableUpdate.yml")
     def post(self):
         Request = AvailableUpdateRequest(request.get_json())
 

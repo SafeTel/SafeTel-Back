@@ -23,6 +23,10 @@ from Models.Endpoints.Authentification.Token.ResetTokenResponse import ResetToke
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -43,6 +47,7 @@ class ResetToken(Resource):
         self.__UserFactory = UserFactory()
 
 
+    @swag_from("../../../../swagger/Authentification/Token/Swagger-ResetToken.yml")
     def get(self):
         Request = ResetTokenRequest(request.args.to_dict())
 

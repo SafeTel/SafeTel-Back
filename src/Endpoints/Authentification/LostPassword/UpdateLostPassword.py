@@ -24,10 +24,14 @@ from Models.Endpoints.Authentification.LostPassword.UpdateLostPasswordResponse i
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
-# POST: localhost:2407/auth/reset-password
+# PATCH: localhost:2407/auth/lost-password/update-password
 # {
 #     "token": ""
 #     "password": "newpassword"
@@ -48,6 +52,7 @@ class UpdateLostPassword(Resource):
         self.__UserFactory = UserFactory()
 
 
+    @swag_from("../../../../swagger/Authentification/LostPassword/Swagger-UpdateLostPassword.yml")
     def patch(self):
         Request = UpdateLostPasswordRequest(request.get_json())
 

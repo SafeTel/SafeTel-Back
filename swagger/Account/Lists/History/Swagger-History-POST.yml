@@ -1,0 +1,47 @@
+summary: "Add a history call to the History of a user"
+description: "Add a history call to the History of an authentificated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-History#add-to-history"
+
+tags:
+- Account.Lists.History
+
+produces:
+- "application/json"
+
+parameters:
+- name: Request
+  in: body
+  schema:
+    type: object
+    required:
+    - token
+    - HistoryCall
+    properties:
+      token:
+        type: string
+        description: JWT token
+      HistoryCall:
+        type: object
+        required:
+        - number
+        - status
+        - time
+        properties:
+          number:
+            type: string
+            description: Number of the call
+          status:
+            type: string
+            description: Status of the call
+          time:
+            type: int
+            description: Timestamp of the call
+
+responses:
+  200:
+    description: "Success"
+  400:
+    description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  403:
+    description: "There is something wrong with the token, check if the account still exists"
+  500:
+    description: "Internal Logic Error - Please report all theses errors"

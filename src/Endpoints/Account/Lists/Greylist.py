@@ -26,6 +26,9 @@ from Models.Endpoints.Account.Lists.Greylist.GreylistResponse import GreylistRes
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
 
 ###
 # Request:
@@ -51,6 +54,7 @@ class GreyList(Resource):
         self.__UserFactory = UserFactory()
 
 
+    @swag_from("../../../../swagger/Account/Lists/Greylist/Swagger-Greylist.yml")
     def get(self):
         Request = GetGreylistRequest(request.args.to_dict())
 
@@ -63,7 +67,7 @@ class GreyList(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = GreylistResponse(

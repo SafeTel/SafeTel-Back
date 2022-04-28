@@ -1,0 +1,34 @@
+summary: "Evaluate a number"
+description: "Evaluate a number for an authenicated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Engine#evaluate-number"
+
+tags:
+- Engine
+
+produces:
+- "application/json"
+
+parameters:
+- name: Request
+  in: body
+  schema:
+    type: object
+    required:
+    - token
+    - number
+    properties:
+      token:
+        type: string
+        description: JWT token
+      number:
+        type: string
+        description: Number to evaluate
+
+responses:
+  200:
+    description: "Success"
+  400:
+    description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  403:
+    description: "There is something wrong with the token, check if the account still exists"
+  500:
+    description: "Internal Logic Error - Please report all theses errors"

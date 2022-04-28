@@ -5,6 +5,7 @@
 ## Magi
 ##
 
+# TODO: Clean Magi.py splitting by Services on MagiInit Folder
 
 #############################
 ### LOGING SETTINGS BEGIN ###
@@ -21,8 +22,9 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 
 ####################################
 ### Initiate Server Config BEGIN ###
-logging.warning("--- /!\ Validating Environement /!\\ ----")
 from MagiInit.InitServerConfig import InitServerConfig
+
+logging.warning("--- /!\ Validating Environement /!\\ ----")
 InitServerConfig()
 logging.warning("---     Environement Validated      ----")
 ###  Initiate Server Config END  ###
@@ -33,6 +35,7 @@ logging.warning("---     Environement Validated      ----")
 ### EXTERNAL SERVICES BEGIN ###
 # Sentry integration
 import sentry_sdk
+
 sentry_sdk.init(
     "https://840739ef53034860b515d400dc4b6219@o1036766.ingest.sentry.io/6004367",
     # Set traces_sample_rate to 1.0 to capture 100%
@@ -45,27 +48,48 @@ logging.info("Connected to sentry")
 ###############################
 
 
-###################
-### INFRA BEGIN ###
+#######################
+### API SETUP BEGIN ###
 # Network Imports
 import os
 from flask import Flask
 from flask_restful import Api
 
+from flask_cors import CORS
+
 # Flask initialitation
 app = Flask(__name__)
+
 app.debug = True
 api = Api(app)
 
 # CORS initialisation
-from flask_cors import CORS
 CORS(app)
 
 # Endpoints Initialization
 from MagiInit.InitEndpoints import InitEndpoints
 InitEndpoints(api)
-###  INFRA END  ###
-###################
+###  API SETUP END  ###
+#######################
+
+
+#############################
+### SWAGGER SERVICE BEGIN ###
+import json
+from flasgger import Swagger
+
+if (not os.path.isfile("configuration/SwaggerConfig.json")):
+    raise ValueError("FATAL ERROR: Environement Denied")
+
+SwaggerConfig = []
+
+with open('configuration/SwaggerConfig.json') as JsonFile:
+    SwaggerConfig = json.load(JsonFile)
+
+swagger = Swagger(app, SwaggerConfig)
+
+###  SWAGGER SERVICE END  ###
+#############################
 
 
 ##########################

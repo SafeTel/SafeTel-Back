@@ -23,13 +23,17 @@ from Models.Endpoints.Engine.EvaluateNumberResponse import EvaluateNumberRespons
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
 # POST: localhost:2407/engine/verify-number
 # {
-# 	"token": "",
-#   "boxid": "",
+# 	"token": "456789",
+#   "boxid": "34567890",
 # 	"number": "0123456789"
 # }
 ###
@@ -48,6 +52,7 @@ class EvaluateNumber(Resource):
         self.__UserFactory = UserFactory()
 
     # TODO: Fix postman test
+    @swag_from("../../../../swagger/Engine/Swagger-EvaluateNumber.yml")
     def post(self):
         Request = EvaluateNumberRequest(request.get_json())
 
@@ -60,7 +65,7 @@ class EvaluateNumber(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = EvaluateNumberResponse(
