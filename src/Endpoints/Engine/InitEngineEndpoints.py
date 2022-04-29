@@ -27,5 +27,5 @@ class InitEngineEndpoints():
     def __InitEvaluateCallEndpoint(self, Api):
         Api.add_resource(
             EvaluateCall,
-            self.ENGINE_URI_BASE_DOMAIN + "evaluate-number"
+            self.ENGINE_URI_BASE_DOMAIN + "evaluate-call"
         )
