@@ -45,8 +45,8 @@ class NumberDB():
         self.__UpdateDocumentCalls(
             number,
             Current["calls"] + 1,
-            Current["reportedcall"],
-            Current["blockedcall"]
+            Current["reportedcalls"],
+            Current["blockedcalls"]
         )
 
 
@@ -57,8 +57,8 @@ class NumberDB():
         self.__UpdateDocumentCalls(
             number,
             Current["calls"] + 1,
-            Current["reportedcall"],
-            Current["blockedcall"] + 1
+            Current["reportedcalls"],
+            Current["blockedcalls"] + 1
         )
 
 
@@ -75,7 +75,7 @@ class NumberDB():
             number,
             NewList,
             Current["calls"] + 1,
-            Current["reportedcall"] + 1
+            Current["reportedcalls"] + 1
         )
 
 
@@ -83,10 +83,10 @@ class NumberDB():
         Document = {
             "number": number,
             "identifier": self.identifier,
-            "score": score,
-            "calls": 1,
-            "reportedcall": 1,
-            "blockedcall": 0,
+            "score": int(score),
+            "calls": 0,
+            "reportedcalls": 0,
+            "blockedcalls": 0,
             "Reports": [
                 {
                     "guid": guid,
@@ -103,10 +103,10 @@ class NumberDB():
         Document = {
             "number": number,
             "identifier": self.identifier,
-            "score": score,
-            "calls": 1,
-            "reportedcall": 0,
-            "blockedcall": 0,
+            "score": int(score),
+            "calls": 0,
+            "reportedcalls": 0,
+            "blockedcalls": 0,
             "Reports": [],
             "TellowsResponse": TellowsResponse
         }
@@ -149,8 +149,8 @@ class NumberDB():
         QueryData = {
             "$set": {
                 "calls": calls,
-                "reportedcall": reportedcall,
-                "blockedcall": blockedcall,
+                "reportedcalls": reportedcall,
+                "blockedcalls": blockedcall,
             }
         }
         self.NumberDB.update_one(QueryDocument, QueryData)

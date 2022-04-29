@@ -51,8 +51,8 @@ class Engine():
 
         if (not self.__NumberDB.isNumber(number)):
             score = 5
-            if (TellowsResponse["score"] != 5):
-                score = TellowsResponse["score"]
+            if (TellowsResponse["tellows"]["score"] != 5):
+                score = TellowsResponse["tellows"]["score"]
 
             self.__NumberDB.addNumberWithoutReport(
                 number,
@@ -82,7 +82,7 @@ class Engine():
         if (report):
             self.__NumberDB.reportNumber(
                 HistoryCall.number,
-                User.__guid,
+                User.GetGUID(),
                 boxid
             )
             User.Blacklist.AddNumber(HistoryCall.number)
