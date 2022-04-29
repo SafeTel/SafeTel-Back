@@ -38,6 +38,13 @@ class NumberDB():
         return self.DBWatcher.IsDocument('number', number)
 
 
+    def addCall(self, number: str):
+        Current = self.__PullNumber(number)
+        if Current is None:
+            return
+        self.__UpdateDocumentCalls(number, Current["calls"] + 1)
+
+
     def reportNumber(self, number: str, guid: str, boxid: str):
         Current = self.__PullNumber(number)
         if Current is None:
@@ -47,19 +54,12 @@ class NumberDB():
             boxid,
             Current["Reports"]
         )
-        self.__UpdateList(number, NewList)
-
-
-    def addNumberWithoutReport(self, number: str, TellowsResponse: dict, score: int = 5):
-        Document = {
-            "number": number,
-            "identifier": self.identifier,
-            "score": score,
-            "source": "User",
-            "Reports": [],
-            "TellowsResponse": TellowsResponse
-        }
-        self.DBWorker.InsertDocument(Document)
+        self.__UpdateDocument(
+            number,
+            NewList,
+            Current["calls"] + 1,
+            Current["reportedcall"] + 1
+        )
 
 
     def addNumber(self, number: str, TellowsResponse: dict, guid: str, boxid: str, score: int = 5):
@@ -67,7 +67,8 @@ class NumberDB():
             "number": number,
             "identifier": self.identifier,
             "score": score,
-            "source": "User",
+            "calls": 1,
+            "reportedcall": 1,
             "Reports": [
                 {
                     "guid": guid,
@@ -79,6 +80,18 @@ class NumberDB():
         }
         self.DBWorker.InsertDocument(Document)
 
+
+    def addNumberWithoutReport(self, number: str, TellowsResponse: dict, score: int = 5):
+        Document = {
+            "number": number,
+            "identifier": self.identifier,
+            "score": score,
+            "calls": 1,
+            "reportedcall": 0,
+            "Reports": [],
+            "TellowsResponse": TellowsResponse
+        }
+        self.DBWorker.InsertDocument(Document)
 
     ### PRIVATE
 
@@ -96,11 +109,27 @@ class NumberDB():
         return TemporaryList
 
 
-    def __UpdateList(self, number: str, NewList: list):
-        QueryNumber = {
+    def __UpdateDocument(self, number: str, NewList: list, calls: int, reportedcalls: int):
+        QueryDocument = {
             'number': str(number)
         }
         QueryData = {
-            "$set": { "Reports": NewList }
+            "$set": {
+                "Reports": NewList,
+                "calls": calls,
+                "reportedcalls": reportedcalls
+            }
         }
-        self.NumberDB.update_one(QueryNumber, QueryData)
+        self.NumberDB.update_one(QueryDocument, QueryData)
+
+
+    def __UpdateDocumentCalls(self, number: str, calls: int):
+        QueryDocument = {
+            'number': str(number)
+        }
+        QueryData = {
+            "$set": {
+                "calls": calls
+            }
+        }
+        self.NumberDB.update_one(QueryDocument, QueryData)
