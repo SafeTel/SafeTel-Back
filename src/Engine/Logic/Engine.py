@@ -59,8 +59,6 @@ class Engine():
                 TellowsResponse,
                 score
             )
-        else:
-            self.__NumberDB.addCall(number)
 
         UserBox:Box = User.Box.PullBox(boxid)
         if (UserBox is None):
@@ -77,8 +75,9 @@ class Engine():
     def ProcessCall(self, User: User, boxid: str, report: bool, HistoryCall: HistoryCallRequest):
         User.History.AddHistoryCall(HistoryCall)
 
-        if (report and User.Blacklist.IsNumber(HistoryCall.number)):
-            return User.Blacklist.DeleteNumber(HistoryCall.number)
+        if (HistoryCall.status is CallStatus.BLOCKED):
+            self.__NumberDB.addBlockedCall(HistoryCall.number)
+            return
 
         if (report):
             self.__NumberDB.reportNumber(
@@ -87,9 +86,12 @@ class Engine():
                 boxid
             )
             User.Blacklist.AddNumber(HistoryCall.number)
+        else:
+            self.__NumberDB.addCall(HistoryCall.number)
 
-        # TODO: 4.0 - Revaluate the number FIXME: next task
-        return User.Blacklist.PullList()
+        # TODO: Re-evaluate the number FIXME: next task
+        # TODO: find something to answer FIXME: next sprint
+
 
     ### PRIVATE
 

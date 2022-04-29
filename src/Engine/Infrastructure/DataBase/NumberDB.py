@@ -42,7 +42,24 @@ class NumberDB():
         Current = self.__PullNumber(number)
         if Current is None:
             return
-        self.__UpdateDocumentCalls(number, Current["calls"] + 1)
+        self.__UpdateDocumentCalls(
+            number,
+            Current["calls"] + 1,
+            Current["reportedcall"],
+            Current["blockedcall"]
+        )
+
+
+    def addBlockedCall(self, number: str):
+        Current = self.__PullNumber(number)
+        if Current is None:
+            return
+        self.__UpdateDocumentCalls(
+            number,
+            Current["calls"] + 1,
+            Current["reportedcall"],
+            Current["blockedcall"] + 1
+        )
 
 
     def reportNumber(self, number: str, guid: str, boxid: str):
@@ -54,7 +71,7 @@ class NumberDB():
             boxid,
             Current["Reports"]
         )
-        self.__UpdateDocument(
+        self.__UpdateDocumentReports(
             number,
             NewList,
             Current["calls"] + 1,
@@ -69,6 +86,7 @@ class NumberDB():
             "score": score,
             "calls": 1,
             "reportedcall": 1,
+            "blockedcall": 0,
             "Reports": [
                 {
                     "guid": guid,
@@ -88,6 +106,7 @@ class NumberDB():
             "score": score,
             "calls": 1,
             "reportedcall": 0,
+            "blockedcall": 0,
             "Reports": [],
             "TellowsResponse": TellowsResponse
         }
@@ -109,7 +128,7 @@ class NumberDB():
         return TemporaryList
 
 
-    def __UpdateDocument(self, number: str, NewList: list, calls: int, reportedcalls: int):
+    def __UpdateDocumentReports(self, number: str, NewList: list, calls: int, reportedcalls: int):
         QueryDocument = {
             'number': str(number)
         }
@@ -123,13 +142,15 @@ class NumberDB():
         self.NumberDB.update_one(QueryDocument, QueryData)
 
 
-    def __UpdateDocumentCalls(self, number: str, calls: int):
+    def __UpdateDocumentCalls(self, number: str, calls: int, reportedcall: int, blockedcall: int):
         QueryDocument = {
             'number': str(number)
         }
         QueryData = {
             "$set": {
-                "calls": calls
+                "calls": calls,
+                "reportedcall": reportedcall,
+                "blockedcall": blockedcall,
             }
         }
         self.NumberDB.update_one(QueryDocument, QueryData)
