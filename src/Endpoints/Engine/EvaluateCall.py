@@ -1,5 +1,5 @@
 ##
-## EPITECH PROJECT, 2022
+## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
 ## EvaluateCall
@@ -16,8 +16,8 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Engine.VerifyNumberRequest import VerifyNumberRequest
-from Models.Endpoints.Engine.VerifyNumberResponse import VerifyNumberResponse
+from Models.Endpoints.Engine.EvaluateCallRequest import EvaluateCallRequest
+from Models.Endpoints.Engine.EvaluateCallResponse import EvaluateCallResponse
 
 ### LOGC
 # JWT converter import
@@ -46,13 +46,13 @@ from flasgger.utils import swag_from
 ###
 # Response:
 # {
-# 	"block": true
+# 	"message": OK
 # }
 ###
 
 
 # Route to evaluate a number from an auth user
-class VerifyNumber(Resource):
+class EvaluateCall(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
@@ -61,9 +61,9 @@ class VerifyNumber(Resource):
 
 
     # TODO: ROUTE CHANGE: Fix postman tests
-    @swag_from("../../../../swagger/Engine/Swagger-VerifyNumber.yml")
+    @swag_from("../../../../swagger/Engine/Swagger-EvaluateCall.yml")
     def post(self):
-        Request = VerifyNumberRequest(request.get_json())
+        Request = EvaluateCallRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -77,13 +77,14 @@ class VerifyNumber(Resource):
         if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = VerifyNumberResponse(
-            self.__Engine.Verify(
-                User,
-                Request.boxid,
-                Request.number
-            )
+        self.__Engine.ProcessCall(
+            User,
+            Request.boxid,
+            Request.report,
+            Request.Call
         )
+
+        Response = EvaluateCallResponse("OK")
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

@@ -19,6 +19,10 @@ class HttpClient():
 
     def Ping(self, uri: str):
         response = requests.get(uri)
+        import sys
+        print("---", file=sys.stderr)
+        print(response, file=sys.stderr)
+        print("---", file=sys.stderr)
         if (self.__IsValidResponse(response)):
             return False
         return True

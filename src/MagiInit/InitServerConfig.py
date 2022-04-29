@@ -44,7 +44,7 @@ class InitServerConfig():
     def __Ping(self):
         httpClient = HttpClient()
         pingUri = os.getenv("PING_URI")
-        if httpClient.Ping(pingUri) == None:
+        if httpClient.Ping(pingUri) is None:
             raise ValueError("FATAL ERROR: Environement Denied")
 
 
