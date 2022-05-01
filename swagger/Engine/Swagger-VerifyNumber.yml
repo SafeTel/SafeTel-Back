@@ -1,5 +1,5 @@
-summary: "Evaluate a number"
-description: "Evaluate a number for an authenicated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Engine#evaluate-number"
+summary: "Verify a number"
+description: "Verify a number for an authenicated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Engine#evaluate-number"
 
 tags:
 - Engine
@@ -14,11 +14,15 @@ parameters:
     type: object
     required:
     - token
+    - boxid
     - number
     properties:
       token:
         type: string
         description: JWT token
+      boxid:
+        type: string
+        description: Box ID
       number:
         type: string
         description: Number to evaluate

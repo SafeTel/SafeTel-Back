@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## EvaluateNumberResponse
+## VerifyNumberResponse
 ##
 
 ### MODELS
@@ -10,7 +10,7 @@
 from Models.ModelAbstractions.JParent import JParent
 
 # Represents Tellows Response
-class EvaluateNumberResponse(JParent):
+class VerifyNumberResponse(JParent):
     def __init__(self, block: bool):
         self.__InitJParent(block)
 

@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## LinkBox
+## VerifyNumber
 ##
 
 ### INFRA
@@ -16,12 +16,14 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.Link.ClaimBox.ClaimBoxRequest import ClaimBoxRequest
-from Models.Endpoints.Embedded.Link.ClaimBox.ClaimBoxResponse import ClaimBoxResponse
+from Models.Endpoints.Engine.VerifyNumberRequest import VerifyNumberRequest
+from Models.Endpoints.Engine.VerifyNumberResponse import VerifyNumberResponse
 
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+# Engine
+from Engine.Logic.Engine import Engine
 
 ### SWAGGER
 # flasgger import
@@ -30,30 +32,33 @@ from flasgger.utils import swag_from
 
 ###
 # Request:
-# POST: localhost:2407/embedded/link/claim-box
+# POST: localhost:2407/engine/verify-number
 # {
-#     "token": "cutest jwt goes here",
-#     "boxid": "boxid"
+# 	"token": "456789",
+#   "boxid": "34567890",
+# 	"number": "0123456789"
 # }
 ###
 # Response:
 # {
-# 	  "linked": true
+# 	"block": true
 # }
 ###
 
 
-# Route to link a box to a user
-class ClaimBox(Resource):
+# Route to evaluate a number from an auth user
+class VerifyNumber(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
+        self.__Engine = Engine()
 
 
-    @swag_from("../../../../swagger/Embedded/Link/Swagger-ClaimBox.yml")
+    # TODO: ROUTE CHANGE: Fix postman tests
+    @swag_from("../../../../swagger/Engine/Swagger-VerifyNumber.yml")
     def post(self):
-        Request = ClaimBoxRequest(request.get_json())
+        Request = VerifyNumberRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -64,15 +69,15 @@ class ClaimBox(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        result = User.Box.ClaimBox(Request.boxid)
-        if (type(result) is str):
-            return self.__EndpointErrorManager.CreateBadRequestError(result), 400
-
-        Response = ClaimBoxResponse(
-            True
+        Response = VerifyNumberResponse(
+            self.__Engine.Verify(
+                User,
+                Request.boxid,
+                Request.number
+            )
         )
 
         responseErrors = Response.EvaluateModelErrors()

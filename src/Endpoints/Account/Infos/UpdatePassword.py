@@ -65,7 +65,7 @@ class UpdatePassword(Resource):
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if JwtInfos is None:
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User is None):

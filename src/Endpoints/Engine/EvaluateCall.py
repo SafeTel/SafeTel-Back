@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## EvaluateNumber
+## EvaluateCall
 ##
 
 ### INFRA
@@ -16,12 +16,14 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Engine.EvaluateNumberRequest import EvaluateNumberRequest
-from Models.Endpoints.Engine.EvaluateNumberResponse import EvaluateNumberResponse
+from Models.Endpoints.Engine.EvaluateCallRequest import EvaluateCallRequest
+from Models.Endpoints.Engine.EvaluateCallResponse import EvaluateCallResponse
 
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+# Engine
+from Engine.Logic.Engine import Engine
 
 ### SWAGGER
 # flasgger import
@@ -30,30 +32,38 @@ from flasgger.utils import swag_from
 
 ###
 # Request:
-# POST: localhost:2407/engine/evaluate-number
+# POST: localhost:2407/engine/verify-number
 # {
-# 	"token": "",
-# 	"number": "0123456789"
+# 	"token": "456789",
+#   "boxid": "34567890",
+# 	"report": true,
+#   "Call": {
+#       "number": "01345678",
+#       "status": "Received",
+#       "time": 3456789
+#   }
 # }
 ###
 # Response:
 # {
-# 	"block": true
+# 	"message": OK
 # }
 ###
 
 
 # Route to evaluate a number from an auth user
-class EvaluateNumber(Resource):
+class EvaluateCall(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
+        self.__Engine = Engine()
 
 
-    @swag_from("../../../../swagger/Engine/Swagger-EvaluateNumber.yml")
+    # TODO: ROUTE CHANGE: Fix postman tests
+    @swag_from("../../../../swagger/Engine/Swagger-EvaluateCall.yml")
     def post(self):
-        Request = EvaluateNumberRequest(request.get_json())
+        Request = EvaluateCallRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -61,18 +71,22 @@ class EvaluateNumber(Resource):
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = EvaluateNumberResponse(
-            User.Blacklist.IsNumber(Request.number)
+        self.__Engine.ProcessCall(
+            User,
+            Request.boxid,
+            Request.report,
+            Request.Call
         )
+
+        Response = EvaluateCallResponse("OK")
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
             return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
-
