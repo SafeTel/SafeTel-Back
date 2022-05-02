@@ -72,13 +72,16 @@ class VerifyNumber(Resource):
         if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = VerifyNumberResponse(
-            self.__Engine.Verify(
-                User,
-                Request.boxid,
-                Request.number
-            )
+        verificationResult = self.__Engine.Verify(
+            User,
+            Request.boxid,
+            Request.number
         )
+
+        if (type(verificationResult) is str):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+
+        Response = VerifyNumberResponse(verificationResult)
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
