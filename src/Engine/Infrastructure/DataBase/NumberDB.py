@@ -30,12 +30,19 @@ class NumberDB():
 
     ### PUBLIC
 
+    ## READ
     def getNumber(self, number: str):
         return self.__PullNumber(number)
 
 
     def isNumber(self, number: str):
         return self.DBWatcher.IsDocument('number', number)
+
+
+    ## WRITE
+
+    def UpdateScore(self, number: str, newScore: int):
+        self.__UpdateScore(number, newScore)
 
 
     def addCall(self, number: str):
@@ -78,6 +85,8 @@ class NumberDB():
             Current["reportedcalls"] + 1
         )
 
+
+    ## CREATE
 
     def addNumber(self, number: str, TellowsResponse: dict, guid: str, boxid: str, score: int = 5):
         Document = {
@@ -126,6 +135,18 @@ class NumberDB():
             }
         )
         return TemporaryList
+
+
+    def __UpdateScore(self, number: str, newScore: int):
+        QueryDocument = {
+            'number': str(number)
+        }
+        QueryData = {
+            "$set": {
+                "score": newScore
+            }
+        }
+        self.NumberDB.update_one(QueryDocument, QueryData)
 
 
     def __UpdateDocumentReports(self, number: str, NewList: list, calls: int, reportedcalls: int):

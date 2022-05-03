@@ -15,7 +15,7 @@ import re
 # Get env var import
 import os
 
-
+# External service tellows
 class Tellows():
     def __init__(self):
         self.uri = os.getenv("TELLOWS_BASE_URI") + os.getenv("TELLOWS_URI_NUMBER")
@@ -29,7 +29,7 @@ class Tellows():
     def GetEvaluation(self, number: str):
         if (not self.__IsValidNumber(number)):
             return None
-        return self.HTTPClient.Get(self.uri + number, self.query)
+        return self.HTTPClient.Get(self.uri + number, self.query)["tellows"] # TODO: set a model for tellows FIXME: next sprint
 
 
     def __IsValidNumber(self, number: str):
