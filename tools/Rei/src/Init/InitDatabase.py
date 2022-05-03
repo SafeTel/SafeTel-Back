@@ -17,15 +17,12 @@ import requests
 
 class InitDatabase():
     def __init__(self):
-
         self.__IsValidConfig()
         self.__CheckEnvVars()
         self.__Ping()
-
         # Using i for paging datas -> avoiding the use of to much memory at the same time
-        self.__DocumentMaxValue = 5000000000 # 5 billions
-        self.__DocumentPageSize = 50
-
+        self.__DocumentsMaxIterationNumber = 5000000000 # 5 billions
+        self.__DocumentsPageSize = 50
 
         self.__MelchiorName = os.getenv("DB_MELCHIOR")
         self.__CasperName = os.getenv("DB_CASPER")
@@ -39,9 +36,7 @@ class InitDatabase():
         if err == False:
             logging.warning(msg)
             return
-
         self.__CopyDataFromServer()
-
 
     def __IsValidConfig(self):
         if (not os.path.isfile("config.json")):
@@ -79,7 +74,6 @@ class InitDatabase():
                 return True
         return False
 
-
     def __CopyDataFromServer(self):
         if self.__MongoDBClientToCopy is None or self.__MongoDBClient is None:
             raise Exception("MongoDB Clients None")
@@ -102,36 +96,36 @@ class InitDatabase():
         WhitelistToCopy = MelchiorToCopy['Whitelist']
 
         # Using i for paging datas -> avoiding the use of to much memory at the same time
-        for i in range(self.__DocumentMaxValue): 
-            RangeMin = i * self.__DocumentPageSize
-            RangeMax = self.__DocumentPageSize + RangeMin
+        for i in range(self.__DocumentsMaxIterationNumber): 
+            RangeMin = i * self.__DocumentsPageSize
+            RangeMax = self.__DocumentsPageSize + RangeMin
             BlacklistDocumentsWithPagingInList = list(BlacklistToCopy.find().skip(RangeMin).limit(RangeMax))
             
             if len(BlacklistDocumentsWithPagingInList) <= 0:
                 break
             Blacklist.insert_many(BlacklistDocumentsWithPagingInList)
 
-        for i in range(self.__DocumentMaxValue): 
-            RangeMin = i * self.__DocumentPageSize
-            RangeMax = self.__DocumentPageSize + RangeMin
+        for i in range(self.__DocumentsMaxIterationNumber): 
+            RangeMin = i * self.__DocumentsPageSize
+            RangeMax = self.__DocumentsPageSize + RangeMin
             HistoryDocumentsWithPagingInList = list(HistoryToCopy.find().skip(RangeMin).limit(RangeMax))
 
             if len(list(HistoryDocumentsWithPagingInList)) <= 0:
                 break
             History.insert_many(list(HistoryDocumentsWithPagingInList))
 
-        for i in range(self.__DocumentMaxValue): 
-            RangeMin = i * self.__DocumentPageSize
-            RangeMax = self.__DocumentPageSize + RangeMin
+        for i in range(self.__DocumentsMaxIterationNumber): 
+            RangeMin = i * self.__DocumentsPageSize
+            RangeMax = self.__DocumentsPageSize + RangeMin
             UserDocumentsWithPagingInList = list(UserToCopy.find().skip(RangeMin).limit(RangeMax))
             
             if len(list(UserDocumentsWithPagingInList)) <= 0:
                 break
             User.insert_many(list(UserDocumentsWithPagingInList))
 
-        for i in range(self.__DocumentMaxValue): 
-            RangeMin = i * self.__DocumentPageSize
-            RangeMax = self.__DocumentPageSize + RangeMin
+        for i in range(self.__DocumentsMaxIterationNumber): 
+            RangeMin = i * self.__DocumentsPageSize
+            RangeMax = self.__DocumentsPageSize + RangeMin
             WhitelistDocumentsWithPagingInList = list(WhitelistToCopy.find().skip(RangeMin).limit(RangeMax))
             
             if len(list(WhitelistDocumentsWithPagingInList)) <= 0:
@@ -148,18 +142,18 @@ class InitDatabase():
         ContributorsToCopy = CasperToCopy['Contributors']
 
         # Using i for paging datas -> avoiding the use of to much memory at the same time
-        for i in range(self.__DocumentMaxValue): 
-            RangeMin = i * self.__DocumentPageSize
-            RangeMax = self.__DocumentPageSize + RangeMin
+        for i in range(self.__DocumentsMaxIterationNumber): 
+            RangeMin = i * self.__DocumentsPageSize
+            RangeMax = self.__DocumentsPageSize + RangeMin
             ApiKeyLogDocumentsWithPagingInList = list(ApiKeyLogToCopy.find().skip(RangeMin).limit(RangeMax))
             
             if len(list(ApiKeyLogDocumentsWithPagingInList)) <= 0:
                 break
             ApiKeyLog.insert_many(list(ApiKeyLogDocumentsWithPagingInList))
 
-        for i in range(self.__DocumentMaxValue): 
-            RangeMin = i * self.__DocumentPageSize
-            RangeMax = self.__DocumentPageSize + RangeMin
+        for i in range(self.__DocumentsMaxIterationNumber): 
+            RangeMin = i * self.__DocumentsPageSize
+            RangeMax = self.__DocumentsPageSize + RangeMin
             ContributorsDocumentsWithPagingInList = list(ContributorsToCopy.find().skip(RangeMin).limit(RangeMax))
             
             if len(list(ContributorsDocumentsWithPagingInList)) <= 0:
@@ -174,9 +168,9 @@ class InitDatabase():
         GoogleServicesToCopy = CasperTwoToCopy['GoogleServices']
 
         # Using i for paging datas -> avoiding the use of to much memory at the same time
-        for i in range(self.__DocumentMaxValue): 
-            RangeMin = i * self.__DocumentPageSize
-            RangeMax = self.__DocumentPageSize + RangeMin
+        for i in range(self.__DocumentsMaxIterationNumber): 
+            RangeMin = i * self.__DocumentsPageSize
+            RangeMax = self.__DocumentsPageSize + RangeMin
             GoogleServicesDocumentsWithPagingInList = list(GoogleServicesToCopy.find().skip(RangeMin).limit(RangeMax))
             
             if len(list(GoogleServicesDocumentsWithPagingInList)) <= 0:
@@ -193,18 +187,18 @@ class InitDatabase():
         UnclaimedBoxesToCopy = BalthasarToCopy['UnclaimedBoxes']
 
         # Using i for paging datas -> avoiding the use of to much memory at the same time
-        for i in range(self.__DocumentMaxValue): 
-            RangeMin = i * self.__DocumentPageSize
-            RangeMax = self.__DocumentPageSize + RangeMin
+        for i in range(self.__DocumentsMaxIterationNumber): 
+            RangeMin = i * self.__DocumentsPageSize
+            RangeMax = self.__DocumentsPageSize + RangeMin
             BoxesDocumentsWithPagingInList = list(BoxesToCopy.find().skip(RangeMin).limit(RangeMax))
             
             if len(list(BoxesDocumentsWithPagingInList)) <= 0:
                 break
             Boxes.insert_many(list(BoxesDocumentsWithPagingInList))
 
-        for i in range(self.__DocumentMaxValue): 
-            RangeMin = i * self.__DocumentPageSize
-            RangeMax = self.__DocumentPageSize + RangeMin
+        for i in range(self.__DocumentsMaxIterationNumber): 
+            RangeMin = i * self.__DocumentsPageSize
+            RangeMax = self.__DocumentsPageSize + RangeMin
             UnclaimedBoxesDocumentsWithPagingInList = list(UnclaimedBoxesToCopy.find().skip(RangeMin).limit(RangeMax))
             
             if len(list(UnclaimedBoxesDocumentsWithPagingInList)) <= 0:
