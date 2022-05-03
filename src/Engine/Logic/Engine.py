@@ -54,8 +54,8 @@ class Engine():
 
         if (not self.__NumberDB.isNumber(number)):
             score = 5
-            if (TellowsResponse["tellows"]["score"] != 5):
-                score = TellowsResponse["tellows"]["score"]
+            if (TellowsResponse["score"] != 5):
+                score = TellowsResponse["score"]
 
             self.__NumberDB.addNumberWithoutReport(
                 number,
@@ -92,7 +92,7 @@ class Engine():
         else:
             self.__NumberDB.addCall(HistoryCall.number)
 
-        InternaleData = self.__NumberDB.__PullNumber()
+        InternaleData = self.__NumberDB.getNumber(HistoryCall.number)
         newScore = self.__RateNumber.EvaNumber(
             HistoryCall.number,
             InternaleData
