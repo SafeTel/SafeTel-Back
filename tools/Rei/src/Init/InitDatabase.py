@@ -18,7 +18,7 @@ import requests
 class InitDatabase():
     def __init__(self):
 
-        self.__IsValidConfig
+        self.__IsValidConfig()
         self.__CheckEnvVars()
         self.__Ping()
 
