@@ -7,12 +7,15 @@
 
 ### LOGIC
 import logging
+# For Getenv
 import os
+# Load json
 import json
 
 ### INFRA
 # Client mongo db import
 import pymongo
+# To perform Ping
 import requests
 
 class InitDatabase():
@@ -94,7 +97,7 @@ class InitDatabase():
             RangeMin = i * self.__DocumentsPageSize
             RangeMax = self.__DocumentsPageSize + RangeMin
             BlacklistDocumentsWithPagingInList = list(BlacklistToCopy.find().skip(RangeMin).limit(RangeMax))
-            
+
             if len(BlacklistDocumentsWithPagingInList) <= 0:
                 break
             Blacklist.insert_many(BlacklistDocumentsWithPagingInList)

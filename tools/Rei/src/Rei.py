@@ -18,13 +18,10 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 ###  LOGING SETTINGS END  ###
 #############################
 
-
-####################################
-### Initiate Local DB BEGIN ###
-logging.warning("--- /!\ Configuring DB /!\\ ----")
+### To Perform the copy of a database
 from Init.InitDatabase import InitDatabase
-InitDatabase()
-logging.warning("--- DB Configuration Ended  ----")
 
-###  Initiate Local DB END  ###
-####################################
+if __name__ == "__main__":
+    logging.warning("--- /!\ Configuring DB /!\\ ----")
+    InitDatabase()
+    logging.warning("--- DB Configuration Ended  ----")
