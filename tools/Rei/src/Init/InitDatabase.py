@@ -86,15 +86,9 @@ class InitDatabase():
         # Melchior mongoDB Copy
         Melchior = self.__MongoDBClient[self.__MelchiorName]
         MelchiorToCopy =  self.__MongoDBClientToCopy[self.__MelchiorName]
-        Blacklist = Melchior['Blacklist']
-        History = Melchior['History']
-        User = Melchior['User']
-        Whitelist = Melchior['Whitelist']
-        BlacklistToCopy = MelchiorToCopy['Blacklist']
-        HistoryToCopy = MelchiorToCopy['History']
-        UserToCopy = MelchiorToCopy['User']
-        WhitelistToCopy = MelchiorToCopy['Whitelist']
 
+        Blacklist = Melchior['Blacklist']
+        BlacklistToCopy = MelchiorToCopy['Blacklist']
         # Using i for paging datas -> avoiding the use of to much memory at the same time
         for i in range(self.__DocumentsMaxIterationNumber): 
             RangeMin = i * self.__DocumentsPageSize
@@ -105,6 +99,8 @@ class InitDatabase():
                 break
             Blacklist.insert_many(BlacklistDocumentsWithPagingInList)
 
+        History = Melchior['History']
+        HistoryToCopy = MelchiorToCopy['History']
         for i in range(self.__DocumentsMaxIterationNumber): 
             RangeMin = i * self.__DocumentsPageSize
             RangeMax = self.__DocumentsPageSize + RangeMin
@@ -114,6 +110,8 @@ class InitDatabase():
                 break
             History.insert_many(list(HistoryDocumentsWithPagingInList))
 
+        User = Melchior['User']
+        UserToCopy = MelchiorToCopy['User']
         for i in range(self.__DocumentsMaxIterationNumber): 
             RangeMin = i * self.__DocumentsPageSize
             RangeMax = self.__DocumentsPageSize + RangeMin
@@ -123,6 +121,8 @@ class InitDatabase():
                 break
             User.insert_many(list(UserDocumentsWithPagingInList))
 
+        Whitelist = Melchior['Whitelist']
+        WhitelistToCopy = MelchiorToCopy['Whitelist']
         for i in range(self.__DocumentsMaxIterationNumber): 
             RangeMin = i * self.__DocumentsPageSize
             RangeMax = self.__DocumentsPageSize + RangeMin
@@ -136,11 +136,9 @@ class InitDatabase():
         # Casper mongoDB Copy
         Casper = self.__MongoDBClient[self.__CasperName]
         CasperToCopy =  self.__MongoDBClientToCopy[self.__CasperName]
-        ApiKeyLog = Casper['ApiKeyLog']
-        Contributors = Casper['Contributors']
-        ApiKeyLogToCopy = CasperToCopy['ApiKeyLog']
-        ContributorsToCopy = CasperToCopy['Contributors']
 
+        ApiKeyLog = Casper['ApiKeyLog']
+        ApiKeyLogToCopy = CasperToCopy['ApiKeyLog']
         # Using i for paging datas -> avoiding the use of to much memory at the same time
         for i in range(self.__DocumentsMaxIterationNumber): 
             RangeMin = i * self.__DocumentsPageSize
@@ -151,6 +149,8 @@ class InitDatabase():
                 break
             ApiKeyLog.insert_many(list(ApiKeyLogDocumentsWithPagingInList))
 
+        Contributors = Casper['Contributors']
+        ContributorsToCopy = CasperToCopy['Contributors']
         for i in range(self.__DocumentsMaxIterationNumber): 
             RangeMin = i * self.__DocumentsPageSize
             RangeMax = self.__DocumentsPageSize + RangeMin
@@ -164,9 +164,9 @@ class InitDatabase():
         # CasperTwo mongoDB Copy
         CasperTwo = self.__MongoDBClient[self.__CasperTwoName]
         CasperTwoToCopy =  self.__MongoDBClientToCopy[self.__CasperTwoName]
+
         GoogleServices = CasperTwo['GoogleServices']
         GoogleServicesToCopy = CasperTwoToCopy['GoogleServices']
-
         # Using i for paging datas -> avoiding the use of to much memory at the same time
         for i in range(self.__DocumentsMaxIterationNumber): 
             RangeMin = i * self.__DocumentsPageSize
@@ -181,11 +181,9 @@ class InitDatabase():
         # Balthasar mongoDB Copy
         Balthasar = self.__MongoDBClient[self.__BalthasarName]
         BalthasarToCopy =  self.__MongoDBClientToCopy[self.__BalthasarName]
-        Boxes = Balthasar['Boxes']
-        UnclaimedBoxes = Balthasar['UnclaimedBoxes']
-        BoxesToCopy = BalthasarToCopy['Boxes']
-        UnclaimedBoxesToCopy = BalthasarToCopy['UnclaimedBoxes']
 
+        Boxes = Balthasar['Boxes']
+        BoxesToCopy = BalthasarToCopy['Boxes']
         # Using i for paging datas -> avoiding the use of to much memory at the same time
         for i in range(self.__DocumentsMaxIterationNumber): 
             RangeMin = i * self.__DocumentsPageSize
@@ -196,6 +194,8 @@ class InitDatabase():
                 break
             Boxes.insert_many(list(BoxesDocumentsWithPagingInList))
 
+        UnclaimedBoxes = Balthasar['UnclaimedBoxes']
+        UnclaimedBoxesToCopy = BalthasarToCopy['UnclaimedBoxes']
         for i in range(self.__DocumentsMaxIterationNumber): 
             RangeMin = i * self.__DocumentsPageSize
             RangeMax = self.__DocumentsPageSize + RangeMin
