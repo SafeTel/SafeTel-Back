@@ -19,38 +19,41 @@ class RateNumber():
 
     ### PUBLIC
 
-    # TODO: voir si un ajout à au furutr scrappeur peut être logique et interessent ici
     # Evaluate a number, 1 to 10, higher is better
     def EvaNumber(self, number: str, InternalData: dict):
-        # TODO: faire un report d'erreur au monitoring si manque de données
+        if ("TellowsResponse" not in InternalData): # TODO: faire un report d'erreur au monitoring si manque de données FIXME: next sprint
+            return None
 
-        # 1;1 - Extratct Data
-        TellowsEvaluation = None
-        if ("TellowsResponse" in InternalData):
-            TellowsEvaluation = self.__ExtTellowsData(
-                InternalData["TellowsResponse"]
-            )
-        InternalEvaluation = self.__ExtInternalData(InternalData)
+        TellowsEvaluation :TellowsNumberEvaluation = self.__ExtTellowsData(InternalData["TellowsResponse"])
+        InternalEvaluation :InternalNumberEvaluation = self.__ExtInternalData(InternalData)
 
-        # 2.1 - Estimer une note en fonction de données de tellowss avec un coeficient
-        # 2.2 - Estimer une note en fonction de données internes avec un coeficient
+        InternalScore, InternalCoefficient = self.__EvaInternalData(InternalEvaluation)
 
         # 3 - Merge les 2 notes en fonction des coeficients
+        MergedScore = self.__MergeScores(
+            TellowsEvaluation,
+            InternalScore,
+            InternalCoefficient
+        )
 
-        return # return int, 1 to 10
+        return int(MergedScore)
 
 
     ### PRIVATE
 
-    def __MergeScores(self, TellowsScore: float, TellowsCoef: float, InternalScore: float, InternalCoef: float):
-        return # merged score (final)
+    def __MergeScores(self, TellowsEvaluation: TellowsNumberEvaluation, InternalScore: float, InternalCoefficient: float):
+        InternalScale = InternalScore * InternalCoefficient
+        TellowsScale = TellowsEvaluation.score * TellowsEvaluation.searches
+        MergedScore = (InternalScale + TellowsScale) / (InternalCoefficient * TellowsEvaluation.searches)
+        return MergedScore
 
-    def __EvaInternalData(self, InternalData: dict):
-        return # score & coeficient
 
-
-    def __EvaTellowsData(self, TellowsData: dict):
-        return # score & coeficient
+    def __EvaInternalData(self, InternalData: InternalNumberEvaluation):
+        reportedCallsPercent = self.__PercentValue(
+            InternalData.reports,
+            InternalData.calls
+        )
+        return (reportedCallsPercent / 10), InternalData.calls
 
 
     def __ExtInternalData(self, number, InternalData: dict):
@@ -80,3 +83,9 @@ class RateNumber():
         if (modelErrors != None):
             return None
         return TellowsEvaluation
+
+
+    ### UTILS
+
+    def __PercentValue(self, interest: int, subject: int):
+        return int((interest / subject) * 100)
