@@ -27,6 +27,7 @@ services:
             - mongoconfig:/data/configdb
         networks:
             - magi_local_network
+            - mongo
 
     mongo-express:
         image: mongo-express:latest
@@ -67,3 +68,5 @@ volumes:
 networks:
     magi_local_network:
         driver: bridge
+    mongo:
+        name: mongo_network

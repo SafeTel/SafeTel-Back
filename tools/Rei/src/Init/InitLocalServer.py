@@ -9,27 +9,24 @@
 import logging
 import os
 import json
-from pathlib import Path
-from pickle import FALSE, TRUE
 
 ### INFRA
 # Client mongo db import
 import pymongo
-from Infrastructure.Utils.HttpClient.HtttpClient import HttpClient
+import requests
 
 class InitLocalServer():
     def __init__(self):
-        isLocal = self.__LaunchCheck()
-        if not isLocal:
-            logging.warning("LaunchMode not Local. Cancelling Local Server Configuration")
-            return
+
+        self.__IsValidConfig
+        self.__CheckEnvVars()
+        self.__Ping()
 
         # Using i for paging datas -> avoiding the use of to much memory at the same time
         self.__DocumentMaxValue = 5000000000 # 5 billions
         self.__DocumentPageSize = 50
 
 
-        logging.warning("Env Vars")
         self.__MelchiorName = os.getenv("DB_MELCHIOR")
         self.__CasperName = os.getenv("DB_CASPER")
         self.__CasperTwoName = os.getenv("DB_CASPER_02")
@@ -37,33 +34,59 @@ class InitLocalServer():
 
         self.__MongoDBClientToCopy = None
         self.__MongoDBClient = None
-        logging.warning("Generating Clients")
-        self.__GenerateClients()
+        err, msg = self.__GenerateClients()
+
+        if err == False:
+            logging.warning(msg)
+            return
 
         self.__CopyDataFromServer()
 
 
-    def __LaunchCheck(self):
+    def __IsValidConfig(self):
+        if (not os.path.isfile("config.json")):
+            raise ValueError("FATAL ERROR: Environement Denied")
         with open("config.json", 'r') as jsonFile:
             config = json.load(jsonFile)
-            launchMode = config["Mode"]["launchMode"]
-            if (launchMode != "LOCAL"):
-                return False
-            return True
+            if ("MandatoryEnvVars" not in config):
+                raise ValueError("FATAL ERROR: Configuration Denied")
+
+    def __CheckEnvVars(self):
+        with open("config.json", 'r') as jsonFile:
+            config = json.load(jsonFile)
+            for mandatoryEnvVar in config["MandatoryEnvVars"]:
+                if (mandatoryEnvVar in os.environ) == False:
+                    raise ValueError("FATAL ERROR: Environement Denied")
+
+    def __Ping(self):
+        pingUri = os.getenv("PING_URI")
+        response = requests.get(pingUri)
+
+        if (self.__IsValidResponse(response)):
+            raise ValueError("FATAL ERROR: Environement Denied")
+
+    def __IsValidResponse(self, response: requests.Response):
+        NominalCode = 200
+        NominalHeaders = [
+            "text/json; charset=utf-8",
+            "text/html; charset=UTF-8"
+        ]
+
+        if (response.status_code != NominalCode):
+            return False
+        for NominalHeader in NominalHeaders:
+            if (response.headers == NominalHeader):
+                return True
+        return False
+
 
     def __CopyDataFromServer(self):
-        logging.warning("Copying")
         if self.__MongoDBClientToCopy is None or self.__MongoDBClient is None:
             raise Exception("MongoDB Clients None")
-        logging.warning(">! Starting")
         self.__MelchiorCopy()
-        logging.warning(">!\t __MelchiorCopy Done")
         self.__CasperCopy()
-        logging.warning(">!\t __CasperCopy Done")
         self.__CasperTwoCopy()
-        logging.warning(">!\t __CasperTwoCopy Done")
         self.__BalthasarCopy()
-        logging.warning(">!\t __BalthasarCopy Done")
 
     def __MelchiorCopy(self):
         # Melchior mongoDB Copy
@@ -93,7 +116,6 @@ class InitLocalServer():
             RangeMax = self.__DocumentPageSize + RangeMin
             HistoryDocumentsWithPagingInList = list(HistoryToCopy.find().skip(RangeMin).limit(RangeMax))
 
-            logging.warning(HistoryDocumentsWithPagingInList)
             if len(list(HistoryDocumentsWithPagingInList)) <= 0:
                 break
             History.insert_many(list(HistoryDocumentsWithPagingInList))
@@ -103,7 +125,6 @@ class InitLocalServer():
             RangeMax = self.__DocumentPageSize + RangeMin
             UserDocumentsWithPagingInList = list(UserToCopy.find().skip(RangeMin).limit(RangeMax))
             
-            logging.warning(UserDocumentsWithPagingInList)
             if len(list(UserDocumentsWithPagingInList)) <= 0:
                 break
             User.insert_many(list(UserDocumentsWithPagingInList))
@@ -113,7 +134,6 @@ class InitLocalServer():
             RangeMax = self.__DocumentPageSize + RangeMin
             WhitelistDocumentsWithPagingInList = list(WhitelistToCopy.find().skip(RangeMin).limit(RangeMax))
             
-            logging.warning(WhitelistDocumentsWithPagingInList)
             if len(list(WhitelistDocumentsWithPagingInList)) <= 0:
                 break
             Whitelist.insert_many(list(WhitelistDocumentsWithPagingInList))
@@ -194,6 +214,7 @@ class InitLocalServer():
     def __GenerateClients(self):
         try:
             uri = os.getenv("DB_URI")
+
             client = pymongo.MongoClient(uri)
             self.__MongoDBClient = client
 
@@ -202,5 +223,4 @@ class InitLocalServer():
             self.__MongoDBClientToCopy = clientToCopy
         except Exception as e:
             return False,  "EXCEPTION FORMAT PRINT:\n{}".format(e)
-        logging.warning("Clients generated")
         return True, "Safetel mongoDB available"

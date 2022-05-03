@@ -1,0 +1,22 @@
+{
+    "MandatoryEnvVars": [
+        "SECRET_KEY",
+        "SERVER_PORT",
+        "DB_CLIENT",
+        "DB_PASSWORD",
+
+        "DB_MELCHIOR",
+        "DB_CASPER",
+        "DB_CASPER_02",
+        "DB_BALTHASAR",
+        "DB_BALTHASAR_02",
+
+        "DB_URI",
+        "DB_URI_SERVER_TO_COPY",
+
+        "TELLOWS_BASE_URI",
+        "TELLOWS_URI_NUMBER",
+        "TELLOWS_API_KEY_MD5",
+        "PING_URI"
+    ]
+}
