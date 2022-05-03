@@ -25,6 +25,9 @@ from Models.Endpoints.Embedded.BoxInfos.BoxInfosResponse import BoxInfosResponse
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
 
 ###
 # Request:
@@ -56,6 +59,7 @@ class BoxInfos(Resource):
         self.__UserFactory = UserFactory()
 
 
+    @swag_from("../../../../swagger/Embedded/Swagger-BoxInfos.yml")
     def get(self):
         Request = BoxInfosRequest(request.args.to_dict())
 
@@ -65,14 +69,14 @@ class BoxInfos(Resource):
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = BoxInfosResponse(
-            User.Box.PullBoxData().Boxes
+            User.Box.PullBoxes().Boxes
         )
 
         responseErrors = Response.EvaluateModelErrors()

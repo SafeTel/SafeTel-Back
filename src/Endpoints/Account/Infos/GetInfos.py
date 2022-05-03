@@ -25,6 +25,10 @@ from Models.Logic.Shared.Roles import Roles
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -55,7 +59,7 @@ class GetInfos(Resource):
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
-
+    @swag_from("../../../../swagger/Account/Infos/Swagger-GetInfos.yml")
     def get(self):
         Request = GetInfosRequest(request.args.to_dict())
 
@@ -65,10 +69,10 @@ class GetInfos(Resource):
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         UserInfos = User.PullUserInfos()

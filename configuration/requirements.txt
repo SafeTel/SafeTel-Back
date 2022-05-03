@@ -9,3 +9,4 @@ uuid
 py-healthcheck
 sentry-sdk
 pygit2
+flasgger

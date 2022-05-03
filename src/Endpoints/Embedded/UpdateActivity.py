@@ -23,6 +23,10 @@ from Models.Endpoints.Embedded.UpdateActivity.UpdateActivityResponse import Upda
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -48,6 +52,7 @@ class UpdateActivity(Resource):
         self.__UserFactory = UserFactory()
 
 
+    @swag_from("../../../../swagger/Embedded/Swagger-UpdateActivity.yml")
     def patch(self):
         Request = UpdateActivityRequest(request.get_json())
 
@@ -57,7 +62,7 @@ class UpdateActivity(Resource):
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 400
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User == None):
