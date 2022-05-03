@@ -15,7 +15,7 @@ import json
 import pymongo
 import requests
 
-class InitLocalServer():
+class InitDatabase():
     def __init__(self):
 
         self.__IsValidConfig

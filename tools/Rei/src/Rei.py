@@ -21,10 +21,10 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 
 ####################################
 ### Initiate Local DB BEGIN ###
-logging.warning("--- /!\ Configuring Local DB depends on Launch mode  /!\\ ----")
-from Init.InitLocalServer import InitLocalServer
-InitLocalServer()
-logging.warning("---     Local DB Configuration Ended      ----")
+logging.warning("--- /!\ Configuring DB /!\\ ----")
+from Init.InitDatabase import InitDatabase
+InitDatabase()
+logging.warning("--- DB Configuration Ended  ----")
 
 ###  Initiate Local DB END  ###
 ####################################
