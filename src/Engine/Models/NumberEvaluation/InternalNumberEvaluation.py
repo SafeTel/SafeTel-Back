@@ -12,7 +12,7 @@ from Models.ModelAbstractions.JParent import JParent
 # Represents Update Email Response
 class InternalNumberEvaluation(JParent):
     def __init__(self, number: str, score: int, calls: int, blocked: int, reports: int):
-        self.__InitJParent(number, score, blocked, reports)
+        self.__InitJParent(number, score, calls, blocked, reports)
 
     # Values Assignement
     def __InitJParent(self, number: str, score: int, calls: int, blocked: int, reports: int):

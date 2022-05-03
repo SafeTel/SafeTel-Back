@@ -24,8 +24,8 @@ class RateNumber():
         if ("TellowsResponse" not in InternalData): # TODO: faire un report d'erreur au monitoring si manque de données FIXME: next sprint
             return None
 
-        TellowsEvaluation :TellowsNumberEvaluation = self.__ExtTellowsData(InternalData["TellowsResponse"])
-        InternalEvaluation :InternalNumberEvaluation = self.__ExtInternalData(InternalData)
+        TellowsEvaluation :TellowsNumberEvaluation = self.__ExtTellowsData(number, InternalData["TellowsResponse"])
+        InternalEvaluation :InternalNumberEvaluation = self.__ExtInternalData(number, InternalData)
 
         InternalScore, InternalCoefficient = self.__EvaInternalData(InternalEvaluation)
 
@@ -75,9 +75,9 @@ class RateNumber():
             return None
         TellowsEvaluation = TellowsNumberEvaluation(
             number,
-            TellowsData["score"],
-            TellowsData["searches"],
-            TellowsData["comments"]
+            int(TellowsData["score"]),
+            int(TellowsData["searches"]),
+            int(TellowsData["comments"])
         )
         modelErrors = TellowsEvaluation.EvaluateModelErrors()
         if (modelErrors != None):
