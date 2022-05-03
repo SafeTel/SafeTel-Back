@@ -93,10 +93,16 @@ class Engine():
             self.__NumberDB.addCall(HistoryCall.number)
 
         InternaleData = self.__NumberDB.__PullNumber()
-        self.__RateNumber.EvaNumber(
+        newScore = self.__RateNumber.EvaNumber(
             HistoryCall.number,
             InternaleData
         )
+
+        self.__NumberDB.UpdateScore(
+            HistoryCall.number,
+            newScore
+        )
+
         # TODO: find something to answer FIXME: next sprint
 
 
