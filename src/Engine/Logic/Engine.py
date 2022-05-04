@@ -16,6 +16,8 @@ from Engine.Infrastructure.DataBase.NumberDB import NumberDB
 ### LOGIC
 # Block algorithms import
 from Engine.Logic.BlockAlgorithm import BlockAlgorithm
+# Rate Number algorithm
+from Engine.Logic.RateNumber import RateNumber
 
 ### MODELS
 # CallStatus Enum
@@ -39,6 +41,7 @@ class Engine():
         self.__Tellows = Tellows()
         self.__NumberDB = NumberDB("FR-0033", "0033")
         self.__BlockAlgorithm = BlockAlgorithm()
+        self.__RateNumber = RateNumber()
 
     ### PUBLIC
 
@@ -51,8 +54,8 @@ class Engine():
 
         if (not self.__NumberDB.isNumber(number)):
             score = 5
-            if (TellowsResponse["tellows"]["score"] != 5):
-                score = TellowsResponse["tellows"]["score"]
+            if (TellowsResponse["score"] != 5):
+                score = TellowsResponse["score"]
 
             self.__NumberDB.addNumberWithoutReport(
                 number,
@@ -89,7 +92,17 @@ class Engine():
         else:
             self.__NumberDB.addCall(HistoryCall.number)
 
-        # TODO: Re-evaluate the number FIXME: next task
+        InternaleData = self.__NumberDB.getNumber(HistoryCall.number)
+        newScore = self.__RateNumber.EvaNumber(
+            HistoryCall.number,
+            InternaleData
+        )
+
+        self.__NumberDB.UpdateScore(
+            HistoryCall.number,
+            newScore
+        )
+
         # TODO: find something to answer FIXME: next sprint
 
 
@@ -107,5 +120,4 @@ class Engine():
         elif (severity is BoxSeverity.MAX):
             return  self.__BlockAlgorithm.BlockMax(User, number)
         return None
-        # TODO: None, means there is a bug internal error (the severity is corrupted)
-        # FIXME: maybe autofix ?
+        # TODO: None, means there is a bug internal error (the severity is corrupted) FIXME: maybe autofix ?
