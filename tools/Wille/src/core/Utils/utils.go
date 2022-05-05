@@ -57,7 +57,7 @@ func IsDataInCollection(col *mongo.Collection, filter bson.M) (bool, error) {
 // Check if the Collection given as first argument contain the elements finded using the filter
 // If it's the case, return an error stipulating the data has already been posted on the db
 // Otherwise, return nil
-func CheckDataNotExitInCollection(col *mongo.Collection, filter bson.M) error {
+func CheckDataNotExistInCollection(col *mongo.Collection, filter bson.M) error {
 	// Check if some documents have been founded
 	isOnStorage, err := IsDataInCollection(col, filter)
 

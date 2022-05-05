@@ -75,7 +75,7 @@ func (blacklist *Blacklist) UploadBlacklistFile(name string) error {
 	}
 	// Generating a bson filter using the value of guid
 	filter := bson.M{"guid": data.Guid}
-	if err = utils.CheckDataNotExitInCollection(blacklist.BlacklistCollection, filter); err != nil {
+	if err = utils.CheckDataNotExistInCollection(blacklist.BlacklistCollection, filter); err != nil {
 		blacklist.Print.Info("Blacklist.json data of model " + name + " already exist inside the server")
 		return nil
 	}
