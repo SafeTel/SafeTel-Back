@@ -17,10 +17,12 @@ import (
 	print "PostmanDbDataImplementation/core/Utils/Print"                // Print data structure
 	"bufio"                                                             // Read a File line per line
 	"context"                                                           // Configure Mongo client
-	"errors"                                                            // Generate new errors
-	"fmt"                                                               // Printing using println
-	"log"                                                               // Logging
-	"os"                                                                // Open a File
+	"errors"
+
+	// Generate new errors
+	"fmt" // Printing using println
+	"log" // Logging
+	"os"  // Open a File
 
 	"go.mongodb.org/mongo-driver/mongo"         // Generate Clients
 	"go.mongodb.org/mongo-driver/mongo/options" // Configure Clients with Options
@@ -41,6 +43,8 @@ type Wille struct {
 	Print       *print.Print
 	ApiKey      string
 }
+
+type CommandFunctionType func(string) error
 
 // Print help
 func (wille *Wille) printHelp() {
@@ -69,64 +73,41 @@ func (wille *Wille) random(name string) error {
 
 // Compute Input command
 // options: command + parameter in input
-func (wille *Wille) compute(options []string) error {
+func (wille *Wille) compute(options []string, functions map[string]CommandFunctionType) error {
 	var optionsNumber int = len(options)
 
 	for i := 0; i < optionsNumber; i++ {
 		switch options[i] {
-		case "--apikey":
-			if (i + 1) >= optionsNumber {
-				return errors.New("Missing user argument for apikey command")
-			}
-			i++
-			if err := wille.apikey(options[i]); err != nil {
-				return err
-			}
-		case "--random":
-			if (i + 1) >= optionsNumber {
-				return errors.New("Missing user argument for random command")
-			}
-			i++
-			if err := wille.random(options[i]); err != nil {
-				return err
-			}
-		case "--show":
-			if (i + 1) >= optionsNumber {
-				return errors.New("Missing model name for show command")
-			}
-			i++
-			if err := wille.show(options[i]); err != nil {
-				return err
-			}
-		case "--upload":
-			if (i + 1) >= optionsNumber {
-				return errors.New("Missing model name for upload command")
-			}
-			i++
-			if err := wille.upload(options[i]); err != nil {
-				return err
-			}
-		case "--hash":
-			if (i + 1) >= optionsNumber {
-				return errors.New("Missing password for hash command")
-			}
-			i++
-			if err := wille.hash(options[i]); err != nil {
-				return err
-			}
 		case "--help":
 			wille.printHelp()
 			return nil
 		default:
-			wille.printHelp()
-			return errors.New("Unknow Input: " + options[i])
+			function := functions[options[i]]
+
+			if function == nil {
+				return errors.New("Unknow Input: " + options[i])
+			}
+			if (i + 1) >= optionsNumber {
+				return errors.New("Missing user argument for random command")
+			}
+			i++
+			if err := function(options[i]); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
 }
 
 func (wille *Wille) Run(withOptions []string) error {
-	if err := wille.compute(withOptions); err != nil {
+	functions := map[string]CommandFunctionType{
+		"--apikey": wille.apikey,
+		"--random": wille.random,
+		"--show":   wille.show,
+		"--upload": wille.upload,
+		"--hash":   wille.hash}
+
+	if err := wille.compute(withOptions, functions); err != nil {
 		return err
 	}
 	return nil
