@@ -37,7 +37,7 @@ func (wille *Wille) CheckApiKeyValidity(name string) error {
 	} else if isOnStorage {
 		return nil
 	}
-	return nil
+	return errors.New("ApiKey Does not exist")
 }
 
 // ApiKey command
