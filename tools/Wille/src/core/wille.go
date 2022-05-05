@@ -89,36 +89,41 @@ func (wille *Wille) compute(options []string) error {
 				return errors.New("Missing user argument for apikey command")
 			}
 			i++
-			err := wille.apikey(options[i])
-			return err
+			if err := wille.apikey(options[i]); err != nil {
+				return err
+			}
 		case "--random":
 			if (i + 1) >= optionsNumber {
 				return errors.New("Missing user argument for random command")
 			}
 			i++
-			err := wille.random(options[i])
-			return err
+			if err := wille.random(options[i]); err != nil {
+				return err
+			}
 		case "--show":
 			if (i + 1) >= optionsNumber {
 				return errors.New("Missing model name for show command")
 			}
 			i++
-			err := wille.show(options[i])
-			return err
+			if err := wille.show(options[i]); err != nil {
+				return err
+			}
 		case "--upload":
 			if (i + 1) >= optionsNumber {
 				return errors.New("Missing model name for upload command")
 			}
 			i++
-			err := wille.upload(options[i])
-			return err
+			if err := wille.upload(options[i]); err != nil {
+				return err
+			}
 		case "--hash":
 			if (i + 1) >= optionsNumber {
 				return errors.New("Missing password for hash command")
 			}
 			i++
-			err := wille.hash(options[i])
-			return err
+			if err := wille.hash(options[i]); err != nil {
+				return err
+			}
 		case "--help":
 			wille.printHelp()
 			return nil

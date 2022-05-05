@@ -41,7 +41,7 @@ build:
 
 
 run:
-	./${NAME} help
+	./${NAME} --help
 
 clean-darwin-arch:	
 	@rm ${NAME}-darwin
