@@ -11,3 +11,62 @@ services:
             on-failure
         environment:
             SERVER_PORT: 2407
+
+    mongo:
+        image: mongo:latest
+        container_name: mongo
+        restart: always
+        ports:
+            - 27017:27017
+        environment:
+            MONGO_INITDB_DATABASE: Melchior
+            MONGO_INITDB_ROOT_USERNAME: SafeTelBackEndUser
+            MONGO_INITDB_ROOT_PASSWORD: aSEFTHUKOM1!
+        volumes: 
+            - mongodb_data_container:/data/db
+            - mongoconfig:/data/configdb
+        networks:
+            - magi_local_network
+            - mongo
+
+    mongo-express:
+        image: mongo-express:latest
+        restart: always
+        ports:
+            - 8081:8081
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: SafeTelBackEndUser
+            ME_CONFIG_MONGODB_ADMINPASSWORD: aSEFTHUKOM1!
+            ME_CONFIG_MONGODB_SERVER: mongo
+
+        volumes:
+            - mongodb_data_container:/data/db
+        depends_on:
+            - mongo
+        networks:
+            - magi_local_network
+
+    magi_local:
+        env_file: ./devOps/local-config.env
+        build:
+            context: ./
+        ports:
+            - 2512:2512
+        restart:
+            on-failure
+        environment:
+            SERVER_PORT: 2512
+        networks:
+            - magi_local_network
+        depends_on:
+            - mongo
+
+volumes:
+    mongodb_data_container:
+    mongoconfig:
+
+networks:
+    magi_local_network:
+        driver: bridge
+    mongo:
+        name: mongo_network
