@@ -9,6 +9,8 @@
 # For Getenv
 import logging
 import os
+# Utils for uploading
+from Collections.Utils import CopyAndUpload
 
 class Casper():
     def __init__(self, DocumentsMaxIterationNumber, DocumentsPageSize, client, clientToCopy):
@@ -16,9 +18,16 @@ class Casper():
         self.__DocumentsMaxIterationNumber = DocumentsMaxIterationNumber # 5 billions
         self.__DocumentsPageSize = DocumentsPageSize
 
+        if client is None:
+            raise Exception("Client is None")
         self.__CasperName = os.getenv("DB_CASPER")
         self.__CasperDB = client[self.__CasperName]
         self.__CasperDBToCopy = clientToCopy[self.__CasperName]
+
+        if self.__CasperDB is None:
+            raise Exception("CasperDB is None")
+        if self.__CasperDBToCopy is None:
+            raise Exception("CasperDBToCopy is None")
         self.__Copy()
 
     def __Copy(self):
@@ -26,23 +35,12 @@ class Casper():
 
         ApiKeyLog = self.__CasperDB['ApiKeyLog']
         ApiKeyLogToCopy = self.__CasperDBToCopy['ApiKeyLog']
-        # Using i for paging datas -> avoiding the use of to much memory at the same time
-        for i in range(self.__DocumentsMaxIterationNumber): 
-            RangeMin = i * self.__DocumentsPageSize
-            RangeMax = self.__DocumentsPageSize + RangeMin
-            ApiKeyLogDocumentsWithPagingInList = list(ApiKeyLogToCopy.find().skip(RangeMin).limit(RangeMax))
-            
-            if len(list(ApiKeyLogDocumentsWithPagingInList)) <= 0:
-                break
-            ApiKeyLog.insert_many(list(ApiKeyLogDocumentsWithPagingInList))
+        if (ApiKeyLog is None or ApiKeyLogToCopy is None):
+            raise Exception("ApiKeyLog Collection is None")
+        CopyAndUpload(ApiKeyLogToCopy, ApiKeyLog)
 
         Contributors = self.__CasperDB['Contributors']
         ContributorsToCopy = self.__CasperDBToCopy['Contributors']
-        for i in range(self.__DocumentsMaxIterationNumber): 
-            RangeMin = i * self.__DocumentsPageSize
-            RangeMax = self.__DocumentsPageSize + RangeMin
-            ContributorsDocumentsWithPagingInList = list(ContributorsToCopy.find().skip(RangeMin).limit(RangeMax))
-            
-            if len(list(ContributorsDocumentsWithPagingInList)) <= 0:
-                break
-            Contributors.insert_many(list(ContributorsDocumentsWithPagingInList))
+        if (Contributors is None or ContributorsToCopy is None):
+            raise Exception("Contributors Collection is None")
+        CopyAndUpload(ContributorsToCopy, Contributors)

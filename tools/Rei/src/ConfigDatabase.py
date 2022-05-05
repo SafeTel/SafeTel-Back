@@ -17,7 +17,6 @@ import json
 import pymongo
 # To perform Ping
 import requests
-
 # Class to perform Copy
 from Collections.Melchior import Melchior
 from Collections.Casper import Casper
@@ -35,13 +34,12 @@ class ConfigDatabase():
         err, msg = self.__GenerateClients()
 
         if err == False:
-            logging.warning(msg)
-            return
+            raise Exception(msg)            
+        elif self.__MongoDBClientToCopy is None or self.__MongoDBClient is None:
+            raise Exception("MongoDB Clients None")
         self.__CopyDataFromServer()
 
     def __CopyDataFromServer(self):
-        if self.__MongoDBClientToCopy is None or self.__MongoDBClient is None:
-            raise Exception("MongoDB Clients None")
         Melchior(self.__DocumentsMaxIterationNumber, self.__DocumentsPageSize, self.__MongoDBClient, self.__MongoDBClientToCopy)
         Casper(self.__DocumentsMaxIterationNumber, self.__DocumentsPageSize, self.__MongoDBClient, self.__MongoDBClientToCopy)
         CasperTwo(self.__DocumentsMaxIterationNumber, self.__DocumentsPageSize, self.__MongoDBClient, self.__MongoDBClientToCopy)
@@ -50,7 +48,6 @@ class ConfigDatabase():
     def __GenerateClients(self):
         try:
             uri = os.getenv("DB_URI")
-
             client = pymongo.MongoClient(uri)
             self.__MongoDBClient = client
 

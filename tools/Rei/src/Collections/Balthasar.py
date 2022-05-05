@@ -9,6 +9,8 @@
 # For Getenv
 import logging
 import os
+# Utils for uploading
+from Collections.Utils import CopyAndUpload
 
 class Balthasar():
     def __init__(self, DocumentsMaxIterationNumber, DocumentsPageSize, client, clientToCopy):
@@ -16,33 +18,28 @@ class Balthasar():
         self.__DocumentsMaxIterationNumber = DocumentsMaxIterationNumber # 5 billions
         self.__DocumentsPageSize = DocumentsPageSize
 
+        if client is None:
+            raise Exception("Client is None")
         self.__BalthasarName = os.getenv("DB_BALTHASAR")
         self.__BalthasarDB = client[self.__BalthasarName]
         self.__BalthasarDBToCopy = clientToCopy[self.__BalthasarName]
+
+        if self.__BalthasarDB is None:
+            raise Exception("BalthasarDB is None")
+        if self.__BalthasarDBToCopy is None:
+            raise Exception("BalthasarDBToCopy is None")
         self.__Copy()
 
     def __Copy(self):
         # Balthasar mongoDB Copy
-
         Boxes = self.__BalthasarDB['Boxes']
         BoxesToCopy = self.__BalthasarDBToCopy['Boxes']
-        # Using i for paging datas -> avoiding the use of to much memory at the same time
-        for i in range(self.__DocumentsMaxIterationNumber): 
-            RangeMin = i * self.__DocumentsPageSize
-            RangeMax = self.__DocumentsPageSize + RangeMin
-            BoxesDocumentsWithPagingInList = list(BoxesToCopy.find().skip(RangeMin).limit(RangeMax))
-            
-            if len(list(BoxesDocumentsWithPagingInList)) <= 0:
-                break
-            Boxes.insert_many(list(BoxesDocumentsWithPagingInList))
+        if (Boxes is None or BoxesToCopy is None):
+            raise Exception("Boxes Collection is None")
+        CopyAndUpload(BoxesToCopy, Boxes)
 
         UnclaimedBoxes = self.__BalthasarDB['UnclaimedBoxes']
         UnclaimedBoxesToCopy = self.__BalthasarDBToCopy['UnclaimedBoxes']
-        for i in range(self.__DocumentsMaxIterationNumber): 
-            RangeMin = i * self.__DocumentsPageSize
-            RangeMax = self.__DocumentsPageSize + RangeMin
-            UnclaimedBoxesDocumentsWithPagingInList = list(UnclaimedBoxesToCopy.find().skip(RangeMin).limit(RangeMax))
-            
-            if len(list(UnclaimedBoxesDocumentsWithPagingInList)) <= 0:
-                break
-            UnclaimedBoxes.insert_many(list(UnclaimedBoxesDocumentsWithPagingInList))
+        if (UnclaimedBoxes is None or UnclaimedBoxesToCopy is None):
+            raise Exception("UnclaimedBoxes Collection is None")
+        CopyAndUpload(UnclaimedBoxesToCopy, UnclaimedBoxes)

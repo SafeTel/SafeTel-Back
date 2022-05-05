@@ -9,6 +9,8 @@
 # For Getenv
 import logging
 import os
+# Utils for uploading
+from Collections.Utils import CopyAndUpload
 
 class Melchior():
     def __init__(self, DocumentsMaxIterationNumber, DocumentsPageSize, client, clientToCopy):
@@ -16,55 +18,41 @@ class Melchior():
         self.__DocumentsMaxIterationNumber = DocumentsMaxIterationNumber # 5 billions
         self.__DocumentsPageSize = DocumentsPageSize
 
+        if client is None:
+            raise Exception("Client is None")
         self.__MelchiorName = os.getenv("DB_MELCHIOR")
         self.__MelchiorDB = client[self.__MelchiorName]
         self.__MelchiorDBToCopy = clientToCopy[self.__MelchiorName]
+
+        if self.__MelchiorDB is None:
+            raise Exception("MelchiorDB is None")
+        if self.__MelchiorDBToCopy is None:
+            raise Exception("MelchiorDBToCopy is None")
         self.__Copy()
 
     def __Copy(self):
         # Melchior mongoDB Copy
         Blacklist = self.__MelchiorDB['Blacklist']
         BlacklistToCopy = self.__MelchiorDBToCopy['Blacklist']
-        # Using i for paging datas -> avoiding the use of to much memory at the same time
-        for i in range(self.__DocumentsMaxIterationNumber): 
-            RangeMin = i * self.__DocumentsPageSize
-            RangeMax = self.__DocumentsPageSize + RangeMin
-            BlacklistDocumentsWithPagingInList = list(BlacklistToCopy.find().skip(RangeMin).limit(RangeMax))
-
-
-            if len(BlacklistDocumentsWithPagingInList) <= 0:
-                break
-            Blacklist.insert_many(BlacklistDocumentsWithPagingInList)
+        if (Blacklist is None or BlacklistToCopy is None):
+            raise Exception("Blacklist Collection is None")
+        CopyAndUpload(BlacklistToCopy, Blacklist)
 
         History = self.__MelchiorDB['History']
         HistoryToCopy = self.__MelchiorDBToCopy['History']
-        for i in range(self.__DocumentsMaxIterationNumber): 
-            RangeMin = i * self.__DocumentsPageSize
-            RangeMax = self.__DocumentsPageSize + RangeMin
-            HistoryDocumentsWithPagingInList = list(HistoryToCopy.find().skip(RangeMin).limit(RangeMax))
-
-            if len(list(HistoryDocumentsWithPagingInList)) <= 0:
-                break
-            History.insert_many(list(HistoryDocumentsWithPagingInList))
+        if (History is None or HistoryToCopy is None):
+            raise Exception("History Collection is None")
+        CopyAndUpload(HistoryToCopy, History)
 
         User = self.__MelchiorDB['User']
         UserToCopy = self.__MelchiorDBToCopy['User']
-        for i in range(self.__DocumentsMaxIterationNumber): 
-            RangeMin = i * self.__DocumentsPageSize
-            RangeMax = self.__DocumentsPageSize + RangeMin
-            UserDocumentsWithPagingInList = list(UserToCopy.find().skip(RangeMin).limit(RangeMax))
-            
-            if len(list(UserDocumentsWithPagingInList)) <= 0:
-                break
-            User.insert_many(list(UserDocumentsWithPagingInList))
+        if (User is None or UserToCopy is None):
+            raise Exception("User Collection is None")
+        CopyAndUpload(UserToCopy, User)
 
         Whitelist = self.__MelchiorDB['Whitelist']
         WhitelistToCopy = self.__MelchiorDBToCopy['Whitelist']
-        for i in range(self.__DocumentsMaxIterationNumber): 
-            RangeMin = i * self.__DocumentsPageSize
-            RangeMax = self.__DocumentsPageSize + RangeMin
-            WhitelistDocumentsWithPagingInList = list(WhitelistToCopy.find().skip(RangeMin).limit(RangeMax))
-            
-            if len(list(WhitelistDocumentsWithPagingInList)) <= 0:
-                break
-            Whitelist.insert_many(list(WhitelistDocumentsWithPagingInList))
+
+        if (Whitelist is None or WhitelistToCopy is None):
+            raise Exception("Whitelist Collection is None")
+        CopyAndUpload(WhitelistToCopy, Whitelist)
