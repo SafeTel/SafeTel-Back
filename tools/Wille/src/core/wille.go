@@ -88,7 +88,7 @@ func (wille *Wille) compute(options []string, functions map[string]CommandFuncti
 				return errors.New("Unknow Input: " + options[i])
 			}
 			if (i + 1) >= optionsNumber {
-				return errors.New("Missing user argument for random command")
+				return errors.New("Missing argument for " + options[i] + " command")
 			}
 			i++
 			if err := function(options[i]); err != nil {
