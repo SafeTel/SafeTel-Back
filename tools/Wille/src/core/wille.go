@@ -35,12 +35,14 @@ type Wille struct {
 	Client                 *mongo.Client
 	DBForUsers             *mongo.Database
 	DBForBox               *mongo.Database
+	DBForApiKey            *mongo.Database
 	Blacklist              *blacklist.Blacklist
 	Whitelist              *whitelist.Whitelist
 	History                *history.History
 	Profile                *profile.Profile
 	Box                    *box.Box
 	Print                  *print.Print
+	ApiKey                 string
 	DEV_DB_CLIENT          string
 	DEV_DB_PASSWORD        string
 	DEV_DB_USERS_NAME      string
@@ -80,37 +82,44 @@ func (wille *Wille) random(name string) error {
 func (wille *Wille) compute(options []string) error {
 	var optionsNumber int = len(options)
 
-	for i := 0; i < len(options); i++ {
+	for i := 0; i < optionsNumber; i++ {
 		switch options[i] {
-		case "random":
+		case "--apikey":
+			if (i + 1) >= optionsNumber {
+				return errors.New("Missing user argument for apikey command")
+			}
+			i++
+			err := wille.apikey(options[i])
+			return err
+		case "--random":
 			if (i + 1) >= optionsNumber {
 				return errors.New("Missing user argument for random command")
 			}
 			i++
 			err := wille.random(options[i])
 			return err
-		case "show":
+		case "--show":
 			if (i + 1) >= optionsNumber {
 				return errors.New("Missing model name for show command")
 			}
 			i++
 			err := wille.show(options[i])
 			return err
-		case "upload":
+		case "--upload":
 			if (i + 1) >= optionsNumber {
 				return errors.New("Missing model name for upload command")
 			}
 			i++
 			err := wille.upload(options[i])
 			return err
-		case "hash":
+		case "--hash":
 			if (i + 1) >= optionsNumber {
 				return errors.New("Missing password for hash command")
 			}
 			i++
 			err := wille.hash(options[i])
 			return err
-		case "help":
+		case "--help":
 			wille.printHelp()
 			return nil
 		default:
@@ -159,8 +168,11 @@ func New() (*Wille, error) {
 
 	wille.DBForUsers = wille.Client.Database(wille.DEV_DB_USERS_NAME)
 	wille.DBForBox = wille.Client.Database(wille.DEV_DB_BOXES_NAME)
+	wille.DBForApiKey = wille.Client.Database(wille.DEV_DB_DEVELOPERS_NAME)
 	wille.Print = print.New()
 	wille.Blacklist, err = blacklist.New(wille.Client, wille.Print)
+
+	wille.ApiKey = ""
 
 	if err != nil {
 		return nil, err

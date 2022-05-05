@@ -7,7 +7,10 @@
 
 package wille
 
-import utils "PostmanDbDataImplementation/core/Utils"
+import (
+	utils "PostmanDbDataImplementation/core/Utils"
+	"errors"
+)
 
 // Upload the content of Lists folder. The files that will be uploaded are:
 // data/name/Lists:	Blacklist.json
@@ -63,6 +66,10 @@ func (wille *Wille) uploadEmbeddedFiles(name string) error {
 //						Whitelist.json
 //				Embedded/: Box.json
 func (wille *Wille) upload(name string) error {
+	if !wille.isValidApiKey() {
+		return errors.New("ApiKey not valid")
+	}
+
 	content, err := utils.CheckModelFolder(name)
 	var valid byte = 1
 
