@@ -8,11 +8,10 @@
 package wille
 
 import (
-	"errors"
+	utils "PostmanDbDataImplementation/core/Utils" // Utils for check data
+	"errors"                                       // Generate new errors
 
-	utils "PostmanDbDataImplementation/core/Utils"
-
-	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson" // Generate Filter bson
 )
 
 // Api Key as to be set using command --apikey
@@ -34,10 +33,10 @@ func (wille *Wille) isValidApiKey() bool {
 //
 // 	If ApiKey is on storage, then ApiKey is valid
 //
-func (wille *Wille) CheckApiKeyValidity(name string) error {
+func (wille *Wille) CheckApiKeyValidity(apiKey string) error {
 	apiKeyCollection := wille.DBForApiKey.Collection("ApiKeyLog")
-	filter := bson.M{"apiKey": name}
-	isOnStorage, err := utils.IsDataOnStorage(apiKeyCollection, filter)
+	filter := bson.M{"apiKey": apiKey}
+	isOnStorage, err := utils.IsDataInCollection(apiKeyCollection, filter)
 
 	if err != nil {
 		return err

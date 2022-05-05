@@ -8,8 +8,8 @@
 package wille
 
 import (
-	utils "PostmanDbDataImplementation/core/Utils"
-	"errors"
+	utils "PostmanDbDataImplementation/core/Utils" // Check Folder methods
+	"errors"                                       // Generate new errors
 )
 
 // Upload the content of Lists folder. The files that will be uploaded are:

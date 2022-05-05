@@ -82,7 +82,7 @@ func (box *Box) UploadBoxFile(name string) error {
 	}
 	// Generating a bson filter using the value of guid
 	filter := bson.M{"guid": data.Guid}
-	if err = utils.CheckDataValidityOnStorage(box.BoxCollection, filter); err != nil {
+	if err = utils.CheckDataNotExitInCollection(box.BoxCollection, filter); err != nil {
 		box.Print.Info("Box.json data of model " + name + " already exist inside the server")
 		return nil
 	}

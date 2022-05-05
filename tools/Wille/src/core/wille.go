@@ -8,48 +8,38 @@
 package wille
 
 import (
-	profile "PostmanDbDataImplementation/core/Account"
-	blacklist "PostmanDbDataImplementation/core/AccountLists/Blacklist"
-	history "PostmanDbDataImplementation/core/AccountLists/History"
-	whitelist "PostmanDbDataImplementation/core/AccountLists/Whitelist"
-	box "PostmanDbDataImplementation/core/Embedded"
-	utils "PostmanDbDataImplementation/core/Utils"
-	print "PostmanDbDataImplementation/core/Utils/Print"
-	"bufio"
-	"context"
-	"errors"
-	"fmt"
-	"log"
-	"os"
+	profile "PostmanDbDataImplementation/core/Account"                  // Profile data structure
+	blacklist "PostmanDbDataImplementation/core/AccountLists/Blacklist" // Blacklist data structure
+	history "PostmanDbDataImplementation/core/AccountLists/History"     // History data structure
+	whitelist "PostmanDbDataImplementation/core/AccountLists/Whitelist" // Whitelist data structure
+	box "PostmanDbDataImplementation/core/Embedded"                     // Embedded data structure
+	utils "PostmanDbDataImplementation/core/Utils"                      // Utils for config.json file
+	print "PostmanDbDataImplementation/core/Utils/Print"                // Print data structure
+	"bufio"                                                             // Read a File line per line
+	"context"                                                           // Configure Mongo client
+	"errors"                                                            // Generate new errors
+	"fmt"                                                               // Printing using println
+	"log"                                                               // Logging
+	"os"                                                                // Open a File
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo"         // Generate Clients
+	"go.mongodb.org/mongo-driver/mongo/options" // Configure Clients with Options
 
-	// "go.mongodb.org/mongo-driver/mongo/readpref"
-	// "go.mongodb.org/mongo-driver/bson/primitive"
-
-	"time"
+	"time" // Timeout
 )
 
 type Wille struct {
-	Client                 *mongo.Client
-	DBForUsers             *mongo.Database
-	DBForBox               *mongo.Database
-	DBForApiKey            *mongo.Database
-	Blacklist              *blacklist.Blacklist
-	Whitelist              *whitelist.Whitelist
-	History                *history.History
-	Profile                *profile.Profile
-	Box                    *box.Box
-	Print                  *print.Print
-	ApiKey                 string
-	DEV_DB_CLIENT          string
-	DEV_DB_PASSWORD        string
-	DEV_DB_USERS_NAME      string
-	DEV_DB_BOXES_NAME      string
-	DEV_DB_DEVELOPERS_NAME string
-	DEV_URI_USERS_DB       string
-	DEV_URI_BOXES_DB       string
+	Client      *mongo.Client
+	DBForUsers  *mongo.Database
+	DBForBox    *mongo.Database
+	DBForApiKey *mongo.Database
+	Blacklist   *blacklist.Blacklist
+	Whitelist   *whitelist.Whitelist
+	History     *history.History
+	Profile     *profile.Profile
+	Box         *box.Box
+	Print       *print.Print
+	ApiKey      string
 }
 
 // Print help
@@ -163,17 +153,9 @@ func New() (*Wille, error) {
 	}
 	wille := Wille{Client: client}
 
-	wille.DEV_DB_CLIENT = config.DEV_DB_CLIENT
-	wille.DEV_DB_PASSWORD = config.DEV_DB_PASSWORD
-	wille.DEV_DB_USERS_NAME = config.DEV_DB_USERS_NAME
-	wille.DEV_DB_BOXES_NAME = config.DEV_DB_BOXES_NAME
-	wille.DEV_DB_DEVELOPERS_NAME = config.DEV_DB_DEVELOPERS_NAME
-	wille.DEV_URI_USERS_DB = config.DEV_URI_USERS_DB
-	wille.DEV_URI_BOXES_DB = config.DEV_URI_BOXES_DB
-
-	wille.DBForUsers = wille.Client.Database(wille.DEV_DB_USERS_NAME)
-	wille.DBForBox = wille.Client.Database(wille.DEV_DB_BOXES_NAME)
-	wille.DBForApiKey = wille.Client.Database(wille.DEV_DB_DEVELOPERS_NAME)
+	wille.DBForUsers = wille.Client.Database(config.DEV_DB_USERS_NAME)
+	wille.DBForBox = wille.Client.Database(config.DEV_DB_BOXES_NAME)
+	wille.DBForApiKey = wille.Client.Database(config.DEV_DB_DEVELOPERS_NAME)
 	wille.Print = print.New()
 	wille.Blacklist, err = blacklist.New(wille.Client, wille.Print)
 

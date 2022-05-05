@@ -38,7 +38,7 @@ func OpenAndGenerateJsonDecoder(file string) (*json.Decoder, error) {
 }
 
 // Perform a Find function to try to find a result using the bson filter on the collection
-func IsDataOnStorage(col *mongo.Collection, filter bson.M) (bool, error) {
+func IsDataInCollection(col *mongo.Collection, filter bson.M) (bool, error) {
 	var isDocument []bson.M
 	cursor, err := col.Find(context.TODO(), filter)
 
@@ -57,9 +57,9 @@ func IsDataOnStorage(col *mongo.Collection, filter bson.M) (bool, error) {
 // Check if the Collection given as first argument contain the elements finded using the filter
 // If it's the case, return an error stipulating the data has already been posted on the db
 // Otherwise, return nil
-func CheckDataValidityOnStorage(col *mongo.Collection, filter bson.M) error {
+func CheckDataNotExitInCollection(col *mongo.Collection, filter bson.M) error {
 	// Check if some documents have been founded
-	isOnStorage, err := IsDataOnStorage(col, filter)
+	isOnStorage, err := IsDataInCollection(col, filter)
 
 	if err != nil {
 		return err
