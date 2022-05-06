@@ -134,7 +134,7 @@ func (profile *Profile) UploadProfileFile(name string) error {
 	}
 	// Generating a bson filter using the value of guid
 	filter := bson.M{"email": data.Email, "guid": data.Guid}
-	if err = utils.CheckDataValidityOnStorage(profile.UserCollection, filter); err != nil {
+	if err = utils.CheckDataNotExistInCollection(profile.UserCollection, filter); err != nil {
 		profile.Print.Info("Profile.json data of model " + name + " already exist inside the server")
 		return nil
 	}

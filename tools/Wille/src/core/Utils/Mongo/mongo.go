@@ -8,8 +8,8 @@
 package mongo
 
 import (
-	"bytes"
-	"os/exec"
+	"bytes"   // Bytes.Buffer for I/O
+	"os/exec" // Exec Bash command
 )
 
 // Mongo Import

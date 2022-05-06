@@ -4,12 +4,12 @@
         {
             "boxid": "07acbe5c-07d6-4107-b07f-f3a107ca8807",
             "activity": true,
-            "severity": "normal"
+            "severity": "High"
         },
         {
             "boxid": "08acbe5c-08d6-4108-b08f-f3a108ca8808",
             "activity": false,
-            "severity": "low"
+            "severity": "Normal"
         }
     ]
 }

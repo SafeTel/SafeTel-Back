@@ -82,7 +82,7 @@ func (history *History) UploadHistoryFile(name string) error {
 	}
 	// Generating a bson filter using the value of guid
 	filter := bson.M{"guid": data.Guid}
-	if err = utils.CheckDataValidityOnStorage(history.HistoryCollection, filter); err != nil {
+	if err = utils.CheckDataNotExistInCollection(history.HistoryCollection, filter); err != nil {
 		history.Print.Info("History.json data of model " + name + " already exist inside the server")
 		return nil
 	}

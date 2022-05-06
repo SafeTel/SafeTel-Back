@@ -71,7 +71,7 @@ func (whitelist *Whitelist) UploadWhitelistFile(name string) error {
 	}
 	// Generating a bson filter using the value of guid
 	filter := bson.M{"guid": data.Guid}
-	if err = utils.CheckDataValidityOnStorage(whitelist.WhitelistCollection, filter); err != nil {
+	if err = utils.CheckDataNotExistInCollection(whitelist.WhitelistCollection, filter); err != nil {
 		whitelist.Print.Info("Whitelist.json data of model " + name + " already exist inside the server")
 		return nil
 	}

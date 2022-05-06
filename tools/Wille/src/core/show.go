@@ -8,8 +8,8 @@
 package wille
 
 import (
-	utils "PostmanDbDataImplementation/core/Utils"
-	"errors"
+	utils "PostmanDbDataImplementation/core/Utils" // Check folders and reading methods
+	"errors"                                       // Generate new errors
 )
 
 type Show struct {
