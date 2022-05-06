@@ -2,17 +2,24 @@ Usage:
     ./wille [options] argument...
 
 Options:
-    show    Show the user configuration
-    ./wille show <data>
 
-    upload  Upload on the database the user configuration
-    ./wille upload <data>
+    --apikey  ApiKey of the developer
+    ./wille --apikey <apikey>
 
-    hash    Hash a password
-    ./wille hash <password>
+    --show    Show the user configuration
+    ./wille --show <data>
+
+    --upload  Upload on the database the user configuration
+              Need a valid apiKey to perform this action 
+    ./wille --apikey <apikey> --upload <data>
+
+    --hash    Hash a password
+    ./wille --hash <password>
 
 Arguments:
 
     <data> The name of a user defined inside the model folder
 
     <password> Plain text password
+
+    <apikey> Plain text apikey

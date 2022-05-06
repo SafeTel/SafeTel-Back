@@ -8,47 +8,43 @@
 package wille
 
 import (
-	profile "PostmanDbDataImplementation/core/Account"
-	blacklist "PostmanDbDataImplementation/core/AccountLists/Blacklist"
-	history "PostmanDbDataImplementation/core/AccountLists/History"
-	whitelist "PostmanDbDataImplementation/core/AccountLists/Whitelist"
-	box "PostmanDbDataImplementation/core/Embedded"
-	utils "PostmanDbDataImplementation/core/Utils"
-	print "PostmanDbDataImplementation/core/Utils/Print"
-	"bufio"
-	"context"
+	profile "PostmanDbDataImplementation/core/Account"                  // Profile data structure
+	blacklist "PostmanDbDataImplementation/core/AccountLists/Blacklist" // Blacklist data structure
+	history "PostmanDbDataImplementation/core/AccountLists/History"     // History data structure
+	whitelist "PostmanDbDataImplementation/core/AccountLists/Whitelist" // Whitelist data structure
+	box "PostmanDbDataImplementation/core/Embedded"                     // Embedded data structure
+	utils "PostmanDbDataImplementation/core/Utils"                      // Utils for config.json file
+	print "PostmanDbDataImplementation/core/Utils/Print"                // Print data structure
+	"bufio"                                                             // Read a File line per line
+	"context"                                                           // Configure Mongo client
 	"errors"
-	"fmt"
-	"log"
-	"os"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	// Generate new errors
+	"fmt" // Printing using println
+	"log" // Logging
+	"os"  // Open a File
 
-	// "go.mongodb.org/mongo-driver/mongo/readpref"
-	// "go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"         // Generate Clients
+	"go.mongodb.org/mongo-driver/mongo/options" // Configure Clients with Options
 
-	"time"
+	"time" // Timeout
 )
 
 type Wille struct {
-	Client                 *mongo.Client
-	DBForUsers             *mongo.Database
-	DBForBox               *mongo.Database
-	Blacklist              *blacklist.Blacklist
-	Whitelist              *whitelist.Whitelist
-	History                *history.History
-	Profile                *profile.Profile
-	Box                    *box.Box
-	Print                  *print.Print
-	DEV_DB_CLIENT          string
-	DEV_DB_PASSWORD        string
-	DEV_DB_USERS_NAME      string
-	DEV_DB_BOXES_NAME      string
-	DEV_DB_DEVELOPERS_NAME string
-	DEV_URI_USERS_DB       string
-	DEV_URI_BOXES_DB       string
+	Client      *mongo.Client
+	DBForUsers  *mongo.Database
+	DBForBox    *mongo.Database
+	DBForApiKey *mongo.Database
+	Blacklist   *blacklist.Blacklist
+	Whitelist   *whitelist.Whitelist
+	History     *history.History
+	Profile     *profile.Profile
+	Box         *box.Box
+	Print       *print.Print
+	ApiKey      string
 }
+
+type CommandFunctionType func(string) error
 
 // Print help
 func (wille *Wille) printHelp() {
@@ -77,52 +73,41 @@ func (wille *Wille) random(name string) error {
 
 // Compute Input command
 // options: command + parameter in input
-func (wille *Wille) compute(options []string) error {
+func (wille *Wille) compute(options []string, functions map[string]CommandFunctionType) error {
 	var optionsNumber int = len(options)
 
-	for i := 0; i < len(options); i++ {
+	for i := 0; i < optionsNumber; i++ {
 		switch options[i] {
-		case "random":
-			if (i + 1) >= optionsNumber {
-				return errors.New("Missing user argument for random command")
-			}
-			i++
-			err := wille.random(options[i])
-			return err
-		case "show":
-			if (i + 1) >= optionsNumber {
-				return errors.New("Missing model name for show command")
-			}
-			i++
-			err := wille.show(options[i])
-			return err
-		case "upload":
-			if (i + 1) >= optionsNumber {
-				return errors.New("Missing model name for upload command")
-			}
-			i++
-			err := wille.upload(options[i])
-			return err
-		case "hash":
-			if (i + 1) >= optionsNumber {
-				return errors.New("Missing password for hash command")
-			}
-			i++
-			err := wille.hash(options[i])
-			return err
-		case "help":
+		case "--help":
 			wille.printHelp()
 			return nil
 		default:
-			wille.printHelp()
-			return errors.New("Unknow Input: " + options[i])
+			function := functions[options[i]]
+
+			if function == nil {
+				return errors.New("Unknow Input: " + options[i])
+			}
+			if (i + 1) >= optionsNumber {
+				return errors.New("Missing argument for " + options[i] + " command")
+			}
+			i++
+			if err := function(options[i]); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
 }
 
 func (wille *Wille) Run(withOptions []string) error {
-	if err := wille.compute(withOptions); err != nil {
+	functions := map[string]CommandFunctionType{
+		"--apikey": wille.apikey,
+		"--random": wille.random,
+		"--show":   wille.show,
+		"--upload": wille.upload,
+		"--hash":   wille.hash}
+
+	if err := wille.compute(withOptions, functions); err != nil {
 		return err
 	}
 	return nil
@@ -149,18 +134,13 @@ func New() (*Wille, error) {
 	}
 	wille := Wille{Client: client}
 
-	wille.DEV_DB_CLIENT = config.DEV_DB_CLIENT
-	wille.DEV_DB_PASSWORD = config.DEV_DB_PASSWORD
-	wille.DEV_DB_USERS_NAME = config.DEV_DB_USERS_NAME
-	wille.DEV_DB_BOXES_NAME = config.DEV_DB_BOXES_NAME
-	wille.DEV_DB_DEVELOPERS_NAME = config.DEV_DB_DEVELOPERS_NAME
-	wille.DEV_URI_USERS_DB = config.DEV_URI_USERS_DB
-	wille.DEV_URI_BOXES_DB = config.DEV_URI_BOXES_DB
-
-	wille.DBForUsers = wille.Client.Database(wille.DEV_DB_USERS_NAME)
-	wille.DBForBox = wille.Client.Database(wille.DEV_DB_BOXES_NAME)
+	wille.DBForUsers = wille.Client.Database(config.DEV_DB_USERS_NAME)
+	wille.DBForBox = wille.Client.Database(config.DEV_DB_BOXES_NAME)
+	wille.DBForApiKey = wille.Client.Database(config.DEV_DB_DEVELOPERS_NAME)
 	wille.Print = print.New()
 	wille.Blacklist, err = blacklist.New(wille.Client, wille.Print)
+
+	wille.ApiKey = ""
 
 	if err != nil {
 		return nil, err

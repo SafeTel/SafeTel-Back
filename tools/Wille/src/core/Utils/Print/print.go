@@ -8,8 +8,8 @@
 package print
 
 import (
-	"log"
-	"os"
+	"log" // Logging
+	"os"  // I/O: stdin - stdout
 )
 
 // "go.mongodb.org/mongo-driver/mongo/readpref"

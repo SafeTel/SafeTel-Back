@@ -8,7 +8,7 @@
 package wille
 
 import (
-	"golang.org/x/crypto/sha3"
+	"golang.org/x/crypto/sha3" // Hash Algorithm
 )
 
 // Hash Wille command

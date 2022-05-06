@@ -8,7 +8,7 @@
 package utils
 
 import (
-	"errors"
+	"errors" // Generate new errors
 )
 
 // Structure used to check environnement variable validity
