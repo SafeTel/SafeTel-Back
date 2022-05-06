@@ -31,6 +31,17 @@ logging.warning("---     Environement Validated      ----")
 ####################################
 
 
+#######################################
+### Initiate Server Condition BEGIN ###
+from MagiInit.InitServerCondition import InitServerCondition
+
+logging.warning("--- /!\ Validating Conditions /!\\ ----")
+InitServerCondition()
+logging.warning("---     Conditions Validated      ----")
+###  Initiate Server Condition END  ###
+#######################################
+
+
 ###############################
 ### EXTERNAL SERVICES BEGIN ###
 # Sentry integration
