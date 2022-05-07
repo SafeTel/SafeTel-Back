@@ -69,9 +69,6 @@ class InitServerNetwork():
 
     def __EvaluateDBUri(self):
         DBUri = os.getenv("DB_URI")
-        import sys
-        print(DBUri, file=sys.stderr)
-        print(DBUri, file=sys.stderr)
         if (self.__UriBasePostman in DBUri):
             return "POSTMAN"
         if (self.__UriBaseDev in DBUri):
@@ -84,9 +81,9 @@ class InitServerNetwork():
     # Veify the current launching branch
     def __VerifyBranch(self, launchMode: str):
         branchName = self.__GetBranchName()
-        if ((launchMode is "DEV") and (branchName is self.__DEVBranch)):
+        if ((launchMode == "DEV") and (branchName == self.__DEVBranch)):
             return
-        if ((launchMode is "PROD") and (branchName is self.__PRODBranch)):
+        if ((launchMode == "PROD") and (branchName == self.__PRODBranch)):
             return
         raise ValueError("FATAL ERROR: ILLEGAL LAUNCH")
 
