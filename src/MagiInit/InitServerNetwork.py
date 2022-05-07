@@ -33,7 +33,7 @@ class InitServerNetwork():
         launchMode = self.__VerifyDBUri()
         if (self.__launchSecurity
             and
-            ((launchMode is "DEV") or (launchMode is "PROD"))
+            ((launchMode == "DEV") or (launchMode == "PROD"))
         ):
             self.__VerifyBranch(launchMode)
         self.__VerifyDBAccess()
