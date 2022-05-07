@@ -34,19 +34,19 @@ services:
             - SERVER_PORT=2407
         env_file: ../prod-config.env
 
-    clean_db:
-        build: # "context" and "dockerfile" fields have to be under "build"
-            context: ../../tools/Amane/
-            dockerfile: ./Dockerfile              
-        restart:
-            on-failure
-        env_file: ../dev-config.env
+    #clean_db:
+    #    build: # "context" and "dockerfile" fields have to be under "build"
+    #        context: ../../tools/Amane/
+    #        dockerfile: ./Dockerfile
+    #    restart:
+    #        on-failure
+    #    env_file: ../dev-config.env
 
-    clean_db_postman_force_now:
-        build:
-            context: ../../tools/Amane/
-            dockerfile: ./Dockerfile
-        command: ["python3", "./src/Amane.py", "--force-now"]
-        restart:
-            on-failure
-        env_file: ../postman-config.env
+    #clean_db_postman_force_now:
+    #    build:
+    #        context: ../../tools/Amane/
+    #        dockerfile: ./Dockerfile
+    #    command: ["python3", "./src/Amane.py", "--force-now"]
+    #    restart:
+    #        on-failure
+    #    env_file: ../postman-config.env
