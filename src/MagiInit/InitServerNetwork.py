@@ -6,56 +6,60 @@
 ##
 
 ### LOGIC
-import logging
 # env var import
 import os
 import json
-# Regex
-import re
-from tkinter.messagebox import NO
 
 ### INFRA
 # Client mongo db import
 import pymongo
-# Error for exception
-from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 
+
+# Verify the Network integrity to launch Magi
 class InitServerNetwork():
     def __init__(self):
-        self.__CheckMongoURI()
-        self.__CheckMongoClientConnection()
+        self.__UriBasePostman = "safetel-back-postman-cl"
+        self.__UriBaseDev = "safetel-back-dev-cluste"
+        self.__UriBaseProd = "safetel-back-cluster"
 
-    # Connect a client and perform a command to see if it's working
-    def __CheckMongoURI(self):
+        launchMode = self.__VerifyDBUri()
+
+        self.__VerifyDBAccess()
+
+
+    # Verify the DB Uri
+    def __VerifyDBUri(self):
+        if (not os.path.isfile("config.json")):
+            raise ValueError("FATAL ERROR: Environement Denied")
+        launchMode = self.__GetLaunchMode()
+        if (launchMode != self.__EvaluateDBUri()):
+            raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
+
+
+    def __GetLaunchMode(self):
+        launchMode = ""
         with open("config.json", 'r') as JsonFile:
             config = json.load(JsonFile)
             launchMode = config["Mode"]["launchMode"]
-            dbURI = os.getenv("DB_URI")
-            if launchMode == "POSTMAN":
-                postmanRegexMatchingResult = re.search("postman", dbURI)
-                if postmanRegexMatchingResult == None:
-                    raise Exception("Postman Launching mode: DB URI does not reach postman cluster")
-            elif launchMode == "DEV":
-                devRegexMatchingResult = re.search("dev", dbURI)
-                if devRegexMatchingResult == None:
-                    raise Exception("Dev Launching mode: DB URI does not reach dev cluster")
+        return launchMode
 
-            elif launchMode == "PROD":
-                postmanRegexMatchingResult = re.search("postman", dbURI)
-                devRegexMatchingResult = re.search("dev", dbURI)
-                if (postmanRegexMatchingResult != None
-                    or  devRegexMatchingResult != None):
-                    raise Exception("Prod Launching mode: DB URI does not reach prod cluster")
 
-    # Connect a client and perform a command to see if it's working
-    def __CheckMongoClientConnection(self):
+    def __EvaluateDBUri(self):
+        DBUri = os.getenv("DB_URI")
+        if (self.__UriBasePostman in DBUri):
+            return "POSTMAN"
+        if (self.__UriBaseDev in DBUri):
+            return "DEV"
+        if (self.__UriBaseProd in DBUri):
+            return "PROD"
+        raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
+
+
+
+    # Verify that the current machine is allowed to run Magi
+    def __VerifyDBAccess(self):
         try:
             client = pymongo.MongoClient(os.getenv("DB_URI"))
-            # The ping command is cheap and does not require auth.
-            logging.warning(client.admin.command('ping'))
-
-        except ServerSelectionTimeoutError:
-            raise Exception("Server not connected: Required Valid IP")
-
-        except ConnectionFailure:
-            raise Exception("Server not available")
+            client.admin.command('ping')
+        except:
+            raise ValueError("FATAL ERROR: YOU ARE NOT ALLOWED TO LAUNCH THE SERVER BY YOURSELF")
