@@ -20,7 +20,7 @@ import pymongo
 # Error for exception
 from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 
-class InitServerCondition():
+class InitServerNetwork():
     def __init__(self):
         self.__CheckMongoURI()
         self.__CheckMongoClientConnection()
@@ -43,7 +43,7 @@ class InitServerCondition():
             elif launchMode == "PROD":
                 postmanRegexMatchingResult = re.search("postman", dbURI)
                 devRegexMatchingResult = re.search("dev", dbURI)
-                if (postmanRegexMatchingResult != None 
+                if (postmanRegexMatchingResult != None
                     or  devRegexMatchingResult != None):
                     raise Exception("Prod Launching mode: DB URI does not reach prod cluster")
 
