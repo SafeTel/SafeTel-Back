@@ -6,9 +6,12 @@
 ##
 
 ### LOGIC
-# env var import
+# Read env var import
 import os
+# Read config.json
 import json
+# Read branch name
+from pygit2 import Repository
 
 ### INFRA
 # Client mongo db import
@@ -22,9 +25,28 @@ class InitServerNetwork():
         self.__UriBaseDev = "safetel-back-dev-cluste"
         self.__UriBaseProd = "safetel-back-cluster"
 
-        launchMode = self.__VerifyDBUri()
+        self.__PRODBranch = "master"
+        self.__DEVBranch = "DEV"
 
+        self.__launchSecurity = self.__GetLaunchSecurity()
+
+        launchMode = self.__VerifyDBUri()
+        if (self.__launchSecurity
+            and
+            ((launchMode is "DEV") or (launchMode is "PROD"))
+        ):
+            self.__VerifyBranch(launchMode)
         self.__VerifyDBAccess()
+
+
+    def __GetLaunchSecurity(self):
+        launchSecurity = None
+        with open("config.json", 'r') as JsonFile:
+            config = json.load(JsonFile)
+            launchSecurity = config["Mode"]["launchSecurity"]
+        if ((launchSecurity is None) or (type(launchSecurity) is not bool)):
+            raise ValueError("FATAL ERROR: INVALID CONFIG")
+        return launchSecurity
 
 
     # Verify the DB Uri
@@ -34,6 +56,7 @@ class InitServerNetwork():
         launchMode = self.__GetLaunchMode()
         if (launchMode != self.__EvaluateDBUri()):
             raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
+        return launchMode
 
 
     def __GetLaunchMode(self):
@@ -54,6 +77,22 @@ class InitServerNetwork():
             return "PROD"
         raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
 
+
+    # Veify the current launching branch
+    def __VerifyBranch(self, launchMode: str):
+        branchName = self.__GetBranchName()
+        if ((launchMode is "DEV") and (branchName is self.__DEVBranch)):
+            return
+        if ((launchMode is "PROD") and (branchName is self.__PRODBranch)):
+            return
+        raise ValueError("FATAL ERROR: ILLEGAL LAUNCH")
+
+
+    def __GetBranchName(self):
+        Repo = Repository(".")
+        HEAD = Repo.lookup_reference('HEAD').resolve()
+        branchName = HEAD.name
+        return branchName.replace("refs/heads/", "")
 
 
     # Verify that the current machine is allowed to run Magi
