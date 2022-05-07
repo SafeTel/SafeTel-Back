@@ -30,7 +30,7 @@ class DBClean(MongoDBWorker):
         self.__MelchiorName = os.getenv("DB_MELCHIOR")
         self.__CasperName = os.getenv("DB_CASPER")
         self.__CasperTwoName = os.getenv("DB_CASPER_02")
-        self.__BalthasarName = "Balthasar"
+        self.__BalthasarName = os.getenv("DB_BALTHASAR")
 
         # All DB on mongoDB
         self.__DB = {
