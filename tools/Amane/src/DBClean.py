@@ -30,7 +30,7 @@ class DBClean(MongoDBWorker):
         self.__MelchiorName = os.getenv("DB_MELCHIOR")
         self.__CasperName = os.getenv("DB_CASPER")
         self.__CasperTwoName = os.getenv("DB_CASPER_02")
-        self.__BalthasarName = os.getenv("DB_BALTHASAR")
+        self.__BalthasarName = "Balthasar"
 
         # All DB on mongoDB
         self.__DB = {
@@ -39,7 +39,7 @@ class DBClean(MongoDBWorker):
             self.__CasperTwoName: self.__MongoDBClient[self.__CasperTwoName],
             self.__BalthasarName: self.__MongoDBClient[self.__BalthasarName]
         }
-        
+
         # All collections on mongoDB
         self.__Collections = {
             'Blacklist':        self.__DB[self.__MelchiorName]['Blacklist'],
