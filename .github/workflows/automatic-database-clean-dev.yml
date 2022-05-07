@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest # hosted OS
 
     steps:
-      - 
+      -
         name: executing remote ssh commands for deployment using ssh_key
         uses: appleboy/ssh-action@master
         with:
