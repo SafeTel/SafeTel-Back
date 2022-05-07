@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## InitServerCondition
+## InitServerNetwork
 ##
 
 ### LOGIC
@@ -69,6 +69,9 @@ class InitServerNetwork():
 
     def __EvaluateDBUri(self):
         DBUri = os.getenv("DB_URI")
+        import sys
+        print(DBUri, file=sys.stderr)
+        print(DBUri, file=sys.stderr)
         if (self.__UriBasePostman in DBUri):
             return "POSTMAN"
         if (self.__UriBaseDev in DBUri):
