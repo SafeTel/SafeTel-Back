@@ -31,6 +31,17 @@ logging.warning("---     Environement Validated      ----")
 ####################################
 
 
+#######################################
+### Initiate Server Condition BEGIN ###
+from MagiInit.InitServerNetwork import InitServerNetwork
+
+logging.warning("--- /!\ Validating Network /!\\ ----")
+InitServerNetwork()
+logging.warning("---     Network Validated      ----")
+###  Initiate Server Condition END  ###
+#######################################
+
+
 ###############################
 ### EXTERNAL SERVICES BEGIN ###
 # Sentry integration

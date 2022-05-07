@@ -1,5 +1,4 @@
 .editorconfig
-.git
 *.md
 LICENSE
 arm/

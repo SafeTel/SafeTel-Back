@@ -39,7 +39,7 @@ class DBClean(MongoDBWorker):
             self.__CasperTwoName: self.__MongoDBClient[self.__CasperTwoName],
             self.__BalthasarName: self.__MongoDBClient[self.__BalthasarName]
         }
-        
+
         # All collections on mongoDB
         self.__Collections = {
             'Blacklist':        self.__DB[self.__MelchiorName]['Blacklist'],
