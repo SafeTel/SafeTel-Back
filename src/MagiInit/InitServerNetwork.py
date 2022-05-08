@@ -55,10 +55,9 @@ class InitServerNetwork():
         if (not os.path.isfile("config.json")):
             raise ValueError("FATAL ERROR: Environement Denied")
         launchMode = self.__GetLaunchMode()
-        return launchMode
-        #if (self.__EvaluateDBUri()):
-        #    return launchMode
-        #raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
+        if (self.__EvaluateDBUri()):
+            return launchMode
+        raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
 
 
     def __GetLaunchMode(self):
