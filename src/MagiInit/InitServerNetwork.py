@@ -28,14 +28,15 @@ class InitServerNetwork():
         self.__PRODBranch = "master"
         self.__DEVBranch = "DEV"
 
-        self.__launchSecurity = self.__GetLaunchSecurity()
+        #self.__launchSecurity = self.__GetLaunchSecurity()
 
-        launchMode = self.__VerifyDBUri()
-        if (self.__launchSecurity
-            and
-            ((launchMode == "DEV") or (launchMode == "PROD"))
-        ):
-            self.__VerifyBranch(launchMode)
+        #launchMode = self.__VerifyDBUri()
+        #if (self.__launchSecurity
+        #    and
+        #    ((launchMode == "DEV") or (launchMode == "PROD"))
+        #):
+        #    self.__VerifyBranch(launchMode)
+        self.__VerifyDBUri()
         self.__VerifyDBAccess()
 
 
@@ -54,9 +55,9 @@ class InitServerNetwork():
         if (not os.path.isfile("config.json")):
             raise ValueError("FATAL ERROR: Environement Denied")
         launchMode = self.__GetLaunchMode()
-        if (launchMode != self.__EvaluateDBUri()):
-            raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
-        return launchMode
+        if (self.__EvaluateDBUri()):
+            return launchMode
+        raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
 
 
     def __GetLaunchMode(self):
@@ -69,12 +70,11 @@ class InitServerNetwork():
 
     def __EvaluateDBUri(self):
         DBUri = os.getenv("DB_URI")
-        if (self.__UriBasePostman in DBUri):
-            return "POSTMAN"
-        if (self.__UriBaseDev in DBUri):
-            return "DEV"
-        if (self.__UriBaseProd in DBUri):
-            return "PROD"
+        if (self.__UriBasePostman in DBUri
+            or self.__UriBaseDev in DBUri
+            or self.__UriBaseProd in DBUri
+        ):
+            return True
         raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
 
 
