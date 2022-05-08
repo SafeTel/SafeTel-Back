@@ -14,10 +14,11 @@ from pathlib import Path
 import requests
 
 class AmaneConfig():
-    def __init__(self):
+    def __init__(self, isForceLaunch = False):
         self.validationCode = 200
         self.__IsValidConfig()
-        self.__SecurityLaunchCheck()
+        if isForceLaunch:
+            self.__SecurityLaunchCheck()
         self.__SetEnvVars()
         self.__CheckEnvVars()
         self.__Ping()
@@ -32,7 +33,6 @@ class AmaneConfig():
                 and launchMode != "PROD"
                 and launchMode != "POSTMAN"):
                     raise ValueError("FATAL ERROR: Launch Mode Denied")
-
 
     def __IsValidConfig(self):
         if (not os.path.isfile("config.json")):
