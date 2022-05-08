@@ -9,7 +9,11 @@
 ### LOGIC
 # env var import
 import os
-from MongoDBWorker import  DeleteManyDocument
+
+# INFRA
+# Client mongo db import
+from typing import Any
+import pymongo
 
 class DBClean():
     def __init__(self, client):
@@ -50,4 +54,10 @@ class DBClean():
                     raise Exception("Collection name None")
                 # Get the collection from DB
                 self.MongoDB = self.__DB[DBName][CollectionName]
-                DeleteManyDocument(self.MongoDB, {})
+                self.DeleteManyDocument(self.MongoDB, {})
+
+    # Delete multiple documents
+    def DeleteManyDocument(self, db, query: Any):
+        if query == None:
+            return
+        db.delete_many(query)
