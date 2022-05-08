@@ -14,7 +14,7 @@ services:
 
     magi_postman:
         image:
-            safetel/safetel-back:dev
+            safetel/safetel-back:postman
         ports:
             - 4207:4207
         restart:
