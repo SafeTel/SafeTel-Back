@@ -70,12 +70,12 @@ class InitServerNetwork():
 
     def __EvaluateDBUri(self):
         DBUri = os.getenv("DB_URI")
-        if (self.__UriBasePostman in DBUri):
-            return "POSTMAN"
         if (self.__UriBaseDev in DBUri):
             return "DEV"
-        if (self.__UriBaseProd in DBUri):
+        elif (self.__UriBaseProd in DBUri):
             return "PROD"
+        elif (self.__UriBasePostman in DBUri):
+            return "POSTMAN"
         raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
 
 
