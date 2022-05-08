@@ -55,7 +55,7 @@ class InitServerNetwork():
         if (not os.path.isfile("config.json")):
             raise ValueError("FATAL ERROR: Environement Denied")
         launchMode = self.__GetLaunchMode()
-        if (launchMode != self.__EvaluateDBUri()):
+        if (self.__EvaluateDBUri()):
             raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
         return launchMode
 
@@ -70,12 +70,11 @@ class InitServerNetwork():
 
     def __EvaluateDBUri(self):
         DBUri = os.getenv("DB_URI")
-        if (self.__UriBaseDev in DBUri):
-            return "DEV"
-        elif (self.__UriBaseProd in DBUri):
-            return "PROD"
-        elif (self.__UriBasePostman in DBUri):
-            return "POSTMAN"
+        if (self.__UriBasePostman in DBUri
+            or self.__UriBaseDev in DBUri
+            or self.__UriBaseProd in DBUri
+        ):
+            return True
         raise ValueError("FATAL ERROR: INVALID LAUNCH MODE")
 
 
