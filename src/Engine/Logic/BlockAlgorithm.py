@@ -30,7 +30,7 @@ class BlockAlgorithm():
         if (score == None):
             return "Internal Error - Unknown Number in DB"
 
-        if (int(score) < 5):
+        if (int(score) < 4):
             return True
         return False
 
