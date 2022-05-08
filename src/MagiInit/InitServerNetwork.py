@@ -28,14 +28,15 @@ class InitServerNetwork():
         self.__PRODBranch = "master"
         self.__DEVBranch = "DEV"
 
-        self.__launchSecurity = self.__GetLaunchSecurity()
+        #self.__launchSecurity = self.__GetLaunchSecurity()
 
-        launchMode = self.__VerifyDBUri()
-        if (self.__launchSecurity
-            and
-            ((launchMode == "DEV") or (launchMode == "PROD"))
-        ):
-            self.__VerifyBranch(launchMode)
+        #launchMode = self.__VerifyDBUri()
+        #if (self.__launchSecurity
+        #    and
+        #    ((launchMode == "DEV") or (launchMode == "PROD"))
+        #):
+        #    self.__VerifyBranch(launchMode)
+        self.__VerifyDBUri()
         self.__VerifyDBAccess()
 
 
