@@ -16,15 +16,8 @@ import os
 from datetime import datetime, timezone
 # Sleep
 import time
-# Thread in python
-import threading
 
 from DBClean import DBClean
-
-def launchThreadForCleanDB(MongoDBClean):
-    threadPerformingCleaning = threading.Thread(target=MongoDBClean.run())
-    threadPerformingCleaning.start()
-    threadPerformingCleaning.join()
 
 def runDBClean(argv):
     Client = pymongo.MongoClient(os.getenv("DB_URI"))
@@ -46,7 +39,7 @@ def runDBClean(argv):
 
         if (10 <= currentTime.hour < 11):
             if (20 < currentTime.minute < 30 and isCleanLaunched == 0):
-                launchThreadForCleanDB(MongoDBClean)
+                MongoDBClean.run()
                 isCleanLaunched = 1
         else:
                 isCleanLaunched = 0

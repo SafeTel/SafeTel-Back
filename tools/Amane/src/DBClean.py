@@ -13,7 +13,6 @@ import os
 # INFRA
 # Client mongo db import
 from typing import Any
-import pymongo
 
 class DBClean():
     def __init__(self, client):

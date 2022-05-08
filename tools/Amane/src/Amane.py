@@ -11,7 +11,6 @@ from RunDBClean import runDBClean
 ### LOGING SETTINGS BEGIN ###
 # Logs Imports
 import logging
-from multiprocessing.connection import Client
 
 format = "%(asctime)s: %(message)s"
 logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
@@ -26,6 +25,7 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 logging.warning("--- /!\ Validating Environement /!\\ ----")
 
 from ScriptInit.AmaneConfig import AmaneConfig
+# For argv
 import sys
 
 if len(sys.argv) == 2:
