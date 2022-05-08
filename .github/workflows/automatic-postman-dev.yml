@@ -18,13 +18,13 @@ jobs:
 
     steps:
       -
-        name: Checkout 
+        name: Checkout
         uses: actions/checkout@v2
       - name:  Set up Node.js
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - 
+      -
         name: executing remote ssh commands for Postman deployment using ssh_key
         uses: appleboy/ssh-action@master
         with:
