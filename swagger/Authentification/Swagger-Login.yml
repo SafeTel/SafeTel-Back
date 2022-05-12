@@ -1,0 +1,38 @@
+summary: "Login from email"
+description: "Login from email\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Authentification#login"
+
+tags:
+- Authentification
+
+produces:
+- "application/json"
+
+parameters:
+- name: Request
+  in: body
+  schema:
+    type: object
+    required:
+    - magicnumber
+    - email
+    - password
+    properties:
+      magicnumber:
+        type: int
+        description: Magic number
+      email:
+        type: string
+        description: Email of the user
+      password:
+        type: string
+        description: Password of the user
+
+responses:
+  200:
+    description: "Success"
+  400:
+    description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  403:
+    description: "There is something wrong with the token, check if the account still exists"
+  500:
+    description: "Internal Logic Error - Please report all theses errors"

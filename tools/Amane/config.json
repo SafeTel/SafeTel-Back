@@ -1,0 +1,26 @@
+{
+    "Mode": {
+        "launchMode": "DEV",
+        "launchSecurity": true,
+        "message": "Launching the clean of the DB on every collection and databases of the DEV mongoDB"
+    },
+    "MandatoryEnvVars": [
+        "DB_CLIENT",
+        "DB_PASSWORD",
+        "DB_MELCHIOR",
+        "DB_CASPER",
+        "DB_CASPER_02",
+        "DB_BALTHASAR",
+        "DB_URI"
+    ],
+    "VariableToSetOptionally": {
+        "DB_CLIENT": "SafeTelBackEndUser",
+        "DB_PASSWORD": "aSEFTHUKOM1!",
+        "DB_URI": "mongodb+srv://SafeTelBackEndUser:aSEFTHUKOM1!@safetel-back-dev-cluste.kicvi.mongodb.net/Melchior?retryWrites=true&w=majority",
+        "DB_MELCHIOR": "Melchior",
+        "DB_CASPER": "Casper",
+        "DB_CASPER_02": "Casper02",
+        "DB_BALTHASAR": "Balthasar",
+        "PING_URI": "http://google.com"
+    }
+}

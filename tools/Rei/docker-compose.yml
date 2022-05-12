@@ -1,0 +1,16 @@
+version: "3.3"
+
+services:
+    rei_for_local_mongo:
+        env_file: ./config.env
+        build:
+            context: ./
+        restart:
+            on-failure
+
+networks: 
+    default: 
+        external: 
+            name: mongo_network
+
+
