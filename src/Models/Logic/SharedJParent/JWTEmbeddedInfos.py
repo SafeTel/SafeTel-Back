@@ -10,7 +10,7 @@
 from Models.ModelAbstractions.JParent import JParent
 
 # Represents Update Email Response
-class JWTInfos(JParent):
+class JWTEmbeddedInfos(JParent):
     def __init__(self, guid: str, boxid: str, exp: int):
         self.__InitJParent(guid, boxid, exp)
 
