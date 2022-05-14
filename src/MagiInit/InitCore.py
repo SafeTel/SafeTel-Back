@@ -32,6 +32,9 @@ class InitCore():
         MagiApi = Api(MagiApp)
         logging.info("Magi App & Api Initialized")
 
+        logging.info(type(MagiApp))
+        logging.info(type(MagiApi))
+
         MagiApp = self.__InitCORS(MagiApp)
         logging.info("Magi App CORS Applied")
 
@@ -39,6 +42,6 @@ class InitCore():
 
     ### PRIVATE
 
-    def __InitCORS(self, MagiApp: Flask.app.Flask):
+    def __InitCORS(self, MagiApp):
         CORS(MagiApp)
         return MagiApp

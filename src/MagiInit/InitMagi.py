@@ -39,10 +39,11 @@ class InitMagi():
         InitMagiConfig()
         InitMagiNetwork()
         self.__InitCore = InitCore()
-        self.__InitSwagger = InitSwagger
+        self.__InitSwagger = InitSwagger("configuration/SwaggerConfig.json")
 
         self.__MagiApp: Flask.app.Flask = None
         self.__MagiApi: Api.Api = None
+
 
     ### PUBLIC
 

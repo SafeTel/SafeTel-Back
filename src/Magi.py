@@ -27,7 +27,7 @@ import logging
 if __name__ == "__main__":
 
     InitializerMagi = InitMagi()
-    MagiApp: Flask.app.Flask = InitializerMagi.Initialize()
+    MagiApp = InitializerMagi.Initialize()
 
     logging.warning("/!\ Be aware of the current git branch /!\\")
     logging.info("Launching Magi")

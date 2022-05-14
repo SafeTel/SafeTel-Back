@@ -13,10 +13,6 @@ import json
 # flasgger framework import
 from flasgger import Swagger
 
-### LOGS
-# logs import
-import logging
-
 # Init Magi's Swagger
 class InitSwagger():
     def __init__(self, path: str):
