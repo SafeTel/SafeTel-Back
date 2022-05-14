@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## LinkBox
+## GetBoxInfos
 ##
 
 ### INFRA
@@ -13,11 +13,13 @@ from flask_restful import Resource
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
+# import low level interface Box
+from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.Link.ClaimBox.ClaimBoxRequest import ClaimBoxRequest
-from Models.Endpoints.Embedded.Link.ClaimBox.ClaimBoxResponse import ClaimBoxResponse
+from Models.Endpoints.Embedded.BoxInfos.BoxInfosRequest import BoxInfosRequest
+from Models.Endpoints.Embedded.BoxInfos.BoxInfosResponse import BoxInfosResponse
 
 ### LOGC
 # JWT converter import
@@ -27,33 +29,39 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # flasgger import
 from flasgger.utils import swag_from
 
-
 ###
 # Request:
-# POST: localhost:2407/embedded/link/claim-box
-# {
-#     "token": "cutest jwt goes here",
-#     "boxid": "boxid"
-# }
+# GET: localhost:2407/embedded/box-infos?token=
 ###
 # Response:
 # {
-# 	  "linked": true
+#    "Boxes": [
+#        {
+#            "boxid": "1234567890",
+#            "activity": true,
+#            "severity": "normal"
+#        },
+#        {
+#            "boxid": "2345678901",
+#            "activity": false,
+#            "severity": "low"
+#        }
+#    ]
 # }
 ###
 
 
-# Route to link a box to a user
-class ClaimBox(Resource):
+# Route to get infos of box
+class BoxInfos(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
 
-    @swag_from("../../../../swagger/Embedded/Link/Swagger-ClaimBox.yml")
-    def post(self):
-        Request = ClaimBoxRequest(request.get_json())
+    @swag_from("../../../../swagger/Box/Swagger-BoxInfos.yml")
+    def get(self):
+        Request = BoxInfosRequest(request.args.to_dict())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -64,18 +72,15 @@ class ClaimBox(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        result = User.Box.ClaimBox(Request.boxid)
-        if (type(result) is str):
-            return self.__EndpointErrorManager.CreateBadRequestError(result), 400
-
-        Response = ClaimBoxResponse(
-            True
+        Response = BoxInfosResponse(
+            User.Box.PullBoxes().Boxes
         )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
             return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
+

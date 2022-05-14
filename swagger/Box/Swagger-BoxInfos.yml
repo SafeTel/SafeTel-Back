@@ -2,7 +2,7 @@ summary: "Get the box's infos of a user"
 description: "Get the box's infos of an authenticated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints:-Embedded#box-infos"
 
 tags:
-- Embedded
+- Box
 
 produces:
 - "application/json"

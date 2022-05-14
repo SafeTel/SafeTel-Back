@@ -2,7 +2,7 @@ summary: "Update Box's severity"
 description: "Update Box's severity\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints:-Embedded#update-severity"
 
 tags:
-- Embedded
+- Box
 
 produces:
 - "application/json"

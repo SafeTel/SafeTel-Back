@@ -2,7 +2,7 @@ summary: "Update Box's activity"
 description: "Update Box's activity\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints:-Embedded#update-activity"
 
 tags:
-- Embedded
+- Box
 
 produces:
 - "application/json"
