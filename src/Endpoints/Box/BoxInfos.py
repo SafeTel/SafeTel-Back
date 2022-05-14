@@ -18,8 +18,8 @@ from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.BoxInfos.BoxInfosRequest import BoxInfosRequest
-from Models.Endpoints.Embedded.BoxInfos.BoxInfosResponse import BoxInfosResponse
+from Models.Endpoints.Box.BoxInfos.BoxInfosRequest import BoxInfosRequest
+from Models.Endpoints.Box.BoxInfos.BoxInfosResponse import BoxInfosResponse
 
 ### LOGC
 # JWT converter import
@@ -31,7 +31,7 @@ from flasgger.utils import swag_from
 
 ###
 # Request:
-# GET: localhost:2407/embedded/box-infos?token=
+# GET: localhost:2407/box/box-infos?token=
 ###
 # Response:
 # {
