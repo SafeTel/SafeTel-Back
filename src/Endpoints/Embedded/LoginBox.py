@@ -48,7 +48,7 @@ from flasgger.utils import swag_from
 class LoginBox(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvertEmbedded(1)
+        self.__JwtConv = JWTConvertEmbedded(24)
         self.__UserFactory = UserFactory()
         self.__BoxDB = BoxDB()
 

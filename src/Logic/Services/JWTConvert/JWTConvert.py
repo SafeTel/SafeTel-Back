@@ -58,7 +58,7 @@ class JWTConvert():
             JwtInfos["lostpassword"]
         )
 
-        if (self.__IsValidExp(Infos.exp)
+        if (not self.__IsValidExp(Infos.exp)
             or self.__UserDb.existByGUID(Infos.guid) is False
             or Infos.EvaluateModelErrors() != None):
             return None
