@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## InitServerNetwork
+## InitMagiNetwork
 ##
 
 ### LOGIC
@@ -19,7 +19,7 @@ import pymongo
 
 
 # Verify the Network integrity to launch Magi
-class InitServerNetwork():
+class InitMagiNetwork():
     def __init__(self):
         self.__UriBasePostman = "safetel-back-postman-cl"
         self.__UriBaseDev = "safetel-back-dev-cluste"
