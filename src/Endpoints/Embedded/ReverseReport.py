@@ -18,8 +18,8 @@ from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.LoginBox.LoginBoxRequest import LoginBoxRequest
-from Models.Endpoints.Embedded.LoginBox.LoginBoxResponse import LoginBoxResponse
+from Models.Endpoints.Embedded.ReverseReport.ReverseReportRequest import ReverseReportRequest
+from Models.Endpoints.Embedded.ReverseReport.ReverseReportResponse import ReverseReportResponse
 
 ### LOGC
 # JWT converter import
@@ -52,30 +52,34 @@ class ReverseReport(Resource):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert(24)
         self.__UserFactory = UserFactory()
-        self.__BoxDB = BoxDB()
 
 
-    @swag_from("../../../../swagger/Embedded/")
+    @swag_from("../../../../swagger/embedded/")
     def post(self):
-        Request = LoginBoxRequest(request.get_json())
+        Request = ReverseReportRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        guid = self.__BoxDB.RSUserByBoxID(Request.boxid)
-        if (guid == None):
+        JwtInfos = self.__JwtConv.Deserialize(Request.token)
+        if (JwtInfos is None):
+            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
+
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        User = self.__UserFactory.LoadUser(guid)
-        if (User == None):
+        if (not User.Box.IsClaimedByUser(Request.boxid)):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = LoginBoxResponse(
-            self.__JwtConv.Serialize(
-                guid,
-                User.PullUserInfos().role
-            )
+        if (User.Blacklist.IsNumber(Request.number)):
+            User.Blacklist.DeleteNumber(Request.number)
+        else:
+            User.Blacklist.AddNumber(Request.number)
+
+        Response = ReverseReportResponse(
+            True
         )
 
         responseErrors = Response.EvaluateModelErrors()

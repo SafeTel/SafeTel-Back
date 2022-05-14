@@ -30,6 +30,8 @@ class BoxDB():
         self.DBWorker = MongoDBWorker(self.Box)
 
 
+    ### PÜBLIC
+
     def newDataBox(self, guid: str):
         NewBoxDocument = {
             "guid": guid,
