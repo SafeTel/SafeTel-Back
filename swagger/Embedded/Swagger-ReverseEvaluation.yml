@@ -1,8 +1,8 @@
-summary: "Claim a Box"
-description: "Claim a Box from Box's ID for an authenticated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Box.Link#claim-box"
+summary: "Reverse the evaluation"
+description: "Reverse an evlauation for the given number (also any action due to evaluyate-call other than history)\n"
 
 tags:
-- Box.Link
+- Embedded
 
 produces:
 - "application/json"
@@ -15,6 +15,7 @@ parameters:
     required:
     - token
     - boxid
+    - number
     properties:
       token:
         type: string
@@ -22,6 +23,9 @@ parameters:
       boxid:
         type: string
         description: Box's ID
+      nummber:
+        type: string
+        description: Phone number of the report to reverse
 
 responses:
   200:

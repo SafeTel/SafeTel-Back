@@ -18,8 +18,9 @@ from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.ReverseReport.ReverseReportRequest import ReverseReportRequest
-from Models.Endpoints.Embedded.ReverseReport.ReverseReportResponse import ReverseReportResponse
+from Models.Endpoints.Embedded.ReverseEvaluation.ReverseEvaluationRequest import ReverseEvaluationRequest
+from Models.Endpoints.Embedded.ReverseEvaluation.ReverseEvaluationResponse import ReverseEvaluationResponse
+
 
 ### LOGC
 # JWT converter import
@@ -32,7 +33,7 @@ from flasgger.utils import swag_from
 
 ###
 # Request:
-# POST: localhost:2407/embedded/reverse-report
+# POST: localhost:2407/embedded/reverse-evaluation
 # {
 #     "token": "nan serieux allez voir SPY x FAMILY l'anime est juste parfait",
 #     "boxid": "nan vraiment stop taffer, allez le voir",
@@ -47,16 +48,16 @@ from flasgger.utils import swag_from
 
 
 # Route to Block Unblock a Number
-class ReverseReport(Resource):
+class ReverseEvaluation(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert(24)
         self.__UserFactory = UserFactory()
 
 
-    @swag_from("../../../../swagger/embedded/")
+    @swag_from("../../../../swagger/Embedded/Swagger-ReverseEvaluation.yml")
     def post(self):
-        Request = ReverseReportRequest(request.get_json())
+        Request = ReverseEvaluationRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -78,7 +79,7 @@ class ReverseReport(Resource):
         else:
             User.Blacklist.AddNumber(Request.number)
 
-        Response = ReverseReportResponse(
+        Response = ReverseEvaluationResponse(
             True
         )
 

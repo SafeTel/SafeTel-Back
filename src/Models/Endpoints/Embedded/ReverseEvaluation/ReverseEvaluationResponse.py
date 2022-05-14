@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## ReverseReportResponse
+## ReverseEvaluationResponse
 ##
 
 ### MODELS
@@ -10,7 +10,7 @@
 from Models.ModelAbstractions.JParent import JParent
 
 # Represents Login Response
-class ReverseReportResponse(JParent):
+class ReverseEvaluationResponse(JParent):
     def __init__(self, updated: bool):
         self.__InitJParent(updated)
 
