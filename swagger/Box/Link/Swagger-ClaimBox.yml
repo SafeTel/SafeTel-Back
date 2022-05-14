@@ -1,5 +1,5 @@
 summary: "Claim a Box"
-description: "Claim a Box from Box's ID for an authenticated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Embedded.Link#claim-box"
+description: "Claim a Box from Box's ID for an authenticated user\https://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Box.Link#claim-box"
 
 tags:
 - Box.Link
