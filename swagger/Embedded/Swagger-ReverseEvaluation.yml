@@ -14,15 +14,11 @@ parameters:
     type: object
     required:
     - token
-    - boxid
     - number
     properties:
       token:
         type: string
-        description: JWT token
-      boxid:
-        type: string
-        description: Box's ID
+        description: JWT Embedded token
       nummber:
         type: string
         description: Phone number of the report to reverse
