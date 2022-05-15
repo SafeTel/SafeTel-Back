@@ -59,7 +59,7 @@ class Engine():
 
             self.__NumberDB.addNumberWithoutReport(
                 number,
-                TellowsResponse,
+                self.__Tellows.GetFullEvaluation(number),
                 score
             )
 

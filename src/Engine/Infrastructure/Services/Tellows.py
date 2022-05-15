@@ -29,7 +29,14 @@ class Tellows():
     def GetEvaluation(self, number: str):
         if (not self.__IsValidNumber(number)):
             return None
-        return self.HTTPClient.Get(self.uri + number, self.query)["tellows"] # TODO: set a model for tellows FIXME: next sprint
+        Response = self.HTTPClient.Get(self.uri + number, self.query)["tellows"]
+        return ""
+
+
+    def GetFullEvaluation(self, number: str):
+        if (not self.__IsValidNumber(number)):
+            return None
+        return self.HTTPClient.Get(self.uri + number, self.query)["tellows"]
 
 
     def __IsValidNumber(self, number: str):
@@ -38,3 +45,30 @@ class Tellows():
         if (match == None):
             return False
         return True
+
+##
+{
+	"tellows": {
+		"number": "0611111111",
+		"normalizedNumber": "06-11111111",
+		"score": "7",
+		"searches": "819",
+		"comments": "2",
+		"scoreColor": "#f79a01",
+		"scorePath": "https:\/\/www.tellows.de\/images\/score\/score7.png",
+		"location": "numéro de téléphone mobile",
+		"country": "France",
+		"callerTypes": {
+			"caller": [
+				{
+					"name": "Agence de recouvrement",
+					"count": "1"
+				},
+				{
+					"name": "Harcèlement téléphonique",
+					"count": "1"
+				}
+			]
+		}
+	}
+}
