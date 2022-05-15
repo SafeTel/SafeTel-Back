@@ -59,6 +59,9 @@ class JWTConvertEmbedded():
         if (JwtInfos is None):
             return None
 
+        if (not self.__VerifyFormat(JwtInfos)):
+            return None
+
         Infos = JWTEmbeddedInfos(
             JwtInfos["guid"],
             JwtInfos["boxid"],
@@ -80,6 +83,15 @@ class JWTConvertEmbedded():
         except Exception as e:
             return None
         return JwtInfos
+
+
+    def __VerifyFormat(JwtInfos: dict):
+        if ("guid" in JwtInfos
+            and "boxid" in JwtInfos
+            and "exp" in JwtInfos
+        ):
+            return True
+        return False
 
 
     def __IsValidExp(self, exp: int):

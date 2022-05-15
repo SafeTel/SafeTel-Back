@@ -24,7 +24,7 @@ from Models.Endpoints.Embedded.ReverseEvaluation.ReverseEvaluationResponse impor
 
 ### LOGC
 # JWT converter import
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+from Logic.Services.JWTConvert.JWTConvertEmbedded import JWTConvertEmbedded
 
 ### SWAGGER
 # flasgger import
@@ -35,9 +35,8 @@ from flasgger.utils import swag_from
 # Request:
 # POST: localhost:2407/embedded/reverse-evaluation
 # {
-#     "token": "nan serieux allez voir SPY x FAMILY l'anime est juste parfait",
-#     "boxid": "nan vraiment stop taffer, allez le voir",
-#     "number": "au moins l'épisode 1 mdr"
+#     "token": "putain je me suis pris une pause de 30 min aujourdhui pour me dire que ma doc est pas assez precise",
+#     "number": "lel"
 # }
 ###
 # Response:
@@ -51,7 +50,7 @@ from flasgger.utils import swag_from
 class ReverseEvaluation(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert(24)
+        self.__JwtConv = JWTConvertEmbedded(24)
         self.__UserFactory = UserFactory()
 
 
@@ -71,7 +70,7 @@ class ReverseEvaluation(Resource):
         if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        if (not User.Box.IsClaimedByUser(Request.boxid)):
+        if (not User.Box.IsClaimedByUser(JwtInfos.boxid)):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         if (User.Blacklist.IsNumber(Request.number)):

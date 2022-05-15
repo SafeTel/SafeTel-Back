@@ -51,6 +51,9 @@ class JWTConvert():
         if (JwtInfos is None):
             return None
 
+        if (not self.__VerifyFormat(JwtInfos)):
+            return None
+
         Infos = JWTInfos(
             JwtInfos["guid"],
             self.__StrToRoles(JwtInfos["role"]),
@@ -82,6 +85,16 @@ class JWTConvert():
         return JwtInfos
 
 
+    def __VerifyFormat(JwtInfos: dict):
+        if ("guid" in JwtInfos
+            and "role" in JwtInfos
+            and "exp" in JwtInfos
+            and "lostpassword" in JwtInfos
+        ):
+            return True
+        return False
+
+
     def __IsValidExp(self, exp: int):
        return time.time() < exp
 
@@ -89,8 +102,8 @@ class JWTConvert():
     def __StrToRoles(self, s: int):
         if (s == 1):
             return Roles.ADMIN
-        if (s == 2):
+        elif (s == 2):
             return Roles.DEVELOPER
-        if (s == 3):
+        elif (s == 3):
             return Roles.USER
         return None
