@@ -77,7 +77,7 @@ class VerifyNumber(Resource):
         if (not User.Box.IsBoxInCall(JwtInfos.boxid)):
             User.Box.UpdateCall(JwtInfos.boxid, True)
         else:
-            return self.__EndpointErrorManager.CreateBadRequestError("This box is already in a call"), 401
+            return self.__EndpointErrorManager.CreateBadRequestError("This box is already in a call"), 403
 
         verificationResult = self.__Engine.Verify(
             User,
