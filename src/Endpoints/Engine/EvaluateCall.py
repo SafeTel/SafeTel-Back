@@ -21,7 +21,7 @@ from Models.Endpoints.Engine.EvaluateCallResponse import EvaluateCallResponse
 
 ### LOGC
 # JWT converter import
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+from Logic.Services.JWTConvert.JWTConvertEmbedded import JWTConvertEmbedded
 # Engine
 from Engine.Logic.Engine import Engine
 
@@ -35,7 +35,6 @@ from flasgger.utils import swag_from
 # POST: localhost:2407/engine/verify-number
 # {
 # 	"token": "456789",
-#   "boxid": "34567890",
 # 	"report": true,
 #   "Call": {
 #       "number": "01345678",
@@ -55,7 +54,7 @@ from flasgger.utils import swag_from
 class EvaluateCall(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert()
+        self.__JwtConv = JWTConvertEmbedded()
         self.__UserFactory = UserFactory()
         self.__Engine = Engine()
 
@@ -77,14 +76,19 @@ class EvaluateCall(Resource):
         if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
+        if (not User.Box.IsClaimedByUser(JwtInfos.boxid)):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+
         self.__Engine.ProcessCall(
             User,
-            Request.boxid,
+            JwtInfos.boxid,
             Request.report,
             Request.Call
         )
 
-        Response = EvaluateCallResponse("OK")
+        Response = EvaluateCallResponse(
+            "OK"
+        )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

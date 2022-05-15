@@ -21,7 +21,6 @@ class EvaluateCallRequest(JParent):
     # Values Assignement
     def __InitJParent(self, loadedJSON: dict):
         self.token = self.LoadElement(loadedJSON, "token")
-        self.boxid = self.LoadElement(loadedJSON, "boxid")
         self.report = self.LoadElement(loadedJSON, "report")
 
     def __InitCallJObject(self, loadedJSON: dict):
@@ -40,9 +39,6 @@ class EvaluateCallRequest(JParent):
     def __EvaErrorsJParent(self):
         if (self.token is None): return "Body Denied"
         if (type(self.token) is not str): return "Token Denied"
-
-        if (self.boxid is None): return "Body Denied"
-        if (type(self.boxid) is not str): return "Box ID Denied"
 
         if (self.report is None): return "Body Denied"
         if (type(self.report) is not bool): return "Report Denied"

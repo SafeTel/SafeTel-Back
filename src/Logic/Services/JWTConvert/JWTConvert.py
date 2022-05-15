@@ -85,7 +85,7 @@ class JWTConvert():
         return JwtInfos
 
 
-    def __VerifyFormat(JwtInfos: dict):
+    def __VerifyFormat(self, JwtInfos: dict):
         if ("guid" in JwtInfos
             and "role" in JwtInfos
             and "exp" in JwtInfos
