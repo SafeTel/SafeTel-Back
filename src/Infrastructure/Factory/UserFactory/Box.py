@@ -44,7 +44,13 @@ class FactBox():
         return None
 
 
+    def IsBoxInCall(self, boxid: str):
+        UserBox: Box = self.PullBox(boxid)
+        return UserBox.call
+
+
     # WRITE
+
     def ClaimBox(self, boxid: str):
         ClaimingBox = Box(boxid, False, True, BoxSeverity.NORMAL)
 
@@ -121,12 +127,14 @@ class FactBox():
 
 
     # PRIVATE
+
     def __PullBoxData(self):
         return BoxList(self.__BoxDB.getBoxData(self.__guid)["Boxes"])
 
 
     def __CheckBoxid(self, UserBox: Box, boxid: str):
         return UserBox.boxid == boxid
+
 
     # UTILS
 

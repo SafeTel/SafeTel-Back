@@ -74,13 +74,16 @@ class VerifyNumber(Resource):
         if (not User.Box.IsClaimedByUser(JwtInfos.boxid)):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
+        if (not User.Box.IsBoxInCall(JwtInfos.boxid)):
+            User.Box.UpdateCall(JwtInfos.boxid, True)
+        else:
+            return self.__EndpointErrorManager.CreateBadRequestError("This box is already in a call"), 401
+
         verificationResult = self.__Engine.Verify(
             User,
             JwtInfos.boxid,
             Request.number
         )
-
-        User.Box.UpdateCall(True)
 
         if (type(verificationResult) is str):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
