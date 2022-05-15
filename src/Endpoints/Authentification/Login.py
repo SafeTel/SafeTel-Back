@@ -23,6 +23,10 @@ from Models.Endpoints.Authentification.LoginResponse import LoginResponse
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+### SWAGGER
+# flasgger import
+from flasgger.utils import swag_from
+
 
 ###
 # Request:
@@ -49,13 +53,13 @@ class Login(Resource):
         self.__UserFactory = UserFactory()
 
 
+    @swag_from("../../../../swagger/Authentification/Swagger-Login.yml")
     def post(self):
         Request = LoginRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
             return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
-
 
         LoginStatus, result = self.__UserFactory.LoginUser(
             Request.email,
@@ -66,7 +70,7 @@ class Login(Resource):
 
         guid = result
         User = self.__UserFactory.LoadUser(guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
         Response = LoginResponse(

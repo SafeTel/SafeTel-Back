@@ -20,24 +20,19 @@ To see the documentation about the server follow [this link](https://github.com/
 
 The server is wrapped with Docker.
 
-
 Command:
 ```sh
 $ sudo docker-compose build && sudo docker-compose up
 ```
 
-
 Don't forget to prune your docker before rerunning Magi.
-
 
 Command:
 ```sh
 $ sudo docker system prune
 ```
 
-
 If you have any weird trouble don't hesitate to prune everything.
-
 
 Command:
 ```sh

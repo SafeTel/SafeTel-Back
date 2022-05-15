@@ -10,7 +10,7 @@ class EndpointErrorManager():
     def CreateBadRequestError(self, details):
         return {
             "error": True,
-            "detail": details
+            "details": details
         }
 
     # Code 500
@@ -27,4 +27,12 @@ class EndpointErrorManager():
             "error": True,
             "details": "Access Denied",
             "message": "Your token may be corrupted"
+        }
+
+    # Code 403
+    def CreateForbiddenAccessErrorWithMessage(self, message):
+        return {
+            "error": True,
+            "details": "Access Denied",
+            "message": message
         }

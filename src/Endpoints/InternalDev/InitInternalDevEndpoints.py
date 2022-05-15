@@ -14,13 +14,23 @@ from Endpoints.InternalDev.HealthCheck import HealthCheck
 
 class InitInternalDevEndpoints():
     def __init__(self, Api):
+        self.INTERNALDEV_URI_BASE_DOMAIN = "/internaldev/"
         self.__InitAccountEndpoints(Api)
         self.__InitHealthCheckEndpoint(Api)
 
 
     def __InitAccountEndpoints(self, Api):
-        Api.add_resource(RegisterAdminDev, "/internaldev/account/register")
-        Api.add_resource(ClaimApiKeys, "/internaldev/account/claimApiKey")
+        Api.add_resource(
+            RegisterAdminDev,
+            self.INTERNALDEV_URI_BASE_DOMAIN + "account/register"
+        )
+        Api.add_resource(
+            ClaimApiKeys,
+            self.INTERNALDEV_URI_BASE_DOMAIN + "account/claimApiKey"
+        )
 
     def __InitHealthCheckEndpoint(self, Api):
-        Api.add_resource(HealthCheck, "/internaldev/healthCheck")
+        Api.add_resource(
+            HealthCheck,
+            self.INTERNALDEV_URI_BASE_DOMAIN + "healthCheck"
+        )

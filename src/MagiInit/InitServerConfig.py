@@ -8,7 +8,6 @@
 ### LOGIC
 import os
 import json
-from pathlib import Path
 
 ### INFRA
 from Infrastructure.Utils.HttpClient.HtttpClient import HttpClient
@@ -24,8 +23,8 @@ class InitServerConfig():
     def __IsValidConfig(self):
         if (not os.path.isfile("config.json")):
             raise ValueError("FATAL ERROR: Environement Denied")
-        with open("config.json", 'r') as jsonFile:
-            config = json.load(jsonFile)
+        with open("config.json", 'r') as JsonFile:
+            config = json.load(JsonFile)
             configMode = config["Mode"]
             if ("launchMode" not in configMode
             or "message" not in configMode
@@ -35,8 +34,8 @@ class InitServerConfig():
 
 
     def __CheckEnvVars(self):
-        with open("config.json", 'r') as jsonFile:
-            config = json.load(jsonFile)
+        with open("config.json", 'r') as JsonFile:
+            config = json.load(JsonFile)
             for mandatoryEnvVar in config["MandatoryEnvVars"]:
                 if (mandatoryEnvVar in os.environ) == False:
                     raise ValueError("FATAL ERROR: Environement Denied")
@@ -45,17 +44,17 @@ class InitServerConfig():
     def __Ping(self):
         httpClient = HttpClient()
         pingUri = os.getenv("PING_URI")
-        if httpClient.IsUp(pingUri) == None:
+        if httpClient.Ping(pingUri) is None:
             raise ValueError("FATAL ERROR: Environement Denied")
 
 
     def __SecurityLaunchCheck(self):
-        with open("config.json", 'r') as jsonFile:
-            config = json.load(jsonFile)
+        with open("config.json", 'r') as JsonFile:
+            config = json.load(JsonFile)
             launchMode = config["Mode"]["launchMode"]
             launchSecurity = config["Mode"]["launchSecurity"]
             if (launchSecurity):
                 if (launchMode != "DEV"
-                or launchMode != "PROD"
-                or launchMode != "POSTMAN"):
+                and launchMode != "PROD"
+                and launchMode != "POSTMAN"):
                     raise ValueError("FATAL ERROR: Launch Mode Denied")

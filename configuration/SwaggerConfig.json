@@ -1,0 +1,18 @@
+{
+    "swagger_version": "2.0",
+    "title": "Magi",
+    "static_url_path": "/flasgger_static",
+    "specs_route": "/swagger/",
+    "swagger_ui": true,
+    "headers": [
+    ],
+    "specs": [
+        {
+            "version": "BETA 1.0",
+            "title": "Magi API",
+            "description": "Magi is SafeTel's server, documentation: https://github.com/SafeTel/SafeTel-Doc-Backend/wiki\nIn case of any doubt refer to the offcial documentation",
+            "route": "/apispec_1.json",
+            "endpoint": "v1_spec"
+        }
+    ]
+}

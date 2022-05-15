@@ -32,8 +32,16 @@ class FactBox():
 
 
     # READ
-    def PullBoxData(self):
-        return BoxList(self.__BoxDB.getBoxData(self.__guid)["Boxes"])
+    def PullBoxes(self):
+        return self.__PullBoxData()
+
+
+    def PullBox(self, boxid: str):
+        UserBoxes = self.__PullBoxData().Boxes
+        for UserBox in UserBoxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                return UserBox
+        return None
 
 
     # WRITE
@@ -61,12 +69,40 @@ class FactBox():
 
 
     def IsClaimedByUser(self, boxid: str):
-        UserBoxes = self.__PullBoxData()
+        UserBoxes = self.__PullBoxData().Boxes
 
         for UserBox in UserBoxes:
             if (self.__CheckBoxid(UserBox, boxid)):
                 return True
         return False
+
+
+    def UpdateActivity(self, boxid: str, activity: bool):
+        UserBoxes = self.__PullBoxData()
+
+        for UserBox in UserBoxes.Boxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                self.__ChangeActivity(UserBox, activity)
+                self.__BoxDB.updateBoxes(
+                    self.__guid,
+                    UserBoxes.ToDict()["Boxes"]
+                )
+                return None
+        return "Unkwonw Box"
+
+
+    def UpdateSeverity(self, boxid: str, severity: BoxSeverity):
+        UserBoxes = self.__PullBoxData()
+
+        for UserBox in UserBoxes.Boxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                self.__ChangBoxMode(UserBox, severity)
+                self.__BoxDB.updateBoxes(
+                    self.__guid,
+                    UserBoxes.ToDict()["Boxes"]
+                )
+                return None
+        return "Unkwonw Box"
 
 
     # PRIVATE
@@ -76,3 +112,11 @@ class FactBox():
 
     def __CheckBoxid(self, UserBox: Box, boxid: str):
         return UserBox.boxid == boxid
+
+    # UTILS
+    def __ChangeActivity(self, UserBox: Box, acitivity: bool):
+        UserBox.activity = acitivity
+
+
+    def __ChangBoxMode(self, UserBox: Box, severity: BoxSeverity):
+        UserBox.severity = severity

@@ -8,7 +8,6 @@
 ### MODELS
 # Abstraction import
 from Models.ModelAbstractions.JObject import JObject
-from Models.ModelAbstractions.JParent import JParent
 # Shared Enum import
 from Models.Endpoints.SharedJObject.Account.Lists.CallStatus import CallStatus
 

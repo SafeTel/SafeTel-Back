@@ -37,6 +37,13 @@ class Whitelist():
         return PhoneList(self.__WhitelistDB.GetBWhitelistNumbers(self.__guid))
 
 
+    def IsNumber(self, number: str):
+        return self.__IsNumberInList(
+            number,
+            PhoneList(self.__WhitelistDB.GetBWhitelistNumbers(self.__guid))
+        )
+
+
     def AddNumber(self, number: str):
         WhitelistNumbers = PhoneList(self.__WhitelistDB.GetBWhitelistNumbers(self.__guid))
 

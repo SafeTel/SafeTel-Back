@@ -23,7 +23,7 @@ class BoxSeverity(IntEnum):
 
     @classmethod
     def StrToEnum(cls, s: str):
-        if (s == None):
+        if ((s is None) or (type(s) is not str)):
             return None
         if (s.lower() == "none"):
             return BoxSeverity.NONE

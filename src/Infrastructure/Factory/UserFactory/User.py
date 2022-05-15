@@ -73,13 +73,12 @@ class User():
 
 
     def __PullUserInfos(self):
-        if (self.__UserInfos == None):
+        if (self.__UserInfos is None):
             userRaw = self.__UserDB.getUserByGUID(self.__guid)
             self.__UserInfos = UserInfos(userRaw)
         return self.__UserInfos
 
     # SECURITY
-
     def LostPasswordMode(self, mode: bool = False):
         self.__UserDB.UpdateLostPasswordMode(self.__guid, mode)
 

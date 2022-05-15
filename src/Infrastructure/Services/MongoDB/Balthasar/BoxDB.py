@@ -12,6 +12,10 @@ import pymongo
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWatcher import MongoDBWatcher
 from Infrastructure.Services.MongoDB.InternalUtils.MongoDBWorker import MongoDBWorker
 
+### MODELS
+# Box Model import
+from Models.Infrastructure.Factory.UserFactory.Box.BoxSeverity import BoxSeverity
+
 ### LOGIC
 # env var import
 import os
@@ -39,7 +43,7 @@ class BoxDB():
 
 
     def isBox(self, guid: str):
-        self.DBWatcher.IsDocument("guid", guid)
+        return self.DBWatcher.IsDocument("guid", guid)
 
 
     def delete(self, guid: str):
@@ -57,6 +61,12 @@ class BoxDB():
             Current["Boxes"]
         )
         self.__UpdateList(guid, NewList)
+
+
+    def updateBoxes(self, guid: str, UserBoxes: list):
+        for UserBox in UserBoxes:
+            UserBox["severity"] = BoxSeverity.EnumToStr(UserBox["severity"])
+        self.__UpdateList(guid, UserBoxes)
 
 
     def RSUserByBoxID(self, boxid: str):
@@ -78,15 +88,6 @@ class BoxDB():
     def __PullData(self, guid: str):
         return self.DBWatcher.GetDocument("guid", guid)
 
-
-    def __UpdateList(self, guid: str, NewList: list):
-        QueryGUID = {
-            'guid': str(guid)
-        }
-        QueryData = { "$set": { "Boxes": NewList } }
-        self.Box.update_one(QueryGUID, QueryData)
-
-
     def __AddBox(self, boxid: str, activity: bool, severity: str, TemporaryList: list):
         TemporaryList.append({
                 "boxid": boxid,
@@ -95,3 +96,13 @@ class BoxDB():
             }
         )
         return TemporaryList
+
+    def __UpdateList(self, guid: str, NewList: list):
+        QueryGUID = {
+            'guid': str(guid)
+        }
+        QueryData = {
+            "$set": { "Boxes": NewList }
+        }
+        self.Box.update_one(QueryGUID, QueryData)
+
