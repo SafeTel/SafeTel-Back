@@ -46,7 +46,7 @@ class FactBox():
 
     # WRITE
     def ClaimBox(self, boxid: str):
-        ClaimingBox = Box(boxid, True, BoxSeverity.NORMAL)
+        ClaimingBox = Box(boxid, False, True, BoxSeverity.NORMAL)
 
         if (not self.__UnclaimedBoxsDB.isValidBoxid(boxid)):
             return "This box isn't claimable"
@@ -60,6 +60,7 @@ class FactBox():
         self.__BoxDB.addBox(
             self.__guid,
             ClaimingBox.boxid,
+            ClaimingBox.call,
             ClaimingBox.activity,
             BoxSeverity.EnumToStr(ClaimingBox.severity)
         )
@@ -75,6 +76,20 @@ class FactBox():
             if (self.__CheckBoxid(UserBox, boxid)):
                 return True
         return False
+
+
+    def UpdateCall(self, boxid: str, call: bool):
+        UserBoxes = self.__PullBoxData()
+
+        for UserBox in UserBoxes.Boxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                self.__ChangeCall(UserBox, call)
+                self.__BoxDB.updateBoxes(
+                    self.__guid,
+                    UserBoxes.ToDict()["Boxes"]
+                )
+                return None
+        return "Unkwonw Box"
 
 
     def UpdateActivity(self, boxid: str, activity: bool):
@@ -114,6 +129,11 @@ class FactBox():
         return UserBox.boxid == boxid
 
     # UTILS
+
+    def __ChangeCall(self, UserBox: Box, call: bool):
+        UserBox.call = call
+
+
     def __ChangeActivity(self, UserBox: Box, acitivity: bool):
         UserBox.activity = acitivity
 

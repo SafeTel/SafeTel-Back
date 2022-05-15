@@ -26,6 +26,7 @@ class BoxList(JObject):
             self.Boxes.append(
                 Box(
                     Bx["boxid"],
+                    Bx["call"],
                     Bx["activity"],
                     BoxSeverity.StrToEnum(Bx["severity"])
             ))

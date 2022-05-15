@@ -80,6 +80,8 @@ class VerifyNumber(Resource):
             Request.number
         )
 
+        User.Box.UpdateCall(True)
+
         if (type(verificationResult) is str):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
