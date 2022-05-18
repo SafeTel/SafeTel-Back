@@ -55,7 +55,7 @@ class ReverseEvaluation(Resource):
         self.__UserFactory = UserFactory()
 
 
-    @swag_from("../../../../swagger/Embedded/Swagger-ReverseEvaluation.yml")
+    @swag_from("../../../../swagger/embedded/Swagger-ReverseEvaluation.yml")
     def post(self):
         Request = ReverseEvaluationRequest(request.get_json())
 
