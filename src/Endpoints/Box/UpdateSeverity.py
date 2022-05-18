@@ -17,8 +17,8 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.UpdateBoxMode.UpdateBoxModeRequest import UpdateBoxModeRequest
-from Models.Endpoints.Embedded.UpdateBoxMode.UpdateBoxModeResponse import UpdateBoxModeResponse
+from Models.Endpoints.Box.UpdateBoxMode.UpdateBoxModeRequest import UpdateBoxModeRequest
+from Models.Endpoints.Box.UpdateBoxMode.UpdateBoxModeResponse import UpdateBoxModeResponse
 
 ### LOGC
 # JWT converter import
@@ -31,7 +31,7 @@ from flasgger.utils import swag_from
 
 ###
 # Request:
-# PATCH: localhost:2407/embedded/update-severity
+# PATCH: localhost:2407/box/update-severity
 # {
 #     "token": "jwt",
 #     "boxid": "1234567890",

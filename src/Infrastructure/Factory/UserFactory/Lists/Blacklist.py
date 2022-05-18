@@ -29,6 +29,8 @@ class Blacklist():
         self.__ConflictResolver = ConflictResolver
 
 
+    ### PÜBLIC
+
     def CreateBlacklist(self):
         self.__BlacklistDB.newBlacklist(self.__guid)
 
@@ -60,6 +62,8 @@ class Blacklist():
         self.__BlacklistDB.delBlacklistNumberForUser(self.__guid, number)
         return PhoneList(self.__BlacklistDB.GetBlacklistNumbers(self.__guid))
 
+
+    ### PRIVATE
 
     def __IsNumberInList(self, targetnumber: str, PhoneList: PhoneList):
         return targetnumber in PhoneList.PhoneNumbers

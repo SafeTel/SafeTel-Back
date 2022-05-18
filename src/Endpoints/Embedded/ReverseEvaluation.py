@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## LinkBox
+## ReverseReport
 ##
 
 ### INFRA
@@ -13,11 +13,14 @@ from flask_restful import Resource
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
+# import low level interface Box
+from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Box.Link.ClaimBox.ClaimBoxRequest import ClaimBoxRequest
-from Models.Endpoints.Box.Link.ClaimBox.ClaimBoxResponse import ClaimBoxResponse
+from Models.Endpoints.Embedded.ReverseEvaluation.ReverseEvaluationRequest import ReverseEvaluationRequest
+from Models.Endpoints.Embedded.ReverseEvaluation.ReverseEvaluationResponse import ReverseEvaluationResponse
+
 
 ### LOGC
 # JWT converter import
@@ -30,30 +33,31 @@ from flasgger.utils import swag_from
 
 ###
 # Request:
-# POST: localhost:2407/box/link/claim-box
+# POST: localhost:2407/embedded/reverse-evaluation
 # {
-#     "token": "cutest jwt goes here",
-#     "boxid": "boxid"
+#     "token": "nan serieux allez voir SPY x FAMILY l'anime est juste parfait",
+#     "boxid": "nan vraiment stop taffer, allez le voir",
+#     "number": "au moins l'épisode 1 mdr"
 # }
 ###
 # Response:
 # {
-# 	  "linked": true
+# 	  "updated": true
 # }
 ###
 
 
-# Route to link a box to a user
-class ClaimBox(Resource):
+# Route to Block Unblock a Number
+class ReverseEvaluation(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert()
+        self.__JwtConv = JWTConvert(24)
         self.__UserFactory = UserFactory()
 
 
-    @swag_from("../../../../swagger/Box/Link/Swagger-ClaimBox.yml")
+    @swag_from("../../../../swagger/Embedded/Swagger-ReverseEvaluation.yml")
     def post(self):
-        Request = ClaimBoxRequest(request.get_json())
+        Request = ReverseEvaluationRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -64,14 +68,18 @@ class ClaimBox(Resource):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User == None):
+        if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        result = User.Box.ClaimBox(Request.boxid)
-        if (type(result) is str):
-            return self.__EndpointErrorManager.CreateBadRequestError(result), 400
+        if (not User.Box.IsClaimedByUser(Request.boxid)):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = ClaimBoxResponse(
+        if (User.Blacklist.IsNumber(Request.number)):
+            User.Blacklist.DeleteNumber(Request.number)
+        else:
+            User.Blacklist.AddNumber(Request.number)
+
+        Response = ReverseEvaluationResponse(
             True
         )
 

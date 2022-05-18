@@ -1,5 +1,5 @@
 summary: "Get the box's infos of a user"
-description: "Get the box's infos of an authenticated user\https://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Box#box-infos"
+description: "Get the box's infos of an authenticated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Box#box-infos"
 
 tags:
 - Box

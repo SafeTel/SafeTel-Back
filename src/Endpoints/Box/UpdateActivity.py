@@ -16,8 +16,8 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.UpdateActivity.UpdateActivityRequest import UpdateActivityRequest
-from Models.Endpoints.Embedded.UpdateActivity.UpdateActivityResponse import UpdateActivityResponse
+from Models.Endpoints.Box.UpdateActivity.UpdateActivityRequest import UpdateActivityRequest
+from Models.Endpoints.Box.UpdateActivity.UpdateActivityResponse import UpdateActivityResponse
 
 ### LOGC
 # JWT converter import
@@ -30,7 +30,7 @@ from flasgger.utils import swag_from
 
 ###
 # Request:
-# PATCH: localhost:2407/embedded/update-activity
+# PATCH: localhost:2407/box/update-activity
 # {
 #     "token": "jwt",
 #     "boxid": "1234567890",
