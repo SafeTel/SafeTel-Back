@@ -1,8 +1,8 @@
-summary: "Update Box's activity"
-description: "Update Box's activity\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints:-Embedded#update-activity"
+summary: "Claim a Box"
+description: "Claim a Box from Box's ID for an authenticated user\https://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Box.Link#claim-box"
 
 tags:
-- Embedded
+- Box.Link
 
 produces:
 - "application/json"
@@ -15,7 +15,6 @@ parameters:
     required:
     - token
     - boxid
-    - activity
     properties:
       token:
         type: string
@@ -23,9 +22,6 @@ parameters:
       boxid:
         type: string
         description: Box's ID
-      activity:
-        type: bool
-        description: Box's activity
 
 responses:
   200:

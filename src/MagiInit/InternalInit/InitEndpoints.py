@@ -19,7 +19,11 @@ from Endpoints.Engine.InitEngineEndpoints import InitEngineEndpoints
 from Endpoints.InternalDev.InitInternalDevEndpoints import InitInternalDevEndpoints
 # Init Endpoints Embedded import
 from Endpoints.Embedded.InitEmbeddedEndpints import InitEmbeddedEndpoints
+# Init Endpoints Box import
+from Endpoints.Box.InitBoxEndpints import InitBoxEndpints
 
+
+# Initialize all the endpoints
 class InitEndpoints():
     def __init__(self, Api):
         format = "%(asctime)s: %(message)s"
@@ -40,6 +44,10 @@ class InitEndpoints():
         logging.info("Embedded endpoints initialization...")
         InitEmbeddedEndpoints(Api)
         logging.info("Embedded endpoints initialized")
+
+        logging.info("Box endpoints initialization...")
+        InitBoxEndpints(Api)
+        logging.info("Box endpoints initialized")
 
         logging.info("Engine endpoints initialization...")
         InitEngineEndpoints(Api)

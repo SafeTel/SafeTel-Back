@@ -1,8 +1,8 @@
-summary: "Update Box's severity"
-description: "Update Box's severity\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints:-Embedded#update-severity"
+summary: "Update Box's activity"
+description: "Update Box's activity\https://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Box#update-activity"
 
 tags:
-- Embedded
+- Box
 
 produces:
 - "application/json"
@@ -15,7 +15,7 @@ parameters:
     required:
     - token
     - boxid
-    - severity
+    - activity
     properties:
       token:
         type: string
@@ -23,9 +23,9 @@ parameters:
       boxid:
         type: string
         description: Box's ID
-      severity:
-        type: string
-        description: Box's severity
+      activity:
+        type: bool
+        description: Box's activity
 
 responses:
   200:
