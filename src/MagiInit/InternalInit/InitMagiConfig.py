@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## config
+## InitMagiConfig
 ##
 
 ### LOGIC
@@ -12,7 +12,7 @@ import json
 ### INFRA
 from Infrastructure.Utils.HttpClient.HtttpClient import HttpClient
 
-class InitServerConfig():
+class InitMagiConfig():
     def __init__(self):
         self.__IsValidConfig()
         self.__CheckEnvVars()
