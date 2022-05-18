@@ -1,5 +1,5 @@
 summary: "Verify a number"
-description: "Verify a number for an authenicated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Engine#evaluate-number"
+description: "Verify a number for an authenicated user\nThis endpoint can only be called at the start of a call\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Engine#evaluate-number"
 
 tags:
 - Engine

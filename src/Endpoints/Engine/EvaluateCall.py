@@ -79,6 +79,11 @@ class EvaluateCall(Resource):
         if (not User.Box.IsClaimedByUser(JwtInfos.boxid)):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
+        if (User.Box.IsBoxInCall(JwtInfos.boxid)):
+            User.Box.UpdateCall(JwtInfos.boxid, False)
+        else:
+            return self.__EndpointErrorManager.CreateBadRequestError("A report must be sent at the end of a call"), 403
+
         self.__Engine.ProcessCall(
             User,
             JwtInfos.boxid,

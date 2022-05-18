@@ -52,12 +52,13 @@ class BoxDB():
         self.DBWorker.DeleteDocument(guid)
 
 
-    def addBox(self, guid: str, boxid: str, activity: bool, severity: str):
+    def addBox(self, guid: str, boxid: str, call: bool, activity: bool, severity: str):
         Current = self.__PullData(guid)
         if Current is None:
             return
         NewList = self.__AddBox(
             boxid,
+            call,
             activity,
             severity,
             Current["Boxes"]
@@ -90,9 +91,10 @@ class BoxDB():
     def __PullData(self, guid: str):
         return self.DBWatcher.GetDocument("guid", guid)
 
-    def __AddBox(self, boxid: str, activity: bool, severity: str, TemporaryList: list):
+    def __AddBox(self, boxid: str, call: bool, activity: bool, severity: str, TemporaryList: list):
         TemporaryList.append({
                 "boxid": boxid,
+                "call": call,
                 "activity": activity,
                 "severity": severity
             }
