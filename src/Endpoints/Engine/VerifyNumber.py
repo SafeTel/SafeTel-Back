@@ -21,7 +21,7 @@ from Models.Endpoints.Engine.VerifyNumberResponse import VerifyNumberResponse
 
 ### LOGC
 # JWT converter import
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+from Logic.Services.JWTConvert.JWTConvertEmbedded import JWTConvertEmbedded
 # Engine
 from Engine.Logic.Engine import Engine
 
@@ -35,7 +35,6 @@ from flasgger.utils import swag_from
 # POST: localhost:2407/engine/verify-number
 # {
 # 	"token": "456789",
-#   "boxid": "34567890",
 # 	"number": "0123456789"
 # }
 ###
@@ -50,7 +49,7 @@ from flasgger.utils import swag_from
 class VerifyNumber(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert()
+        self.__JwtConv = JWTConvertEmbedded(24)
         self.__UserFactory = UserFactory()
         self.__Engine = Engine()
 
@@ -72,16 +71,21 @@ class VerifyNumber(Resource):
         if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
+        if (not User.Box.IsClaimedByUser(JwtInfos.boxid)):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+
         verificationResult = self.__Engine.Verify(
             User,
-            Request.boxid,
+            JwtInfos.boxid,
             Request.number
         )
 
         if (type(verificationResult) is str):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        Response = VerifyNumberResponse(verificationResult)
+        Response = VerifyNumberResponse(
+            verificationResult
+        )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):

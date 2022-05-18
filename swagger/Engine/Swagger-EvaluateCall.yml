@@ -14,16 +14,12 @@ parameters:
     type: object
     required:
     - token
-    - boxid
     - report
     - Call
     properties:
       token:
         type: string
-        description: JWT token
-      boxid:
-        type: string
-        description: Box ID
+        description: JWT Embedded token
       report:
         type: bool
         description: Does the user reported this number

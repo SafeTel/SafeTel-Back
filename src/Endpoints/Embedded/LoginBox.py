@@ -23,7 +23,7 @@ from Models.Endpoints.Embedded.LoginBox.LoginBoxResponse import LoginBoxResponse
 
 ### LOGC
 # JWT converter import
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+from Logic.Services.JWTConvert.JWTConvertEmbedded import JWTConvertEmbedded
 
 ### SWAGGER
 # flasgger import
@@ -48,7 +48,7 @@ from flasgger.utils import swag_from
 class LoginBox(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert(24)
+        self.__JwtConv = JWTConvertEmbedded(24)
         self.__UserFactory = UserFactory()
         self.__BoxDB = BoxDB()
 
@@ -69,10 +69,13 @@ class LoginBox(Resource):
         if (User == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
+        if (not User.Box.IsClaimedByUser(Request.boxid)):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+
         Response = LoginBoxResponse(
             self.__JwtConv.Serialize(
                 guid,
-                User.PullUserInfos().role
+                Request.boxid
             )
         )
 
