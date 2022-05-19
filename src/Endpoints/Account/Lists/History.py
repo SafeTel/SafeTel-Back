@@ -94,7 +94,7 @@ from flasgger.utils import swag_from
 class History(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert(os.getenv("JWT_FRONTEND_DURATION"))
+        self.__JwtConv = JWTConvert(int(os.getenv("JWT_FRONTEND_DURATION")))
         self.__UserFactory = UserFactory()
 
 

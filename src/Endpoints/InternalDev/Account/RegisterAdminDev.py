@@ -67,7 +67,7 @@ import os
 class RegisterAdminDev(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert(os.getenv("JWT_FRONTEND_DURATION"))
+        self.__JwtConv = JWTConvert(int(os.getenv("JWT_FRONTEND_DURATION")))
         self.__ApiKeyLogDb = ApiKeyLogDB()
         self.__UserDB = UserDB()
         self.__BlacklistDB = BlacklistDB()

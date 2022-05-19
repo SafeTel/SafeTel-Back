@@ -49,7 +49,7 @@ from flasgger.utils import swag_from
 class ReverseEvaluation(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvertEmbedded(os.getenv("JWT_EMBEDDED_DURATION"))
+        self.__JwtConv = JWTConvertEmbedded(int(os.getenv("JWT_EMBEDDED_DURATION")))
         self.__UserFactory = UserFactory()
 
 
