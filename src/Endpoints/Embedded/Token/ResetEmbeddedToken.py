@@ -32,7 +32,7 @@ from flasgger.utils import swag_from
 
 ###
 # Request:
-# GET: localhost:2407/embedded/token/reset-embedded/token?token=
+# GET: localhost:2407/embedded/token/reset-embedded?token=
 ###
 # Response:
 # {
