@@ -23,6 +23,7 @@ from Models.Endpoints.Account.Infos.UpdatePersonalInfosResponse import UpdatePer
 # Utils check imports
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+
 ### SWAGGER
 # flasgger import
 from flasgger.utils import swag_from

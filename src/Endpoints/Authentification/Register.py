@@ -24,8 +24,7 @@ from Models.Logic.Shared.Roles import Roles
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-# Password encription import
-from Logic.Services.PWDConvert.PWDConvert import PWDConvert
+
 
 ### SWAGGER
 # flasgger import

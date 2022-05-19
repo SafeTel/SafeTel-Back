@@ -25,6 +25,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Password converter import
 from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 
+
 ### SWAGGER
 # flasgger import
 from flasgger.utils import swag_from

@@ -26,6 +26,7 @@ from Models.Endpoints.Authentification.LostPassword.LostPasswordResponse import 
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 from Models.Infrastructure.Factory.UserFactory.UserInfos import UserInfos
 
+
 ### SWAGGER
 # flasgger import
 from flasgger.utils import swag_from

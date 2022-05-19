@@ -25,6 +25,7 @@ from Models.Endpoints.Embedded.LoginBox.LoginBoxResponse import LoginBoxResponse
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvertEmbedded import JWTConvertEmbedded
 
+
 ### SWAGGER
 # flasgger import
 from flasgger.utils import swag_from
@@ -48,7 +49,7 @@ from flasgger.utils import swag_from
 class LoginBox(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvertEmbedded(24)
+        self.__JwtConv = JWTConvertEmbedded()
         self.__UserFactory = UserFactory()
         self.__BoxDB = BoxDB()
 

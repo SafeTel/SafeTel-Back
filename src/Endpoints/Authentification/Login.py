@@ -23,6 +23,7 @@ from Models.Endpoints.Authentification.LoginResponse import LoginResponse
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+
 ### SWAGGER
 # flasgger import
 from flasgger.utils import swag_from

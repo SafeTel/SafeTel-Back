@@ -25,6 +25,7 @@ from Logic.Services.JWTConvert.JWTConvertEmbedded import JWTConvertEmbedded
 # Engine
 from Engine.Logic.Engine import Engine
 
+
 ### SWAGGER
 # flasgger import
 from flasgger.utils import swag_from

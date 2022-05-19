@@ -18,12 +18,11 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 # Model Request & Response import
 from Models.Endpoints.Authentification.Token.CheckTokenRequest import CheckTokenRequest
 from Models.Endpoints.Authentification.Token.CheckTokenResponse import CheckTokenResponse
-# Model for Role import
-from Models.Logic.Shared.Roles import Roles
 
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+
 
 ### SWAGGER
 # flasgger import

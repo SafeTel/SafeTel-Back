@@ -13,8 +13,6 @@ from flask_restful import Resource
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-# import low level interface Box
-from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
 # Model Request & Response import
@@ -24,6 +22,7 @@ from Models.Endpoints.Box.BoxInfos.BoxInfosResponse import BoxInfosResponse
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+
 
 ### SWAGGER
 # flasgger import

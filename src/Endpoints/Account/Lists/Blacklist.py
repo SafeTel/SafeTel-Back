@@ -26,6 +26,7 @@ from Models.Endpoints.Account.Lists.Blacklist.BlacklistResponse import Blacklist
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
+
 ### SWAGGER
 # flasgger import
 from flasgger.utils import swag_from

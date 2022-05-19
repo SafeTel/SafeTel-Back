@@ -5,16 +5,7 @@
 ## EmbeddedJWTConvert
 ##
 
-##
-## SAFETEL PROJECT, 2022
-## SafeTel-Back
-## File description:
-## Provider
-##
-
 ### MODELS
-# Role import
-from Models.Logic.Shared.Roles import Roles
 # JwtInfos Model import
 from Models.Logic.SharedJParent.JWTEmbeddedInfos import JWTEmbeddedInfos
 
@@ -33,10 +24,10 @@ from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 
 class JWTConvertEmbedded():
-    def __init__(self, expiration = 24):
+    def __init__(self, expiration: int = 24):
         self.__UserDb = UserDB()
         self.__SECRET_KEY = os.getenv("SECRET_KEY")
-        self.__expiration = expiration
+        self.__expiration = int(expiration)
 
 
     ### PUBLIC

@@ -13,9 +13,6 @@ from flask_restful import Resource
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-# High level usage DB
-from Infrastructure.Factory.UserFactory.Lists.Blacklist import Blacklist
-from Infrastructure.Factory.UserFactory.Lists.Whitelist import Whitelist
 
 ### MODELS
 # Models Request & Response imports
@@ -25,6 +22,7 @@ from Models.Endpoints.Account.Lists.Greylist.GreylistResponse import GreylistRes
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+
 
 ### SWAGGER
 # flasgger import

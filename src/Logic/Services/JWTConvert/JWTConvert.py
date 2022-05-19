@@ -26,11 +26,13 @@ from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
 
 
 class JWTConvert():
-    def __init__(self, expiration = 24):
+    def __init__(self, expiration :int = 24):
         self.__UserDb = UserDB()
         self.__SECRET_KEY = os.getenv("SECRET_KEY")
-        self.__expiration = expiration
+        self.__expiration = int(expiration)
 
+
+    ### PUBLIC
 
     def Serialize(self, guid: str, role: Roles, lostpassword: bool = False):
         if (guid == "" or guid is None):

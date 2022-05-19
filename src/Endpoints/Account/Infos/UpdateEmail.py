@@ -27,6 +27,7 @@ from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # flasgger import
 from flasgger.utils import swag_from
 
+
 ###
 # Request:
 # PATCH: localhost:2407/account/infos/update-email
