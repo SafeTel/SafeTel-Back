@@ -24,8 +24,7 @@ from Models.Endpoints.Account.Infos.UpdatePasswordResponse import UpdatePassword
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 # Password converter import
 from Logic.Services.PWDConvert.PWDConvert import PWDConvert
-# OS environement var import
-import os
+
 
 ### SWAGGER
 # flasgger import
@@ -52,7 +51,7 @@ from flasgger.utils import swag_from
 class UpdatePassword(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert(int(os.getenv("JWT_FRONTEND_DURATION")))
+        self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
         self.__PWDConvert = PWDConvert()
 

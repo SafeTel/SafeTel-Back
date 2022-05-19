@@ -22,8 +22,7 @@ from Models.Endpoints.Account.Infos.GetInfosResponse import GetInfosResponse
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-# OS environement var import
-import os
+
 
 ### SWAGGER
 # flasgger import
@@ -56,7 +55,7 @@ from flasgger.utils import swag_from
 class GetInfos(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert(int(os.getenv("JWT_FRONTEND_DURATION")))
+        self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
     @swag_from("../../../../swagger/Account/Infos/Swagger-GetInfos.yml")

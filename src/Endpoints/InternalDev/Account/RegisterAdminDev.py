@@ -36,8 +36,7 @@ from Models.Logic.Shared.Roles import Roles
 from Logic.Services.PWDConvert.PWDConvert import PWDConvert
 # GUID  creation import
 import uuid
-# OS environement var import
-import os
+
 
 
 ###
@@ -67,7 +66,7 @@ import os
 class RegisterAdminDev(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert(int(os.getenv("JWT_FRONTEND_DURATION")))
+        self.__JwtConv = JWTConvert()
         self.__ApiKeyLogDb = ApiKeyLogDB()
         self.__UserDB = UserDB()
         self.__BlacklistDB = BlacklistDB()

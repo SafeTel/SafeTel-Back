@@ -24,8 +24,7 @@ from Models.Endpoints.Engine.EvaluateCallResponse import EvaluateCallResponse
 from Logic.Services.JWTConvert.JWTConvertEmbedded import JWTConvertEmbedded
 # Engine
 from Engine.Logic.Engine import Engine
-# OS environement var import
-import os
+
 
 ### SWAGGER
 # flasgger import
@@ -56,7 +55,7 @@ from flasgger.utils import swag_from
 class EvaluateCall(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvertEmbedded(int(os.getenv("JWT_EMBEDDED_DURATION")))
+        self.__JwtConv = JWTConvertEmbedded()
         self.__UserFactory = UserFactory()
         self.__Engine = Engine()
 
