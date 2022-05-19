@@ -23,10 +23,10 @@ from Models.Endpoints.Account.Infos.UpdateEmailResponse import UpdateEmailRespon
 # Utils check imports
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 
-
 ### SWAGGER
 # flasgger import
 from flasgger.utils import swag_from
+
 
 ###
 # Request:
