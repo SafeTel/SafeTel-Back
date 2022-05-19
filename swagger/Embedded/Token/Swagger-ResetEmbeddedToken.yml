@@ -1,5 +1,5 @@
 summary: "Reset the validity of a JWT token"
-description: "Reset the validity of a JWT token\n"
+description: "Reset the validity of a JWT token\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints:-Embedded.Token#reset-embedded-token"
 
 tags:
 - Embedded.Token
