@@ -2,7 +2,7 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## ReverseReport
+## ResetEmbeddedToken
 ##
 
 ### INFRA
@@ -16,9 +16,8 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.ReverseEvaluation.ReverseEvaluationRequest import ReverseEvaluationRequest
-from Models.Endpoints.Embedded.ReverseEvaluation.ReverseEvaluationResponse import ReverseEvaluationResponse
-
+from Models.Endpoints.Embedded.Token.ResetEmbeddedToken.ResetEmbeddedTokenRequest import ResetEmbeddedTokenRequest
+from Models.Endpoints.Embedded.Token.ResetEmbeddedToken.ResetEmbeddedTokenResponse import ResetEmbeddedTokenResponse
 
 ### LOGC
 # JWT converter import
@@ -31,30 +30,26 @@ from flasgger.utils import swag_from
 
 ###
 # Request:
-# POST: localhost:2407/embedded/reverse-evaluation
-# {
-#     "token": "putain je me suis pris une pause de 30 min aujourdhui pour me dire que ma doc est pas assez precise",
-#     "number": "lel"
-# }
+# GET: localhost:2407/embedded/token/reset-embedded/token?token=
 ###
 # Response:
 # {
-# 	  "updated": true
+# 	"token": "new token"
 # }
 ###
 
 
-# Route to Block Unblock a Number
-class ReverseEvaluation(Resource):
+# Route to reset a JWT
+class ResetEmbeddedToken(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvertEmbedded(24)
         self.__UserFactory = UserFactory()
 
 
-    @swag_from("../../../../swagger/Embedded/Swagger-ReverseEvaluation.yml")
-    def post(self):
-        Request = ReverseEvaluationRequest(request.get_json())
+    @swag_from("../../../../swagger/Embedded/Token/Swagger-ResetEmbeddedToken.yml")
+    def get(self):
+        Request = ResetEmbeddedTokenRequest(request.args.to_dict())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -64,20 +59,14 @@ class ReverseEvaluation(Resource):
         if (JwtInfos is None):
             return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
 
-        User = self.__UserFactory.LoadUser(JwtInfos.guid)
-        if (User is None):
+        if (self.__UserFactory.LoadUser(JwtInfos.guid) == None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
-        if (not User.Box.IsClaimedByUser(JwtInfos.boxid)):
-            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
-
-        if (User.Blacklist.IsNumber(Request.number)):
-            User.Blacklist.DeleteNumber(Request.number)
-        else:
-            User.Blacklist.AddNumber(Request.number)
-
-        Response = ReverseEvaluationResponse(
-            True
+        Response = ResetEmbeddedTokenResponse(
+            self.__JwtConv.Serialize(
+                JwtInfos.guid,
+                JwtInfos.boxid
+            )
         )
 
         responseErrors = Response.EvaluateModelErrors()
