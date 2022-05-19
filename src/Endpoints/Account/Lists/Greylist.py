@@ -13,9 +13,6 @@ from flask_restful import Resource
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-# High level usage DB
-from Infrastructure.Factory.UserFactory.Lists.Blacklist import Blacklist
-from Infrastructure.Factory.UserFactory.Lists.Whitelist import Whitelist
 
 ### MODELS
 # Models Request & Response imports
@@ -25,6 +22,8 @@ from Models.Endpoints.Account.Lists.Greylist.GreylistResponse import GreylistRes
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+# OS environement var import
+import os
 
 ### SWAGGER
 # flasgger import
@@ -50,7 +49,7 @@ from flasgger.utils import swag_from
 class GreyList(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert()
+        self.__JwtConv = JWTConvert(os.getenv("JWT_FRONTEND_DURATION"))
         self.__UserFactory = UserFactory()
 
 

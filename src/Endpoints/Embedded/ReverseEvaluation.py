@@ -19,10 +19,11 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 from Models.Endpoints.Embedded.ReverseEvaluation.ReverseEvaluationRequest import ReverseEvaluationRequest
 from Models.Endpoints.Embedded.ReverseEvaluation.ReverseEvaluationResponse import ReverseEvaluationResponse
 
-
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvertEmbedded import JWTConvertEmbedded
+# OS environement var import
+import os
 
 ### SWAGGER
 # flasgger import
@@ -48,7 +49,7 @@ from flasgger.utils import swag_from
 class ReverseEvaluation(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvertEmbedded(24)
+        self.__JwtConv = JWTConvertEmbedded(os.getenv("JWT_EMBEDDED_DURATION"))
         self.__UserFactory = UserFactory()
 
 

@@ -24,6 +24,8 @@ from Models.Endpoints.Embedded.LoginBox.LoginBoxResponse import LoginBoxResponse
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvertEmbedded import JWTConvertEmbedded
+# OS environement var import
+import os
 
 ### SWAGGER
 # flasgger import
@@ -48,7 +50,7 @@ from flasgger.utils import swag_from
 class LoginBox(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvertEmbedded(24)
+        self.__JwtConv = JWTConvertEmbedded(os.getenv("JWT_EMBEDDED_DURATION"))
         self.__UserFactory = UserFactory()
         self.__BoxDB = BoxDB()
 

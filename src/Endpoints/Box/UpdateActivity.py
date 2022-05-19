@@ -22,6 +22,8 @@ from Models.Endpoints.Box.UpdateActivity.UpdateActivityResponse import UpdateAct
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+# OS environement var import
+import os
 
 ### SWAGGER
 # flasgger import
@@ -48,7 +50,7 @@ from flasgger.utils import swag_from
 class UpdateActivity(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert()
+        self.__JwtConv = JWTConvert(os.getenv("JWT_FRONTEND_DURATION"))
         self.__UserFactory = UserFactory()
 
 

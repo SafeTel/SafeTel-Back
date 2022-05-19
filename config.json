@@ -7,6 +7,8 @@
     "MandatoryEnvVars": [
         "SECRET_KEY",
         "SERVER_PORT",
+        "JWT_FRONTEND_DURATION",
+        "JWT_EMBEDDED_DURATION",
         "DB_CLIENT",
         "DB_PASSWORD",
         "DB_MELCHIOR",
