@@ -69,8 +69,6 @@ responses:
   200:
     description: "Success"
   400:
-    description: "Two cases:\n- Missing body values\n- \"Bad token\""
-  403:
-    description: "There is something wrong with the token, check if the account still exists"
+    description: "Three cases:\n- Missing body values\n- \"Bad token\"\n- This email is already linked to an account"
   500:
     description: "Internal Logic Error - Please report all theses errors"
