@@ -56,8 +56,14 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        updated:
+          type: boolean
+          description: The status of the update
   400:
-    description: "Three cases:\n- Missing body values\n- \"Bad token\"\nThe given infos and current are the same"
+    description: "Three cases:\n- Missing body values\n- \"Bad token\"\n- The given infos and current are the same"
   401:
     description: "\"Bad token\""
   403:

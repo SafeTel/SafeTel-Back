@@ -68,6 +68,18 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        created:
+          type: boolean
+          description: The status of the creation
+        username:
+          type: string
+          description: User name
+        token:
+          type: string
+          description: User token
   400:
     description: "Three cases:\n- Missing body values\n- \"Bad token\"\n- This email is already linked to an account"
   500:

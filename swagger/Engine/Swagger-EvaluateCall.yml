@@ -43,6 +43,12 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Evaluation Message
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
   401:

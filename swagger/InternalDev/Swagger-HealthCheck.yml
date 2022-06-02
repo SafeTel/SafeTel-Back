@@ -17,6 +17,16 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        healthCheck:
+          type: object
+          properties:
+            server:
+              type: object
+            environment:
+              type: object
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
   401:

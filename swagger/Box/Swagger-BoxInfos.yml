@@ -17,6 +17,23 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        Boxes:
+          type: array
+          items:
+            type: object
+            properties:
+              boxid:
+                type: string
+                description: Box id
+              activity:
+                type: boolean
+                description: Box activity status
+              severity:
+                type: string
+                description: "Box Severity: None / Blacklist / Normal / High / Max"
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
   401:

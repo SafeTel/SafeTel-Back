@@ -17,6 +17,17 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        Blacklist:
+          type: array
+          items:
+            type: string
+        Whitelist:
+          type: array
+          items:
+            type: string
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
   401:

@@ -26,6 +26,12 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        linked:
+          type: boolean
+          description: The status of the linkage
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
   401:

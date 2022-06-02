@@ -17,6 +17,12 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        validity:
+          type: boolean
+          description: The status of the validity
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
   401:
