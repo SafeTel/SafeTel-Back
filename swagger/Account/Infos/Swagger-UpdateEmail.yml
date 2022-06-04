@@ -26,8 +26,16 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        updated:
+          type: boolean
+          description: The status of the update
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  401:
+    description: "\"Bad token\""
   403:
     description: "There is something wrong with the token, check if the account still exists"
   500:

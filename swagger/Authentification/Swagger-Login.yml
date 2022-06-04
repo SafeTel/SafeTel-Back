@@ -30,6 +30,15 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        username:
+          type: string
+          description: User name
+        token:
+          type: string
+          description: User token
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
   403:

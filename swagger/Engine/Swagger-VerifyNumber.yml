@@ -26,9 +26,17 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        block:
+          type: boolean
+          description: "Blocking status"
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  401:
+    description: "\"Bad token\""
   403:
-    description: "There is something wrong with the token, check if the account still exists"
+    description: "Two cases:\n- There is something wrong with the token, check if the account still exists\n- This box is already in a call"
   500:
     description: "Internal Logic Error - Please report all theses errors"

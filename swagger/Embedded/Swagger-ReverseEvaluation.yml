@@ -1,5 +1,5 @@
 summary: "Reverse the evaluation"
-description: "Reverse an evlauation for the given number (also any action due to evaluyate-call other than history)\n"
+description: "Reverse an evaluation for the given number (also any action due to evaluate-call other than history)"
 
 tags:
 - Embedded
@@ -26,8 +26,16 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        updated:
+          type: boolean
+          description: The status of the update
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  401:
+    description: "\"Bad token\""
   403:
     description: "There is something wrong with the token, check if the account still exists"
   500:
