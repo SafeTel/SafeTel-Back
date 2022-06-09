@@ -11,6 +11,10 @@ services:
             on-failure
         environment:
             SERVER_PORT: 2407
+        volumes:
+            -   type: bind
+                source: ./logs/ # host path or volume name
+                target: /logs # Container path
 
     #mongo:
     #    image: mongo:latest
@@ -61,9 +65,9 @@ services:
     #    depends_on:
     #        - mongo
 
-#volumes:
-#    mongodb_data_container:
-#    mongoconfig:
+# volumes:
+    # mongodb_data_container:
+    # mongoconfig:
 
 #networks:
 #    magi_local_network:
