@@ -39,8 +39,18 @@ class MiddlewareLogger():
 
     def __LogRequest(self):
         request = Request(self.__Environ)
+        buffer = "Incoming Request Environ:"
         for i in request.environ:
-            self.__FileLogger.Logger.info("\t- \"" + i + "\" = " + str(request.environ[i]))
+            buffer += "\n\t- \"" + i + "\" = " + str(request.environ[i])
+        self.__FileLogger.Logger.info(buffer)
+
+        # TO Create à middleware for response
+        # @app.after_request
+        # def modify_outgoing(response):
+        #     html = response.get_data(as_text=True)
+        #     response.data = {modify html}
+        #     return response
+
         ## TODO: Find a way to get_json
         # Current problem: when calling get_json, json empty for next route
         # Exemple:

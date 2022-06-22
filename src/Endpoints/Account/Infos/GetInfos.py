@@ -13,6 +13,8 @@ from flask_restful import Resource
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
+# File Logging
+from Infrastructure.Utils.FileLogger.FileLogger import FileLogger
 
 ### MODELS
 # Model Request & Response import
@@ -57,10 +59,14 @@ class GetInfos(Resource):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
+        self.__FileLogger = FileLogger()
 
     @swag_from("../../../../swagger/Account/Infos/Swagger-GetInfos.yml")
     def get(self):
-        Request = GetInfosRequest(request.args.to_dict())
+        requestArgsDict = request.args.to_dict()
+
+        self.__LoggingRequest(requestArgsDict)
+        Request = GetInfosRequest(requestArgsDict)
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -85,4 +91,12 @@ class GetInfos(Resource):
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
             return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+        ## TODO: Fix using an after_response middleware
+        self.__LoggingResponse(Response.ToDict(), 200)
         return Response.ToDict(), 200
+
+    def __LoggingRequest(self, request: dict):
+        self.__FileLogger.LoggingObjects("Get Infos", "GetInfosRequest", str(request))
+
+    def __LoggingResponse(self, request: dict, httpCode: int):
+        self.__FileLogger.LoggingObjects("Get Infos", "GetInfosResponse with status " + str(httpCode), str(request))

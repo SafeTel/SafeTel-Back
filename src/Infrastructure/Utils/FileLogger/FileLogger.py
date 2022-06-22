@@ -26,3 +26,7 @@ class FileLogger():
 
         self.Logger.addHandler(file_handler)
 
+
+    def LoggingObjects(self, message: str, name: str, object: str):
+        self.Logger.info(message + " - " + name + " : " + object)
+

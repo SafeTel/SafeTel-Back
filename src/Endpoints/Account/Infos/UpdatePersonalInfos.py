@@ -13,6 +13,8 @@ from flask_restful import Resource
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
 from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
+# File Logging
+from Infrastructure.Utils.FileLogger.FileLogger import FileLogger
 
 ### MODELS
 # Models Request & Response imports
@@ -59,10 +61,14 @@ class UpdatePersonalInfos(Resource):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
+        self.__FileLogger = FileLogger()
 
     @swag_from("../../../../swagger/Account/Infos/Swagger-UpdatePersonalInfos.yml")
     def patch(self):
-        Request = UpdatePErsonalInfosRequest(fquest.get_json())
+        JsonRequest = fquest.get_json()
+
+        self.__LoggingRequest(str(JsonRequest))
+        Request = UpdatePErsonalInfosRequest(JsonRequest)
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -92,3 +98,6 @@ class UpdatePersonalInfos(Resource):
         if (responseErrors != None):
             return self.__EndpointErrorManager.CreateInternalLogicError(), 500
         return Response.ToDict(), 200
+
+    def __LoggingRequest(self, request: str):
+        self.__FileLogger.LoggingObjects("Update Personal Infos", "Request Json", request)
