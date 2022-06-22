@@ -76,7 +76,7 @@ class Register(Resource):
         if (requestErrors != None):
             return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
 
-        if (self.__UserFactory.IsMailRegitered(Request.email)):
+        if (self.__UserFactory.IsMailRegitered(Request.email)): #TODO: Regitered -> Registered
             return self.__EndpointErrorManager.CreateBadRequestError("This email is already linked to an account"), 400
 
         User = self.__UserFactory.CreateUser(Request)
