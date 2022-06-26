@@ -1,5 +1,5 @@
 summary: "Get the number of reported number"
-description: "Count how many numbers have been reported\n"
+description: "Count how many numbers have been reported\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints:-Engine#reported-count"
 
 tags:
 - Engine
