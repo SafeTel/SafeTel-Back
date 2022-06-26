@@ -41,7 +41,7 @@ from flasgger.utils import swag_from
 ###
 
 
-# Route to get the informations of an account
+# Route to get the number of reported numbers
 class ReportedCount(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
@@ -49,7 +49,8 @@ class ReportedCount(Resource):
         self.__UserFactory = UserFactory()
         self.__Engine = Engine()
 
-    @swag_from("../../../../swagger/")
+
+    @swag_from("../../../../swagger/Engine/Swagger-ReportedCount.yml")
     def get(self):
         Request = ReportedCountRequest(request.args.to_dict())
 

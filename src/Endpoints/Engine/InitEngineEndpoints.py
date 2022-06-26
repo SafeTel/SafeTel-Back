@@ -13,6 +13,7 @@ from Endpoints.Engine.EvaluateCall import EvaluateCall
 # Evaluate Call unique endpoint import
 from Endpoints.Engine.ReportedCount import ReportedCount
 
+
 class InitEngineEndpoints():
     def __init__(self, Api):
         self.ENGINE_URI_BASE_DOMAIN = "/engine/"
