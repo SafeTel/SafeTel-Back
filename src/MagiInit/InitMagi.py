@@ -26,7 +26,8 @@ import logging
 from MagiInit.InternalInit.InitMagiConfig import InitMagiConfig
 # Swagger Init import
 from MagiInit.ExternalServices.InitSwagger import InitSwagger
-
+# Monitorign Init import
+from MagiInit.ExternalServices.InitMonitoring import InitMonitoring
 
 # Initialize Magi
 class InitMagi():
@@ -40,6 +41,7 @@ class InitMagi():
         InitMagiNetwork()
         self.__InitCore = InitCore()
         self.__InitSwagger = InitSwagger("configuration/SwaggerConfig.json")
+        self.__InitMonitoring = InitMonitoring("configuration/MonitoringConfig.cfg")
 
         self.__MagiApp: Flask.app.Flask = None
         self.__MagiApi: Api.Api = None
@@ -52,6 +54,7 @@ class InitMagi():
         self.__InitializeCore()
         self.__InitializeEndpoints()
         self.__InitializeSwagger()
+        self.__InitializeMonitoring()
         return self.__MagiApp
 
 
@@ -78,3 +81,7 @@ class InitMagi():
 
     def __InitializeSwagger(self):
         self.__MagiApp = self.__InitSwagger.Initialize(self.__MagiApp)
+
+
+    def __InitializeMonitoring(self):
+        self.__MagiApp = self.__InitMonitoring.Initialize(self.__MagiApp)

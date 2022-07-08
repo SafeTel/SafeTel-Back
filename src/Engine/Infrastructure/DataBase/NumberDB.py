@@ -39,6 +39,10 @@ class NumberDB():
         return self.DBWatcher.IsDocument('number', number)
 
 
+    def count(self):
+        return self.NumberDB.count_documents({})
+
+
     ## WRITE
 
     def UpdateScore(self, number: str, newScore: int):
