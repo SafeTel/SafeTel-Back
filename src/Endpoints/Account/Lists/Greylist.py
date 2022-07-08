@@ -7,7 +7,6 @@
 
 ### INFRA
 # Flask imports
-from msilib.schema import Error
 from flask.globals import request
 from flask_restful import Resource
 # User Factory import
