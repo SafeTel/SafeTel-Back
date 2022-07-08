@@ -15,7 +15,7 @@ from MagiInit.InternalInit.InitMagiNetwork import InitMagiNetwork
 # Endpoints Init import
 from MagiInit.InternalInit.InitEndpoints import InitEndpoints
 # Middle Init import
-from MagiInit.InternalInit.MiddlewareLogger.MiddlewareLogger import MiddlewareLogger
+from MagiInit.ExternalServices.InitMiddlewareLogger import MiddlewareLoggerForRequest, MiddlewareLoggerForResponses
 # Flask import
 from flask import Flask
 # Restfull api import
@@ -85,9 +85,11 @@ class InitMagi():
     def __InitializeSwagger(self):
         self.__MagiApp = self.__InitSwagger.Initialize(self.__MagiApp)
 
+
     def __InitializeMiddleware(self):
-        self.__MagiApp.wsgi_app = MiddlewareLogger(self.__MagiApp.wsgi_app)
-        # app.wsgi_app = MiddlewareLogger(app.wsgi_app)
+        self.__MagiApp.before_request(MiddlewareLoggerForRequest)
+        self.__MagiApp.after_request(MiddlewareLoggerForResponses)
+
 
     def __InitializeMonitoring(self):
         self.__MagiApp = self.__InitMonitoring.Initialize(self.__MagiApp)

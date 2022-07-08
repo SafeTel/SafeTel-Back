@@ -13,12 +13,25 @@ import logging
 import sys
 
 class FileLogger():
+    __instance = None
+
+    @classmethod
     def __init__(self, loggerName= "FileLogger", filePath = "logs/", fileName = "magi.log"):
-        logger = logging.Logger(loggerName, logging.DEBUG)
-        self.Logger = logger
-        self.__SetFileHandler(filePath+fileName)
+        self.Logger = None
 
+        if FileLogger.__instance != None:
+            raise Exception("This class is a singleton!")
+        else:
+            logger = logging.Logger(loggerName, logging.DEBUG)
+            self.Logger = logger
+            self.__SetFileHandler(filePath+fileName)
+            FileLogger.__instance = self
 
+    @classmethod
+    def LoggingObjects(self, message: str, name: str, object: str):
+        self.Logger.info(message + " - " + name + " : " + object)
+
+    @classmethod
     def __SetFileHandler(self, path):
         file_handler = logging.FileHandler(path)
         file_handler.setLevel(logging.DEBUG)
@@ -27,6 +40,9 @@ class FileLogger():
         self.Logger.addHandler(file_handler)
 
 
-    def LoggingObjects(self, message: str, name: str, object: str):
-        self.Logger.info(message + " - " + name + " : " + object)
+    @staticmethod
+    def getInstance():
+        if FileLogger.__instance == None:
+            FileLogger()
+        return FileLogger.__instance
 

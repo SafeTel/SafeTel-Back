@@ -27,7 +27,7 @@ class InitCore():
 
     def Initialize(self, debug: bool = True):
         MagiApp = Flask(__name__)
-
+        
         MagiApp.debug = debug # TODO: Put this param into the config.jsoin
         MagiApi = Api(MagiApp)
         logging.info("Magi App & Api Initialized")
