@@ -11,9 +11,8 @@ from flask.globals import request
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-# Endpoint Error Manager import
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-
+# Error Manager Factory import
+from Models.Endpoints.Errors.Factory.ErrorManagerFactory import ErrorManagerFactory
 ### MODELS
 # Model Request & Response import
 from Models.Endpoints.Authentification.RegisterRequest import RegisterRequest
@@ -63,7 +62,7 @@ from flasgger.utils import swag_from
 # Route to Register a user
 class Register(Resource):
     def __init__(self):
-        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__ErrorManagerFactory = ErrorManagerFactory()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
@@ -74,10 +73,10 @@ class Register(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
 
         if (self.__UserFactory.IsMailRegitered(Request.email)): #TODO: Regitered -> Registered
-            return self.__EndpointErrorManager.CreateBadRequestError("This email is already linked to an account"), 400
+            return self.__ErrorManagerFactory.BadRequestError({"details": "This email is already linked to an account"}).ToDict(), 400
 
         User = self.__UserFactory.CreateUser(Request)
         UserInfos = User.PullUserInfos()
@@ -90,5 +89,5 @@ class Register(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+            return self.__ErrorManagerFactory.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200
