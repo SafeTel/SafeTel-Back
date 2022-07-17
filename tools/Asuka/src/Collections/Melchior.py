@@ -1,0 +1,51 @@
+##
+## SAFETEL PROJECT, 2022
+## SafeTel-Back
+## File description:
+## Melchior
+##
+
+### LOGIC
+# For Getenv
+import logging
+import os
+# Utils for uploading
+from Collections.Utils import SaveAndUpload
+
+class Melchior():
+    def __init__(self, DocumentsMaxIterationNumber, DocumentsPageSize, client, filepath):
+        # Using i for paging datas -> avoiding the use of to much memory at the same time
+        self.__DocumentsMaxIterationNumber = DocumentsMaxIterationNumber # 5 billions
+        self.__DocumentsPageSize = DocumentsPageSize
+
+        if client is None:
+            raise Exception("Client is None")
+        self.__MelchiorName = os.getenv("DB_MELCHIOR")
+        self.__MelchiorDB = client[self.__MelchiorName]
+
+        if self.__MelchiorDB is None:
+            raise Exception("MelchiorDB is None")
+        self.__Save()
+
+    def __Save(self):
+        # Melchior mongoDB Save
+        Blacklist = self.__MelchiorDB['Blacklist']
+        if (Blacklist is None):
+            raise Exception("Blacklist Collection is None")
+        GetCollectionContentAndFunc(Blacklist, )
+
+        History = self.__MelchiorDB['History']
+        if (History is None):
+            raise Exception("History Collection is None")
+        GetCollectionContentAndFunc(History, )
+
+        User = self.__MelchiorDB['User']
+        if (User is None):
+            raise Exception("User Collection is None")
+        GetCollectionContentAndFunc(User, )
+
+        Whitelist = self.__MelchiorDB['Whitelist']
+
+        if (Whitelist is None):
+            raise Exception("Whitelist Collection is None")
+        GetCollectionContentAndFunc(Whitelist, )
