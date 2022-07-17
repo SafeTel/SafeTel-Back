@@ -1,6 +1,11 @@
 version: "3.3"
 
 services:
+
+    #####################
+    ### --- Magi ---- ###
+    #####################
+
     magi_dev:
         image:
             safetel/safetel-back:dev
@@ -34,6 +39,10 @@ services:
             - SERVER_PORT=2407
         env_file: ../prod-config.env
 
+    #####################
+    ### --- Amane --- ###
+    #####################
+
     clean_db:
         build: # "context" and "dockerfile" fields have to be under "build"
             context: ../../tools/Amane/
@@ -59,3 +68,43 @@ services:
         restart:
             on-failure
         env_file: ../postman-config.env
+
+    #####################
+    ### --- Asuka --- ###
+    #####################
+
+    ## Prod Services
+    save_db_prod:
+        build:
+            context: ../../tools/Asuka/
+            dockerfile: ./Dockerfile
+        restart:
+            on-failure
+        env_file: ../prod-config.env
+
+    save_db_prod_force_now:
+        build:
+            context: ../../tools/Asuka/
+            dockerfile: ./Dockerfile
+        command: ["python3", "./src/Asuka.py", "--force-now"]
+        restart:
+            on-failure
+        env_file: ../prod-config.env
+
+    ## Dev Services
+    save_db_dev:
+        build:
+            context: ../../tools/Asuka/
+            dockerfile: ./Dockerfile
+        restart:
+            on-failure
+        env_file: ../dev-config.env
+
+    save_db_dev_force_now:
+        build:
+            context: ../../tools/Asuka/
+            dockerfile: ./Dockerfile
+        command: ["python3", "./src/Asuka.py", "--force-now"]
+        restart:
+            on-failure
+        env_file: ../dev-config.env
