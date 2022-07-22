@@ -16,6 +16,7 @@ class Melchior():
         # Using i for paging datas -> avoiding the use of to much memory at the same time
         self.__DocumentsMaxIterationNumber = DocumentsMaxIterationNumber # 5 billions
         self.__DocumentsPageSize = DocumentsPageSize
+        self.__Filepath = filepath
 
         if client is None:
             raise Exception("Client is None")

@@ -13,8 +13,10 @@ import os
 ### INFRA
 # Mongo Collection
 import pymongo
+# Callable import for annotation function as argument
+from typing import Callable
 
-def GetCollectionContentAndFunc(collection: pymongo.Collection, func: function, DocumentsMaxIterationNumber = 5000000000, DocumentsPageSize = 50):
+def GetCollectionContentAndFunc(collection: pymongo.collection, func: Callable[[list], bool], DocumentsMaxIterationNumber = 5000000000, DocumentsPageSize = 50):
     for i in range(DocumentsMaxIterationNumber): 
         RangeMin = i * DocumentsPageSize
         RangeMax = DocumentsPageSize + RangeMin

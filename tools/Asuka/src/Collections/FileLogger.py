@@ -7,14 +7,8 @@
 
 
 ### LOGIC
-# Date stl import
-from datetime import datetime
 # logging stl import
 import logging
-# I/O stream
-import sys
-# Env var
-import os
 
 class FileLogger():
     def __init__(self, loggerName= "FileLogger", filePath = "saves/", fileName = "database.json"):
