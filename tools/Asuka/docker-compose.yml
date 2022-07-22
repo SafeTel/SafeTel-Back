@@ -14,7 +14,7 @@ services:
             dockerfile: ./Dockerfile
         restart:
             on-failure
-        env_file: ../config.env
+        env_file: ./config.env
         volumes:
             -   type: bind
                 source: ./saves/ # host path or volume name
@@ -28,7 +28,7 @@ services:
         command: ["python3", "./src/Asuka.py", "--force-now"]
         restart:
             on-failure
-        env_file: ../config.env
+        env_file: ./config.env
         volumes:
             -   type: bind
                 source: ./saves/ # host path or volume name

@@ -4,8 +4,8 @@
         "DB_CASPER",
         "DB_CASPER_02",
         "DB_BALTHASAR",
+        "DB_BALTHASAR_02",
         "DB_URI",
-        "DB_URI_SERVER_TO_COPY",
         "PING_URI",
         "MODE"
     ]
