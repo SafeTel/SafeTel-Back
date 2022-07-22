@@ -8,6 +8,7 @@
 
 ### LOGIC
 # env var import
+import logging
 import os
 
 # INFRA
@@ -38,6 +39,7 @@ class DBClean():
 
     # Parse __DBAndCollectionPair array to perform deletion on every collections
     def run(self):
+        logging.info("Launching DBClean.run() ...")
         for MongoConfig in self.__DBAndCollectionPair:
 
             if MongoConfig == None:
@@ -55,6 +57,7 @@ class DBClean():
                 # Get the collection from DB
                 self.MongoDB = self.__DB[DBName][CollectionName]
                 self.DeleteManyDocument(self.MongoDB, {})
+        logging.info("DBClean.run() Done")
 
     # Delete multiple documents
     def DeleteManyDocument(self, db, query: Any):
