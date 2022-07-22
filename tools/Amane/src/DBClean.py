@@ -24,7 +24,8 @@ class DBClean():
             os.getenv("DB_MELCHIOR"):  self.__MongoDBClient[os.getenv("DB_MELCHIOR")],
             os.getenv("DB_CASPER"):    self.__MongoDBClient[os.getenv("DB_CASPER")],
             os.getenv("DB_CASPER_02"): self.__MongoDBClient[os.getenv("DB_CASPER_02")],
-            os.getenv("DB_BALTHASAR"): self.__MongoDBClient[os.getenv("DB_BALTHASAR")]
+            os.getenv("DB_BALTHASAR"): self.__MongoDBClient[os.getenv("DB_BALTHASAR")],
+            os.getenv("DB_BALTHASAR_02"): self.__MongoDBClient[os.getenv("DB_BALTHASAR_02")]
         }
 
     # Set a pair of database and collection to clean

@@ -11,6 +11,7 @@
         "DB_CASPER",
         "DB_CASPER_02",
         "DB_BALTHASAR",
+        "DB_BALTHASAR°02",
         "DB_URI"
     ],
     "VariableToSetOptionally": {
@@ -21,6 +22,7 @@
         "DB_CASPER": "Casper",
         "DB_CASPER_02": "Casper02",
         "DB_BALTHASAR": "Balthasar",
+        "DB_BALTHASAR_02": "Balthasar02",
         "PING_URI": "http://google.com"
     }
 }

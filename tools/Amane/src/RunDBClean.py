@@ -27,6 +27,7 @@ def runDBClean(argv):
     MongoDBClean.setDatabasesCollectionPair(os.getenv("DB_CASPER"), ['ApiKeyLog', 'Contributors'])
     MongoDBClean.setDatabasesCollectionPair(os.getenv("DB_CASPER_02"), ['GoogleServices'])
     MongoDBClean.setDatabasesCollectionPair(os.getenv("DB_BALTHASAR"), ['Boxes', 'UnclaimedBoxes'])
+    MongoDBClean.setDatabasesCollectionPair(os.getenv("DB_BALTHASAR_02"), ['FR-0033'])
 
     if (len(argv) == 2):
         if (argv[1] == '--force-now'):
