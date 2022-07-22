@@ -6,10 +6,10 @@
 ##
 
 ### LOGIC
+# For Logging
+import logging
 # For Getenv
 import os
-# Utils for uploading
-from Collections.Utils import SaveAndUpload
 
 class Melchior():
     def __init__(self, DocumentsMaxIterationNumber, DocumentsPageSize, client, filepath):
@@ -37,18 +37,21 @@ class Melchior():
         Blacklist = self.__MelchiorDB['Blacklist']
         if (Blacklist is None):
             raise Exception("Blacklist Collection is None")
+        logging.info("Save Melchior Blacklist")
         # GetCollectionContentAndFunc(Blacklist, )
 
     def __SaveHistory(self):
         History = self.__MelchiorDB['History']
         if (History is None):
             raise Exception("History Collection is None")
+        logging.info("Save Melchior History")
         # GetCollectionContentAndFunc(History, )
 
     def __SaveUser(self):
         User = self.__MelchiorDB['User']
         if (User is None):
             raise Exception("User Collection is None")
+        logging.info("Save Melchior User")
         # GetCollectionContentAndFunc(User, )
 
     def __SaveWhitelist(self):
@@ -56,4 +59,5 @@ class Melchior():
 
         if (Whitelist is None):
             raise Exception("Whitelist Collection is None")
+        logging.info("Save Melchior Whitelist")
         # GetCollectionContentAndFunc(Whitelist, )

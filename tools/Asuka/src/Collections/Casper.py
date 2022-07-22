@@ -22,25 +22,21 @@ class Casper():
             raise Exception("Client is None")
         self.__CasperName = os.getenv("DB_CASPER")
         self.__CasperDB = client[self.__CasperName]
-        self.__CasperDBToCopy = clientToCopy[self.__CasperName]
 
         if self.__CasperDB is None:
             raise Exception("CasperDB is None")
-        if self.__CasperDBToCopy is None:
-            raise Exception("CasperDBToCopy is None")
-        self.__Copy()
+        self.__Save()
 
-    def __Copy(self):
-        # Casper mongoDB Copy
-
+    def __Save(self):
+        # Casper mongoDB Saving
         ApiKeyLog = self.__CasperDB['ApiKeyLog']
-        ApiKeyLogToCopy = self.__CasperDBToCopy['ApiKeyLog']
-        if (ApiKeyLog is None or ApiKeyLogToCopy is None):
+        if (ApiKeyLog is None):
             raise Exception("ApiKeyLog Collection is None")
-        CopyAndUpload(ApiKeyLogToCopy, ApiKeyLog)
+        logging.info("Save Casper ApiKeyLog")
+        # GetCollectionContentAndFunc(ApiKeyLog, )
 
         Contributors = self.__CasperDB['Contributors']
-        ContributorsToCopy = self.__CasperDBToCopy['Contributors']
-        if (Contributors is None or ContributorsToCopy is None):
+        if (Contributors is None):
             raise Exception("Contributors Collection is None")
-        CopyAndUpload(ContributorsToCopy, Contributors)
+        logging.info("Save Casper Contributors")
+        # GetCollectionContentAndFunc(Contributors, )

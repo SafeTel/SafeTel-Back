@@ -2,17 +2,16 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## Balthasar
+## BalthasarTwo
 ##
 
 ### LOGIC
-# For Getenv
+# For Logging
 import logging
+# For Getenv
 import os
-# Utils for uploading
-from Collections.Utils import CopyAndUpload
 
-class Balthasar():
+class BalthasarTwo():
     def __init__(self, DocumentsMaxIterationNumber, DocumentsPageSize, client, clientToCopy):
         # Using i for paging datas -> avoiding the use of to much memory at the same time
         self.__DocumentsMaxIterationNumber = DocumentsMaxIterationNumber # 5 billions
@@ -20,21 +19,17 @@ class Balthasar():
 
         if client is None:
             raise Exception("Client is None")
-        self.__BalthasarName = os.getenv("DB_BALTHASAR")
-        self.__BalthasarDB = client[self.__BalthasarName]
+        self.__BalthasarTwoName = os.getenv("DB_BALTHASAR_02")
+        self.__BalthasarTwoDB = client[self.__BalthasarTwoName]
 
-        if self.__BalthasarDB is None:
+        if self.__BalthasarTwoDB is None:
             raise Exception("BalthasarDB is None")
         self.__Save()
 
     def __Save(self):
         # Balthasar mongoDB Saving
-        Boxes = self.__BalthasarDB['Boxes']
-        if (Boxes is None):
+        Fr_0033 = self.__BalthasarTwoDB['FR-0033']
+        if (Fr_0033 is None):
             raise Exception("Boxes Collection is None")
-        # GetCollectionContentAndFunc(Boxes, )
-
-        UnclaimedBoxes = self.__BalthasarDB['UnclaimedBoxes']
-        if (UnclaimedBoxes is None):
-            raise Exception("UnclaimedBoxes Collection is None")
-        # GetCollectionContentAndFunc(UnclaimedBoxes, )
+        logging.info("Save BalthasarTwo FR-0033")
+        # GetCollectionContentAndFunc(Fr_0033, )

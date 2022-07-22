@@ -22,18 +22,14 @@ class CasperTwo():
             raise Exception("Client is None")
         self.__CasperTwoName = os.getenv("DB_CASPER_02")
         self.__CasperTwoDB = client[self.__CasperTwoName]
-        self.__CasperTwoDBToCopy = clientToCopy[self.__CasperTwoName]
         if self.__CasperTwoDB is None:
             raise Exception("CasperTwoDB is None")
-        if self.__CasperTwoDBToCopy is None:
-            raise Exception("CasperTwoDBToCopy is None")
-        self.__Copy()
+        self.__Save()
 
-    def __Copy(self):
-        # CasperTwo mongoDB Copy
-
+    def __Save(self):
+        # CasperTwo mongoDB Save
         GoogleServices = self.__CasperTwoDB['GoogleServices']
-        GoogleServicesToCopy = self.__CasperTwoDBToCopy['GoogleServices']
-        if (GoogleServices is None or GoogleServicesToCopy is None):
+        if (GoogleServices is None):
             raise Exception("GoogleServices Collection is None")
-        CopyAndUpload(GoogleServicesToCopy, GoogleServices)
+        logging.info("Save CasperTwo GoogleServices")
+        # GetCollectionContentAndFunc(GoogleServices, )
