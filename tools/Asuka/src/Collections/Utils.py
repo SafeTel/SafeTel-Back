@@ -17,6 +17,8 @@ import pymongo
 from typing import Callable
 
 def GetCollectionContentAndFunc(collection: pymongo.collection, func: Callable[[list], bool], DocumentsMaxIterationNumber = 5000000000, DocumentsPageSize = 50):
+    logging.info("GetCollectionContentAndFunc")
+
     for i in range(DocumentsMaxIterationNumber): 
         RangeMin = i * DocumentsPageSize
         RangeMax = DocumentsPageSize + RangeMin
@@ -25,4 +27,4 @@ def GetCollectionContentAndFunc(collection: pymongo.collection, func: Callable[[
         if len(list(BoxesDocumentsWithPagingInList)) <= 0:
             break
 
-        func(BoxesDocumentsWithPagingInList)
+    func(BoxesDocumentsWithPagingInList)

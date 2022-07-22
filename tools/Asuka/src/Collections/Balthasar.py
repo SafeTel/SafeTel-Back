@@ -11,8 +11,12 @@ import logging
 # For Getenv
 import os
 
+from Collections.FileLogger import FileLogger
+
+from Collections.Utils import GetCollectionContentAndFunc
+
 class Balthasar():
-    def __init__(self, DocumentsMaxIterationNumber, DocumentsPageSize, client, clientToCopy):
+    def __init__(self, DocumentsMaxIterationNumber, DocumentsPageSize, client, filepath):
         # Using i for paging datas -> avoiding the use of to much memory at the same time
         self.__DocumentsMaxIterationNumber = DocumentsMaxIterationNumber # 5 billions
         self.__DocumentsPageSize = DocumentsPageSize
@@ -28,13 +32,17 @@ class Balthasar():
         self.__Save()
 
     def __Save(self):
+        logger = FileLogger("BalthaserBoxesLogger", self.__Filepath, "/Boxes.json")
         # Balthasar mongoDB Saving
         Boxes = self.__BalthasarDB['Boxes']
         if (Boxes is None):
             raise Exception("Boxes Collection is None")
-        # GetCollectionContentAndFunc(Boxes, )
+        logging.info("Save Balthasar Boxes")
+
+        GetCollectionContentAndFunc(Boxes, logger.LoggingList)
 
         UnclaimedBoxes = self.__BalthasarDB['UnclaimedBoxes']
         if (UnclaimedBoxes is None):
             raise Exception("UnclaimedBoxes Collection is None")
+        logging.info("Save Balthasar UnclaimedBoxes")
         # GetCollectionContentAndFunc(UnclaimedBoxes, )

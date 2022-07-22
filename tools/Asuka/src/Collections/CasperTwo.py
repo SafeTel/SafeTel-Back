@@ -12,7 +12,7 @@ import os
 import logging
 
 class CasperTwo():
-    def __init__(self, DocumentsMaxIterationNumber, DocumentsPageSize, client, clientToCopy):
+    def __init__(self, DocumentsMaxIterationNumber, DocumentsPageSize, client, filepath):
         # Using i for paging datas -> avoiding the use of to much memory at the same time
         self.__DocumentsMaxIterationNumber = DocumentsMaxIterationNumber # 5 billions
         self.__DocumentsPageSize = DocumentsPageSize

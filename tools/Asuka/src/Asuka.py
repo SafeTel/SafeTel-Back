@@ -11,6 +11,7 @@
 # Logs Imports
 import logging
 
+
 format = "%(asctime)s: %(message)s"
 logging.basicConfig(format=format, level=logging.INFO, datefmt="%H:%M:%S")
 
@@ -21,16 +22,21 @@ logging.info("You can find documentation on this repo: https://github.com/SafeTe
 
 ####################################
 ### Initiate Tool Config BEGIN ###
-from InitToolConfig import InitToolConfig
-
 logging.warning("--- /!\ Validating Environement /!\\ ----")
+
+from InitToolConfig import InitToolConfig
 InitToolConfig()
 logging.warning("---     Environement Validated      ----")
 ###  Initiate Tool Config END  ###
 ####################################
 
 ### To Perform the copy of a database
-from SaveDatabases import SaveDatabases
+
+# For argv
+import sys
+# For Running DBSave
+from RunDBSave import runDBSave
+
 
 if __name__ == "__main__":
-    SaveDatabases()
+    runDBSave(sys.argv)

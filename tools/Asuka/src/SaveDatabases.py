@@ -20,7 +20,7 @@ from Collections.Melchior import Melchior
 from Collections.Casper import Casper
 from Collections.CasperTwo import CasperTwo
 from Collections.Balthasar import Balthasar
-from tools.Asuka.src.Collections.BalthasarTwo import BalthasarTwo
+from Collections.BalthasarTwo import BalthasarTwo
 # Class to init parameters
 from InitSaveFileParameters import InitSaveFileParameters
 
