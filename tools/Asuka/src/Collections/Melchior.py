@@ -7,7 +7,6 @@
 
 ### LOGIC
 # For Getenv
-import logging
 import os
 # Utils for uploading
 from Collections.Utils import SaveAndUpload
@@ -28,24 +27,33 @@ class Melchior():
         self.__Save()
 
     def __Save(self):
+        self.__SaveBlacklist()
+        self.__SaveHistory()
+        self.__SaveUser()
+        self.__SaveWhitelist()
+
+    def __SaveBlacklist(self):
         # Melchior mongoDB Save
         Blacklist = self.__MelchiorDB['Blacklist']
         if (Blacklist is None):
             raise Exception("Blacklist Collection is None")
-        GetCollectionContentAndFunc(Blacklist, )
+        # GetCollectionContentAndFunc(Blacklist, )
 
+    def __SaveHistory(self):
         History = self.__MelchiorDB['History']
         if (History is None):
             raise Exception("History Collection is None")
-        GetCollectionContentAndFunc(History, )
+        # GetCollectionContentAndFunc(History, )
 
+    def __SaveUser(self):
         User = self.__MelchiorDB['User']
         if (User is None):
             raise Exception("User Collection is None")
-        GetCollectionContentAndFunc(User, )
+        # GetCollectionContentAndFunc(User, )
 
+    def __SaveWhitelist(self):
         Whitelist = self.__MelchiorDB['Whitelist']
 
         if (Whitelist is None):
             raise Exception("Whitelist Collection is None")
-        GetCollectionContentAndFunc(Whitelist, )
+        # GetCollectionContentAndFunc(Whitelist, )
