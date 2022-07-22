@@ -8,9 +8,28 @@ services:
         restart:
             on-failure
 
-networks: 
-    default: 
-        external: 
-            name: mongo_network
+    save_db:
+        build:
+            context: ../../tools/Asuka/
+            dockerfile: ./Dockerfile
+        restart:
+            on-failure
+        env_file: ../config.env
+        volumes:
+            -   type: bind
+                source: ./saves/ # host path or volume name
+                target: /saves # Container path
 
 
+    save_db_force_now:
+        build:
+            context: ../../tools/Asuka/
+            dockerfile: ./Dockerfile
+        command: ["python3", "./src/Asuka.py", "--force-now"]
+        restart:
+            on-failure
+        env_file: ../config.env
+        volumes:
+            -   type: bind
+                source: ./saves/ # host path or volume name
+                target: /saves # Container path
