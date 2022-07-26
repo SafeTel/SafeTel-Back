@@ -32,7 +32,8 @@ class Balthasar():
         self.__Save()
 
     def __Save(self):
-        logger = FileLogger("BalthaserBoxesLogger", self.__Filepath, "/Boxes.json")
+        logger = FileLogger("BalthaserBoxesLogger", self.__Filepath, "")
+        logger.UpdateFileHandler(self.__Filepath+"/Balthasar", "/Boxes.json")
         # Balthasar mongoDB Saving
         Boxes = self.__BalthasarDB['Boxes']
         if (Boxes is None):
