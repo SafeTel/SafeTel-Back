@@ -5,15 +5,11 @@ services:
         env_file: ./config.env
         build:
             context: ./
-        restart:
-            on-failure
 
     save_db:
         build:
             context: ../../tools/Asuka/
             dockerfile: ./Dockerfile
-        restart:
-            on-failure
         env_file: ./config.env
         volumes:
             -   type: bind
@@ -26,8 +22,6 @@ services:
             context: ../../tools/Asuka/
             dockerfile: ./Dockerfile
         command: ["python3", "./src/Asuka.py", "--force-now"]
-        restart:
-            on-failure
         env_file: ./config.env
         volumes:
             -   type: bind

@@ -11,8 +11,10 @@ import logging
 # For Getenv
 import os
 
+### INFRA
+# For File logging
 from Collections.FileLogger import FileLogger
-
+# Utils for saving
 from Collections.Utils import GetCollectionContentAndFunc
 
 class Balthasar():
@@ -29,21 +31,30 @@ class Balthasar():
 
         if self.__BalthasarDB is None:
             raise Exception("BalthasarDB is None")
+        self.__InitLogger()
         self.__Save()
 
+    def __InitLogger(self):
+        self.__Logger = FileLogger("BalthasarLogger", self.__Filepath+"/Balthasar", "")
+
     def __Save(self):
-        logger = FileLogger("BalthaserBoxesLogger", self.__Filepath, "")
-        logger.UpdateFileHandler(self.__Filepath+"/Balthasar", "/Boxes.json")
-        # Balthasar mongoDB Saving
+        self.__SaveBoxes()
+        self.__SaveUnclaimedBoxes()
+
+    def __SaveBoxes(self):
+        self.__Logger.UpdateFileHandlerFileName("/Boxes.json")
+
         Boxes = self.__BalthasarDB['Boxes']
         if (Boxes is None):
             raise Exception("Boxes Collection is None")
         logging.info("Save Balthasar Boxes")
+        GetCollectionContentAndFunc(Boxes, self.__Logger.LoggingBsonIntoJson)
 
-        GetCollectionContentAndFunc(Boxes, logger.LoggingList)
+    def __SaveUnclaimedBoxes(self):
+        self.__Logger.UpdateFileHandlerFileName("/UnclaimedBoxes.json")
 
         UnclaimedBoxes = self.__BalthasarDB['UnclaimedBoxes']
         if (UnclaimedBoxes is None):
             raise Exception("UnclaimedBoxes Collection is None")
         logging.info("Save Balthasar UnclaimedBoxes")
-        # GetCollectionContentAndFunc(UnclaimedBoxes, )
+        GetCollectionContentAndFunc(UnclaimedBoxes, self.__Logger.LoggingBsonIntoJson)

@@ -23,6 +23,8 @@ from Collections.Balthasar import Balthasar
 from Collections.BalthasarTwo import BalthasarTwo
 # Class to init parameters
 from InitSaveFileParameters import InitSaveFileParameters
+# For Logging
+from Collections.FileLogger import FileLogger
 
 class SaveDatabases():
     def __init__(self):
@@ -41,6 +43,8 @@ class SaveDatabases():
         self.__SaveDataFromServer()
 
     def __SaveDataFromServer(self):
+        FileLogger.CreateFolder(self.__SaveFileParameters.GetFilePath())
+
         Melchior(self.__DocumentsMaxIterationNumber, self.__DocumentsPageSize, self.__MongoDBClient, self.__SaveFileParameters.GetFilePath())
         Casper(self.__DocumentsMaxIterationNumber, self.__DocumentsPageSize, self.__MongoDBClient, self.__SaveFileParameters.GetFilePath())
         CasperTwo(self.__DocumentsMaxIterationNumber, self.__DocumentsPageSize, self.__MongoDBClient, self.__SaveFileParameters.GetFilePath())

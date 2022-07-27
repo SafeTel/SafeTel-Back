@@ -16,15 +16,23 @@ import pymongo
 # Callable import for annotation function as argument
 from typing import Callable
 
-def GetCollectionContentAndFunc(collection: pymongo.collection, func: Callable[[list], bool], DocumentsMaxIterationNumber = 5000000000, DocumentsPageSize = 50):
-    logging.info("GetCollectionContentAndFunc")
 
+import json
+from bson import json_util
+
+## Util Function for Collection
+#
+#   Launch Func while getting collection content 
+#
+def GetCollectionContentAndFunc(collection: pymongo.collection, func: Callable[[list], bool], DocumentsMaxIterationNumber = 5000000000, DocumentsPageSize = 50):
     for i in range(DocumentsMaxIterationNumber): 
         RangeMin = i * DocumentsPageSize
         RangeMax = DocumentsPageSize + RangeMin
-        BoxesDocumentsWithPagingInList = list(collection.find().skip(RangeMin).limit(RangeMax))
 
-        if len(list(BoxesDocumentsWithPagingInList)) <= 0:
+        DocumentsWithPaging = collection.find().skip(RangeMin).limit(RangeMax)
+
+        func(DocumentsWithPaging)
+
+        DocumentsWithPagingInList = list(DocumentsWithPaging)
+        if (DocumentsWithPagingInList.__len__() == 0):
             break
-
-    func(BoxesDocumentsWithPagingInList)

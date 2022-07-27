@@ -11,6 +11,12 @@ import logging
 # For Getenv
 import os
 
+### INFRA
+# For File logging
+from Collections.FileLogger import FileLogger
+# Utils for saving
+from Collections.Utils import GetCollectionContentAndFunc
+
 class BalthasarTwo():
     def __init__(self, DocumentsMaxIterationNumber, DocumentsPageSize, client, filepath):
         # Using i for paging datas -> avoiding the use of to much memory at the same time
@@ -25,12 +31,17 @@ class BalthasarTwo():
 
         if self.__BalthasarTwoDB is None:
             raise Exception("BalthasarDB is None")
+        self.__InitLogger()
         self.__Save()
 
+    def __InitLogger(self):
+        self.__Logger = FileLogger("BalthasarTwoLogger", self.__Filepath+"/BalthaserTwo", "")
+
     def __Save(self):
-        # Balthasar mongoDB Saving
+        self.__Logger.UpdateFileHandlerFileName("/Fr_0033.json")
+
         Fr_0033 = self.__BalthasarTwoDB['FR-0033']
         if (Fr_0033 is None):
-            raise Exception("Boxes Collection is None")
+            raise Exception("Fr_0033 Collection is None")
         logging.info("Save BalthasarTwo FR-0033")
-        # GetCollectionContentAndFunc(Fr_0033, )
+        GetCollectionContentAndFunc(Fr_0033, self.__Logger.LoggingBsonIntoJson)
