@@ -49,6 +49,25 @@ class FactBox():
         return UserBox.call
 
 
+    def IsClaimedByUser(self, boxid: str):
+        UserBoxes = self.__PullBoxData().Boxes
+
+        for UserBox in UserBoxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                return True
+        return False
+
+
+    def IsRegisteredBoxIp(self, boxid: str, boxip: str):
+        UserBoxes = self.__PullBoxData().Boxes
+
+        for UserBox in UserBoxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                if (self.__CheckBoxip(UserBox, boxip)):
+                    return True
+        return False
+
+
     # WRITE
 
     def ClaimBox(self, boxid: str):
@@ -73,15 +92,6 @@ class FactBox():
         self.__UnclaimedBoxsDB.deleteByBoxid(boxid)
 
         return BoxList(self.__BoxDB.getBoxData(self.__guid)["Boxes"])
-
-
-    def IsClaimedByUser(self, boxid: str):
-        UserBoxes = self.__PullBoxData().Boxes
-
-        for UserBox in UserBoxes:
-            if (self.__CheckBoxid(UserBox, boxid)):
-                return True
-        return False
 
 
     def UpdateBoxIp(self, boxid: str, boxip: str):
@@ -148,6 +158,13 @@ class FactBox():
 
     def __CheckBoxid(self, UserBox: Box, boxid: str):
         return UserBox.boxid == boxid
+
+
+    def __CheckBoxip(self, UserBox: Box, boxip: str):
+        import sys
+        print(UserBox.ip, file=sys.stderr)
+        print(boxip, file=sys.stderr)
+        return UserBox.ip == boxip
 
 
     # UTILS
