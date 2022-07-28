@@ -27,6 +27,7 @@ class BoxList(JObject):
                 Box(
                     Bx["boxid"],
                     Bx["call"],
+                    Bx["ip"],
                     Bx["activity"],
                     BoxSeverity.StrToEnum(Bx["severity"])
             ))

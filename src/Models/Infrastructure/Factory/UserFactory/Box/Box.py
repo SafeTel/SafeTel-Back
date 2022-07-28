@@ -16,20 +16,22 @@ class Box(JObject):
     def __init__(self, loadedJSON: dict):
         self.__InitInputJObject(loadedJSON)
 
-    def __init__(self, boxid: str, call: bool, activity: bool, severity: BoxSeverity):
-        self.__InitOutputJObject(boxid, call, activity, severity)
+    def __init__(self, boxid: str, call: bool, ip: str, activity: bool, severity: BoxSeverity):
+        self.__InitOutputJObject(boxid, call, ip, activity, severity)
 
     # Values Assignement
     def __InitInputJObject(self, loadedJSON: dict):
         self.boxid = self.LoadElement(loadedJSON, "boxid")
         self.call = self.LoadElement(loadedJSON, "call")
+        self.ip = self.LoadElement(loadedJSON, "ip")
         self.activity = self.LoadElement(loadedJSON, "activity")
         self.severity = BoxSeverity.StrToEnum(self.LoadElement(loadedJSON, "severity"))
 
 
-    def __InitOutputJObject(self, boxid: str, call: bool, activity: bool, severity: BoxSeverity):
+    def __InitOutputJObject(self, boxid: str, call: bool, ip :str, activity: bool, severity: BoxSeverity):
         self.boxid = boxid
         self.call = call
+        self.ip = ip
         self.activity = activity
         self.severity = severity
 

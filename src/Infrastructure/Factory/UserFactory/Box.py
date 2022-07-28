@@ -84,6 +84,20 @@ class FactBox():
         return False
 
 
+    def UpdateBoxIp(self, boxid: str, boxip: str):
+        UserBoxes = self.__PullBoxData()
+
+        for UserBox in UserBoxes.Boxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                self.__ChangeBoxIp(UserBox, boxip)
+                self.__BoxDB.updateBoxes(
+                    self.__guid,
+                    UserBoxes.ToDict()["Boxes"]
+                )
+                return None
+        return "Unkwonw Box"
+
+
     def UpdateCall(self, boxid: str, call: bool):
         UserBoxes = self.__PullBoxData()
 
@@ -137,6 +151,10 @@ class FactBox():
 
 
     # UTILS
+
+    def __ChangeBoxIp(self, UserBox: Box, boxip: str):
+        UserBox.ip = boxip
+
 
     def __ChangeCall(self, UserBox: Box, call: bool):
         UserBox.call = call
