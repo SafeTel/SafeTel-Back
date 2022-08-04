@@ -71,7 +71,7 @@ class FactBox():
     # WRITE
 
     def ClaimBox(self, boxid: str):
-        ClaimingBox = Box(boxid, False, True, BoxSeverity.NORMAL)
+        ClaimingBox = Box(boxid, False, "", True, BoxSeverity.NORMAL)
 
         if (not self.__UnclaimedBoxsDB.isValidBoxid(boxid)):
             return "This box isn't claimable"
