@@ -1,5 +1,5 @@
 summary: "Report an error for a specific box"
-description: "Report an error for a specific box"
+description: "Report an error for a specific box\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints:-Embedded#report-error"
 
 tags:
 - Embedded
