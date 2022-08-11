@@ -14,7 +14,7 @@ Command:
 $ sudo docker-compose build && sudo docker-compose up
 ```
 
-Don't forget to prune your docker before rerunning Magi.
+Don't forget to prune your docker before rerunning Asuka.
 
 Command:
 ```sh
@@ -51,39 +51,12 @@ With:
 - $Mode: The database mode with 4 possible values: PROD/DEV/LOCAL/POSTMAN
 
 - $Date: The date in ISO 8601 format with the specific structure:
-    * %Y-%m-%d-T%H_%M_%SZ:
-    (Year)-(month)-(day)(T: time)(hours)_(minutes)_(seconds)(Z: Zone)
+    * %Y-%m-%d-T%H_%M_%SZ
+        * %Y: Year
+        * %m: month
+        * %d: day
+        * %H: hours
+        * %M: minutes
+        * %S: seconds
+        * (Year)-(month)-(day)(T: time)(hours)_(minutes)_(seconds)(Z: Zone)
 ```
-
-#### DatabaseName/Collections.json
-
-The **DatabaseName/Collections.json** is of the following format:
-
-Inside a save folder, you can find multiples files and folders organised in this way:
-
-```
-    MongoDBDatabaseName/:
-        - Collection1.json
-        - Collection2.json
-        etc...
-```
-
-Currently, the saving folder is organised this way:
-```
-    /Balthasar/:
-        - Boxes.json
-        - UnclaimedBoxes.json
-    /Balthasar02/:
-        - FR-0033.json
-    /Casper/:
-        - ApiKeyLog.json
-        - Contributors.json
-    /Casper02/:
-        - GoogleServices.json
-    /Melchior/:
-        - Blacklist.json
-        - History.json
-        - User.json
-        - Whitelist.json
-```
-
