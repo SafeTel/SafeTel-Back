@@ -24,12 +24,12 @@ class Balthasar():
         self.__DocumentsPageSize = DocumentsPageSize
         self.__Filepath = filepath
 
-        if client is None:
+        if (client is None):
             raise Exception("Client is None")
         self.__BalthasarName = os.getenv("DB_BALTHASAR")
         self.__BalthasarDB = client[self.__BalthasarName]
 
-        if self.__BalthasarDB is None:
+        if (self.__BalthasarDB is None):
             raise Exception("BalthasarDB is None")
         self.__InitLogger()
         self.__Save()

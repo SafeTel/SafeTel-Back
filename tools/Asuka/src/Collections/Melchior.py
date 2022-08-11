@@ -24,12 +24,12 @@ class Melchior():
         self.__DocumentsPageSize = DocumentsPageSize
         self.__Filepath = filepath
 
-        if client is None:
+        if (client is None):
             raise Exception("Client is None")
         self.__MelchiorName = os.getenv("DB_MELCHIOR")
         self.__MelchiorDB = client[self.__MelchiorName]
 
-        if self.__MelchiorDB is None:
+        if (self.__MelchiorDB is None):
             raise Exception("MelchiorDB is None")
         self.__InitLogger()
         self.__Save()

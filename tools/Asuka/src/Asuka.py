@@ -38,5 +38,5 @@ import sys
 from RunDBSave import runDBSave
 
 
-if __name__ == "__main__":
+if (__name__ == "__main__"):
     runDBSave(sys.argv)

@@ -24,12 +24,12 @@ class Casper():
         self.__DocumentsPageSize = DocumentsPageSize
         self.__Filepath = filepath
 
-        if client is None:
+        if (client is None):
             raise Exception("Client is None")
         self.__CasperName = os.getenv("DB_CASPER")
         self.__CasperDB = client[self.__CasperName]
 
-        if self.__CasperDB is None:
+        if (self.__CasperDB is None):
             raise Exception("CasperDB is None")
         self.__InitLogger()
         self.__Save()
