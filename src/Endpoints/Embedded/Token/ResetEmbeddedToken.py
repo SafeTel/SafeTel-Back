@@ -59,8 +59,12 @@ class ResetEmbeddedToken(Resource):
         if (JwtInfos is None):
             return self.__ErrorManagerFactory.BadRequestError({"details": "Bad Token"}).ToDict(), 401
 
-        if (self.__UserFactory.LoadUser(JwtInfos.guid) == None):
-            return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
+        User = self.__UserFactory.LoadUser(JwtInfos.guid)
+        if (User == None):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+
+        if (not User.Box.IsRegisteredBoxIp(JwtInfos.boxid, request.remote_addr)):
+            return self.__EndpointErrorManager.CreateProxyAuthenticationRequired(), 407
 
         Response = ResetEmbeddedTokenResponse(
             self.__JwtConv.Serialize(

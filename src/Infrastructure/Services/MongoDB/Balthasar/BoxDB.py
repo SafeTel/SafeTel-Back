@@ -91,15 +91,19 @@ class BoxDB():
     def __PullData(self, guid: str):
         return self.DBWatcher.GetDocument("guid", guid)
 
+
     def __AddBox(self, boxid: str, call: bool, activity: bool, severity: str, TemporaryList: list):
         TemporaryList.append({
                 "boxid": boxid,
                 "call": call,
+                "ip": "",
                 "activity": activity,
-                "severity": severity
+                "severity": severity,
+                "Reports":[]
             }
         )
         return TemporaryList
+
 
     def __UpdateList(self, guid: str, NewList: list):
         QueryGUID = {
@@ -109,4 +113,3 @@ class BoxDB():
             "$set": { "Boxes": NewList }
         }
         self.Box.update_one(QueryGUID, QueryData)
-

@@ -32,7 +32,7 @@ from flasgger.utils import swag_from
 # Request:
 # POST: localhost:2407/embedded/reverse-evaluation
 # {
-#     "token": "putain je me suis pris une pause de 30 min aujourdhui pour me dire que ma doc est pas assez precise",
+#     "token": "trdfytguyhiujoiko",
 #     "number": "lel"
 # }
 ###
@@ -69,6 +69,9 @@ class ReverseEvaluation(Resource):
 
         if (not User.Box.IsClaimedByUser(JwtInfos.boxid)):
             return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
+
+        if (not User.Box.IsRegisteredBoxIp(JwtInfos.boxid, request.remote_addr)):
+            return self.__EndpointErrorManager.CreateProxyAuthenticationRequired(), 407
 
         if (User.Blacklist.IsNumber(Request.number)):
             User.Blacklist.DeleteNumber(Request.number)

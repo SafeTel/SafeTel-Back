@@ -36,3 +36,10 @@ class EndpointErrorManager():
             "details": "Access Denied",
             "message": message
         }
+
+    # Code 407, error for IP of embedded
+    def CreateProxyAuthenticationRequired(self):
+        return {
+            "error": True,
+            "details": "IP Denied"
+        }
