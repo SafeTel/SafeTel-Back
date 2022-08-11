@@ -17,10 +17,8 @@ class FileLogger():
 
     @classmethod
     def __init__(self, loggerName= "FileLogger", filePath = "logs/", fileName = "magi.log"):
-        self.Logger = None
-
-        if FileLogger.__instance != None:
-            raise Exception("This class is a singleton!")
+        if (FileLogger.__instance != None):
+            raise Exception("Singleton class, you're not allowed to init a new one")
         else:
             logger = logging.Logger(loggerName, logging.DEBUG)
             self.Logger = logger
@@ -42,7 +40,7 @@ class FileLogger():
 
     @staticmethod
     def getInstance():
-        if FileLogger.__instance == None:
+        if (FileLogger.__instance == None):
             FileLogger()
         return FileLogger.__instance
 
