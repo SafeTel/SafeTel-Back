@@ -1,0 +1,60 @@
+summary: "Report an error for a specific box"
+description: "Report an error for a specific box\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints:-Embedded#report-error"
+
+tags:
+- Embedded
+
+produces:
+- "application/json"
+
+parameters:
+- name: Request
+  in: body
+  schema:
+    type: object
+    required:
+    - token
+    - Error
+    properties:
+      token:
+        type: string
+        description: JWT Embedded token
+      Error:
+        type: object
+        required:
+        - trace
+        - ts
+        - message
+        - type
+        properties:
+          trace:
+            type: string
+            description: Error's trace
+          ts:
+            type: int
+            description: Error's timestamp
+          message:
+            type: string
+            description: Error's message
+          type:
+            type: string
+            description: Error's Type
+
+
+responses:
+  200:
+    description: "Success"
+    schema:
+      type: object
+      properties:
+        received:
+          type: boolean
+          description: The status of the report
+  400:
+    description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  401:
+    description: "\"Bad token\""
+  403:
+    description: "There is something wrong with the token, check if the account still exists"
+  500:
+    description: "Internal Logic Error - Please report all theses errors"
