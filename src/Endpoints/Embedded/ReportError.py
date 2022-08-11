@@ -1,8 +1,8 @@
 ##
-## SAFETEL PROJECT, 2022
+## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## ReverseReport
+## ReportError
 ##
 
 ### INFRA
@@ -16,8 +16,8 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Embedded.ReverseEvaluation.ReverseEvaluationRequest import ReverseEvaluationRequest
-from Models.Endpoints.Embedded.ReverseEvaluation.ReverseEvaluationResponse import ReverseEvaluationResponse
+from Models.Endpoints.Embedded.ReportError.ReportErrorRequest import ReportErrorRequest
+from Models.Endpoints.Embedded.ReportError.ReportErrorResponse import ReportErrorResponse
 
 ### LOGC
 # JWT converter import
@@ -33,28 +33,33 @@ from flasgger.utils import swag_from
 # Request:
 # POST: localhost:2407/embedded/reverse-evaluation
 # {
-#     "token": "trdfytguyhiujoiko",
-#     "number": "lel"
+#     "token": "YTFUGYIHIJ",
+#     "error": {
+#        "trace": "File test.py, line 26, in <module> \n File urequests.py, line 108, in get \n File urequests.py, line 53, in request",
+#		 "ts": 123456789,
+#        "message":  "-202",
+#        "type":  "OSError"
+#     }
 # }
 ###
 # Response:
 # {
-# 	  "updated": true
+# 	  "received": true
 # }
 ###
 
 
-# Route to Block Unblock a Number
-class ReverseEvaluation(Resource):
+# Route to Report an error from the embedded
+class ReportError(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
         self.__JwtConv = JWTConvertEmbedded()
         self.__UserFactory = UserFactory()
 
 
-    @swag_from("../../../../swagger/Embedded/Swagger-ReverseEvaluation.yml")
+    @swag_from("../../../../swagger/Embedded/Swagger-ReportError.yml")
     def post(self):
-        Request = ReverseEvaluationRequest(request.get_json())
+        Request = ReportErrorRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -74,12 +79,9 @@ class ReverseEvaluation(Resource):
         if (not User.Box.IsRegisteredBoxIp(JwtInfos.boxid, request.remote_addr)):
             return self.__EndpointErrorManager.CreateProxyAuthenticationRequired(), 407
 
-        if (User.Blacklist.IsNumber(Request.number)):
-            User.Blacklist.DeleteNumber(Request.number)
-        else:
-            User.Blacklist.AddNumber(Request.number)
+        User.Box.AddErrorReport(JwtInfos.boxid, Request.Error)
 
-        Response = ReverseEvaluationResponse(
+        Response = ReportErrorResponse(
             True
         )
 

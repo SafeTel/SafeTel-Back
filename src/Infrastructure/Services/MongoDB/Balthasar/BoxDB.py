@@ -98,7 +98,8 @@ class BoxDB():
                 "call": call,
                 "ip": "",
                 "activity": activity,
-                "severity": severity
+                "severity": severity,
+                "Reports":[]
             }
         )
         return TemporaryList
