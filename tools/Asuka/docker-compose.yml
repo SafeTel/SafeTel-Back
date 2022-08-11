@@ -1,14 +1,9 @@
 version: "3.3"
 
 services:
-    asuka_for_local_mongo:
-        env_file: ./config.env
-        build:
-            context: ./
-
     save_db:
         build:
-            context: ../../tools/Asuka/
+            context: ./
             dockerfile: ./Dockerfile
         env_file: ./config.env
         volumes:
@@ -19,7 +14,7 @@ services:
 
     save_db_force_now:
         build:
-            context: ../../tools/Asuka/
+            context: ./
             dockerfile: ./Dockerfile
         command: ["python3", "./src/Asuka.py", "--force-now"]
         env_file: ./config.env

@@ -34,13 +34,19 @@ This tool save every 24h the dedicated database.
 
 The saved files is of the following specific architecture:
 
-```sh
-- SavingFolder/DatabaseName/Collections.json
+```
+- saves/$DatabaseName/$Collections.json
 ```
 
-#### SavingFolder/
+With
+```
+- $DatabaseName : the name of the corresponding database
+- $Collections.json : the name of the corresponding collection
+```
 
-The name of the **SavingFolder/** is of the following format:
+#### saves/
+
+The name of the **saves/** is of the following format:
 
 ```
 $MODE-$DATE-save/
