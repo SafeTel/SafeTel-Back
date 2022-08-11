@@ -55,8 +55,8 @@ class InitMagi():
         self.__LaunchSentry()
         self.__InitializeCore()
         self.__InitializeEndpoints()
-        self.__InitializeSwagger()
         self.__InitializeMiddleware()
+        self.__InitializeSwagger()
         self.__InitializeMonitoring()
         return self.__MagiApp
 
