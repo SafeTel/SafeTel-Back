@@ -49,10 +49,29 @@ class FactBox():
         return UserBox.call
 
 
+    def IsClaimedByUser(self, boxid: str):
+        UserBoxes = self.__PullBoxData().Boxes
+
+        for UserBox in UserBoxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                return True
+        return False
+
+
+    def IsRegisteredBoxIp(self, boxid: str, boxip: str):
+        UserBoxes = self.__PullBoxData().Boxes
+
+        for UserBox in UserBoxes:
+            if (self.__CheckBoxid(UserBox, boxid)):
+                if (self.__CheckBoxip(UserBox, boxip)):
+                    return True
+        return False
+
+
     # WRITE
 
     def ClaimBox(self, boxid: str):
-        ClaimingBox = Box(boxid, False, True, BoxSeverity.NORMAL)
+        ClaimingBox = Box(boxid, False, "", True, BoxSeverity.NORMAL)
 
         if (not self.__UnclaimedBoxsDB.isValidBoxid(boxid)):
             return "This box isn't claimable"
@@ -75,13 +94,18 @@ class FactBox():
         return BoxList(self.__BoxDB.getBoxData(self.__guid)["Boxes"])
 
 
-    def IsClaimedByUser(self, boxid: str):
-        UserBoxes = self.__PullBoxData().Boxes
+    def UpdateBoxIp(self, boxid: str, boxip: str):
+        UserBoxes = self.__PullBoxData()
 
-        for UserBox in UserBoxes:
+        for UserBox in UserBoxes.Boxes:
             if (self.__CheckBoxid(UserBox, boxid)):
-                return True
-        return False
+                self.__ChangeBoxIp(UserBox, boxip)
+                self.__BoxDB.updateBoxes(
+                    self.__guid,
+                    UserBoxes.ToDict()["Boxes"]
+                )
+                return None
+        return "Unkwonw Box"
 
 
     def UpdateCall(self, boxid: str, call: bool):
@@ -136,7 +160,18 @@ class FactBox():
         return UserBox.boxid == boxid
 
 
+    def __CheckBoxip(self, UserBox: Box, boxip: str):
+        import sys
+        print(UserBox.ip, file=sys.stderr)
+        print(boxip, file=sys.stderr)
+        return UserBox.ip == boxip
+
+
     # UTILS
+
+    def __ChangeBoxIp(self, UserBox: Box, boxip: str):
+        UserBox.ip = boxip
+
 
     def __ChangeCall(self, UserBox: Box, call: bool):
         UserBox.call = call

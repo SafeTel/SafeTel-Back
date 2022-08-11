@@ -66,6 +66,9 @@ class ReportedCount(Resource):
         if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
+        if (not User.Box.IsRegisteredBoxIp(JwtInfos.boxid, request.remote_addr)):
+            return self.__EndpointErrorManager.CreateProxyAuthenticationRequired(), 407
+
         count = self.__Engine.ReportedCount()
         Response = ReportedCountResponse(
             count
