@@ -73,6 +73,8 @@ class LoginBox(Resource):
         if (not User.Box.IsClaimedByUser(Request.boxid)):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
+        User.Box.UpdateBoxIp(Request.boxid, request.remote_addr)
+
         Response = LoginBoxResponse(
             self.__JwtConv.Serialize(
                 guid,

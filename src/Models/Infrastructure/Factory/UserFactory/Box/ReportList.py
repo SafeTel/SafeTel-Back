@@ -1,37 +1,33 @@
 ##
-## SAFETEL PROJECT, 2022
+## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## BoxList
+## ReportList
 ##
 
 ### MODELS
 # Abstraction import
 from Models.ModelAbstractions.JObject import JObject
 # Model Shared import
-from Models.Infrastructure.Factory.UserFactory.Box.Box import Box
-# Shared Enum import
-from Models.Infrastructure.Factory.UserFactory.Box.BoxSeverity import BoxSeverity
-
+from Models.Logic.Shared.EmbeddedErrorReport import EmbeddedErrorReport
 
 # Represents Number Request
-class BoxList(JObject):
-    def __init__(self, Boxes: list):
-        self.__InitJObject(Boxes)
+class ReportList(JObject):
+    def __init__(self, Reports: list):
+        self.__InitJObject(Reports)
 
 
     # Values Assignement
-    def __InitJObject(self, Boxes: list):
-        self.Boxes = []
-        for Bx in Boxes:
-            self.Boxes.append(
-                Box(
-                    Bx["boxid"],
-                    Bx["call"],
-                    Bx["ip"],
-                    Bx["activity"],
-                    BoxSeverity.StrToEnum(Bx["severity"]),
-                    Bx["Reports"]
+    def __InitJObject(self, Reports: list):
+        self.Reports = []
+        for Rpt in Reports:
+            tmp = EmbeddedErrorReport()
+            self.Reports.append(
+                tmp.InitValues(
+                    Rpt["trace"],
+                    Rpt["ts"],
+                    Rpt["message"],
+                    Rpt["type"]
             ))
 
 
@@ -51,13 +47,14 @@ class BoxList(JObject):
 
 
     def __EvaErrorsJObject(self):
-        for Box in self.Boxes:
-            errorJObject = self.__EvaErrorBox(Box)
+        for Box in self.Reports:
+            errorJObject = self.__EvaErrorReport(Box)
             if (errorJObject != None):
                 return errorJObject
         return None
 
 
-    def __EvaErrorBox(self, Box: Box):
-        errorBox = Box.EvaluateModelErrors()
+    def __EvaErrorReport(self, Reports: EmbeddedErrorReport):
+        errorBox = Reports.EvaluateModelErrors()
         return errorBox
+

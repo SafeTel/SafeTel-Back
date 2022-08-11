@@ -12,6 +12,8 @@ from Endpoints.Embedded.LoginBox import LoginBox
 from Endpoints.Embedded.ReverseEvaluation import ReverseEvaluation
 # Reset Embedded Token unique endpoint import
 from Endpoints.Embedded.Token.ResetEmbeddedToken import ResetEmbeddedToken
+# Report an error for Embedded unique endpoint import
+from Endpoints.Embedded.ReportError import ReportError
 
 
 # Initialization of the endpoints for emebeded side
@@ -21,6 +23,7 @@ class InitEmbeddedEndpoints():
         self.EMBEDDED_URI_TOKEN_DOMAIN = "token/"
         self.__InitLoginBoxEndpoint(Api)
         self.__InitReverseReportEndpoint(Api)
+        self.__InitReportErrorEndpoint(Api)
         self.__InitResetEmbeddedTokenEndpoint(Api)
 
 
@@ -35,6 +38,12 @@ class InitEmbeddedEndpoints():
         Api.add_resource(
             ReverseEvaluation,
             self.EMBEDDED_URI_BASE_DOMAIN + "reverse-evaluation"
+        )
+
+    def __InitReportErrorEndpoint(self, Api):
+        Api.add_resource(
+            ReportError,
+            self.EMBEDDED_URI_BASE_DOMAIN + "report-error"
         )
 
 

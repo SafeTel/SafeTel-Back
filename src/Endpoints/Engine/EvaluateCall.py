@@ -80,6 +80,9 @@ class EvaluateCall(Resource):
         if (not User.Box.IsClaimedByUser(JwtInfos.boxid)):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
+        if (not User.Box.IsRegisteredBoxIp(JwtInfos.boxid, request.remote_addr)):
+            return self.__EndpointErrorManager.CreateProxyAuthenticationRequired(), 407
+
         if (User.Box.IsBoxInCall(JwtInfos.boxid)):
             User.Box.UpdateCall(JwtInfos.boxid, False)
         else:

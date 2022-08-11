@@ -2,7 +2,7 @@
 ## EPITECH PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## ReportedCount
+## ReportError
 ##
 
 ### INFRA
@@ -16,14 +16,13 @@ from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
 
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Engine.ReportedCountRequest import ReportedCountRequest
-from Models.Endpoints.Engine.ReportedCountResponse import ReportedCountResponse
+from Models.Endpoints.Embedded.ReportError.ReportErrorRequest import ReportErrorRequest
+from Models.Endpoints.Embedded.ReportError.ReportErrorResponse import ReportErrorResponse
 
 ### LOGC
 # JWT converter import
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-# Engine
-from Engine.Logic.Engine import Engine
+from Logic.Services.JWTConvert.JWTConvertEmbedded import JWTConvertEmbedded
+
 
 ### SWAGGER
 # flasgger import
@@ -32,27 +31,35 @@ from flasgger.utils import swag_from
 
 ###
 # Request:
-# GET: localhost:2407/engine/reported-count?token=
+# POST: localhost:2407/embedded/reverse-evaluation
+# {
+#     "token": "YTFUGYIHIJ",
+#     "error": {
+#        "trace": "File test.py, line 26, in <module> \n File urequests.py, line 108, in get \n File urequests.py, line 53, in request",
+#		 "ts": 123456789,
+#        "message":  "-202",
+#        "type":  "OSError"
+#     }
+# }
 ###
 # Response:
 # {
-#	"count": 42
+# 	  "received": true
 # }
 ###
 
 
-# Route to get the number of reported numbers
-class ReportedCount(Resource):
+# Route to Report an error from the embedded
+class ReportError(Resource):
     def __init__(self):
         self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert()
+        self.__JwtConv = JWTConvertEmbedded()
         self.__UserFactory = UserFactory()
-        self.__Engine = Engine()
 
 
-    @swag_from("../../../../swagger/Engine/Swagger-ReportedCount.yml")
-    def get(self):
-        Request = ReportedCountRequest(request.args.to_dict())
+    @swag_from("../../../../swagger/Embedded/Swagger-ReportError.yml")
+    def post(self):
+        Request = ReportErrorRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -66,12 +73,16 @@ class ReportedCount(Resource):
         if (User is None):
             return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
 
+        if (not User.Box.IsClaimedByUser(JwtInfos.boxid)):
+            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+
         if (not User.Box.IsRegisteredBoxIp(JwtInfos.boxid, request.remote_addr)):
             return self.__EndpointErrorManager.CreateProxyAuthenticationRequired(), 407
 
-        count = self.__Engine.ReportedCount()
-        Response = ReportedCountResponse(
-            count
+        User.Box.AddErrorReport(JwtInfos.boxid, Request.Error)
+
+        Response = ReportErrorResponse(
+            True
         )
 
         responseErrors = Response.EvaluateModelErrors()
