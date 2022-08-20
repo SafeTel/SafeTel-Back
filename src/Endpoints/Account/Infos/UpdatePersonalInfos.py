@@ -61,6 +61,7 @@ class UpdatePersonalInfos(Resource):
 
     @swag_from("../../../../swagger/Account/Infos/Swagger-UpdatePersonalInfos.yml")
     def patch(self):
+        ## TODO: PE -> Pe
         Request = UpdatePErsonalInfosRequest(fquest.get_json())
 
         requestErrors = Request.EvaluateModelErrors()

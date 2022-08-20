@@ -11,6 +11,11 @@ services:
         environment:
             - SERVER_PORT=4270
         env_file: ../dev-config.env
+        volumes:
+            -   type: bind
+                source: ../../logs/ # host path or volume name
+                target: /logs # Container path
+
 
     magi_postman:
         image:
@@ -22,6 +27,10 @@ services:
         environment:
             - SERVER_PORT=4207
         env_file: ../postman-config.env
+        volumes:
+            -   type: bind
+                source: ../../logs/ # host path or volume name
+                target: /logs # Container path
 
     magi_prod:
         image:
@@ -33,6 +42,10 @@ services:
         environment:
             - SERVER_PORT=2407
         env_file: ../prod-config.env
+        volumes:
+            -   type: bind
+                source: ../../logs/ # host path or volume name
+                target: /logs # Container path
 
     clean_db:
         build: # "context" and "dockerfile" fields have to be under "build"

@@ -56,7 +56,6 @@ class UpdatePassword(Resource):
         self.__UserFactory = UserFactory()
         self.__PWDConvert = PWDConvert()
 
-
     @swag_from("../../../../swagger/Account/Infos/Swagger-UpdatePassword.yml")
     def patch(self):
         Request = UpdatePasswordRequest(fquest.get_json())
@@ -89,4 +88,3 @@ class UpdatePassword(Resource):
         if (responseErrors != None):
             return self.__ErrorManagerFactory.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200
-
