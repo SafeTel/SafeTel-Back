@@ -1,6 +1,11 @@
 version: "3.3"
 
 services:
+
+    #####################
+    ### --- Magi ---- ###
+    #####################
+
     magi_dev:
         image:
             safetel/safetel-back:dev
@@ -46,6 +51,10 @@ services:
             -   type: bind
                 source: ../../logs/ # host path or volume name
                 target: /logs # Container path
+
+    #####################
+    ### --- Amane --- ###
+    #####################
 
     clean_db:
         build: # "context" and "dockerfile" fields have to be under "build"

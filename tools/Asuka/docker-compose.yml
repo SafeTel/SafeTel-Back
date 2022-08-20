@@ -1,0 +1,24 @@
+version: "3.3"
+
+services:
+    save_db:
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
+        env_file: ./config.env
+        volumes:
+            -   type: bind
+                source: ./saves/ # host path or volume name
+                target: /saves # Container path
+
+
+    save_db_force_now:
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
+        command: ["python3", "./src/Asuka.py", "--force-now"]
+        env_file: ./config.env
+        volumes:
+            -   type: bind
+                source: ./saves/ # host path or volume name
+                target: /saves # Container path
