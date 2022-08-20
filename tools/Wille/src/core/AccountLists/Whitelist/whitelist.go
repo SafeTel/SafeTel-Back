@@ -69,6 +69,7 @@ func (whitelist *Whitelist) UploadWhitelistFile(name string) error {
 	if err != nil {
 		return err
 	}
+	// TODO: replace start
 	// Generating a bson filter using the value of guid
 	filter := bson.M{"guid": data.Guid}
 	if err = utils.CheckDataNotExistInCollection(whitelist.WhitelistCollection, filter); err != nil {
@@ -81,6 +82,7 @@ func (whitelist *Whitelist) UploadWhitelistFile(name string) error {
 	if err != nil {
 		return err
 	}
+	// TODO: replace end
 	whitelist.Print.Info("StdOut: Uploading the whitelist file of " + name + ": " + inOut)
 	whitelist.Print.Info("StdErr: Uploading the whitelist file of " + name + ": " + inErr)
 	return nil

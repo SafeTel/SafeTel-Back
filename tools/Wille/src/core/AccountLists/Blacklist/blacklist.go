@@ -73,6 +73,7 @@ func (blacklist *Blacklist) UploadBlacklistFile(name string) error {
 	if err != nil {
 		return err
 	}
+	// TODO: replace start
 	// Generating a bson filter using the value of guid
 	filter := bson.M{"guid": data.Guid}
 	if err = utils.CheckDataNotExistInCollection(blacklist.BlacklistCollection, filter); err != nil {
@@ -85,6 +86,7 @@ func (blacklist *Blacklist) UploadBlacklistFile(name string) error {
 	if err != nil {
 		return err
 	}
+	// TODO: replace end
 	blacklist.Print.Info("StdOut: Uploading the blacklist file of " + name + ": " + inOut)
 	blacklist.Print.Info("StdErr: Uploading the blacklist file of " + name + ": " + inErr)
 	return nil

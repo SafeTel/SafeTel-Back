@@ -80,6 +80,7 @@ func (history *History) UploadHistoryFile(name string) error {
 	if err != nil {
 		return err
 	}
+	// TODO: replace start
 	// Generating a bson filter using the value of guid
 	filter := bson.M{"guid": data.Guid}
 	if err = utils.CheckDataNotExistInCollection(history.HistoryCollection, filter); err != nil {
@@ -92,6 +93,7 @@ func (history *History) UploadHistoryFile(name string) error {
 	if err != nil {
 		return err
 	}
+	// TODO: replace end
 	history.Print.Info("StdOut: Uploading the history file of " + name + ": " + inOut)
 	history.Print.Info("StdErr: Uploading the history file of " + name + ": " + inErr)
 	return nil

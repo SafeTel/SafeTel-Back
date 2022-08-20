@@ -80,6 +80,7 @@ func (box *Box) UploadBoxFile(name string) error {
 	if err != nil {
 		return err
 	}
+	// TODO: replace start
 	// Generating a bson filter using the value of guid
 	filter := bson.M{"guid": data.Guid}
 	if err = utils.CheckDataNotExistInCollection(box.BoxCollection, filter); err != nil {
@@ -92,6 +93,7 @@ func (box *Box) UploadBoxFile(name string) error {
 	if err != nil {
 		return err
 	}
+	// TODO: replace end
 	box.Print.Info("StdOut: Uploading the box file of " + name + ": " + inOut)
 	box.Print.Info("StdErr: Uploading the box file of " + name + ": " + inErr)
 	return nil

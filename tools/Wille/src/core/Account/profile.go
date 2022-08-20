@@ -132,6 +132,7 @@ func (profile *Profile) UploadProfileFile(name string) error {
 	if err != nil {
 		return err
 	}
+	// TODO: replace start
 	// Generating a bson filter using the value of guid
 	filter := bson.M{"email": data.Email, "guid": data.Guid}
 	if err = utils.CheckDataNotExistInCollection(profile.UserCollection, filter); err != nil {
@@ -145,6 +146,7 @@ func (profile *Profile) UploadProfileFile(name string) error {
 		profile.Print.Info("Profile.json data of model " + name + " already exist inside the server")
 		return err
 	}
+	// TODO: replace end
 	profile.Print.Info("StdOut: Uploading the profile file of " + name + ": " + inOut)
 	profile.Print.Info("StdErr: Uploading the profile file of " + name + ": " + inErr)
 	return nil
