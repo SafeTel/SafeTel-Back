@@ -11,8 +11,8 @@ from flask.globals import request
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-# Endpoint Error Manager import
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
+# Error Manager Factory import
+from Models.Endpoints.Errors.Factory.ErrorManagerFactory import ErrorManagerFactory
 
 ### MODELS
 # Model Request & Response import
@@ -47,7 +47,7 @@ from flasgger.utils import swag_from
 # Route to delete an account from an auth user
 class DeleteAccount(Resource):
     def __init__(self):
-        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__ErrorManagerFactory = ErrorManagerFactory()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
@@ -57,15 +57,15 @@ class DeleteAccount(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
+            return self.__ErrorManagerFactory.BadRequestError({"details": "Bad Token"}).ToDict(), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User is None):
-            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+            return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
 
         if (User.PullUserInfos().username == Request.username):
             User.Delete()
@@ -74,5 +74,5 @@ class DeleteAccount(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+            return self.__ErrorManagerFactory.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200

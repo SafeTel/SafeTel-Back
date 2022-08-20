@@ -12,7 +12,8 @@ from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Endpoint Error Manager import
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
+from Models.Endpoints.Errors.Factory.ErrorManagerFactory import ErrorManagerFactory
+
 
 ### MODELS
 # Models Request & Response imports
@@ -50,7 +51,7 @@ from flasgger.utils import swag_from
 # Route to update passwword of an account
 class UpdatePassword(Resource):
     def __init__(self):
-        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__ErrorManagerFactory = ErrorManagerFactory()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
         self.__PWDConvert = PWDConvert()
@@ -61,20 +62,20 @@ class UpdatePassword(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if JwtInfos is None:
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
+            return self.__ErrorManagerFactory.BadRequestError({"details": "Bad Token"}).ToDict(), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User is None):
-            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+            return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
 
         UserInfos = User.PullUserInfos()
         hashednewpassword = self.__PWDConvert.Serialize(Request.newpassword)
         if (UserInfos.password == hashednewpassword):
-            return self.__EndpointErrorManager.CreateBadRequestError("The old and new password are the same"), 400
+            return self.__ErrorManagerFactory.BadRequestError({"details": "The old and new password are the same"}).ToDict(), 400
 
         User.UpdatePassword(Request.newpassword)
 
@@ -85,5 +86,5 @@ class UpdatePassword(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+            return self.__ErrorManagerFactory.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200
