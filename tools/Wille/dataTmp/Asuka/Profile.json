@@ -1,0 +1,16 @@
+{
+    "magicnumber": 42,
+    "email": "asuka_safetel_wille@gmail.com",
+    "username": "Asuka",
+    "password": "a03lancaç40!&abp0321",
+    "CustomerInfos": {
+        "firstName": "Asuka",
+        "lastName": "Soryu langley",
+        "phoneNumber": "33601435114"
+    },
+    "Localization": {
+        "country": "USA",
+        "region": "California",
+        "address": "7089 N Marks Avenue, Fresno"
+    }
+}

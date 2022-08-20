@@ -1,0 +1,16 @@
+{
+    "magicnumber": 42,
+    "email": "amane_safetel_wille@gmail.com",
+    "username": "Amane",
+    "password": "a0391!apcAZC",
+    "CustomerInfos": {
+        "firstName": "Amane",
+        "lastName": "Misa",
+        "phoneNumber": "33701935712"
+    },
+    "Localization": {
+        "country": "Maroc",
+        "region": "Marrakesh",
+        "address": "186 Derb Rahala Road"
+    },
+} 
