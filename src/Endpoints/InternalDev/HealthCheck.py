@@ -9,9 +9,8 @@
 # Flask imports
 from flask.globals import request
 from flask_restful import Resource
-# Endpoint Error Manager import
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-# Health CHeck Service
+# Error Manager Factory import
+from Models.Endpoints.Errors.Factory.ErrorManagerFactory import ErrorManagerFactory# Health CHeck Service
 from Infrastructure.Services.HealthCheck.HealthCheckService import HealthCheckService
 
 ### MODELS
@@ -51,7 +50,7 @@ from flasgger.utils import swag_from
 # Route check the health of the server
 class HealthCheck(Resource):
     def __init__(self):
-        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__ErrorManagerFactory = ErrorManagerFactory()
         self.__JwtConv = JWTConvert()
         self.__HealthCheckService = HealthCheckService()
 
@@ -62,14 +61,14 @@ class HealthCheck(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
+            return self.__ErrorManagerFactory.BadRequestError({"details": "Bad Token"}).ToDict(), 401
 
         if (JwtInfos.role is Roles.USER):
-            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+            return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
 
         serverDatas = self.__HealthCheckService.RunInfraCheck()
         serverEnvDatas = self.__HealthCheckService.RunSoftCheck()
