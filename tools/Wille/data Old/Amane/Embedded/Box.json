@@ -1,0 +1,15 @@
+{
+    "guid": "01f012e0-d01e-4321-a0b1-01c54321e321",
+    "Boxes": [
+        {
+            "boxid": "01acbe5c-01d6-4101-b01f-f3a101ca8801",
+            "activity": true,
+            "severity": "Normal"
+        },
+        {
+            "boxid": "02acbe5c-02d6-4102-b02f-f3a102ca8802",
+            "activity": false,
+            "severity": "Blacklist"
+        }
+    ]
+}
