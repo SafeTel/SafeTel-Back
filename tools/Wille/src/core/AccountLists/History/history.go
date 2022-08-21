@@ -8,13 +8,15 @@
 package history
 
 import (
+	// Read Json
 	utils "PostmanDbDataImplementation/core/Utils"
-	mongoUtils "PostmanDbDataImplementation/core/Utils/Mongo"
+	// Show command
 	print "PostmanDbDataImplementation/core/Utils/Print"
-	"errors"
+	// Itoa Function
 	"strconv"
-
-	"go.mongodb.org/mongo-driver/bson"
+	// Error Type
+	"errors"
+	// Mongo Type
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -23,8 +25,7 @@ type History struct {
 	DB                *mongo.Database
 	HistoryCollection *mongo.Collection
 	Print             *print.Print
-	DEV_DB_USERS_NAME string
-	DEV_URI_USERS_DB  string
+	Data              *Data
 }
 
 type Call struct {
@@ -34,15 +35,11 @@ type Call struct {
 }
 
 type Data struct {
-	Guid  string `json:"guid"`
 	Calls []Call `json:"History"`
 }
 
 // Check the content of a History object
 func (history *History) checkHistoryObjectDataValidity(name string, data Data) error {
-	if data.Guid == "" {
-		return errors.New("Problem with json file " + name + "/Lists/History.jsonBox Missing History Guid value")
-	}
 	for _, call := range data.Calls {
 		if call.Number == "" {
 			return errors.New("Problem with json file " + name + "/Lists/History.jsonBox Missing History Call Number value")
@@ -73,54 +70,60 @@ func (history *History) checkHistoryDataValidity(name string) (Data, error) {
 	return data, nil
 }
 
-// Upload the History.json file
-func (history *History) UploadHistoryFile(name string) error {
+func (history *History) setData(name string) error {
 	data, err := history.checkHistoryDataValidity(name)
 
 	if err != nil {
 		return err
 	}
-	// TODO: replace start
-	// Generating a bson filter using the value of guid
-	filter := bson.M{"guid": data.Guid}
-	if err = utils.CheckDataNotExistInCollection(history.HistoryCollection, filter); err != nil {
-		history.Print.Info("History.json data of model " + name + " already exist inside the server")
-		return nil
-	}
-	// Upload
-	err, inOut, inErr := mongoUtils.Import(history.DEV_URI_USERS_DB, "History", "data/"+name+"/Lists/History.json")
-
-	if err != nil {
-		return err
-	}
-	// TODO: replace end
-	history.Print.Info("StdOut: Uploading the history file of " + name + ": " + inOut)
-	history.Print.Info("StdErr: Uploading the history file of " + name + ": " + inErr)
+	history.Data = &data
 	return nil
 }
 
-func (history *History) showHistory(data Data) {
-	history.Print.DefinedKeyWithValueWithTab("Guid", data.Guid)
-	history.Print.DefinedKeyWithValueWithTab("Calls", data.Calls)
+func (history *History) LoadData(name string) error {
+	return history.setData(name)
+}
+
+// // Upload the History.json file
+// func (history *History) UploadHistoryFile(name string) error {
+// 	data, err := history.checkHistoryDataValidity(name)
+
+// 	if err != nil {
+// 		return err
+// 	}
+// 	// TODO: replace start
+// 	// Generating a bson filter using the value of guid
+// 	filter := bson.M{"guid": data.Guid}
+// 	if err = utils.CheckDataNotExistInCollection(history.HistoryCollection, filter); err != nil {
+// 		history.Print.Info("History.json data of model " + name + " already exist inside the server")
+// 		return nil
+// 	}
+// 	// Upload
+// 	err, inOut, inErr := mongoUtils.Import(history.DEV_URI_USERS_DB, "History", "data/"+name+"/Lists/History.json")
+
+// 	if err != nil {
+// 		return err
+// 	}
+// 	// TODO: replace end
+// 	history.Print.Info("StdOut: Uploading the history file of " + name + ": " + inOut)
+// 	history.Print.Info("StdErr: Uploading the history file of " + name + ": " + inErr)
+// 	return nil
+// }
+
+func (history *History) ShowHistory() {
+
+	history.Print.ResetTabForPrint()
+	history.Print.Info("\t- History.json Content:")
+	// Print Data
+	history.Print.DefinedKeyWithValueWithTab("Calls", history.Data.Calls)
 	history.Print.AddOneTabForPrint()
-	for index, call := range data.Calls {
+	for index, call := range history.Data.Calls {
 		history.Print.InfoWithTab("Call number " + strconv.Itoa(index))
 		history.Print.DefinedKeyWithValueWithTab("Call", call.Number)
 		history.Print.DefinedKeyWithValueWithTab("Call", call.Status)
 		history.Print.DefinedKeyWithValueWithTab("Call", call.Time)
 	}
 	history.Print.ResetTabForPrint()
-}
-
-// Check the content of the History.json file and print it
-func (history *History) CheckAndShowHistoryJsonContent(name string) error {
-	data, err := history.checkHistoryDataValidity(name)
-	if err != nil {
-		return err
-	}
-
-	history.showHistory(data)
-	return nil
 }
 
 func New(client *mongo.Client, print *print.Print) (*History, error) {
@@ -134,13 +137,7 @@ func New(client *mongo.Client, print *print.Print) (*History, error) {
 	history.DB = history.Client.Database("Melchior")
 	history.HistoryCollection = history.DB.Collection("History")
 	history.Print = print
-	config, err := utils.CheckAndLoadConfig()
-
-	if err != nil {
-		return nil, err
-	}
-	history.DEV_DB_USERS_NAME = config.DEV_DB_USERS_NAME
-	history.DEV_URI_USERS_DB = config.DEV_URI_USERS_DB
+	history.Data = nil
 
 	return &history, nil
 }

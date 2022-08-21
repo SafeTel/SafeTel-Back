@@ -8,26 +8,22 @@
 package profile
 
 import (
+	// Read Json
 	utils "PostmanDbDataImplementation/core/Utils"
-	mongoUtils "PostmanDbDataImplementation/core/Utils/Mongo"
+	// Show Command
 	print "PostmanDbDataImplementation/core/Utils/Print"
+	// Error Type
 	"errors"
-
-	"go.mongodb.org/mongo-driver/bson"
+	// Mongo Type
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Profile struct {
-	Client            *mongo.Client
-	DB                *mongo.Database
-	UserCollection    *mongo.Collection
-	Print             *print.Print
-	DEV_DB_USERS_NAME string
-	DEV_URI_USERS_DB  string
-}
-
-type Administrative struct {
-	Passwordlost bool `json:"passwordlost"`
+	Client         *mongo.Client
+	DB             *mongo.Database
+	UserCollection *mongo.Collection
+	Print          *print.Print
+	Data           *Data
 }
 
 type CustomerInfos struct {
@@ -43,15 +39,12 @@ type Localization struct {
 }
 
 type Data struct {
-	Email          string         `json:"email"`
-	Username       string         `json:"userName"`
-	Password       string         `json:"password"`
-	CustomerInfos  CustomerInfos  `json:"CustomerInfos"`
-	Localization   Localization   `json:"Localization"`
-	Administrative Administrative `json:"Administrative"`
-	Guid           string         `json:"guid"`
-	Role           string         `json:"role"`
-	Time           float64        `json:"time"`
+	MagicNumber   int           `json:"magicnumber"`
+	Email         string        `json:"email"`
+	Username      string        `json:"userName"`
+	Password      string        `json:"password"`
+	CustomerInfos CustomerInfos `json:"CustomerInfos"`
+	Localization  Localization  `json:"Localization"`
 }
 
 // Check the content of a Profile object
@@ -94,15 +87,6 @@ func (profile *Profile) checkProfileObjectDataValidity(name string, data Data) e
 	if data.Localization.Address == "" {
 		return errors.New("Problem with json file " + name + "/Lists/Profile.jsonBox Missing Profile Localization.Address value")
 	}
-	if data.Guid == "" {
-		return errors.New("Problem with json file " + name + "/Lists/Profile.jsonBox Missing Profile Guid value")
-	}
-	if data.Role == "" {
-		return errors.New("Problem with json file " + name + "/Lists/Profile.jsonBox Missing Profile Role value")
-	}
-	if data.Time == 0 {
-		return errors.New("Problem with json file " + name + "/Lists/Profile.jsonBox Missing Profile Time value")
-	}
 	return nil
 }
 
@@ -125,69 +109,69 @@ func (profile *Profile) checkProfileDataValidity(name string) (Data, error) {
 	return data, nil
 }
 
-// Upload the Profile.json file
-func (profile *Profile) UploadProfileFile(name string) error {
+func (profile *Profile) setData(name string) error {
 	data, err := profile.checkProfileDataValidity(name)
 
 	if err != nil {
 		return err
 	}
-	// TODO: replace start
-	// Generating a bson filter using the value of guid
-	filter := bson.M{"email": data.Email, "guid": data.Guid}
-	if err = utils.CheckDataNotExistInCollection(profile.UserCollection, filter); err != nil {
-		profile.Print.Info("Profile.json data of model " + name + " already exist inside the server")
-		return nil
-	}
-	// Upload
-	err, inOut, inErr := mongoUtils.Import(profile.DEV_URI_USERS_DB, "User", "data/"+name+"/Profile.json")
-
-	if err != nil {
-		profile.Print.Info("Profile.json data of model " + name + " already exist inside the server")
-		return err
-	}
-	// TODO: replace end
-	profile.Print.Info("StdOut: Uploading the profile file of " + name + ": " + inOut)
-	profile.Print.Info("StdErr: Uploading the profile file of " + name + ": " + inErr)
+	profile.Data = &data
 	return nil
 }
 
-func (profile *Profile) showProfile(data Data) {
-	profile.Print.DefinedKeyWithValueWithTab("Email", data.Email)
-	profile.Print.DefinedKeyWithValueWithTab("Username", data.Username)
-	profile.Print.DefinedKeyWithValueWithTab("Password", data.Password)
+func (profile *Profile) LoadData(name string) error {
+	return profile.setData(name)
+}
+
+// // Upload the Profile.json file
+// func (profile *Profile) UploadProfileFile(name string) error {
+// 	data, err := profile.checkProfileDataValidity(name)
+
+// 	if err != nil {
+// 		return err
+// 	}
+// 	// TODO: replace start
+// 	// Generating a bson filter using the value of guid
+// 	filter := bson.M{"email": data.Email, "guid": data.Guid}
+// 	if err = utils.CheckDataNotExistInCollection(profile.UserCollection, filter); err != nil {
+// 		profile.Print.Info("Profile.json data of model " + name + " already exist inside the server")
+// 		return nil
+// 	}
+// 	// Upload
+// 	err, inOut, inErr := mongoUtils.Import(profile.DEV_URI_USERS_DB, "User", "data/"+name+"/Profile.json")
+
+// 	if err != nil {
+// 		profile.Print.Info("Profile.json data of model " + name + " already exist inside the server")
+// 		return err
+// 	}
+// 	// TODO: replace end
+// 	profile.Print.Info("StdOut: Uploading the profile file of " + name + ": " + inOut)
+// 	profile.Print.Info("StdErr: Uploading the profile file of " + name + ": " + inErr)
+// 	return nil
+// }
+
+func (profile *Profile) ShowProfile() {
+
+	profile.Print.ResetTabForPrint()
+	profile.Print.Info("\t- Profile.json Content:")
+	// Print Data
+	profile.Print.DefinedKeyWithValueWithTab("Email", profile.Data.Email)
+	profile.Print.DefinedKeyWithValueWithTab("Username", profile.Data.Username)
+	profile.Print.DefinedKeyWithValueWithTab("Password", profile.Data.Password)
 	// Print CustomerInfos object
-	profile.Print.DefinedKeyWithValueWithTab("CustomerInfos", data.CustomerInfos)
+	profile.Print.DefinedKeyWithValueWithTab("CustomerInfos", profile.Data.CustomerInfos)
 	profile.Print.AddOneTabForPrint()
-	profile.Print.DefinedKeyWithValueWithTab("Firstname", data.CustomerInfos.Firstname)
-	profile.Print.DefinedKeyWithValueWithTab("Lastname", data.CustomerInfos.Lastname)
-	profile.Print.DefinedKeyWithValueWithTab("PhoneNumber", data.CustomerInfos.PhoneNumber)
+	profile.Print.DefinedKeyWithValueWithTab("Firstname", profile.Data.CustomerInfos.Firstname)
+	profile.Print.DefinedKeyWithValueWithTab("Lastname", profile.Data.CustomerInfos.Lastname)
+	profile.Print.DefinedKeyWithValueWithTab("PhoneNumber", profile.Data.CustomerInfos.PhoneNumber)
 	profile.Print.ResetTabForPrint()
 	// Print Localization object
-	profile.Print.DefinedKeyWithValueWithTab("Localization", data.Localization)
+	profile.Print.DefinedKeyWithValueWithTab("Localization", profile.Data.Localization)
 	profile.Print.AddOneTabForPrint()
-	profile.Print.DefinedKeyWithValueWithTab("Country", data.Localization.Country)
-	profile.Print.DefinedKeyWithValueWithTab("Region", data.Localization.Region)
-	profile.Print.DefinedKeyWithValueWithTab("Address", data.Localization.Address)
+	profile.Print.DefinedKeyWithValueWithTab("Country", profile.Data.Localization.Country)
+	profile.Print.DefinedKeyWithValueWithTab("Region", profile.Data.Localization.Region)
+	profile.Print.DefinedKeyWithValueWithTab("Address", profile.Data.Localization.Address)
 	profile.Print.ResetTabForPrint()
-	// Print Administrative object
-	profile.Print.DefinedKeyWithValueWithTab("Administrative", data.Administrative)
-	profile.Print.AddOneTabForPrint()
-	profile.Print.DefinedKeyWithValueWithTab("Passwordlost", data.Administrative.Passwordlost)
-	profile.Print.ResetTabForPrint()
-	profile.Print.DefinedKeyWithValueWithTab("Guid", data.Guid)
-	profile.Print.DefinedKeyWithValueWithTab("Role", data.Guid)
-}
-
-// Check the content of the Profile.json file and print it
-func (profile *Profile) CheckAndShowProfileJsonContent(name string) error {
-	data, err := profile.checkProfileDataValidity(name)
-	if err != nil {
-		return err
-	}
-
-	profile.showProfile(data)
-	return nil
 }
 
 func New(client *mongo.Client, print *print.Print) (*Profile, error) {
@@ -201,14 +185,7 @@ func New(client *mongo.Client, print *print.Print) (*Profile, error) {
 	profile.DB = profile.Client.Database("Melchior")
 	profile.UserCollection = profile.DB.Collection("User")
 	profile.Print = print
-
-	config, err := utils.CheckAndLoadConfig()
-
-	if err != nil {
-		return nil, err
-	}
-	profile.DEV_DB_USERS_NAME = config.DEV_DB_USERS_NAME
-	profile.DEV_URI_USERS_DB = config.DEV_URI_USERS_DB
+	profile.Data = nil
 
 	return &profile, nil
 }

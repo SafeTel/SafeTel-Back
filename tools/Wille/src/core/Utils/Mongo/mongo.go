@@ -8,8 +8,22 @@
 package mongo
 
 import (
-	"bytes"   // Bytes.Buffer for I/O
-	"os/exec" // Exec Bash command
+
+	// Bytes.Buffer for I/O
+	"bytes"
+
+	// Configure Mongo client
+	"context"
+	// Exec Bash command
+	"os/exec"
+
+	// Timeout
+	"time"
+
+	// Generate Clients
+	"go.mongodb.org/mongo-driver/mongo"
+	// Configure Clients with Options
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // Mongo Import
@@ -29,4 +43,15 @@ func Import(uri, collection, file string) (err error, onStdOut string, onStdErr 
 	// Start the specified command and waits for it to complete
 	err = bashCommand.Run()
 	return err, stdout.String(), stderr.String()
+}
+
+func GenerateClient(uri string) (*mongo.Client, error) {
+	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
+	clientOptions := options.Client().
+		ApplyURI(uri).
+		SetServerAPIOptions(serverAPIOptions)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	return mongo.Connect(ctx, clientOptions)
 }
