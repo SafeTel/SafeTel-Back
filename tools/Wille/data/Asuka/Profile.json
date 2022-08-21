@@ -1,21 +1,16 @@
 {
+    "magicnumber": 42,
     "email": "asuka_safetel_wille@gmail.com",
     "username": "Asuka",
-    "password": "f13d06323784e62a084f46ca21e4acf950a853d075bb779375868c10651a7f7bfc0374751470ed183138142cd3fe7dbb1825eb5b03f5648280a9010599487f24",
-    "customerInfos": {
+    "password": "a03lancaç40!&abp0321",
+    "CustomerInfos": {
         "firstName": "Asuka",
         "lastName": "Soryu langley",
         "phoneNumber": "33601435114"
     },
-    "localization": {
+    "Localization": {
         "country": "USA",
         "region": "California",
         "address": "7089 N Marks Avenue, Fresno"
-    },
-    "Administrative": {
-        "passwordlost": false
-    },
-    "time": 1649617188.8572538,
-    "guid": "02f022e0-d02e-4322-a0b2-02c54322e322",
-    "role": "user"
+    }
 }
