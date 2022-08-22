@@ -78,13 +78,13 @@ class RegisterAdminDev(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
 
         if (not self.__ApiKeyLogDb.isValidApiKey(Request.apiKey)):
-            return self.__ErrorManagerFactory.BadRequestError({"details": "Invalid ApiKey"}).ToDict(), 403
+            return self.__ErrorManagerFactory.BadRequestError("Invalid ApiKey").ToDict(), 403
 
         if (self.__UserDB.exists(Request.Registrattion.email)):
-            return self.__ErrorManagerFactory.BadRequestError({"details": "This email is already linked to an account"}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError("This email is already linked to an account").ToDict(), 400
 
         guid = str(uuid.uuid4())
         role = Roles.StrToEnum(Request.role)

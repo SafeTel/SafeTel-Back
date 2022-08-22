@@ -53,15 +53,15 @@ class ClaimApiKeys(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
 
         claimer = Request.name
 
         if (not self.ContributorsDb.IsContributor(claimer)):
-            return self.__ErrorManagerFactory.BadRequestError({"details": "You are not a contributor"}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError("You are not a contributor").ToDict(), 400
 
         if (self.ApiKeyLogDb.isApiKeyForContributor(claimer, request.remote_addr)):
-            return self.__ErrorManagerFactory.BadRequestError({"details": "You already have an apiKey"}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError("You already have an apiKey").ToDict(), 400
 
         apiKey = secrets.token_urlsafe(32)
         self.ApiKeyLogDb.logClaimeApiKey(apiKey, claimer, request.remote_addr)

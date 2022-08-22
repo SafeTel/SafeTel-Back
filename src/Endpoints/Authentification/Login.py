@@ -59,14 +59,14 @@ class Login(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
 
         LoginStatus, result = self.__UserFactory.LoginUser(
             Request.email,
             Request.password
         )
         if (not LoginStatus):
-            self.__ErrorManagerFactory.BadRequestError({"details": result}).ToDict(), 400
+            self.__ErrorManagerFactory.BadRequestError(result).ToDict(), 400
 
         guid = result
         User = self.__UserFactory.LoadUser(guid)

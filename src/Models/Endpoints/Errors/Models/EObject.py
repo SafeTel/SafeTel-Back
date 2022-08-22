@@ -19,6 +19,7 @@ class EObject(JObject):
     # Values Assignement
     def __InitEObject(self, loadedJSON: dict):
         self.details = self.LoadElement(loadedJSON, "details")
+        self.error = self.LoadElement(loadedJSON, "error")
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -30,4 +31,9 @@ class EObject(JObject):
         if (self.details is None): return "Internal Model Error - Model missing element - $details"
         if (type(self.details) is not str): return "Internal Model Error - Invalid variable type - $details"
         if (self.details == ""): return "Internal Model Error - Element empty - $details"
+
+        if (self.error is None): return "Internal Model Error - Model missing element - $error"
+        if (type(self.error) is not bool): return "Internal Model Error - Invalid variable type - $error"
+
+
         return None

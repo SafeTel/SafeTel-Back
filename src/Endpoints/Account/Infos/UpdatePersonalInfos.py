@@ -66,11 +66,11 @@ class UpdatePersonalInfos(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if JwtInfos is None:
-            return self.__ErrorManagerFactory.BadRequestError({"details": "Bad Token"}).ToDict(), 401
+            return self.__ErrorManagerFactory.BadRequestError("Bad Token").ToDict(), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User is None):
@@ -79,7 +79,7 @@ class UpdatePersonalInfos(Resource):
         UserInfos = User.PullUserInfos()
         if (UserInfos.CustomerInfos.Deserialize() == Request.CustomerInfos.Deserialize()
         and UserInfos.Localization.Deserialize() == Request.Localization.Deserialize()):
-            return self.__ErrorManagerFactory.BadRequestError({"details": "The given infos and current are the same"}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError("The given infos and current are the same").ToDict(), 400
 
         User.UpdatePersonalInfos(Request.CustomerInfos, Request.Localization)
 

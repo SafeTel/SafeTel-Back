@@ -57,11 +57,11 @@ class DeleteAccount(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__ErrorManagerFactory.BadRequestError({"details": "Bad Token"}).ToDict(), 401
+            return self.__ErrorManagerFactory.BadRequestError("Bad Token").ToDict(), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User is None):

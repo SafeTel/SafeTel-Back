@@ -73,10 +73,10 @@ class Register(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
 
         if (self.__UserFactory.IsMailRegitered(Request.email)): #TODO: Regitered -> Registered
-            return self.__ErrorManagerFactory.BadRequestError({"details": "This email is already linked to an account"}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError("This email is already linked to an account").ToDict(), 400
 
         User = self.__UserFactory.CreateUser(Request)
         UserInfos = User.PullUserInfos()
