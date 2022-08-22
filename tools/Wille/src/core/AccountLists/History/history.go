@@ -25,6 +25,7 @@ type History struct {
 	DB                *mongo.Database
 	HistoryCollection *mongo.Collection
 	Print             *print.Print
+	Config            *utils.Config
 	Data              *Data
 }
 
@@ -126,7 +127,7 @@ func (history *History) ShowHistory() {
 	history.Print.ResetTabForPrint()
 }
 
-func New(client *mongo.Client, print *print.Print) (*History, error) {
+func New(client *mongo.Client, print *print.Print, config *utils.Config) (*History, error) {
 	if client == nil {
 		return nil, errors.New("Mongo.Client object nil")
 	} else if print == nil {
@@ -137,6 +138,7 @@ func New(client *mongo.Client, print *print.Print) (*History, error) {
 	history.DB = history.Client.Database("Melchior")
 	history.HistoryCollection = history.DB.Collection("History")
 	history.Print = print
+	history.Config = config
 	history.Data = nil
 
 	return &history, nil

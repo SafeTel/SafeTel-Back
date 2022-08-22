@@ -24,6 +24,7 @@ type Whitelist struct {
 	DB                  *mongo.Database
 	WhitelistCollection *mongo.Collection
 	Print               *print.Print
+	Config              *utils.Config
 	Data                *Data
 }
 
@@ -106,7 +107,7 @@ func (whitelist *Whitelist) ShowWhitelist() {
 	whitelist.Print.DefinedKeyWithValueWithTab("PhoneNumbers", whitelist.Data.PhoneNumbers)
 }
 
-func New(client *mongo.Client, print *print.Print) (*Whitelist, error) {
+func New(client *mongo.Client, print *print.Print, config *utils.Config) (*Whitelist, error) {
 	if client == nil {
 		return nil, errors.New("Mongo.Client object nil")
 	} else if print == nil {
@@ -116,6 +117,7 @@ func New(client *mongo.Client, print *print.Print) (*Whitelist, error) {
 	whitelist.DB = whitelist.Client.Database("Melchior")
 	whitelist.WhitelistCollection = whitelist.DB.Collection("Whitelist")
 	whitelist.Print = print
+	whitelist.Config = config
 	whitelist.Data = nil
 
 	return &whitelist, nil

@@ -22,27 +22,43 @@ type RegisterSuccess struct {
 }
 
 type RegisterError struct {
+	Error  bool   `json:"error"`
 	Detail string `json:"detail"`
 }
 
+func (profile *Profile) CheckRegisterSuccess(rSuccess RegisterSuccess) error {
+	if !rSuccess.Created {
+		return errors.New("Register: Unexpected error ")
+	}
+
+	if rSuccess.Token == "" {
+		return errors.New("Unexpected Error")
+	}
+	return nil
+}
+
 func (profile *Profile) Register(client *resty.Client) (string, error) {
-	var success RegisterSuccess
-	var failure RegisterError
+	var rSuccess RegisterSuccess
+	var rFailure RegisterError
 
 	resp, err := client.R().
 		SetBody(profile.Data).
-		SetResult(&success). // or SetResult(AuthSuccess{}).
-		SetError(&failure).  // or SetError(AuthError{}).
+		SetResult(&rSuccess).
+		SetError(&rFailure).
 		Post(profile.Config.DEV_URI_SERVER)
 
 	if err != nil {
 		return "", err
 	}
 
-	if resp.StatusCode() != 200 {
-		profile.Print.Error(failure)
-		return "", errors.New("Status Code : " + strconv.Itoa(resp.StatusCode()) + "- Error: " + failure.Detail)
+	if resp.StatusCode() != 200 && rFailure.Error {
+		profile.Print.Error(rFailure)
+		return "", errors.New("Register - Status Code : " + strconv.Itoa(resp.StatusCode()) + "- Error: " + rFailure.Detail)
 	}
 
-	return "", nil
+	if err := profile.CheckRegisterSuccess(rSuccess); err != nil {
+		return "", err
+	}
+
+	return rSuccess.Token, nil
 }

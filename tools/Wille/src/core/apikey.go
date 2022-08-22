@@ -34,6 +34,8 @@ func (wille *Wille) isValidApiKey() bool {
 // 	If ApiKey is on storage, then ApiKey is valid
 //
 func (wille *Wille) CheckApiKeyValidity(apiKey string) error {
+	return nil
+
 	apiKeyCollection := wille.DBForApiKey.Collection("ApiKeyLog")
 	filter := bson.M{"apiKey": apiKey}
 	isOnStorage, err := utils.IsDataInCollection(apiKeyCollection, filter)

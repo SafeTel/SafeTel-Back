@@ -7,25 +7,45 @@
 
 package uploader
 
-// Profile data structure
-// Blacklist data structure
-// History data structure
-// Whitelist data structure
-// Embedded data structure
-// Print data structure
+import "errors"
 
-// Errors data type
+func (uploader *Uploader) uploadAccount() (string, error) {
+	var registerErr error
+	var loginErr error
+	var token string
 
-// Clients data type
+	token, registerErr = uploader.Profile.Register(uploader.HttpClient)
 
-func (uploader *Uploader) uploadAccount() error {
-	// POST Map, default is JSON content type. No need to set one
+	if registerErr == nil {
+		return token, nil
+	}
 
+	token, loginErr = uploader.Profile.Login(uploader.HttpClient)
+
+	if loginErr == nil {
+		return token, nil
+	}
+
+	return "", errors.New("Error from Register and Login: " + registerErr.Error() + " <|||> " + loginErr.Error())
+}
+
+func (uploader *Uploader) uploadAccountLists(token string) error {
+	return nil
 }
 
 func (uploader *Uploader) uploadData() error {
-	uploader.uploadAccount()
-	// uploader.uploadAccountLists()
+	token, err := uploader.uploadAccount()
+
+	if err != nil {
+		return err
+	}
+
+	err = uploader.uploadAccountLists(token)
+
+	if err != nil {
+		return err
+	}
+
 	// uploader.uploadEmbedded()
 
 	return nil

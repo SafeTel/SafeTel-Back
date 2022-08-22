@@ -25,13 +25,17 @@ import (
 
 	// Errors data type
 	"errors"
-	// Clients data type
+	// Client data type
 	"go.mongodb.org/mongo-driver/mongo"
+	// HTTP Client data type
+	resty "github.com/go-resty/resty/v2"
 )
 
 type Uploader struct {
 	Client *mongo.Client
 	Print  *print.Print
+	// For Httop Request
+	HttpClient *resty.Client
 	// Class for data sructures
 	Blacklist *blacklist.Blacklist
 	Whitelist *whitelist.Whitelist
@@ -144,10 +148,6 @@ func (uploader *Uploader) LoadModel(name string) error {
 	return nil
 }
 
-func (uploader *Uploader) uploadModels(name string) error {
-	return nil
-}
-
 // Upload wille command
 // upload a model to the database
 // Upload the following files
@@ -161,7 +161,7 @@ func (uploader *Uploader) Upload(name string) error {
 	if err := uploader.LoadModel(name); err != nil {
 		return err
 	}
-
+	uploader.uploadData()
 	return nil
 }
 
@@ -176,24 +176,26 @@ func New(client *mongo.Client, print *print.Print, config *utils.Config) (*Uploa
 	uploader.Print = print
 	uploader.Config = config
 
+	uploader.HttpClient = resty.New()
+
 	var err error = nil
 
-	uploader.Blacklist, err = blacklist.New(client, print)
+	uploader.Blacklist, err = blacklist.New(client, print, config)
 
 	if err != nil {
 		return nil, err
 	}
-	uploader.Whitelist, err = whitelist.New(client, print)
+	uploader.Whitelist, err = whitelist.New(client, print, config)
 
 	if err != nil {
 		return nil, err
 	}
-	uploader.History, err = history.New(client, print)
+	uploader.History, err = history.New(client, print, config)
 
 	if err != nil {
 		return nil, err
 	}
-	uploader.Profile, err = profile.New(client, print)
+	uploader.Profile, err = profile.New(client, print, config)
 
 	if err != nil {
 		return nil, err

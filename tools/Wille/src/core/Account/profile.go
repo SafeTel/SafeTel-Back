@@ -23,6 +23,7 @@ type Profile struct {
 	DB             *mongo.Database
 	UserCollection *mongo.Collection
 	Print          *print.Print
+	Config         *utils.Config
 	Data           *Data
 }
 
@@ -174,7 +175,7 @@ func (profile *Profile) ShowProfile() {
 	profile.Print.ResetTabForPrint()
 }
 
-func New(client *mongo.Client, print *print.Print) (*Profile, error) {
+func New(client *mongo.Client, print *print.Print, config *utils.Config) (*Profile, error) {
 	if client == nil {
 		return nil, errors.New("Mongo.Client object nil")
 	} else if print == nil {
@@ -185,6 +186,7 @@ func New(client *mongo.Client, print *print.Print) (*Profile, error) {
 	profile.DB = profile.Client.Database("Melchior")
 	profile.UserCollection = profile.DB.Collection("User")
 	profile.Print = print
+	profile.Config = config
 	profile.Data = nil
 
 	return &profile, nil

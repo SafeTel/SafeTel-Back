@@ -23,6 +23,7 @@ type Blacklist struct {
 	DB                  *mongo.Database
 	BlacklistCollection *mongo.Collection
 	Print               *print.Print
+	Config              *utils.Config
 	Data                *Data
 }
 
@@ -107,7 +108,7 @@ func (blacklist *Blacklist) ShowBlacklist() {
 	blacklist.Print.ResetTabForPrint()
 }
 
-func New(client *mongo.Client, print *print.Print) (*Blacklist, error) {
+func New(client *mongo.Client, print *print.Print, config *utils.Config) (*Blacklist, error) {
 	if client == nil {
 		return nil, errors.New("Mongo.Client object nil")
 	} else if print == nil {
@@ -118,6 +119,7 @@ func New(client *mongo.Client, print *print.Print) (*Blacklist, error) {
 	blacklist.DB = blacklist.Client.Database("Melchior")
 	blacklist.BlacklistCollection = blacklist.DB.Collection("Blacklist")
 	blacklist.Print = print
+	blacklist.Config = config
 	blacklist.Data = nil
 
 	return &blacklist, nil
