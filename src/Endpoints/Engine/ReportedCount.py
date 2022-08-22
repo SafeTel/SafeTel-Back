@@ -11,8 +11,8 @@ from flask.globals import request
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-# Endpoint Error Manager import
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
+# Error Manager Factory import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager
 
 ### MODELS
 # Model Request & Response import
@@ -44,7 +44,7 @@ from flasgger.utils import swag_from
 # Route to get the number of reported numbers
 class ReportedCount(Resource):
     def __init__(self):
-        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__ErrorManager = ErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
         self.__Engine = Engine()
@@ -56,18 +56,18 @@ class ReportedCount(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__ErrorManager.BadRequestError(requestErrors), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__EndpointErrorManager.CreateBadRequestError("Bad Token"), 401
+            return self.__ErrorManager.BadRequestError("Bad Token"), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User is None):
-            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
-
+            return self.__ErrorManager.ForbiddenAccessError(), 403
+        # TODO: CreateProxyAuthenticationRequired
         if (not User.Box.IsRegisteredBoxIp(JwtInfos.boxid, request.remote_addr)):
-            return self.__EndpointErrorManager.CreateProxyAuthenticationRequired(), 407
+            return self.__ErrorManager.ProxyAuthenticationRequiredError(), 407
 
         count = self.__Engine.ReportedCount()
         Response = ReportedCountResponse(
@@ -76,5 +76,5 @@ class ReportedCount(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+            return self.__ErrorManager.InternalLogicError(), 500
         return Response.ToDict(), 200

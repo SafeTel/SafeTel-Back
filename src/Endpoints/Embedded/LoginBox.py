@@ -12,7 +12,7 @@ from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Error Manager Factory import
-from Models.Endpoints.Errors.Factory.ErrorManagerFactory import ErrorManagerFactory# import low level interface Box
+from Models.Endpoints.Errors.ErrorManager import ErrorManager# import low level interface Box
 from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
@@ -47,7 +47,7 @@ from flasgger.utils import swag_from
 # Route to login a box
 class LoginBox(Resource):
     def __init__(self):
-        self.__ErrorManagerFactory = ErrorManagerFactory()
+        self.__ErrorManager = ErrorManager()
         self.__JwtConv = JWTConvertEmbedded()
         self.__UserFactory = UserFactory()
         self.__BoxDB = BoxDB()
@@ -59,18 +59,18 @@ class LoginBox(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
+            return self.__ErrorManager.BadRequestError(requestErrors).ToDict(), 400
 
         guid = self.__BoxDB.RSUserByBoxID(Request.boxid)
         if (guid == None):
-            return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
+            return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
 
         User = self.__UserFactory.LoadUser(guid)
         if (User == None):
-            return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
+            return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
 
         if (not User.Box.IsClaimedByUser(Request.boxid)):
-            return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
+            return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
 
         User.Box.UpdateBoxIp(Request.boxid, request.remote_addr)
 
@@ -83,5 +83,5 @@ class LoginBox(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__ErrorManagerFactory.InternalLogicError().ToDict(), 500
+            return self.__ErrorManager.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200

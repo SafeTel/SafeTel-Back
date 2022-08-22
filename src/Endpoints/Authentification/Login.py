@@ -12,7 +12,7 @@ from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Error Manager Factory import
-from Models.Endpoints.Errors.Factory.ErrorManagerFactory import ErrorManagerFactory
+from Models.Endpoints.Errors.ErrorManager import ErrorManager
 ### MODELS
 # Model Request & Response import
 from Models.Endpoints.Authentification.LoginRequest import LoginRequest
@@ -48,7 +48,7 @@ from flasgger.utils import swag_from
 # Route to auth a user
 class Login(Resource):
     def __init__(self):
-        self.__ErrorManagerFactory = ErrorManagerFactory()
+        self.__ErrorManager = ErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
@@ -59,19 +59,19 @@ class Login(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
+            return self.__ErrorManager.BadRequestError(requestErrors).ToDict(), 400
 
         LoginStatus, result = self.__UserFactory.LoginUser(
             Request.email,
             Request.password
         )
         if (not LoginStatus):
-            self.__ErrorManagerFactory.BadRequestError(result).ToDict(), 400
+            self.__ErrorManager.BadRequestError(result).ToDict(), 400
 
         guid = result
         User = self.__UserFactory.LoadUser(guid)
         if (User is None):
-            return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
+            return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
 
         Response = LoginResponse(
             User.PullUserInfos().username,
@@ -80,5 +80,5 @@ class Login(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__ErrorManagerFactory.InternalLogicError().ToDict(), 500
+            return self.__ErrorManager.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200

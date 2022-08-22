@@ -12,7 +12,7 @@ from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 # Error Manager Factory import
-from Models.Endpoints.Errors.Factory.ErrorManagerFactory import ErrorManagerFactory# Service import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager# Service import
 from Infrastructure.Services.GMail.GMail import GMail
 
 ### MODELS
@@ -48,7 +48,7 @@ from flasgger.utils import swag_from
 # Route to auth a user
 class ResetPassword(Resource):
     def __init__(self):
-        self.__ErrorManagerFactory = ErrorManagerFactory()
+        self.__ErrorManager = ErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
         self.__GMail = GMail()
@@ -60,11 +60,11 @@ class ResetPassword(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
+            return self.__ErrorManager.BadRequestError(requestErrors).ToDict(), 400
 
         User = self.__UserFactory.LoadUserByMail(Request.email)
         if (User == None):
-            return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
+            return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
 
         User.LostPasswordMode(True)
         UserInfos = User.PullUserInfos()
@@ -85,5 +85,5 @@ class ResetPassword(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__ErrorManagerFactory.InternalLogicError().ToDict(), 500
+            return self.__ErrorManager.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200

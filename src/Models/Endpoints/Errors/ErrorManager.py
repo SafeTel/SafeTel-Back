@@ -2,26 +2,24 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## ErrorManagerFactory
+## ErrorManager
 ##
 
 
 ### INFRA
 # Endpoints import
+from Models.Endpoints.Errors.Factory.ErrorFactory import ErrorFactory
 
-# Represent a ErrorManagerFactory Object
-from Models.Endpoints.Errors.Models.BadRequestError import BadRequestError
-from Models.Endpoints.Errors.Models.ForbiddenAccessError import ForbiddenAccessError
-from Models.Endpoints.Errors.Models.InternalLogicError import InternalLogicError
+class ErrorManager():
+    def __init__(self):
+        self.__ErrorFactory = ErrorFactory()
 
-
-class ErrorManagerFactory():
     def BadRequestError(self, details):
         ErrorJson = {
             "error": True,
             "details": details
         }
-        return BadRequestError(ErrorJson)
+        return self.__ErrorFactory.BadRequestError(ErrorJson)
 
     def InternalLogicError(self):
         ErrorJson = {
@@ -29,7 +27,7 @@ class ErrorManagerFactory():
             "details": "Internal Logic Error",
             "message": "Contact SafeTel Backend devs"
         }
-        return InternalLogicError(ErrorJson)
+        return self.__ErrorFactory.InternalLogicError(ErrorJson)
 
     def ForbiddenAccessError(self):
         ErrorJson = {
@@ -37,7 +35,7 @@ class ErrorManagerFactory():
             "details": "Access Denied",
             "message": "Your token may be corrupted"
         }
-        return ForbiddenAccessError(ErrorJson)
+        return self.__ErrorFactory.ForbiddenAccessError(ErrorJson)
 
     def ForbiddenAccessErrorWithMessage(self, message):
         ErrorJson = {
@@ -45,4 +43,12 @@ class ErrorManagerFactory():
             "details": "Access Denied",
             "message": message
         }
-        return ForbiddenAccessError(ErrorJson)
+        return self.__ErrorFactory.ForbiddenAccessErrorWithMessage(ErrorJson)
+
+    # Code 407, error for IP of embedded
+    def ProxyAuthenticationRequiredError(self):
+        ErrorJson = {
+            "error": True,
+            "details": "IP Denied"
+        }
+        return self.__ErrorFactory.ProxyAuthenticationRequiredError(ErrorJson)

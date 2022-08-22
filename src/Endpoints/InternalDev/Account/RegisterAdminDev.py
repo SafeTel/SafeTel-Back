@@ -11,7 +11,7 @@
 from flask.globals import request
 from flask_restful import Resource
 # Error Manager Factory import
-from Models.Endpoints.Errors.Factory.ErrorManagerFactory import ErrorManagerFactory# Casper DB imports
+from Models.Endpoints.Errors.ErrorManager import ErrorManager# Casper DB imports
 from Infrastructure.Services.MongoDB.Casper.ApiKeys import ApiKeyLogDB
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB
@@ -64,7 +64,7 @@ import uuid
 # Route to register admin & dev account from Api Key
 class RegisterAdminDev(Resource):
     def __init__(self):
-        self.__ErrorManagerFactory = ErrorManagerFactory()
+        self.__ErrorManager = ErrorManager()
         self.__JwtConv = JWTConvert()
         self.__ApiKeyLogDb = ApiKeyLogDB()
         self.__UserDB = UserDB()
@@ -78,13 +78,13 @@ class RegisterAdminDev(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
+            return self.__ErrorManager.BadRequestError(requestErrors).ToDict(), 400
 
         if (not self.__ApiKeyLogDb.isValidApiKey(Request.apiKey)):
-            return self.__ErrorManagerFactory.BadRequestError("Invalid ApiKey").ToDict(), 403
+            return self.__ErrorManager.BadRequestError("Invalid ApiKey").ToDict(), 403
 
         if (self.__UserDB.exists(Request.Registrattion.email)):
-            return self.__ErrorManagerFactory.BadRequestError("This email is already linked to an account").ToDict(), 400
+            return self.__ErrorManager.BadRequestError("This email is already linked to an account").ToDict(), 400
 
         guid = str(uuid.uuid4())
         role = Roles.StrToEnum(Request.role)
@@ -99,7 +99,7 @@ class RegisterAdminDev(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__ErrorManagerFactory.InternalLogicError().ToDict(), 500
+            return self.__ErrorManager.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200
 
 
