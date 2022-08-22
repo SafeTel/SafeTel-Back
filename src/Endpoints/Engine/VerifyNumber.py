@@ -61,11 +61,11 @@ class VerifyNumber(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__ErrorManagerFactory.BadRequestError({"details": "Bad Token"}).ToDict(), 401
+            return self.__ErrorManagerFactory.BadRequestError("Bad Token").ToDict(), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User is None):
@@ -80,7 +80,7 @@ class VerifyNumber(Resource):
         if (not User.Box.IsBoxInCall(JwtInfos.boxid)):
             User.Box.UpdateCall(JwtInfos.boxid, True)
         else:
-            return self.__ErrorManagerFactory.BadRequestError({"details": "This box is already in a call"}).ToDict(), 403
+            return self.__ErrorManagerFactory.BadRequestError("This box is already in a call").ToDict(), 403
 
         verificationResult = self.__Engine.Verify(
             User,

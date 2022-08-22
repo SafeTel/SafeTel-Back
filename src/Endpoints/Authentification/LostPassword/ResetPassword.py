@@ -60,7 +60,7 @@ class ResetPassword(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError({"details": requestErrors}).ToDict(), 400
+            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
 
         User = self.__UserFactory.LoadUserByMail(Request.email)
         if (User == None):
