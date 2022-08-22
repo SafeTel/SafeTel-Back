@@ -11,9 +11,8 @@ from flask.globals import request
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-# Error Manager Factory import
-from Models.Endpoints.Errors.ErrorManager import ErrorManager
-### MODELS
+# Error Manager import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager### MODELS
 # Model Request & Response import
 from Models.Endpoints.Account.Lists.Shared.ListGetRequest import ListGetRequest
 from Models.Endpoints.Account.Lists.History.HistoryResponse import HistoryResponse

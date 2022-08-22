@@ -10,8 +10,9 @@
 # Flask imports
 from flask.globals import request
 from flask_restful import Resource
-# Error Manager Factory import
-from Models.Endpoints.Errors.ErrorManager import ErrorManager# Casper DB imports
+# Error Manager import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager
+# Casper DB imports
 from Infrastructure.Services.MongoDB.Casper.ApiKeys import ApiKeyLogDB
 # Melchior DB imports
 from Infrastructure.Services.MongoDB.Melchior.UserDB import UserDB

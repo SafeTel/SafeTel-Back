@@ -11,9 +11,8 @@ from flask import request as fquest
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-# Error Manager Factory import
+# Error Manager import
 from Models.Endpoints.Errors.ErrorManager import ErrorManager
-
 ### MODELS
 # Models Request & Response imports
 from Models.Endpoints.Account.Infos.UpdateEmailRequest import UpdateEmailRequest

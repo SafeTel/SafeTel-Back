@@ -9,8 +9,9 @@
 # Flask imports
 from flask.globals import request
 from flask_restful import Resource
-# Error Manager Factory import
-from Models.Endpoints.Errors.ErrorManager import ErrorManager# Health CHeck Service
+# Error Manager import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager
+# Health CHeck Service
 from Infrastructure.Services.HealthCheck.HealthCheckService import HealthCheckService
 
 ### MODELS

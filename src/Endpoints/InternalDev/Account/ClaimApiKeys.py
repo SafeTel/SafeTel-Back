@@ -9,8 +9,9 @@
 # Flask imports
 from flask.globals import request
 from flask_restful import Resource
-# Error Manager Factory import
-from Models.Endpoints.Errors.ErrorManager import ErrorManager# DB imports (doesn't need High Level interface since it's internal dev)
+# Error Manager import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager
+# DB imports (doesn't need High Level interface since it's internal dev)
 from Infrastructure.Services.MongoDB.Casper.Contributors import ContributorsDB
 from Infrastructure.Services.MongoDB.Casper.ApiKeys import ApiKeyLogDB
 

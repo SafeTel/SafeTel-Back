@@ -11,9 +11,8 @@ from flask.globals import request
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-# Error Manager Factory import
-from Models.Endpoints.Errors.ErrorManager import ErrorManager
-# Service import
+# Error Manager import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager# Service import
 from Infrastructure.Services.GMail.GMail import GMail
 
 ### MODELS
