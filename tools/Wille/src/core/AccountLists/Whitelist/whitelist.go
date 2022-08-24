@@ -75,31 +75,6 @@ func (whitelist *Whitelist) LoadData(name string) error {
 	return whitelist.setData(name)
 }
 
-// // Upload the Whitelist.json file
-// func (whitelist *Whitelist) UploadWhitelistFile(name string) error {
-// 	data, err := whitelist.checkDataValidity(name)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	// TODO: replace start
-// 	// Generating a bson filter using the value of guid
-// 	filter := bson.M{"guid": data.Guid}
-// 	if err = utils.CheckDataNotExistInCollection(whitelist.WhitelistCollection, filter); err != nil {
-// 		whitelist.Print.Info("Whitelist.json data of model " + name + " already exist inside the server")
-// 		return nil
-// 	}
-// 	// Upload
-// 	err, inOut, inErr := mongoUtils.Import(whitelist.DEV_URI_USERS_DB, "Whitelist", "data/"+name+"/Lists/Whitelist.json")
-
-// 	if err != nil {
-// 		return err
-// 	}
-// 	// TODO: replace end
-// 	whitelist.Print.Info("StdOut: Uploading the whitelist file of " + name + ": " + inOut)
-// 	whitelist.Print.Info("StdErr: Uploading the whitelist file of " + name + ": " + inErr)
-// 	return nil
-// }
-
 func (whitelist *Whitelist) ShowWhitelist() {
 	whitelist.Print.ResetTabForPrint()
 	whitelist.Print.Info("\t- Whitelist.json Content:")
