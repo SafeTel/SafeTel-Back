@@ -46,8 +46,8 @@ func (history *History) PostHistory(client *resty.Client, token string) error {
 	history.Print.Info("Uploading History...")
 
 	for _, call := range history.Data.Calls {
-		history.Print.Info("History post phone number: " + call.Number + " - Status: " + call.Status)
 
+		history.Print.Info("History post phone number: " + call.Number + " - Status: " + call.Status)
 		resp, err, _, pFailure := history.postHistoryHttpRequest(client, token, call)
 
 		if err != nil {

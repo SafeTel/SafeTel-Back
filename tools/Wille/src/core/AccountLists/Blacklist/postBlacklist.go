@@ -43,9 +43,10 @@ func (blacklist *Blacklist) PostBlacklist(client *resty.Client, token string) er
 	blacklist.Print.Info("Uploading Blacklist...")
 
 	for _, phoneNumber := range blacklist.Data.PhoneNumbers {
-		blacklist.Print.Info("Blacklist post phone number: " + phoneNumber)
 
+		blacklist.Print.Info("Blacklist post phone number: " + phoneNumber)
 		resp, err, _, pFailure := blacklist.postBlacklistHttpRequest(client, token, phoneNumber)
+
 		if err != nil {
 			return err
 		}
