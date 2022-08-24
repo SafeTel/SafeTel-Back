@@ -20,22 +20,32 @@ type PostSuccess struct {
 
 type PostError struct {
 	Error  bool   `json:"error"`
-	Detail string `json:"detail"`
+	Detail string `json:"details"`
 }
 
-func (blacklist *Blacklist) PostBlacklist(client *resty.Client, token string) error {
+func (blacklist *Blacklist) postBlacklistHttpRequest(client *resty.Client, token, phoneNumber string) (*resty.Response, error, PostSuccess, PostError) {
 	var pSuccess PostSuccess
 	var pFailure PostError
 
+	resp, err := client.R().
+		SetBody(map[string]interface{}{
+			"token":  token,
+			"number": phoneNumber,
+		}).
+		SetResult(&pSuccess).
+		SetError(&pFailure).
+		Post("http://" + blacklist.Config.DEV_URI_SERVER + "/account/lists/blacklist")
+
+	return resp, err, pSuccess, pFailure
+}
+
+func (blacklist *Blacklist) PostBlacklist(client *resty.Client, token string) error {
+	blacklist.Print.Info("Uploading Blacklist...")
+
 	for _, phoneNumber := range blacklist.Data.PhoneNumbers {
-		resp, err := client.R().
-			SetBody(map[string]interface{}{
-				"token":  token,
-				"number": phoneNumber,
-			}).
-			SetResult(&pSuccess).
-			SetError(&pFailure).
-			Post(blacklist.Config.DEV_URI_SERVER)
+		blacklist.Print.Info("Blacklist post phone number: " + phoneNumber)
+
+		resp, err, _, pFailure := blacklist.postBlacklistHttpRequest(client, token, phoneNumber)
 		if err != nil {
 			return err
 		}
@@ -44,6 +54,7 @@ func (blacklist *Blacklist) PostBlacklist(client *resty.Client, token string) er
 			blacklist.Print.Error(pFailure)
 			return errors.New("PostBlacklist - Status Code : " + strconv.Itoa(resp.StatusCode()) + "- Error: " + pFailure.Detail)
 		}
+		blacklist.Print.Info("Done")
 	}
 	return nil
 }

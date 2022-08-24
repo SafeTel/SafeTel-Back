@@ -74,32 +74,6 @@ func (blacklist *Blacklist) LoadData(name string) error {
 	return blacklist.setData(name)
 }
 
-// // Upload the Blacklist.json file
-// func (blacklist *Blacklist) UploadBlacklistFile(name string) error {
-// 	data, err := blacklist.checkBlacklistDataValidity(name)
-
-// 	if err != nil {
-// 		return err
-// 	}
-// 	// TODO: replace start
-// 	// Generating a bson filter using the value of guid
-// 	filter := bson.M{"guid": data.Guid}
-// 	if err = utils.CheckDataNotExistInCollection(blacklist.BlacklistCollection, filter); err != nil {
-// 		blacklist.Print.Info("Blacklist.json data of model " + name + " already exist inside the server")
-// 		return nil
-// 	}
-// 	// Upload
-// 	err, inOut, inErr := mongoUtils.Import(blacklist.DEV_URI_USERS_DB, "Blacklist", "data/"+name+"/Lists/Blacklist.json")
-
-// 	if err != nil {
-// 		return err
-// 	}
-// 	// TODO: replace end
-// 	blacklist.Print.Info("StdOut: Uploading the blacklist file of " + name + ": " + inOut)
-// 	blacklist.Print.Info("StdErr: Uploading the blacklist file of " + name + ": " + inErr)
-// 	return nil
-// }
-
 func (blacklist *Blacklist) ShowBlacklist() {
 	blacklist.Print.ResetTabForPrint()
 	blacklist.Print.Info("\t- Blacklist.json Content:")
