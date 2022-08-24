@@ -12,9 +12,8 @@ from flask.globals import request
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-# Error Manager Factory import
-from Models.Endpoints.Errors.Factory.ErrorManagerFactory import ErrorManagerFactory
-### MODELS
+# Error Manager import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager### MODELS
 # Model Request & Response import
 from Models.Endpoints.Box.UpdateBoxMode.UpdateBoxModeRequest import UpdateBoxModeRequest
 from Models.Endpoints.Box.UpdateBoxMode.UpdateBoxModeResponse import UpdateBoxModeResponse
@@ -48,7 +47,7 @@ from flasgger.utils import swag_from
 # Route to update a box severity
 class UpdateSeverity(Resource):
     def __init__(self):
-        self.__ErrorManagerFactory = ErrorManagerFactory()
+        self.__ErrorManager = ErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
@@ -59,15 +58,15 @@ class UpdateSeverity(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
+            return self.__ErrorManager.BadRequestError(requestErrors).ToDict(), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__ErrorManagerFactory.BadRequestError("Bad Token").ToDict(), 401
+            return self.__ErrorManager.BadRequestError("Bad Token").ToDict(), 401
 
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User == None):
-            return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
+            return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
 
         error = User.Box.UpdateSeverity(
             Request.boxid,
@@ -75,7 +74,7 @@ class UpdateSeverity(Resource):
         )
 
         if (error != None):
-            return self.__ErrorManagerFactory.ForbiddenAccessErrorWithMessage(error).ToDict(), 403
+            return self.__ErrorManager.ForbiddenAccessErrorWithMessage(error).ToDict(), 403
 
         Response = UpdateBoxModeResponse(
             True
@@ -83,5 +82,5 @@ class UpdateSeverity(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__ErrorManagerFactory.InternalLogicError().ToDict(), 500
+            return self.__ErrorManager.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200
