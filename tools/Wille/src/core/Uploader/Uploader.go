@@ -49,7 +49,7 @@ type Uploader struct {
 // data/name/Lists:	Blacklist.json
 //					History.json
 //					Whitelist.json
-func (uploader *Uploader) uploadListFiles(name string) error {
+func (uploader *Uploader) loadListFiles(name string) error {
 	content, err := utils.CheckListFolder(name)
 	var valid byte = 1
 
@@ -92,7 +92,7 @@ func (uploader *Uploader) uploadListFiles(name string) error {
 // Upload the content of Embedded folder. The files that will be uploaded are:
 // data/name/Embedded:	Box.json
 //
-func (uploader *Uploader) uploadEmbeddedFiles(name string) error {
+func (uploader *Uploader) loadEmbeddedFiles(name string) error {
 	content, err := utils.CheckEmbeddedFolder(name)
 	var valid byte = 1
 
@@ -127,7 +127,7 @@ func (uploader *Uploader) LoadModel(name string) error {
 	}
 	if content&(0b00000010)>>1 == valid {
 		uploader.Print.Info("Lists folder: \033[32mFinded\033[0m")
-		err = uploader.uploadListFiles(name)
+		err = uploader.loadListFiles(name)
 		if err != nil {
 			return err
 		}
@@ -137,7 +137,7 @@ func (uploader *Uploader) LoadModel(name string) error {
 	}
 	if content&(0b00001000)>>3 == valid {
 		uploader.Print.Info("Embedded folder: \033[32mFinded\033[0m")
-		err = uploader.uploadEmbeddedFiles(name)
+		err = uploader.loadEmbeddedFiles(name)
 		if err != nil {
 			return err
 		}
@@ -161,7 +161,7 @@ func (uploader *Uploader) Upload(name string) error {
 	if err := uploader.LoadModel(name); err != nil {
 		return err
 	}
-	uploader.uploadData()
+	uploader.uploadData(name)
 	return nil
 }
 

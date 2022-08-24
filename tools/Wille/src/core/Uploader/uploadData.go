@@ -30,15 +30,51 @@ func (uploader *Uploader) uploadAccount() (string, error) {
 }
 
 func (uploader *Uploader) uploadAccountLists(token string) error {
+	err := uploader.Blacklist.PostBlacklist(uploader.HttpClient, token)
+
+	if err != nil {
+		uploader.Print.Info("Post Blacklist Error: " + err.Error())
+	}
+	err = uploader.Whitelist.PostWhitelist(uploader.HttpClient, token)
+
+	if err != nil {
+		uploader.Print.Info("Post Whitelist Error: " + err.Error())
+		// return err
+	}
+	err = uploader.History.PostHistory(uploader.HttpClient, token)
+
+	if err != nil {
+		uploader.Print.Info("Post History Error: " + err.Error())
+		// return err
+	}
+
 	return nil
 }
 
-func (uploader *Uploader) uploadData() error {
+func (uploader *Uploader) uploadEmbedded(token string, name string) error {
+	err := uploader.Box.InsertBoxes(name)
+
+	if err != nil {
+		return err
+	}
+
+	err = uploader.Box.ClaimBox(uploader.HttpClient, token)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (uploader *Uploader) uploadData(name string) error {
 	token, err := uploader.uploadAccount()
 
 	if err != nil {
 		return err
 	}
+
+	uploader.Print.Info(token)
 
 	err = uploader.uploadAccountLists(token)
 
@@ -46,7 +82,11 @@ func (uploader *Uploader) uploadData() error {
 		return err
 	}
 
-	// uploader.uploadEmbedded()
+	err = uploader.uploadEmbedded(token, name)
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
