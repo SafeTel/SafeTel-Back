@@ -124,33 +124,6 @@ func (profile *Profile) LoadData(name string) error {
 	return profile.setData(name)
 }
 
-// // Upload the Profile.json file
-// func (profile *Profile) UploadProfileFile(name string) error {
-// 	data, err := profile.checkProfileDataValidity(name)
-
-// 	if err != nil {
-// 		return err
-// 	}
-// 	// TODO: replace start
-// 	// Generating a bson filter using the value of guid
-// 	filter := bson.M{"email": data.Email, "guid": data.Guid}
-// 	if err = utils.CheckDataNotExistInCollection(profile.UserCollection, filter); err != nil {
-// 		profile.Print.Info("Profile.json data of model " + name + " already exist inside the server")
-// 		return nil
-// 	}
-// 	// Upload
-// 	err, inOut, inErr := mongoUtils.Import(profile.DEV_URI_USERS_DB, "User", "data/"+name+"/Profile.json")
-
-// 	if err != nil {
-// 		profile.Print.Info("Profile.json data of model " + name + " already exist inside the server")
-// 		return err
-// 	}
-// 	// TODO: replace end
-// 	profile.Print.Info("StdOut: Uploading the profile file of " + name + ": " + inOut)
-// 	profile.Print.Info("StdErr: Uploading the profile file of " + name + ": " + inErr)
-// 	return nil
-// }
-
 func (profile *Profile) ShowProfile() {
 
 	profile.Print.ResetTabForPrint()

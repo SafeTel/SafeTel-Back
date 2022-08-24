@@ -9,6 +9,7 @@ package profile
 
 import (
 	"errors"
+
 	// Itoa Function
 	"strconv"
 
@@ -22,7 +23,7 @@ type LoginSuccess struct {
 
 type LoginError struct {
 	Error  bool   `json:"error"`
-	Detail string `json:"detail"`
+	Detail string `json:"details"`
 }
 
 func (profile *Profile) CheckLoginSuccess(lSuccess LoginSuccess) error {
@@ -32,10 +33,11 @@ func (profile *Profile) CheckLoginSuccess(lSuccess LoginSuccess) error {
 	return nil
 }
 
-func (profile *Profile) Login(client *resty.Client) (string, error) {
+func (profile *Profile) loginHttpRequest(client *resty.Client) (*resty.Response, error, LoginSuccess, LoginError) {
 	var lSuccess LoginSuccess
 	var lFailure LoginError
 
+	profile.Print.Info("Login")
 	resp, err := client.R().
 		SetBody(map[string]interface{}{
 			"magicnumber": profile.Data.MagicNumber,
@@ -44,7 +46,14 @@ func (profile *Profile) Login(client *resty.Client) (string, error) {
 		}).
 		SetResult(&lSuccess).
 		SetError(&lFailure).
-		Post(profile.Config.DEV_URI_SERVER)
+		Post("http://" + profile.Config.DEV_URI_SERVER + "/auth/login")
+	return resp, err, lSuccess, lFailure
+}
+
+func (profile *Profile) Login(client *resty.Client) (string, error) {
+	profile.Print.Info("Performing a login...")
+
+	resp, err, lSuccess, lFailure := profile.loginHttpRequest(client)
 
 	if err != nil {
 		return "", err
@@ -58,6 +67,6 @@ func (profile *Profile) Login(client *resty.Client) (string, error) {
 	if err := profile.CheckLoginSuccess(lSuccess); err != nil {
 		return "", err
 	}
-
+	profile.Print.Info("Done")
 	return lSuccess.Token, nil
 }

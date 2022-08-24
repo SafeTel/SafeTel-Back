@@ -9,9 +9,11 @@ package profile
 
 import (
 	"errors"
+
 	// Itoa Function
 	"strconv"
 
+	// Request type
 	"github.com/go-resty/resty/v2"
 )
 
@@ -23,7 +25,7 @@ type RegisterSuccess struct {
 
 type RegisterError struct {
 	Error  bool   `json:"error"`
-	Detail string `json:"detail"`
+	Detail string `json:"details"`
 }
 
 func (profile *Profile) CheckRegisterSuccess(rSuccess RegisterSuccess) error {
@@ -37,15 +39,39 @@ func (profile *Profile) CheckRegisterSuccess(rSuccess RegisterSuccess) error {
 	return nil
 }
 
-func (profile *Profile) Register(client *resty.Client) (string, error) {
+func (profile *Profile) registerHttpRequest(client *resty.Client) (*resty.Response, error, RegisterSuccess, RegisterError) {
 	var rSuccess RegisterSuccess
 	var rFailure RegisterError
 
 	resp, err := client.R().
-		SetBody(profile.Data).
+		SetBody(
+			map[string]interface{}{
+				"magicnumber": profile.Data.MagicNumber,
+				"email":       profile.Data.Email,
+				"username":    profile.Data.Username,
+				"password":    profile.Data.Password,
+				"CustomerInfos": map[string]interface{}{
+					"firstName":   profile.Data.CustomerInfos.Firstname,
+					"lastName":    profile.Data.CustomerInfos.Lastname,
+					"phoneNumber": profile.Data.CustomerInfos.PhoneNumber,
+				},
+				"Localization": map[string]interface{}{
+					"country": profile.Data.Localization.Country,
+					"region":  profile.Data.Localization.Region,
+					"address": profile.Data.Localization.Country,
+				}},
+		).
 		SetResult(&rSuccess).
 		SetError(&rFailure).
-		Post(profile.Config.DEV_URI_SERVER)
+		Post("http://" + profile.Config.DEV_URI_SERVER + "/auth/register")
+
+	return resp, err, rSuccess, rFailure
+}
+
+func (profile *Profile) Register(client *resty.Client) (string, error) {
+	profile.Print.Info("Performing a register...")
+
+	resp, err, rSuccess, rFailure := profile.registerHttpRequest(client)
 
 	if err != nil {
 		return "", err
@@ -59,6 +85,8 @@ func (profile *Profile) Register(client *resty.Client) (string, error) {
 	if err := profile.CheckRegisterSuccess(rSuccess); err != nil {
 		return "", err
 	}
+
+	profile.Print.Info("Done")
 
 	return rSuccess.Token, nil
 }
