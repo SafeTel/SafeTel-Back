@@ -85,32 +85,6 @@ func (history *History) LoadData(name string) error {
 	return history.setData(name)
 }
 
-// // Upload the History.json file
-// func (history *History) UploadHistoryFile(name string) error {
-// 	data, err := history.checkHistoryDataValidity(name)
-
-// 	if err != nil {
-// 		return err
-// 	}
-// 	// TODO: replace start
-// 	// Generating a bson filter using the value of guid
-// 	filter := bson.M{"guid": data.Guid}
-// 	if err = utils.CheckDataNotExistInCollection(history.HistoryCollection, filter); err != nil {
-// 		history.Print.Info("History.json data of model " + name + " already exist inside the server")
-// 		return nil
-// 	}
-// 	// Upload
-// 	err, inOut, inErr := mongoUtils.Import(history.DEV_URI_USERS_DB, "History", "data/"+name+"/Lists/History.json")
-
-// 	if err != nil {
-// 		return err
-// 	}
-// 	// TODO: replace end
-// 	history.Print.Info("StdOut: Uploading the history file of " + name + ": " + inOut)
-// 	history.Print.Info("StdErr: Uploading the history file of " + name + ": " + inErr)
-// 	return nil
-// }
-
 func (history *History) ShowHistory() {
 
 	history.Print.ResetTabForPrint()

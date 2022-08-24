@@ -20,25 +20,36 @@ type PostSuccess struct {
 
 type PostError struct {
 	Error  bool   `json:"error"`
-	Detail string `json:"detail"`
+	Detail string `json:"details"`
 }
 
-func (history *History) PostHistory(client *resty.Client, token string) error {
+func (history *History) postHistoryHttpRequest(client *resty.Client, token string, call Call) (*resty.Response, error, PostSuccess, PostError) {
 	var pSuccess PostSuccess
 	var pFailure PostError
 
+	resp, err := client.R().
+		SetBody(map[string]interface{}{
+			"token": token,
+			"HistoryCall": map[string]interface{}{
+				"number": call.Number,
+				"status": call.Status,
+				"time":   call.Time,
+			}}).
+		SetResult(&pSuccess).
+		SetError(&pFailure).
+		Post("http://" + history.Config.DEV_URI_SERVER + "/account/lists/history")
+
+	return resp, err, pSuccess, pFailure
+}
+
+func (history *History) PostHistory(client *resty.Client, token string) error {
+	history.Print.Info("Uploading History...")
+
 	for _, call := range history.Data.Calls {
-		resp, err := client.R().
-			SetBody(map[string]interface{}{
-				"token": token,
-				"HistoryCall": map[string]interface{}{
-					"number": call.Number,
-					"status": call.Status,
-					"time":   call.Time,
-				}}).
-			SetResult(&pSuccess).
-			SetError(&pFailure).
-			Post(history.Config.DEV_URI_SERVER)
+		history.Print.Info("History post phone number: " + call.Number + " - Status: " + call.Status)
+
+		resp, err, _, pFailure := history.postHistoryHttpRequest(client, token, call)
+
 		if err != nil {
 			return err
 		}
@@ -47,6 +58,7 @@ func (history *History) PostHistory(client *resty.Client, token string) error {
 			history.Print.Error(pFailure)
 			return errors.New("PostBlacklist - Status Code : " + strconv.Itoa(resp.StatusCode()) + "- Error: " + pFailure.Detail)
 		}
+		history.Print.Info("Done")
 	}
 
 	return nil
