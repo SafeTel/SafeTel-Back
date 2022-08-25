@@ -43,7 +43,7 @@ func (box *Box) ClaimBox(client *resty.Client, token string) error {
 
 	for _, aBox := range box.Data.Boxes {
 
-		box.Print.Error("Claiminb box with id: " + aBox.BoxId)
+		box.Print.Info("Claiminb box with id: " + aBox.BoxId)
 		resp, err, _, cBFailure := box.claimBoxHttpRequest(client, token, aBox.BoxId)
 
 		if err != nil {
