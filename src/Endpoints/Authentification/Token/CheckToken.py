@@ -11,9 +11,8 @@ from flask.globals import request
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-# Error Manager Factory import
-from Models.Endpoints.Errors.Factory.ErrorManagerFactory import ErrorManagerFactory
-### MODELS
+# Error Manager import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager### MODELS
 # Model Request & Response import
 from Models.Endpoints.Authentification.Token.CheckTokenRequest import CheckTokenRequest
 from Models.Endpoints.Authentification.Token.CheckTokenResponse import CheckTokenResponse
@@ -42,7 +41,7 @@ from flasgger.utils import swag_from
 # Route to check a JWT
 class CheckToken(Resource):
     def __init__(self):
-        self.__ErrorManagerFactory = ErrorManagerFactory()
+        self.__ErrorManager = ErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
@@ -53,14 +52,14 @@ class CheckToken(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__ErrorManagerFactory.BadRequestError(requestErrors).ToDict(), 400
+            return self.__ErrorManager.BadRequestError(requestErrors).ToDict(), 400
 
         JwtInfos = self.__JwtConv.Deserialize(Request.token)
         if (JwtInfos is None):
-            return self.__ErrorManagerFactory.BadRequestError("Bad Token").ToDict(), 401
+            return self.__ErrorManager.BadRequestError("Bad Token").ToDict(), 401
 
         if (self.__UserFactory.LoadUser(JwtInfos.guid) == None):
-            return self.__ErrorManagerFactory.ForbiddenAccessError().ToDict(), 403
+            return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
 
         Response = CheckTokenResponse(
             self.__JwtConv.IsValid(Request.token)
@@ -68,5 +67,5 @@ class CheckToken(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__ErrorManagerFactory.InternalLogicError().ToDict(), 500
+            return self.__ErrorManager.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200
