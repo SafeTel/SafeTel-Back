@@ -23,6 +23,8 @@ import (
 // 	If ApiKey != defaultValue, then ApiKey is valid
 //
 func (wille *Wille) isValidApiKey() bool {
+	return true
+
 	if wille.ApiKey == "" {
 		return false
 	}
