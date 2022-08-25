@@ -48,10 +48,10 @@ func (box *Box) checkBoxObjectDataValidity(name string, data Data) error {
 }
 
 // Check the content of the Box.json file and check if the data has not been uploaded yet
-func (box *Box) checkBoxDataValidity(name string) (Data, error) {
+func (box *Box) checkBoxDataValidity(name string, filepath string) (Data, error) {
 	var data Data
 
-	decoder, err := utils.OpenAndGenerateJsonDecoder("data/" + name + "/Embedded/Box.json")
+	decoder, err := utils.OpenAndGenerateJsonDecoder(filepath)
 	if err != nil {
 		return Data{}, err
 	}
@@ -66,8 +66,26 @@ func (box *Box) checkBoxDataValidity(name string) (Data, error) {
 	return data, nil
 }
 
+// Loading a File
+
+func (box *Box) setDataFile(filePath string) error {
+	data, err := box.checkBoxDataValidity(filePath, filePath)
+
+	if err != nil {
+		return err
+	}
+	box.Data = &data
+	return nil
+}
+
+func (box *Box) LoadFile(filePath string) error {
+	return box.setDataFile(filePath)
+}
+
+// Loading a Model
+
 func (box *Box) setData(name string) error {
-	data, err := box.checkBoxDataValidity(name)
+	data, err := box.checkBoxDataValidity(name, "data/"+name+"/Embedded/Box.json")
 
 	if err != nil {
 		return err

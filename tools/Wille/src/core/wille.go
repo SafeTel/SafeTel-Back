@@ -100,11 +100,12 @@ func (wille *Wille) compute(options []string, functions map[string]CommandFuncti
 
 func (wille *Wille) Run(withOptions []string) error {
 	functions := map[string]CommandFunctionType{
-		"--apikey": wille.apikey,
-		"--random": wille.random,
-		"--show":   wille.show,
-		"--upload": wille.upload,
-		"--hash":   wille.hash}
+		"--apikey":      wille.apikey,
+		"--random":      wille.random,
+		"--show":        wille.show,
+		"--upload":      wille.upload,
+		"--uploadBoxes": wille.uploadBoxes,
+		"--hash":        wille.hash}
 
 	if err := wille.compute(withOptions, functions); err != nil {
 		return err

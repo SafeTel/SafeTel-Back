@@ -13,6 +13,10 @@ Options:
               Need a valid apiKey to perform this action 
     ./wille --apikey <apikey> --upload <data>
 
+    --uploadBoxes  Upload on the database a file containing Boxes
+                 Need a valid apiKey to perform this action 
+    ./wille --apikey <apikey> --uploadBoxes <file>
+
     --hash    Hash a password
     ./wille --hash <password>
 
@@ -23,3 +27,5 @@ Arguments:
     <password> Plain text password
 
     <apikey> Plain text apikey
+
+    <file>  Valid Path to the file

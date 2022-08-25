@@ -90,3 +90,16 @@ func (uploader *Uploader) uploadData(name string) error {
 
 	return nil
 }
+
+func (uploader *Uploader) UploadBoxesFromFile(filePath string) error {
+	if err := uploader.Box.LoadFile(filePath); err != nil {
+		return err
+	}
+
+	err := uploader.Box.InsertBoxes(filePath)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
