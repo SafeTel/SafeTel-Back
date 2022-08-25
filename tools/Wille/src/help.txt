@@ -11,11 +11,17 @@ Options:
 
     --upload  Upload on the database the user configuration
               Need a valid apiKey to perform this action 
-    ./wille --apikey <apikey> --upload <data>
+    OLD:
+        ./wille --apikey <apikey> --upload <file>
+    New:
+        ./wille --upload <file>
 
     --uploadBoxes  Upload on the database a file containing Boxes
                  Need a valid apiKey to perform this action 
-    ./wille --apikey <apikey> --uploadBoxes <file>
+    OLD:
+        ./wille --apikey <apikey> --uploadBoxes <file>
+    New:
+        ./wille --uploadBoxes <file>
 
     --hash    Hash a password
     ./wille --hash <password>
