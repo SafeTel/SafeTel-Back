@@ -21,6 +21,7 @@ jobs:
           port: ${{ secrets.SSH_PORT_DEV }}
           script: |
             cd /home/backadmin/SafeTel-Back/
+            git checkout DEV
             git pull origin DEV
             cd tools/Asuka
             docker-compose up -d --force-recreate --no-deps --build save_db
