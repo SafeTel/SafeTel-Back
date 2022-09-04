@@ -1,4 +1,4 @@
-name: clean-db-amane
+name: save-db-asuka
 
 on:
   push:
