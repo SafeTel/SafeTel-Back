@@ -1,0 +1,44 @@
+summary: "Get the box's infos of a user"
+description: "Get the box's infos of an authenticated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Box#box-infos"
+
+tags:
+- Box
+
+produces:
+- "application/json"
+
+parameters:
+  - name: token
+    type: string
+    in: query
+    required: True
+    minimum: 1
+
+responses:
+  200:
+    description: "Success"
+    schema:
+      type: object
+      properties:
+        Boxes:
+          type: array
+          items:
+            type: object
+            properties:
+              boxid:
+                type: string
+                description: Box id
+              activity:
+                type: boolean
+                description: Box activity status
+              severity:
+                type: string
+                description: "Box Severity: None / Blacklist / Normal / High / Max"
+  400:
+    description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  401:
+    description: "\"Bad token\""
+  403:
+    description: "There is something wrong with the token, check if the account still exists"
+  500:
+    description: "Internal Logic Error - Please report all theses errors"

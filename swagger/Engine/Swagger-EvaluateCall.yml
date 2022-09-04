@@ -1,5 +1,5 @@
 summary: "Evaluate a call"
-description: "Evaluate the call by the engine, means that it will act, reach this endpoint at the end of the phone call\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints:-Engine#evaluate-call"
+description: "Evaluate the call by the engine, means that it will act, reach this endpoint at the end of the phone call\nThis endpoint can only be called at the end of a call\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints:-Engine#evaluate-call"
 
 tags:
 - Engine
@@ -14,22 +14,15 @@ parameters:
     type: object
     required:
     - token
-    - boxid
     - report
     - Call
     properties:
       token:
         type: string
-        description: JWT token
-      boxid:
-        type: string
-        description: Box ID
+        description: JWT Embedded token
       report:
         type: bool
         description: Does the user reported this number
-      Call:
-        type: Call
-        description: User's password
       Call:
         type: object
         required:
@@ -50,9 +43,17 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Evaluation Message
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  401:
+    description: "\"Bad token\""
   403:
-    description: "There is something wrong with the token, check if the account still exists"
+    description: "Two cases:\n- There is something wrong with the token, check if the account still exists\n- A report must be sent at the end of a call"
   500:
     description: "Internal Logic Error - Please report all theses errors"

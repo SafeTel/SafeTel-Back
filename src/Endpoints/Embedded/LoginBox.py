@@ -11,9 +11,8 @@ from flask.globals import request
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-# Endpoint Error Manager import
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-# import low level interface Box
+# Error Manager import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager# import low level interface Box
 from Infrastructure.Services.MongoDB.Balthasar.BoxDB import BoxDB
 
 ### MODELS
@@ -23,7 +22,8 @@ from Models.Endpoints.Embedded.LoginBox.LoginBoxResponse import LoginBoxResponse
 
 ### LOGC
 # JWT converter import
-from Logic.Services.JWTConvert.JWTConvert import JWTConvert
+from Logic.Services.JWTConvert.JWTConvertEmbedded import JWTConvertEmbedded
+
 
 ### SWAGGER
 # flasgger import
@@ -47,8 +47,8 @@ from flasgger.utils import swag_from
 # Route to login a box
 class LoginBox(Resource):
     def __init__(self):
-        self.__EndpointErrorManager = EndpointErrorManager()
-        self.__JwtConv = JWTConvert(24)
+        self.__ErrorManager = ErrorManager()
+        self.__JwtConv = JWTConvertEmbedded()
         self.__UserFactory = UserFactory()
         self.__BoxDB = BoxDB()
 
@@ -59,24 +59,29 @@ class LoginBox(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__ErrorManager.BadRequestError(requestErrors).ToDict(), 400
 
         guid = self.__BoxDB.RSUserByBoxID(Request.boxid)
         if (guid == None):
-            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+            return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
 
         User = self.__UserFactory.LoadUser(guid)
         if (User == None):
-            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+            return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
+
+        if (not User.Box.IsClaimedByUser(Request.boxid)):
+            return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
+
+        User.Box.UpdateBoxIp(Request.boxid, request.remote_addr)
 
         Response = LoginBoxResponse(
             self.__JwtConv.Serialize(
                 guid,
-                User.PullUserInfos().role
+                Request.boxid
             )
         )
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+            return self.__ErrorManager.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200

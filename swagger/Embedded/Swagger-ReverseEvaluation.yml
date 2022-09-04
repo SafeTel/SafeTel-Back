@@ -1,0 +1,42 @@
+summary: "Reverse the evaluation"
+description: "Reverse an evaluation for the given number (also any action due to evaluate-call other than history)"
+
+tags:
+- Embedded
+
+produces:
+- "application/json"
+
+parameters:
+- name: Request
+  in: body
+  schema:
+    type: object
+    required:
+    - token
+    - number
+    properties:
+      token:
+        type: string
+        description: JWT Embedded token
+      nummber:
+        type: string
+        description: Phone number of the report to reverse
+
+responses:
+  200:
+    description: "Success"
+    schema:
+      type: object
+      properties:
+        updated:
+          type: boolean
+          description: The status of the update
+  400:
+    description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  401:
+    description: "\"Bad token\""
+  403:
+    description: "There is something wrong with the token, check if the account still exists"
+  500:
+    description: "Internal Logic Error - Please report all theses errors"

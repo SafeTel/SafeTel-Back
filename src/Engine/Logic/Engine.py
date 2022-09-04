@@ -45,6 +45,9 @@ class Engine():
 
     ### PUBLIC
 
+    def ReportedCount(self):
+        return self.__NumberDB.count()
+
     # Just veify the number
     def Verify(self, User: User, boxid: str, number: str):
         # TODO: Verify the number country by regex FIXME: next sprint

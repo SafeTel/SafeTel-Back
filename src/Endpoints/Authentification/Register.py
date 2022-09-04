@@ -11,10 +11,8 @@ from flask.globals import request
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-# Endpoint Error Manager import
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-
-### MODELS
+# Error Manager import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager### MODELS
 # Model Request & Response import
 from Models.Endpoints.Authentification.RegisterRequest import RegisterRequest
 from Models.Endpoints.Authentification.RegisterResponse import RegisterResponse
@@ -24,8 +22,7 @@ from Models.Logic.Shared.Roles import Roles
 ### LOGC
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
-# Password encription import
-from Logic.Services.PWDConvert.PWDConvert import PWDConvert
+
 
 ### SWAGGER
 # flasgger import
@@ -64,7 +61,7 @@ from flasgger.utils import swag_from
 # Route to Register a user
 class Register(Resource):
     def __init__(self):
-        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__ErrorManager = ErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
 
@@ -75,10 +72,10 @@ class Register(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__ErrorManager.BadRequestError(requestErrors).ToDict(), 400
 
-        if (self.__UserFactory.IsMailRegitered(Request.email)):
-            return self.__EndpointErrorManager.CreateBadRequestError("This email is already linked to an account"), 400
+        if (self.__UserFactory.IsMailRegitered(Request.email)): #TODO: Regitered -> Registered
+            return self.__ErrorManager.BadRequestError("This email is already linked to an account").ToDict(), 400
 
         User = self.__UserFactory.CreateUser(Request)
         UserInfos = User.PullUserInfos()
@@ -91,5 +88,5 @@ class Register(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+            return self.__ErrorManager.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200

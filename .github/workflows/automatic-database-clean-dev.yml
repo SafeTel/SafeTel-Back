@@ -21,6 +21,7 @@ jobs:
           port: ${{ secrets.SSH_PORT_DEV }}
           script: |
             cd /home/backadmin/SafeTel-Back/
+            git checkout DEV
             git pull origin DEV
             cd devOps/cd/
             docker-compose up -d --force-recreate --no-deps --build clean_db

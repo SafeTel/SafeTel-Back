@@ -1,5 +1,5 @@
 summary: "Verify a number"
-description: "Verify a number for an authenicated user\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Engine#evaluate-number"
+description: "Verify a number for an authenicated user\nThis endpoint can only be called at the start of a call\nhttps://github.com/SafeTel/SafeTel-Doc-Backend/wiki/Endpoints%3A-Engine#evaluate-number"
 
 tags:
 - Engine
@@ -14,15 +14,11 @@ parameters:
     type: object
     required:
     - token
-    - boxid
     - number
     properties:
       token:
         type: string
-        description: JWT token
-      boxid:
-        type: string
-        description: Box ID
+        description: JWT Embedded token
       number:
         type: string
         description: Number to evaluate
@@ -30,9 +26,17 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        block:
+          type: boolean
+          description: "Blocking status"
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  401:
+    description: "\"Bad token\""
   403:
-    description: "There is something wrong with the token, check if the account still exists"
+    description: "Two cases:\n- There is something wrong with the token, check if the account still exists\n- This box is already in a call"
   500:
     description: "Internal Logic Error - Please report all theses errors"

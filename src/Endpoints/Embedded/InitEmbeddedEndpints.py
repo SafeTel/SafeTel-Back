@@ -6,37 +6,25 @@
 ##
 
 ### INFRA
-# Link endpoint imports
-from Endpoints.Embedded.Link.ClaimBox import ClaimBox
 # Login box unique endpoint import
 from Endpoints.Embedded.LoginBox import LoginBox
-# Infos box unique endpoint import
-from Endpoints.Embedded.BoxInfos import BoxInfos
-# Avaible Update unique endpoint import
-from Endpoints.Embedded.UpdateActivity import UpdateActivity
-# Avaible Update unique endpoint import
-from Endpoints.Embedded.UpdateSeverity import UpdateSeverity
-# Avaible Update unique endpoint import
-from Endpoints.Embedded.AvailableUpdate import AvaiableUpdate
+# Reverse Evaluation unique endpoint import
+from Endpoints.Embedded.ReverseEvaluation import ReverseEvaluation
+# Reset Embedded Token unique endpoint import
+from Endpoints.Embedded.Token.ResetEmbeddedToken import ResetEmbeddedToken
+# Report an error for Embedded unique endpoint import
+from Endpoints.Embedded.ReportError import ReportError
 
 
 # Initialization of the endpoints for emebeded side
 class InitEmbeddedEndpoints():
     def __init__(self, Api):
         self.EMBEDDED_URI_BASE_DOMAIN = "/embedded/"
-        self.__InitLinkEndpoints(Api)
+        self.EMBEDDED_URI_TOKEN_DOMAIN = "token/"
         self.__InitLoginBoxEndpoint(Api)
-        self.__InitBoxInfosEndpoint(Api)
-        self.__InitUpdateActivityEndpoint(Api)
-        self.__InitUpdateSeverityEndpoint(Api)
-        self.__InitAvaiableUpdateEndpoint(Api)
-
-
-    def __InitLinkEndpoints(self, Api):
-        Api.add_resource(
-            ClaimBox,
-            self.EMBEDDED_URI_BASE_DOMAIN + "link/claim-box"
-        )
+        self.__InitReverseReportEndpoint(Api)
+        self.__InitReportErrorEndpoint(Api)
+        self.__InitResetEmbeddedTokenEndpoint(Api)
 
 
     def __InitLoginBoxEndpoint(self, Api):
@@ -46,29 +34,21 @@ class InitEmbeddedEndpoints():
         )
 
 
-    def __InitBoxInfosEndpoint(self, Api):
+    def __InitReverseReportEndpoint(self, Api):
         Api.add_resource(
-            BoxInfos,
-            self.EMBEDDED_URI_BASE_DOMAIN + "box-infos"
+            ReverseEvaluation,
+            self.EMBEDDED_URI_BASE_DOMAIN + "reverse-evaluation"
+        )
+
+    def __InitReportErrorEndpoint(self, Api):
+        Api.add_resource(
+            ReportError,
+            self.EMBEDDED_URI_BASE_DOMAIN + "report-error"
         )
 
 
-    def __InitUpdateActivityEndpoint(self, Api):
+    def __InitResetEmbeddedTokenEndpoint(self, Api):
         Api.add_resource(
-            UpdateActivity,
-            self.EMBEDDED_URI_BASE_DOMAIN + "update-activity"
-        )
-
-
-    def __InitUpdateSeverityEndpoint(self, Api):
-        Api.add_resource(
-            UpdateSeverity,
-            self.EMBEDDED_URI_BASE_DOMAIN + "update-severity"
-        )
-
-
-    def __InitAvaiableUpdateEndpoint(self, Api):
-        Api.add_resource(
-            AvaiableUpdate,
-            self.EMBEDDED_URI_BASE_DOMAIN + "update"
+            ResetEmbeddedToken,
+            self.EMBEDDED_URI_BASE_DOMAIN + self.EMBEDDED_URI_TOKEN_DOMAIN + "reset-embedded-token"
         )

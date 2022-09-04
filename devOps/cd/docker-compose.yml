@@ -1,6 +1,11 @@
 version: "3.3"
 
 services:
+
+    #####################
+    ### --- Magi ---- ###
+    #####################
+
     magi_dev:
         image:
             safetel/safetel-back:dev
@@ -11,6 +16,11 @@ services:
         environment:
             - SERVER_PORT=4270
         env_file: ../dev-config.env
+        volumes:
+            -   type: bind
+                source: ../../logs/ # host path or volume name
+                target: /logs # Container path
+
 
     magi_postman:
         image:
@@ -22,6 +32,10 @@ services:
         environment:
             - SERVER_PORT=4207
         env_file: ../postman-config.env
+        volumes:
+            -   type: bind
+                source: ../../logs/ # host path or volume name
+                target: /logs # Container path
 
     magi_prod:
         image:
@@ -33,11 +47,28 @@ services:
         environment:
             - SERVER_PORT=2407
         env_file: ../prod-config.env
+        volumes:
+            -   type: bind
+                source: ../../logs/ # host path or volume name
+                target: /logs # Container path
+
+    #####################
+    ### --- Amane --- ###
+    #####################
 
     clean_db:
         build: # "context" and "dockerfile" fields have to be under "build"
             context: ../../tools/Amane/
             dockerfile: ./Dockerfile
+        restart:
+            on-failure
+        env_file: ../dev-config.env
+
+    clean_db_dev_force_now:
+        build:
+            context: ../../tools/Amane/
+            dockerfile: ./Dockerfile
+        command: ["python3", "./src/Amane.py", "--force-now"]
         restart:
             on-failure
         env_file: ../dev-config.env

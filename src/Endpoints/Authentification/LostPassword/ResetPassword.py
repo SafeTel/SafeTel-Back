@@ -11,9 +11,8 @@ from flask.globals import request
 from flask_restful import Resource
 # User Factory import
 from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
-# Endpoint Error Manager import
-from Infrastructure.Utils.EndpointErrorManager import EndpointErrorManager
-# Service import
+# Error Manager import
+from Models.Endpoints.Errors.ErrorManager import ErrorManager# Service import
 from Infrastructure.Services.GMail.GMail import GMail
 
 ### MODELS
@@ -25,6 +24,7 @@ from Models.Endpoints.Authentification.LostPassword.LostPasswordResponse import 
 # JWT converter import
 from Logic.Services.JWTConvert.JWTConvert import JWTConvert
 from Models.Infrastructure.Factory.UserFactory.UserInfos import UserInfos
+
 
 ### SWAGGER
 # flasgger import
@@ -48,7 +48,7 @@ from flasgger.utils import swag_from
 # Route to auth a user
 class ResetPassword(Resource):
     def __init__(self):
-        self.__EndpointErrorManager = EndpointErrorManager()
+        self.__ErrorManager = ErrorManager()
         self.__JwtConv = JWTConvert()
         self.__UserFactory = UserFactory()
         self.__GMail = GMail()
@@ -60,11 +60,11 @@ class ResetPassword(Resource):
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
-            return self.__EndpointErrorManager.CreateBadRequestError(requestErrors), 400
+            return self.__ErrorManager.BadRequestError(requestErrors).ToDict(), 400
 
         User = self.__UserFactory.LoadUserByMail(Request.email)
         if (User == None):
-            return self.__EndpointErrorManager.CreateForbiddenAccessError(), 403
+            return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
 
         User.LostPasswordMode(True)
         UserInfos = User.PullUserInfos()
@@ -85,5 +85,5 @@ class ResetPassword(Resource):
 
         responseErrors = Response.EvaluateModelErrors()
         if (responseErrors != None):
-            return self.__EndpointErrorManager.CreateInternalLogicError(), 500
+            return self.__ErrorManager.InternalLogicError().ToDict(), 500
         return Response.ToDict(), 200

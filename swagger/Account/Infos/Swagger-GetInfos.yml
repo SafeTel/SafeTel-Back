@@ -17,6 +17,39 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        email:
+          type: string
+          description: User email
+        username:
+          type: string
+          description: User name
+        CustomerInfos:
+          type: object
+          properties:
+            firstName:
+              type: string
+              description: User's First Name
+            lastName:
+              type: string
+              description: User's Last Name
+            phoneNumber:
+              type: string
+              description: User's Phone Number
+        Localization:
+          type: object
+          properties:
+            country:
+              type: string
+              description: User's Country
+            region:
+              type: string
+              description: User's Region
+            address:
+              type: string
+              description: User's Address
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
   403:

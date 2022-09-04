@@ -1,0 +1,12 @@
+{
+    "MandatoryEnvVars": [
+        "DB_MELCHIOR",
+        "DB_CASPER",
+        "DB_CASPER_02",
+        "DB_BALTHASAR",
+        "DB_BALTHASAR_02",
+        "DB_URI",
+        "PING_URI",
+        "MODE"
+    ]
+}

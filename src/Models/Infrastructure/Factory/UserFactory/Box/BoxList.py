@@ -13,6 +13,7 @@ from Models.Infrastructure.Factory.UserFactory.Box.Box import Box
 # Shared Enum import
 from Models.Infrastructure.Factory.UserFactory.Box.BoxSeverity import BoxSeverity
 
+
 # Represents Number Request
 class BoxList(JObject):
     def __init__(self, Boxes: list):
@@ -26,8 +27,11 @@ class BoxList(JObject):
             self.Boxes.append(
                 Box(
                     Bx["boxid"],
+                    Bx["call"],
+                    Bx["ip"],
                     Bx["activity"],
-                    BoxSeverity.StrToEnum(Bx["severity"])
+                    BoxSeverity.StrToEnum(Bx["severity"]),
+                    Bx["Reports"]
             ))
 
 

@@ -1,4 +1,4 @@
-name: postman-ci
+name: postman-safetel-dev-ci
 
 on:
   push:

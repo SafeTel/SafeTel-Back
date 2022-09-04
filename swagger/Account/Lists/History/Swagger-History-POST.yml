@@ -39,8 +39,27 @@ parameters:
 responses:
   200:
     description: "Success"
+    schema:
+      type: object
+      properties:
+        History:
+          type: array
+          items:
+            type: object
+            properties:
+              number:
+                type: string
+                description: Phone number of the call
+              status:
+                type: string
+                description: "status of the call: Missed, Received, Blocked, or Outgoing"
+              time:
+                type: integer
+                description: timestamp of the call
   400:
     description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  401:
+    description: "\"Bad token\""
   403:
     description: "There is something wrong with the token, check if the account still exists"
   500:
