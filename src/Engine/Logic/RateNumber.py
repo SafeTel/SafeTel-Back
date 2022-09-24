@@ -47,14 +47,15 @@ class RateNumber():
 
 
     def __EvaInternalData(self, InternalData: InternalNumberEvaluation):
-        if (InternalData.reports < 10):
+        import sys
+        if (InternalData.calls < 10):
             return 5, InternalData.calls
 
         reportedCallsPercent = self.__PercentValue(
             InternalData.reports,
             InternalData.calls
         )
-        return (reportedCallsPercent / 10), InternalData.calls
+        return 10 - (reportedCallsPercent / 10), InternalData.calls
 
 
     def __ExtInternalData(self, number, InternalData: dict):
