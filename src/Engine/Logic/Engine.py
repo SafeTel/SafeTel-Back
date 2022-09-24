@@ -7,6 +7,7 @@
 
 ### INFRA
 # User sub class import
+from tokenize import Number
 from Infrastructure.Factory.UserFactory.User import User
 # Tellows service
 from Engine.Infrastructure.Services.Tellows import Tellows
@@ -34,7 +35,6 @@ from Models.Endpoints.Account.Lists.History.HistoryCallRequest import HistoryCal
 ### /!\ WARNING /!\ ###
 
 
-## TODO: redo the errors with a real Error Mangaer FIXME: next sprint
 # This is the engine of Magi to evaluate the calls & numbers
 class Engine():
     def __init__(self):
@@ -48,9 +48,9 @@ class Engine():
     def ReportedCount(self):
         return self.__NumberDB.count()
 
+
     # Just veify the number
     def Verify(self, User: User, boxid: str, number: str):
-        # TODO: Verify the number country by regex FIXME: next sprint
         TellowsResponse = self.__Tellows.GetEvaluation(number)
         if (TellowsResponse is None):
             return "Internal Error"
@@ -81,6 +81,9 @@ class Engine():
     def ProcessCall(self, User: User, boxid: str, report: bool, HistoryCall: HistoryCallRequest):
         User.History.AddHistoryCall(HistoryCall)
 
+        if (self.__IsNumberReportedByUser(User.GetGUID(), HistoryCall.number)):
+            return "Number already reported by the user"
+
         if (HistoryCall.status is CallStatus.BLOCKED):
             self.__NumberDB.addBlockedCall(HistoryCall.number)
             return
@@ -106,10 +109,17 @@ class Engine():
             newScore
         )
 
-        # TODO: find something to answer FIXME: next sprint
+        return "OK"
 
 
     ### PRIVATE
+
+    def __IsNumberReportedByUser(self, guid: str, number: str):
+        for Report in self.__NumberDB.getNumber(number)["Reports"]:
+            if (Report["guid"] == guid):
+                return True
+        return False
+
 
     def __EvaBoxAlgorithm(self, User: User,  severity: BoxSeverity, number: str):
         if (severity is BoxSeverity.NONE):

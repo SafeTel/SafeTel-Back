@@ -10,9 +10,11 @@
 # Endpoints import
 from Models.Endpoints.Errors.Factory.ErrorFactory import ErrorFactory
 
+
 class ErrorManager():
     def __init__(self):
         self.__ErrorFactory = ErrorFactory()
+
 
     def BadRequestError(self, details):
         ErrorJson = {
@@ -20,6 +22,7 @@ class ErrorManager():
             "details": details
         }
         return self.__ErrorFactory.BadRequestError(ErrorJson)
+
 
     def InternalLogicError(self):
         ErrorJson = {
@@ -29,6 +32,7 @@ class ErrorManager():
         }
         return self.__ErrorFactory.InternalLogicError(ErrorJson)
 
+
     def ForbiddenAccessError(self):
         ErrorJson = {
             "error": True,
@@ -37,6 +41,7 @@ class ErrorManager():
         }
         return self.__ErrorFactory.ForbiddenAccessError(ErrorJson)
 
+
     def ForbiddenAccessErrorWithMessage(self, message):
         ErrorJson = {
             "error": True,
@@ -44,6 +49,7 @@ class ErrorManager():
             "message": message
         }
         return self.__ErrorFactory.ForbiddenAccessErrorWithMessage(ErrorJson)
+
 
     # Code 407, error for IP of embedded
     def ProxyAuthenticationRequiredError(self):

@@ -86,15 +86,18 @@ class EvaluateCall(Resource):
         else:
             return self.__ErrorManager.BadRequestError("A report must be sent at the end of a call").ToDict(), 403
 
-        self.__Engine.ProcessCall(
+        result = self.__Engine.ProcessCall(
             User,
             JwtInfos.boxid,
             Request.report,
             Request.Call
         )
 
+        if (result != "OK"):
+            return self.__ErrorManager.BadRequestError(result).ToDict(), 403
+
         Response = EvaluateCallResponse(
-            "OK"
+            result
         )
 
         responseErrors = Response.EvaluateModelErrors()
