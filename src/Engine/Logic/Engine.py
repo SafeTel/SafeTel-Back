@@ -81,12 +81,12 @@ class Engine():
     def ProcessCall(self, User: User, boxid: str, report: bool, HistoryCall: HistoryCallRequest):
         User.History.AddHistoryCall(HistoryCall)
 
-        if (self.__IsNumberReportedByUser(User.GetGUID(), HistoryCall.number)):
-            return "Number already reported by the user"
+        ## if (self.__IsNumberReportedByUser(User.GetGUID(), HistoryCall.number)):
+        ##    return "Number already reported by the user"
 
         if (HistoryCall.status is CallStatus.BLOCKED):
             self.__NumberDB.addBlockedCall(HistoryCall.number)
-            return
+            return "Number has already been blocked, report this bug"
 
         if (report):
             self.__NumberDB.reportNumber(
@@ -98,15 +98,15 @@ class Engine():
         else:
             self.__NumberDB.addCall(HistoryCall.number)
 
-        InternaleData = self.__NumberDB.getNumber(HistoryCall.number)
-        newScore = self.__RateNumber.EvaNumber(
+        InternalData = self.__NumberDB.getNumber(HistoryCall.number)
+        NewScore = self.__RateNumber.EvaNumber(
             HistoryCall.number,
-            InternaleData
+            InternalData
         )
 
         self.__NumberDB.UpdateScore(
             HistoryCall.number,
-            newScore
+            NewScore
         )
 
         return "OK"
@@ -132,5 +132,5 @@ class Engine():
             return  self.__BlockAlgorithm.BlockHigh(User, number)
         elif (severity is BoxSeverity.MAX):
             return  self.__BlockAlgorithm.BlockMax(User, number)
+        User.Box.UpdateSeverity("normal")
         return None
-        # TODO: None, means there is a bug internal error (the severity is corrupted) FIXME: maybe autofix ?
