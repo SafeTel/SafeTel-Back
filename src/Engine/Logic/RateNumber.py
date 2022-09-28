@@ -12,7 +12,6 @@ from Engine.Models.NumberEvaluation.TellowsNumberEvaluation import TellowsNumber
 
 
 # This part of the engine is responsible for rating the score of each number
-# TODO: Takes models as arguments
 class RateNumber():
     def __init__(self):
         return
@@ -21,7 +20,7 @@ class RateNumber():
 
     # Evaluate a number, 1 to 10, higher is better
     def EvaNumber(self, number: str, InternalData: dict):
-        if ("TellowsResponse" not in InternalData): # TODO: faire un report d'erreur au monitoring si manque de données FIXME: next sprint
+        if ("TellowsResponse" not in InternalData):
             return None
 
         TellowsEvaluation :TellowsNumberEvaluation = self.__ExtTellowsData(number, InternalData["TellowsResponse"])
@@ -29,7 +28,6 @@ class RateNumber():
 
         InternalScore, InternalCoefficient = self.__EvaInternalData(InternalEvaluation)
 
-        # 3 - Merge les 2 notes en fonction des coeficients
         MergedScore = self.__MergeScores(
             TellowsEvaluation,
             InternalScore,
@@ -49,11 +47,15 @@ class RateNumber():
 
 
     def __EvaInternalData(self, InternalData: InternalNumberEvaluation):
+        import sys
+        if (InternalData.calls < 10):
+            return 5, InternalData.calls
+
         reportedCallsPercent = self.__PercentValue(
             InternalData.reports,
             InternalData.calls
         )
-        return (reportedCallsPercent / 10), InternalData.calls
+        return 10 - (reportedCallsPercent / 10), InternalData.calls
 
 
     def __ExtInternalData(self, number, InternalData: dict):
