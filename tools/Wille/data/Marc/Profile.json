@@ -1,21 +1,16 @@
 {
+    "magicnumber": 42,
     "email": "marc_feu_safetel_wille@gmail.com",
     "username": "Marc",
-    "password": "ee5a77f34e6431232a8e404957c03d9a311f885fd9ea01e401a72f246333f1b44b53aa5e6670f72b31eb00f7e70e6da9d2696f45b99550aad3e7c802cd55a47a",
-    "customerInfos": {
+    "password": "oAX031lcax8!'(:PAS0132",
+    "CustomerInfos": {
         "firstName": "Marc",
         "lastName": "Jammeron",
         "phoneNumber": "33693410380"
     },
-    "localization": {
+    "Localization": {
         "country": "France",
         "region": "Paris",
         "address": "108 Boulevard Richard-Lenoir, Paris 75011"
-    },
-    "Administrative": {
-        "passwordlost": false
-    },
-    "time": 1649617188.8572538,
-    "guid": "04f024e0-d04e-4324-a0b4-04c54324e324",
-    "role": "user"
+    }
 }

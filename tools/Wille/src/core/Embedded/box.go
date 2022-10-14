@@ -8,57 +8,50 @@
 package box
 
 import (
+	"context"
 	"errors"
 	"strconv"
-
-	"go.mongodb.org/mongo-driver/mongo"
+	"time"
 
 	utils "PostmanDbDataImplementation/core/Utils"
 
-	mongoUtils "PostmanDbDataImplementation/core/Utils/Mongo"
-	print "PostmanDbDataImplementation/core/Utils/Print"
-
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+
+	print "PostmanDbDataImplementation/core/Utils/Print"
 )
 
 type Box struct {
-	Client            *mongo.Client
-	DB                *mongo.Database
-	BoxCollection     *mongo.Collection
-	Print             *print.Print
-	DEV_DB_BOXES_NAME string
-	DEV_URI_BOXES_DB  string
+	Client                 *mongo.Client
+	DB                     *mongo.Database
+	BoxCollection          *mongo.Collection
+	UnclaimedBoxCollection *mongo.Collection
+	Print                  *print.Print
+	Config                 *utils.Config
+	Data                   *Data
 }
 
 type Data struct {
-	Guid  string `json:"guid"`
 	Boxes []struct {
-		BoxId    string `json:"boxid"`
-		Activity bool   `json:"activity"`
-		Severity string `json:"severity"`
+		BoxId string `json:"boxid"`
 	}
 }
 
 // Check the content of a Box object
 func (box *Box) checkBoxObjectDataValidity(name string, data Data) error {
-	if data.Guid == "" {
-		return errors.New("Problem with json file " + name + "/Embedded/Box.json: Missing Box Guid value")
-	}
 	for _, aBox := range data.Boxes {
 		if aBox.BoxId == "" {
 			return errors.New("Problem with json file " + name + "/Embedded/Box.json: Missing BoxId value")
-		} else if aBox.Severity == "" {
-			return errors.New("Problem with json file " + name + "/Embedded/Box.json: Missing Severity value")
 		}
 	}
 	return nil
 }
 
 // Check the content of the Box.json file and check if the data has not been uploaded yet
-func (box *Box) checkBoxDataValidity(name string) (Data, error) {
+func (box *Box) checkBoxDataValidity(name string, filepath string) (Data, error) {
 	var data Data
 
-	decoder, err := utils.OpenAndGenerateJsonDecoder("data/" + name + "/Embedded/Box.json")
+	decoder, err := utils.OpenAndGenerateJsonDecoder(filepath)
 	if err != nil {
 		return Data{}, err
 	}
@@ -73,57 +66,76 @@ func (box *Box) checkBoxDataValidity(name string) (Data, error) {
 	return data, nil
 }
 
-// Upload the Box.json file
-func (box *Box) UploadBoxFile(name string) error {
-	data, err := box.checkBoxDataValidity(name)
+// Loading a File
+
+func (box *Box) setDataFile(filePath string) error {
+	data, err := box.checkBoxDataValidity(filePath, filePath)
 
 	if err != nil {
 		return err
 	}
-	// Generating a bson filter using the value of guid
-	filter := bson.M{"guid": data.Guid}
-	if err = utils.CheckDataNotExistInCollection(box.BoxCollection, filter); err != nil {
-		box.Print.Info("Box.json data of model " + name + " already exist inside the server")
-		return nil
-	}
-	// Upload
-	err, inOut, inErr := mongoUtils.Import(box.DEV_URI_BOXES_DB, "Boxes", "data/"+name+"/Embedded/Box.json")
-
-	if err != nil {
-		return err
-	}
-	box.Print.Info("StdOut: Uploading the box file of " + name + ": " + inOut)
-	box.Print.Info("StdErr: Uploading the box file of " + name + ": " + inErr)
+	box.Data = &data
 	return nil
 }
 
-func (box *Box) showBox(data Data) {
-	box.Print.DefinedKeyWithValueWithTab("Guid", data.Guid)
-	box.Print.DefinedKeyWithValueWithTab("Boxes", data.Boxes)
+func (box *Box) LoadFile(filePath string) error {
+	return box.setDataFile(filePath)
+}
 
+// Loading a Model
+
+func (box *Box) setData(name string) error {
+	data, err := box.checkBoxDataValidity(name, "data/"+name+"/Embedded/Box.json")
+
+	if err != nil {
+		return err
+	}
+	box.Data = &data
+	return nil
+}
+
+func (box *Box) LoadData(name string) error {
+	return box.setData(name)
+}
+
+// Upload the Box.json file
+func (box *Box) InsertBoxes(name string) error {
+	for _, aBox := range box.Data.Boxes {
+		// Generating a bson filter using the value of guid
+		filter := bson.M{"boxid": aBox.BoxId}
+
+		if err := utils.CheckDataNotExistInCollection(box.UnclaimedBoxCollection, filter); err != nil {
+			box.Print.Info("Box.json data of model " + name + " already exist inside the server")
+			continue
+		}
+		// Insert Boxes
+		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+		_, err := box.UnclaimedBoxCollection.InsertOne(ctx, bson.D{
+			{Key: "boxid", Value: aBox.BoxId},
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (box *Box) ShowBox() {
+	box.Print.ResetTabForPrint()
+	box.Print.Info("\t- Box.json Content:")
+	box.Print.DefinedKeyWithValueWithTab("Boxes", box.Data.Boxes)
 	box.Print.AddOneTabForPrint()
-	for index, aBox := range data.Boxes {
+	for index, aBox := range box.Data.Boxes {
 		box.Print.InfoWithTab("Box number " + strconv.Itoa(index))
 		box.Print.DefinedKeyWithValueWithTab("Box", aBox.BoxId)
-		box.Print.DefinedKeyWithValueWithTab("Box", aBox.Activity)
-		box.Print.DefinedKeyWithValueWithTab("Box", aBox.Severity)
 	}
 	box.Print.ResetTabForPrint()
 
 }
 
-// Check the content of the Box.json file and print it
-func (box *Box) CheckAndShowBoxJsonContent(name string) error {
-	data, err := box.checkBoxDataValidity(name)
-	if err != nil {
-		return err
-	}
-
-	box.showBox(data)
-	return nil
-}
-
-func New(client *mongo.Client, print *print.Print) (*Box, error) {
+func New(client *mongo.Client, print *print.Print, config *utils.Config) (*Box, error) {
 	config, err := utils.CheckAndLoadConfig()
 
 	if err != nil {
@@ -135,13 +147,11 @@ func New(client *mongo.Client, print *print.Print) (*Box, error) {
 	}
 
 	box := Box{Client: client}
-	box.DEV_DB_BOXES_NAME = config.DEV_DB_BOXES_NAME
-	box.DEV_URI_BOXES_DB = config.DEV_URI_BOXES_DB
-
-	box.DB = box.Client.Database(box.DEV_DB_BOXES_NAME)
-
+	box.DB = box.Client.Database(config.DEV_DB_BOXES_NAME)
 	box.BoxCollection = box.DB.Collection("Boxes")
+	box.UnclaimedBoxCollection = box.DB.Collection("UnclaimedBoxes")
 	box.Print = print
+	box.Config = config
 
 	return &box, nil
 }

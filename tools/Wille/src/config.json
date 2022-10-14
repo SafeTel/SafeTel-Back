@@ -5,5 +5,6 @@
     "DEV_DB_BOXES_NAME": "Balthasar",
     "DEV_DB_DEVELOPERS_NAME": "Casper",
     "DEV_URI_USERS_DB": "mongodb+srv://SafeTelBackEndUser:aSEFTHUKOM1!@safetel-back-dev-cluste.kicvi.mongodb.net/Melchior?retryWrites=true&w=majority",
-    "DEV_URI_BOXES_DB": "mongodb+srv://SafeTelBackEndUser:aSEFTHUKOM1!@safetel-back-dev-cluste.kicvi.mongodb.net/Balthasar?retryWrites=true&w=majority"
+    "DEV_URI_BOXES_DB": "mongodb+srv://SafeTelBackEndUser:aSEFTHUKOM1!@safetel-back-dev-cluste.kicvi.mongodb.net/Balthasar?retryWrites=true&w=majority",
+    "DEV_URI_SERVER": "safetel.francecentral.cloudapp.azure.com:4270"
 }

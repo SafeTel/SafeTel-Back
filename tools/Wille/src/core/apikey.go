@@ -23,6 +23,8 @@ import (
 // 	If ApiKey != defaultValue, then ApiKey is valid
 //
 func (wille *Wille) isValidApiKey() bool {
+	return true
+
 	if wille.ApiKey == "" {
 		return false
 	}
@@ -34,6 +36,9 @@ func (wille *Wille) isValidApiKey() bool {
 // 	If ApiKey is on storage, then ApiKey is valid
 //
 func (wille *Wille) CheckApiKeyValidity(apiKey string) error {
+	// TODO: Not needed
+	return nil
+
 	apiKeyCollection := wille.DBForApiKey.Collection("ApiKeyLog")
 	filter := bson.M{"apiKey": apiKey}
 	isOnStorage, err := utils.IsDataInCollection(apiKeyCollection, filter)

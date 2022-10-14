@@ -64,67 +64,6 @@ func (wille *Wille) checkAndShowShowJsonContent(name string) error {
 	return nil
 }
 
-// Check the content of the Lists folder and print it
-func (wille *Wille) showListFolder(name string) error {
-	listFolderContent, err := utils.CheckListFolder(name)
-	var valid byte = 1
-
-	if err != nil {
-		return err
-	}
-	if listFolderContent&(0b00000001) == valid {
-		wille.Print.Info("\t- Blacklist.json: \033[32mFinded\033[0m")
-		// Check the content of the Blacklist.json file and print the elements
-		err = wille.Blacklist.CheckAndShowBlacklistJsonContent(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		wille.Print.Info("\t- Blacklist.json: \033[32mMissing\033[0m")
-	}
-	if listFolderContent&(0b00000010)>>1 == valid {
-		wille.Print.Info("\t- History.json: \033[32mFinded\033[0m")
-		// Check the content of the History.json file and print the elements
-		err = wille.History.CheckAndShowHistoryJsonContent(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		wille.Print.Info("\t- History.json: \033[32mMissing\033[0m")
-	}
-	if listFolderContent&(0b00000100)>>2 == valid {
-		wille.Print.Info("\t- Whitelist.json: \033[32mFinded\033[0m")
-		// Check the content of the Whitelist.json file and print the elements
-		err = wille.Whitelist.CheckAndShowWhitelistJsonContent(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		wille.Print.Info("\t- Whitelist.json: \033[32mMissing\033[0m")
-	}
-	return nil
-}
-
-func (wille *Wille) showEmbeddedFolder(name string) error {
-	listFolderContent, err := utils.CheckEmbeddedFolder(name)
-	var valid byte = 1
-
-	if err != nil {
-		return err
-	}
-	if listFolderContent&(0b00000001) == valid {
-		wille.Print.Info("\t- Box.json: \033[32mFinded\033[0m")
-		// Check the content of the Box.json file and print the elements
-		err = wille.Box.CheckAndShowBoxJsonContent(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		wille.Print.Info("\t- Blacklist.json: \033[32mMissing\033[0m")
-	}
-	return nil
-}
-
 // Show wille command
 // Check the content of a model folder
 // Print the content of the following files
@@ -137,56 +76,18 @@ func (wille *Wille) showEmbeddedFolder(name string) error {
 // The missing content is printed in Red
 // The unknown content is printed in Yellow
 func (wille *Wille) show(name string) error {
-	modelFolderContent, err := utils.CheckModelFolder(name) // Return, stored inside a bit, the available files and folders of the model(name) folder
-	var valid byte = 1
 
-	if err != nil {
+	if err := wille.Uploader.LoadModel(name); err != nil {
 		return err
 	}
-	if modelFolderContent&(0b00000001) == valid {
-		wille.Print.Info("Profile.json: \033[32mFinded\033[0m")
-		// Check the content of the Profile.json file and print the elements
-		err = wille.Profile.CheckAndShowProfileJsonContent(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		wille.Print.Info("Profile.json: \033[31mMissing\033[0m")
-		return errors.New("Missing " + name + "/Profile.json file")
-	}
-	if modelFolderContent&(0b00000010)>>1 == valid {
-		wille.Print.Info("Lists folder: \033[32mFinded\033[0m")
-		// Check the content of the Lists folder and print the elements
-		err = wille.showListFolder(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		wille.Print.Info("Lists folder: \033[31mMissing\033[0m")
-		return errors.New("Missing " + name + "/Lists folder")
-	}
-	if modelFolderContent&(0b00000100)>>2 == valid {
-		wille.Print.Info("Show.json: \033[32mFinded\033[0m")
-		// Check the content of the Show.json file and print the elements
-		err = wille.checkAndShowShowJsonContent(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		wille.Print.Info("Show.json: \033[31mMissing\033[0m")
-		return errors.New("Missing " + name + "/Show.json file")
-	}
-	if modelFolderContent&(0b00001000)>>3 == valid {
-		wille.Print.Info("Embedded folder: \033[32mFinded\033[0m")
-		// Check the content of the Embedded folder and print the elements
-		err = wille.showEmbeddedFolder(name)
-		if err != nil {
-			return err
-		}
-	} else {
-		wille.Print.Info("Embedded folder: \033[31mMissing\033[0m")
-		return errors.New("Missing " + name + "/Embedded folder")
-	}
+
+	wille.Print.Info("Showing Content:	")
+
+	wille.Uploader.Profile.ShowProfile()
+	wille.Uploader.Blacklist.ShowBlacklist()
+	wille.Uploader.Whitelist.ShowWhitelist()
+	wille.Uploader.History.ShowHistory()
+	wille.Uploader.Box.ShowBox()
 
 	return nil
 }

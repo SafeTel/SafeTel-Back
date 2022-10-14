@@ -20,6 +20,7 @@ type Config struct {
 	DEV_DB_DEVELOPERS_NAME string `json:"DEV_DB_DEVELOPERS_NAME"`
 	DEV_URI_USERS_DB       string `json:"DEV_URI_USERS_DB"`
 	DEV_URI_BOXES_DB       string `json:"DEV_URI_BOXES_DB"`
+	DEV_URI_SERVER         string `json:"DEV_URI_SERVER"`
 }
 
 func checkConfig(config *Config) error {
@@ -39,6 +40,8 @@ func checkConfig(config *Config) error {
 		return errors.New("Error: Config.DEV_URI_USERS_DB empty value")
 	} else if config.DEV_URI_BOXES_DB == "" {
 		return errors.New("Error: Config.DEV_URI_BOXES_DB empty value")
+	} else if config.DEV_URI_SERVER == "" {
+		return errors.New("Error: Config.DEV_URI_SERVER empty value")
 	}
 	return nil
 }
