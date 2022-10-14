@@ -9,6 +9,10 @@
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 
+###
+from datetime import datetime
+
+
 # Represents DeleteAccount Request
 class EmbeddedErrorReport(JParent):
     def InitValues(self, trace: str, ts: int, message: str, type: str):
@@ -21,6 +25,7 @@ class EmbeddedErrorReport(JParent):
     def __InitInputJObject(self, loadedJSON: dict):
         self.trace = self.LoadElement(loadedJSON, "trace")
         self.ts = self.LoadElement(loadedJSON, "ts")
+        self.date = datetime.fromtimestamp(self.ts).strftime("%Y-%m-%dT%H:%M:%S.%f")
         self.message = self.LoadElement(loadedJSON, "message")
         self.type = self.LoadElement(loadedJSON, "type")
 
@@ -28,6 +33,7 @@ class EmbeddedErrorReport(JParent):
     def __InitOutputJObject(self, trace: str, ts: int, message: str, type: str):
         self.trace = trace
         self.ts = ts
+        self.date = datetime.fromtimestamp(self.ts).strftime("%Y-%m-%dT%H:%M:%S.%f")
         self.message = message
         self.type = type
 
