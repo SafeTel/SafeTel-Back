@@ -2,21 +2,22 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## ReportErrorResponse
+## GetReportedNumbersResponse
 ##
 
 ### MODELS
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 
-# Represents Update Email Response
-class ReportErrorResponse(JParent):
-    def __init__(self, received: bool):
-        self.__InitJParent(received)
+
+# Represents Reported Count Response
+class GetReportedNumbersResponse(JParent):
+    def __init__(self, Numbers: int):
+        self.__InitJParent(Numbers)
 
     # Values Assignement
-    def __InitJParent(self, received: bool):
-        self.received = received
+    def __InitJParent(self, Numbers: int):
+        self.Numbers = Numbers
 
     # Errors Evaluation
     def EvaluateModelErrors(self):
@@ -25,7 +26,6 @@ class ReportErrorResponse(JParent):
         return None
 
     def __EvaErrorsJParent(self):
-        if (self.received is None): return "Internal Model Error"
-        if (type(self.received) is not bool): return "Internal Model Error"
-
+        if (self.Numbers is None): return "Internal Model Error"
+        if (type(self.Numbers) is not list): return "Internal Model Error"
         return None

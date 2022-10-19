@@ -49,6 +49,28 @@ class Engine():
         return self.__NumberDB.count()
 
 
+    def GetReportedNumbers(self, index: int):
+        Result :list = []
+        RangeMinimal :int = (index - 1) * 3
+        RangeMaximal :int = index * 3
+
+        Cursor = list(self.__NumberDB.getNumbers())
+
+        if (len(Cursor) < RangeMinimal):
+            return Result
+
+        if (len(Cursor) < RangeMaximal):
+            RangedCursor = Cursor[RangeMinimal : len(Cursor) - 1]
+        else:
+            RangedCursor = Cursor[RangeMinimal : RangeMaximal]
+
+        for Document in RangedCursor:
+            if (Document["score"] > 5):
+                Result.append(Document["number"])
+
+        return Result
+
+
     # Just veify the number
     def Verify(self, User: User, boxid: str, number: str):
         TellowsResponse = self.__Tellows.GetEvaluation(number)

@@ -35,13 +35,16 @@ class NumberDB():
         return self.__PullNumber(number)
 
 
+    def getNumbers(self):
+        return self.NumberDB.find({})
+
+
     def isNumber(self, number: str):
         return self.DBWatcher.IsDocument('number', number)
 
 
     def count(self):
         return self.NumberDB.count_documents({})
-
 
     ## WRITE
 

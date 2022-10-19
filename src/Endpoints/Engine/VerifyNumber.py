@@ -53,7 +53,6 @@ class VerifyNumber(Resource):
         self.__Engine = Engine()
 
 
-    # TODO: ROUTE CHANGE: Fix postman tests
     @swag_from("../../../../swagger/Engine/Swagger-VerifyNumber.yml")
     def post(self):
         Request = VerifyNumberRequest(request.get_json())
