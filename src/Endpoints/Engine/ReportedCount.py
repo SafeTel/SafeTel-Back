@@ -64,7 +64,7 @@ class ReportedCount(Resource):
         User = self.__UserFactory.LoadUser(JwtInfos.guid)
         if (User is None):
             return self.__ErrorManager.ForbiddenAccessError(), 403
-        # TODO: CreateProxyAuthenticationRequired
+
         if (not User.Box.IsRegisteredBoxIp(JwtInfos.boxid, request.remote_addr)):
             return self.__ErrorManager.ProxyAuthenticationRequiredError(), 407
 

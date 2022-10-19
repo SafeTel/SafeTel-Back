@@ -81,8 +81,8 @@ class Engine():
     def ProcessCall(self, User: User, boxid: str, report: bool, HistoryCall: HistoryCallRequest):
         User.History.AddHistoryCall(HistoryCall)
 
-        ## if (self.__IsNumberReportedByUser(User.GetGUID(), HistoryCall.number)):
-        ##    return "Number already reported by the user"
+        if (self.__IsNumberReportedByUser(User.GetGUID(), HistoryCall.number)):
+            return "Number already reported by the user"
 
         if (HistoryCall.status is CallStatus.BLOCKED):
             self.__NumberDB.addBlockedCall(HistoryCall.number)
