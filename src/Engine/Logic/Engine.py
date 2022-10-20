@@ -51,8 +51,8 @@ class Engine():
 
     def GetReportedNumbers(self, index: int):
         Result :list = []
-        RangeMinimal :int = (index - 1) * 3
-        RangeMaximal :int = index * 3
+        RangeMinimal :int = (index - 1) * 50
+        RangeMaximal :int = index * 50
 
         Cursor = list(self.__NumberDB.getNumbers())
 
