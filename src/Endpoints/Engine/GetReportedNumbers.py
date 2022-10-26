@@ -2,8 +2,9 @@
 ## SAFETEL PROJECT, 2022
 ## SafeTel-Back
 ## File description:
-## ReportedCount
+## GetReportedNumbers
 ##
+
 
 ### INFRA
 # Flask imports
@@ -15,8 +16,8 @@ from Infrastructure.Factory.UserFactory.UserFactory import UserFactory
 from Models.Endpoints.Errors.ErrorManager import ErrorManager
 ### MODELS
 # Model Request & Response import
-from Models.Endpoints.Engine.ReportedCountRequest import ReportedCountRequest
-from Models.Endpoints.Engine.ReportedCountResponse import ReportedCountResponse
+from Models.Endpoints.Engine.GetReportedNumbersRequest import GetReportedNumbersRequest
+from Models.Endpoints.Engine.GetReportedNumbersResponse import GetReportedNumbersResponse
 
 ### LOGC
 # JWT converter import
@@ -31,17 +32,25 @@ from flasgger.utils import swag_from
 
 ###
 # Request:
-# GET: localhost:2407/engine/reported-count?token=
+# GET: localhost:2407/engine/get-reported-numbers
+# {
+# 	"token": "456789",
+# 	"index": 3
+# }
 ###
 # Response:
 # {
-#	"count": 42
+#	"Numbers": [
+#       "3812897321",
+#       "7987897237",
+#       "6676860986"
+#   ]
 # }
 ###
 
 
-# Route to get the number of reported numbers
-class ReportedCount(Resource):
+# Route to get the numbers by index
+class GetReportedNumbers(Resource):
     def __init__(self):
         self.__ErrorManager = ErrorManager()
         self.__JwtConv = JWTConvert()
@@ -49,9 +58,9 @@ class ReportedCount(Resource):
         self.__Engine = Engine()
 
 
-    @swag_from("../../../../swagger/Engine/Swagger-ReportedCount.yml")
-    def get(self):
-        Request = ReportedCountRequest(request.args.to_dict())
+    @swag_from("../../../../swagger/Engine/Swagger-GetReportedNumbers.yml")
+    def post(self):
+        Request = GetReportedNumbersRequest(request.get_json())
 
         requestErrors = Request.EvaluateModelErrors()
         if (requestErrors != None):
@@ -65,9 +74,8 @@ class ReportedCount(Resource):
         if (User is None):
             return self.__ErrorManager.ForbiddenAccessError().ToDict(), 403
 
-        count = self.__Engine.ReportedCount()
-        Response = ReportedCountResponse(
-            count
+        Response = GetReportedNumbersResponse(
+            self.__Engine.GetReportedNumbers(Request.index)
         )
 
         responseErrors = Response.EvaluateModelErrors()

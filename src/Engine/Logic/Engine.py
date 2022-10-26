@@ -49,6 +49,28 @@ class Engine():
         return self.__NumberDB.count()
 
 
+    def GetReportedNumbers(self, index: int):
+        Result :list = []
+        RangeMinimal :int = (index - 1) * 50
+        RangeMaximal :int = index * 50
+
+        Cursor = list(self.__NumberDB.getNumbers())
+
+        if (len(Cursor) < RangeMinimal):
+            return Result
+
+        if (len(Cursor) < RangeMaximal):
+            RangedCursor = Cursor[RangeMinimal : len(Cursor) - 1]
+        else:
+            RangedCursor = Cursor[RangeMinimal : RangeMaximal]
+
+        for Document in RangedCursor:
+            if (Document["score"] > 5):
+                Result.append(Document["number"])
+
+        return Result
+
+
     # Just veify the number
     def Verify(self, User: User, boxid: str, number: str):
         TellowsResponse = self.__Tellows.GetEvaluation(number)
@@ -81,8 +103,8 @@ class Engine():
     def ProcessCall(self, User: User, boxid: str, report: bool, HistoryCall: HistoryCallRequest):
         User.History.AddHistoryCall(HistoryCall)
 
-        ## if (self.__IsNumberReportedByUser(User.GetGUID(), HistoryCall.number)):
-        ##    return "Number already reported by the user"
+        if (self.__IsNumberReportedByUser(User.GetGUID(), HistoryCall.number)):
+            return "Number already reported by the user"
 
         if (HistoryCall.status is CallStatus.BLOCKED):
             self.__NumberDB.addBlockedCall(HistoryCall.number)

@@ -1,0 +1,36 @@
+summary: "Get the reported number within a range starting at 1"
+description: "Get the reported number with a bad score\n"
+
+tags:
+- Engine
+
+produces:
+- "application/json"
+
+parameters:
+  - name: token
+    type: string
+    in: body
+    required: True
+  - name: index
+    type: int
+    in: body
+    required: True
+
+responses:
+  200:
+    description: "Success"
+    schema:
+      type: list
+      properties:
+        count:
+          type: string
+          description: Reported numbers
+  400:
+    description: "Two cases:\n- Missing body values\n- \"Bad token\""
+  401:
+    description: "\"Bad token\""
+  403:
+    description: "Two cases:\n- There is something wrong with the token, check if the account still exists\n- A report must be sent at the end of a call"
+  500:
+    description: "Internal Logic Error - Please report all theses errors"
