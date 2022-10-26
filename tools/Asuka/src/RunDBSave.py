@@ -29,7 +29,7 @@ def runDBSave(argv):
     while True:
         currentTime = datetime.now(tz=timezone.utc).time()
 
-        if (10 <= currentTime.hour < 11):
+        if (8 <= currentTime.hour < 9):
             if (20 < currentTime.minute < 30 and isCleanLaunched == 0):
                 SaveDatabases()
                 isCleanLaunched = 1
