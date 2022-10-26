@@ -13,11 +13,10 @@ fi
 echo 'If you are ready for the deploy, please trigger Enter'
 read MYSQL_PRESENT
 
-echo "Deploying $1"
-
-
 echo 'devOps absolute path parent folder:'
 read DOCKER_DIRECTORY
+
+echo "Deploying $1"
 
 if [ ! -d "${DOCKER_DIRECTORY}/cd" ]; then
         echo "${DOCKER_DIRECTORY}  does not exists or does not contains docker-compose folder"
