@@ -32,6 +32,7 @@ def BodyRequestInText(fquest):
 def MiddlewareLoggerForResponses(response):
     Logger = FileLogger.getInstance()
     statusCode = response.status
+    response.direct_passthrough = False
     body = response.get_data(as_text=True)
 
     Logger.Logger.info("Response Object - Status Code " + statusCode + " :\n" + body)

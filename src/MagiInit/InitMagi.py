@@ -55,7 +55,7 @@ class InitMagi():
         self.__LaunchSentry()
         self.__InitializeCore()
         self.__InitializeEndpoints()
-        # self.__InitializeMiddleware() FIXME: TO Arthur, THIS INTERCEPT ALSO SWAGGER
+        self.__InitializeMiddleware() # FIXME: TO Arthur, THIS INTERCEPT ALSO SWAGGER
         self.__InitializeSwagger()
         self.__InitializeMonitoring()
         return self.__MagiApp
