@@ -44,6 +44,5 @@ jobs:
             cd /home/backadmin/SafeTel-Back/
             git checkout master
             git pull origin master
-            cd devOps/cd/
-            docker-compose pull magi_prod
-            docker-compose up -d --force-recreate --no-deps --build magi_prod
+            cd devOps/scripts/
+            echo "\n../\n" | bash deploy-magi.sh prod
