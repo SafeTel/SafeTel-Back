@@ -15,7 +15,6 @@ To see the documentation about the server follow [this link](https://github.com/
 
 ## How to run the server
 
-
 The server is wrapped with Docker.
 
 Command:
