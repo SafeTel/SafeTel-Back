@@ -38,4 +38,3 @@ Command:
 ```sh
 $ sudo docker system prune -a
 ```
-

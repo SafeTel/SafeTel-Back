@@ -8,6 +8,5 @@ pyjwt
 uuid
 py-healthcheck
 sentry-sdk
-pygit2
 flasgger
 flask_monitoringdashboard

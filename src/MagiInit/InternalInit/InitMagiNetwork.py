@@ -10,8 +10,6 @@
 import os
 # Read config.json
 import json
-# Read branch name
-from pygit2 import Repository
 
 ### INFRA
 # Client mongo db import

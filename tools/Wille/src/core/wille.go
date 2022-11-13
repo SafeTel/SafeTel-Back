@@ -8,40 +8,39 @@
 package wille
 
 import (
-	profile "PostmanDbDataImplementation/core/Account"                  // Profile data structure
-	blacklist "PostmanDbDataImplementation/core/AccountLists/Blacklist" // Blacklist data structure
-	history "PostmanDbDataImplementation/core/AccountLists/History"     // History data structure
-	whitelist "PostmanDbDataImplementation/core/AccountLists/Whitelist" // Whitelist data structure
-	box "PostmanDbDataImplementation/core/Embedded"                     // Embedded data structure
-	utils "PostmanDbDataImplementation/core/Utils"                      // Utils for config.json file
-	print "PostmanDbDataImplementation/core/Utils/Print"                // Print data structure
-	"bufio"                                                             // Read a File line per line
-	"context"                                                           // Configure Mongo client
-	"errors"
+	// Uploader data structure
+	uploader "PostmanDbDataImplementation/core/Uploader"
+	// Utils for config.json file
+	utils "PostmanDbDataImplementation/core/Utils"
+	// Print data structure
+	print "PostmanDbDataImplementation/core/Utils/Print"
+	// Mongo Utils
+	mongoUtils "PostmanDbDataImplementation/core/Utils/Mongo"
+
+	// Read a File line per line
+	"bufio"
+	// Configure Mongo client
 
 	// Generate new errors
-	"fmt" // Printing using println
-	"log" // Logging
-	"os"  // Open a File
-
-	"go.mongodb.org/mongo-driver/mongo"         // Generate Clients
-	"go.mongodb.org/mongo-driver/mongo/options" // Configure Clients with Options
-
-	"time" // Timeout
+	"errors"
+	// Printing using println
+	"fmt"
+	// Logging
+	"log"
+	// Open a File
+	"os"
+	// Mongo.Client type
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Wille struct {
 	Client      *mongo.Client
-	DBForUsers  *mongo.Database
-	DBForBox    *mongo.Database
 	DBForApiKey *mongo.Database
-	Blacklist   *blacklist.Blacklist
-	Whitelist   *whitelist.Whitelist
-	History     *history.History
-	Profile     *profile.Profile
-	Box         *box.Box
-	Print       *print.Print
-	ApiKey      string
+	Config      *utils.Config
+
+	Uploader *uploader.Uploader
+	Print    *print.Print
+	ApiKey   string
 }
 
 type CommandFunctionType func(string) error
@@ -101,11 +100,12 @@ func (wille *Wille) compute(options []string, functions map[string]CommandFuncti
 
 func (wille *Wille) Run(withOptions []string) error {
 	functions := map[string]CommandFunctionType{
-		"--apikey": wille.apikey,
-		"--random": wille.random,
-		"--show":   wille.show,
-		"--upload": wille.upload,
-		"--hash":   wille.hash}
+		"--apikey":      wille.apikey,
+		"--random":      wille.random,
+		"--show":        wille.show,
+		"--upload":      wille.upload,
+		"--uploadBoxes": wille.uploadBoxes,
+		"--hash":        wille.hash}
 
 	if err := wille.compute(withOptions, functions); err != nil {
 		return err
@@ -119,51 +119,23 @@ func New() (*Wille, error) {
 	if err != nil {
 		return nil, err
 	}
-	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
-	DEV_URI_USERS_DB := config.DEV_URI_USERS_DB
-	clientOptions := options.Client().
-		ApplyURI(DEV_URI_USERS_DB).
-		SetServerAPIOptions(serverAPIOptions)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 
-	defer cancel()
-	client, err := mongo.Connect(ctx, clientOptions)
+	client, err := mongoUtils.GenerateClient(config.DEV_URI_USERS_DB)
 
 	if err != nil {
 		return nil, err
 	}
 	wille := Wille{Client: client}
-
-	wille.DBForUsers = wille.Client.Database(config.DEV_DB_USERS_NAME)
-	wille.DBForBox = wille.Client.Database(config.DEV_DB_BOXES_NAME)
-	wille.DBForApiKey = wille.Client.Database(config.DEV_DB_DEVELOPERS_NAME)
-	wille.Print = print.New()
-	wille.Blacklist, err = blacklist.New(wille.Client, wille.Print)
-
 	wille.ApiKey = ""
+	wille.DBForApiKey = wille.Client.Database(config.DEV_DB_DEVELOPERS_NAME)
+	wille.Config = config
+	wille.Print = print.New()
+
+	wille.Uploader, err = uploader.New(wille.Client, wille.Print, wille.Config)
 
 	if err != nil {
 		return nil, err
 	}
-	wille.Whitelist, err = whitelist.New(wille.Client, wille.Print)
 
-	if err != nil {
-		return nil, err
-	}
-	wille.History, err = history.New(wille.Client, wille.Print)
-
-	if err != nil {
-		return nil, err
-	}
-	wille.Profile, err = profile.New(wille.Client, wille.Print)
-
-	if err != nil {
-		return nil, err
-	}
-	wille.Box, err = box.New(wille.Client, wille.Print)
-
-	if err != nil {
-		return nil, err
-	}
 	return &wille, nil
 }
