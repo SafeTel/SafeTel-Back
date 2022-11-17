@@ -12,6 +12,8 @@ from Endpoints.Engine.VerifyNumber import VerifyNumber
 from Endpoints.Engine.EvaluateCall import EvaluateCall
 # Evaluate Call unique endpoint import
 from Endpoints.Engine.ReportedCount import ReportedCount
+# Send back reported numbers
+from Endpoints.Engine.GetReportedNumbers import GetReportedNumbers
 
 
 class InitEngineEndpoints():
@@ -20,6 +22,7 @@ class InitEngineEndpoints():
         self.__InitVerifyNumberEndpoint(Api)
         self.__InitEvaluateCallEndpoint(Api)
         self.__InitReportedCountEndpoint(Api)
+        self.__InitGetReportedNumbersEndpoint(Api)
 
 
     def __InitVerifyNumberEndpoint(self, Api):
@@ -38,4 +41,10 @@ class InitEngineEndpoints():
         Api.add_resource(
             ReportedCount,
             self.ENGINE_URI_BASE_DOMAIN + "reported-count"
+        )
+
+    def __InitGetReportedNumbersEndpoint(self, Api):
+        Api.add_resource(
+            GetReportedNumbers,
+            self.ENGINE_URI_BASE_DOMAIN + "get-reported-numbers"
         )

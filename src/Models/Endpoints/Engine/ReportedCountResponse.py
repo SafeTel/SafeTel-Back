@@ -9,6 +9,7 @@
 # Abstraction import
 from Models.ModelAbstractions.JParent import JParent
 
+
 # Represents Reported Count Response
 class ReportedCountResponse(JParent):
     def __init__(self, count: int):

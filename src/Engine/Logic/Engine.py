@@ -7,6 +7,7 @@
 
 ### INFRA
 # User sub class import
+from tokenize import Number
 from Infrastructure.Factory.UserFactory.User import User
 # Tellows service
 from Engine.Infrastructure.Services.Tellows import Tellows
@@ -34,7 +35,6 @@ from Models.Endpoints.Account.Lists.History.HistoryCallRequest import HistoryCal
 ### /!\ WARNING /!\ ###
 
 
-## TODO: redo the errors with a real Error Mangaer FIXME: next sprint
 # This is the engine of Magi to evaluate the calls & numbers
 class Engine():
     def __init__(self):
@@ -48,9 +48,31 @@ class Engine():
     def ReportedCount(self):
         return self.__NumberDB.count()
 
+
+    def GetReportedNumbers(self, index: int):
+        Result :list = []
+        RangeMinimal :int = (index - 1) * 50
+        RangeMaximal :int = index * 50
+
+        Cursor = list(self.__NumberDB.getNumbers())
+
+        if (len(Cursor) < RangeMinimal):
+            return Result
+
+        if (len(Cursor) < RangeMaximal):
+            RangedCursor = Cursor[RangeMinimal : len(Cursor) - 1]
+        else:
+            RangedCursor = Cursor[RangeMinimal : RangeMaximal]
+
+        for Document in RangedCursor:
+            if (Document["score"] > 5):
+                Result.append(Document["number"])
+
+        return Result
+
+
     # Just veify the number
     def Verify(self, User: User, boxid: str, number: str):
-        # TODO: Verify the number country by regex FIXME: next sprint
         TellowsResponse = self.__Tellows.GetEvaluation(number)
         if (TellowsResponse is None):
             return "Internal Error"
@@ -81,9 +103,12 @@ class Engine():
     def ProcessCall(self, User: User, boxid: str, report: bool, HistoryCall: HistoryCallRequest):
         User.History.AddHistoryCall(HistoryCall)
 
+        if (self.__IsNumberReportedByUser(User.GetGUID(), HistoryCall.number)):
+            return "Number already reported by the user"
+
         if (HistoryCall.status is CallStatus.BLOCKED):
             self.__NumberDB.addBlockedCall(HistoryCall.number)
-            return
+            return "Number has already been blocked, report this bug"
 
         if (report):
             self.__NumberDB.reportNumber(
@@ -95,21 +120,28 @@ class Engine():
         else:
             self.__NumberDB.addCall(HistoryCall.number)
 
-        InternaleData = self.__NumberDB.getNumber(HistoryCall.number)
-        newScore = self.__RateNumber.EvaNumber(
+        InternalData = self.__NumberDB.getNumber(HistoryCall.number)
+        NewScore = self.__RateNumber.EvaNumber(
             HistoryCall.number,
-            InternaleData
+            InternalData
         )
 
         self.__NumberDB.UpdateScore(
             HistoryCall.number,
-            newScore
+            NewScore
         )
 
-        # TODO: find something to answer FIXME: next sprint
+        return "OK"
 
 
     ### PRIVATE
+
+    def __IsNumberReportedByUser(self, guid: str, number: str):
+        for Report in self.__NumberDB.getNumber(number)["Reports"]:
+            if (Report["guid"] == guid):
+                return True
+        return False
+
 
     def __EvaBoxAlgorithm(self, User: User,  severity: BoxSeverity, number: str):
         if (severity is BoxSeverity.NONE):
@@ -122,5 +154,5 @@ class Engine():
             return  self.__BlockAlgorithm.BlockHigh(User, number)
         elif (severity is BoxSeverity.MAX):
             return  self.__BlockAlgorithm.BlockMax(User, number)
+        User.Box.UpdateSeverity("normal")
         return None
-        # TODO: None, means there is a bug internal error (the severity is corrupted) FIXME: maybe autofix ?
