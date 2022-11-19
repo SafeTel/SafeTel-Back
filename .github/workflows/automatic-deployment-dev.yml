@@ -45,4 +45,4 @@ jobs:
             git checkout DEV
             git pull origin DEV
             cd devOps/scripts/
-            echo "\n..\n" | bash deploy-magi.sh dev
+            bash deploy-magi.sh dev ..
