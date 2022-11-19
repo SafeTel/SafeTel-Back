@@ -15,6 +15,9 @@ To see the documentation about the server follow [this link](https://github.com/
 
 ## How to run the server
 
+**WARNING:** You must be whitelisted on mongo atlas db to launch the server.
+
+
 The server is wrapped with Docker.
 
 Command:
