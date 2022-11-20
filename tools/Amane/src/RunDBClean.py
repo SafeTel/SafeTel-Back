@@ -2,7 +2,7 @@
 # SAFETEL PROJECT, 2022
 # SafeTel-Back
 # File description:
-# Run Clean 
+# Run Clean
 ##
 
 ### INFRA
@@ -25,7 +25,7 @@ def runDBClean(argv):
     MongoDBClean = DBClean(Client)
     MongoDBClean.setDatabasesCollectionPair(os.getenv("DB_MELCHIOR"), ['Blacklist', 'History', 'User', 'Whitelist'])
     MongoDBClean.setDatabasesCollectionPair(os.getenv("DB_CASPER"), ['ApiKeyLog', 'Contributors'])
-    MongoDBClean.setDatabasesCollectionPair(os.getenv("DB_CASPER_02"), ['GoogleServices'])
+    # MongoDBClean.setDatabasesCollectionPair(os.getenv("DB_CASPER_02"), ['GoogleServices'])
     MongoDBClean.setDatabasesCollectionPair(os.getenv("DB_BALTHASAR"), ['Boxes', 'UnclaimedBoxes'])
 
     if (len(argv) == 2):
