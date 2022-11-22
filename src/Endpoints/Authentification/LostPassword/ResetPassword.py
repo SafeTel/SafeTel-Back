@@ -75,11 +75,11 @@ class ResetPassword(Resource):
             True
         )
 
-        self.__GMail.SendMail(
-            UserInfos.email,
-            "SafeTel: " + UserInfos.username + " it looks like you lost your password",
-            "safetel.fr/resetpassword?token=" + token
-        )
+        #self.__GMail.SendMail(
+        #    UserInfos.email,
+        #    "SafeTel: " + UserInfos.username + " it looks like you lost your password",
+        #    "safetel.fr/resetpassword?token=" + token
+        #)
 
         Response = LostPasswordResponse(True)
 
