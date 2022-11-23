@@ -24,13 +24,8 @@ class GMail:
 
 
     def SendMail(self, useremail, object, content):
-        import sys
-
-        print(useremail, file=sys.stderr)
-        print(object, file=sys.stderr)
-        print(content, file=sys.stderr)
-
         import requests
+
         requests.post(
             "https://api.mailgun.net/v3/sandboxfd26e18457f049e78ab60a93ee8da368.mailgun.org/messages",
             auth = (
