@@ -32,6 +32,8 @@ def BodyRequestInText(fquest):
 def MiddlewareLoggerForResponses(response):
     Logger = FileLogger.getInstance()
     statusCode = response.status
+    # Needed for the swagger to run to avoid errors
+    response.direct_passthrough = False
     body = response.get_data(as_text=True)
 
     Logger.Logger.info("Response Object - Status Code " + statusCode + " :\n" + body)
