@@ -44,10 +44,5 @@ jobs:
             cd /home/backadmin/SafeTel-Back/
             git checkout DEV
             git pull origin DEV
-            cd devOps/cd/
-            docker-compose pull magi_dev
-            docker-compose up -d --force-recreate --no-deps --build magi_dev
-
-# FIXME: @Arthur fix scripts
-# cd devOps/scripts/
-# echo "\n../\n" | bash deploy-magi.sh dev
+            cd devOps/scripts/
+            bash deploy-magi.sh dev ..

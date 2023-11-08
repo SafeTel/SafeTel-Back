@@ -13,10 +13,10 @@ To know how to contribute follow [this link](https://github.com/SafeTel/Contribu
 
 To see the documentation about the server follow [this link](https://github.com/SafeTel/SafeTel-Doc-Backend).
 
+
 ## How to run the server
 
 **WARNING:** You must be whitelisted on mongo atlas db to launch the server.
-
 
 The server is wrapped with Docker.
 

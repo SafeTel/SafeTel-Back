@@ -32,22 +32,17 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/safetel-back:prod
 
-      -
-        name: executing remote ssh commands for Prod deployment using ssh_key
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd /home/backadmin/SafeTel-Back/
-            git checkout master
-            git pull origin master
-            cd devOps/cd/
-            docker-compose pull magi_prod
-            docker-compose up -d --force-recreate --no-deps --build magi_prod
-
-# FIXME: @Arthur fix scripts
-# cd devOps/scripts/
-# echo "\n../\n" | bash deploy-magi.sh prod
+      # -
+      #   name: executing remote ssh commands for Prod deployment using ssh_key
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USERNAME }}
+      #     key: ${{ secrets.SSH_KEY }}
+      #     port: ${{ secrets.SSH_PORT }}
+      #     script: |
+      #       cd /home/backadmin/SafeTel-Back/
+      #       git checkout master
+      #       git pull origin master
+      #       cd devOps/scripts/
+      #       bash deploy-magi.sh prod ..
